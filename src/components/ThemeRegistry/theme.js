@@ -1,7 +1,7 @@
-import { Roboto } from 'next/font/google';
+import { Libre_Franklin } from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
 
-const roboto = Roboto({
+const libreFranklin = Libre_Franklin({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
@@ -12,7 +12,7 @@ const theme = createTheme({
     mode: 'light',
   },
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily: libreFranklin.style.fontFamily,
   },
   components: {
     MuiAlert: {

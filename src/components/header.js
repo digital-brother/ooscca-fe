@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Header() {
   return (
     // TODO: p={1} - how much px?
-    <Box display="flex" justifyContent="space-between" p={1} mb={1} style={{borderBottom: '1px solid black'}}>
+    <Box display="flex" justifyContent="space-between" p={2} sx={{borderBottom: 1}}>
       {/* TODO: Should svg be inserted as image? */}
       <Image src="/logo.svg" width={117} height={27} alt="OOSCCA logo"/>
       {/* TODO: Add menu */}
