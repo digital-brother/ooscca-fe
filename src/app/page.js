@@ -1,5 +1,14 @@
-import Box from "@mui/material/Box";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import Intro from "@/app/homepage/intro";
+
 
 export default function Homepage() {
-  return <Box>Homepage</Box>
+  return (
+    <>
+      <Header/>
+      <Intro/>
+      <Footer/>
+    </>
+  )
 }
