@@ -6,9 +6,7 @@ import Intro from "@/app/homepage/intro";
 export default function Homepage() {
   return (
     <>
-      <Header/>
       <Intro/>
-      <Footer/>
     </>
   )
 }
