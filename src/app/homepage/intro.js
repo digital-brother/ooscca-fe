@@ -1,14 +1,17 @@
 import {Box, Button} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Grid from '@mui/material/Grid';
 
 export default function Intro() {
   return (
-    <>
-      <Box mt={5} mx="auto" maxWidth={500}>
-        <img src="/demo.svg" width="100%" align="center"/>
-      </Box>
-      <Box textAlign="center" px={3}>
-        <Typography mt={5} variant="body1" color="text.secondary">
+    <Grid container justifyContent="center" rowSpacing={5} columnSpacing={10} py={{xs: 5, md: 10}}>
+      <Grid item>
+        <Box maxWidth={500}>
+          <img src="/demo.svg" width="100%"/>
+        </Box>
+      </Grid>
+      <Grid item maxWidth={473} textAlign={{xs: "center", md: "left"}} px={3}>
+        <Typography variant="body1" color="text.secondary">
           Bringing activity planning into 21st century.
         </Typography>
         <Typography mt={3} variant="h4" fontWeight="bold">
@@ -20,7 +23,7 @@ export default function Intro() {
         <Button sx={{mt: 3}} variant="contained" color="warning">
           Sign in to plan better
         </Button>
-      </Box>
-    </>
+      </Grid>
+    </Grid>
   )
 }
