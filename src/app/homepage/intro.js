@@ -47,7 +47,6 @@ export default function Intro() {
     }}>
         <IntroImage/>
         <IntroText sx={{mr: {xs: 0, md: 5}, mt: {xs: 5, md: 0}}}/>
-
     </Box>
   )
 }
