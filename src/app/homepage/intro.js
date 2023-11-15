@@ -44,7 +44,6 @@ export default function Intro() {
     <Box sx={{
       display: "flex", flexDirection: {xs: "column", md: "row-reverse"},
       justifyContent: "space-evenly", alignItems: "center",
-      my: {xs:5, md: 10}
     }}>
         <IntroImage/>
         <IntroText sx={{mr: {xs: 0, md: 5}, mt: {xs: 5, md: 0}}}/>
