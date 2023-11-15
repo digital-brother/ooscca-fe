@@ -13,7 +13,7 @@ const SCHOOLS = [
 export default function ClientSchools() {
   return (
     <Box mt={{xs: 5, md: 10}}>
-      <Typography variant="h6" textAlign="center" fontWeight="bold" color="text.secondary">
+      <Typography variant="body2" textAlign="center" fontWeight="bold" color="text.secondary">
         Join other parents from local schools who already use OOSCCA
       </Typography>
 

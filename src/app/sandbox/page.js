@@ -8,12 +8,12 @@ export const metadata = {
 
 export default function Test() {
   return (
-    <Box sx={{display: "grid", gridTemplateColumns: "500px 1fr 2fr"}}>
-      <Box>1</Box>
-      <Box>2</Box>
-      <Box>3</Box>
-      <Box>4</Box>
-      <Box>5</Box>
-    </Box>
+    <Grid container>
+      {[1, 2, 3].map(item => (
+        <Grid item xs={12} md={4} sx={{maxWidth: {md: "auto"}}}>
+          {item}
+        </Grid>
+      ))}
+    </Grid>
   )
 }
