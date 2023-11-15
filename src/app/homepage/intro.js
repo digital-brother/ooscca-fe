@@ -2,13 +2,12 @@
 
 import {Box, Button} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Grid from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {useTheme} from '@mui/material/styles';
 
-function IntroText() {
+function IntroText(props) {
   return (
-    <Box textAlign={{xs: "center", md: "left"}} border={1} width={270}>
+    <Box textAlign={{xs: "center", md: "left"}} {...props}>
       <Typography variant="body1" color="text.secondary">
         Bringing activity planning into 21st century.
       </Typography>
@@ -28,34 +27,28 @@ function IntroText() {
 function IntroImage() {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const image = mdUp ? "/demo-md.svg" : "/demo.svg"
+  const image = lgUp ? "/demo-md.svg" : "/demo.svg"
+  const maxWidth = mdUp ? 700 : 500
 
   return (
-    <Box width="100%" maxWidth={700}>
-      <img src={image} width="100%" style={{border: '1px solid black'}}/>
+    <Box width="100%" maxWidth={maxWidth}>
+      <img src={image} width="100%" />
     </Box>
   )
 }
 
 export default function Intro() {
   return (
-    <Grid container flexDirection={{xs: "row", md: "row-reverse"}}
-          spacing={5} my={{md: 10}}>
-      <Grid item xs={12} md={8}
-            sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}
-            border={1}
-      >
+    <Box sx={{
+      display: "flex", flexDirection: {xs: "column", md: "row-reverse"},
+      justifyContent: "space-evenly", alignItems: "center",
+      mx: {xs:5, md: 10}, my: {xs:5, md: 10}
+    }}>
         <IntroImage/>
-      </Grid>
+        <IntroText sx={{mr: {xs: 0, md: 5}, mt: {xs: 5, md: 0}}}/>
 
-      <Grid item xs={12} md={4}
-            sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}
-            border={1}
-      >
-        <IntroText/>
-      </Grid>
-
-    </Grid>
+    </Box>
   )
 }
