@@ -39,7 +39,7 @@ export default function Benefits() {
 
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
         <Grid container justifyContent="center" alignItems="center" spacing={5}
-              sx={{textAlign: "center", mt: {xs: 2, md: 3}, maxWidth: {xs: 500, md: 1200}}}
+              sx={{textAlign: "center", pt: {xs: 5, md: 10}, maxWidth: {xs: 500, md: 1200}}}
         >
           {BENEFITS.map(benefit => (
             <Grid item xs={12} md={4}>
