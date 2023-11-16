@@ -1,9 +1,11 @@
+'use client'
+
 import {Box} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 const SCHOOLS = [
   {src: "/milbourne-lodge.svg", label: "Milbourne Lodge "},
-  {src: "/shrewsbury-house-pre-preparatory.svg", label: "Shrewsbury House  Pre-Preparatory"},
+  {src: "/shrewsbury-house-pre-preparatory.svg", label: "Shrewsbury House Pre-Preparatory"},
   {src: "/rowan-preparatory.svg", label: "Rowan Preparatory"},
   {src: "/claremont-fan-court.svg", label: "Claremont Fan Court "},
   {src: "/parkside.svg", label: "Parkside "},
@@ -13,7 +15,7 @@ const SCHOOLS = [
 export default function ClientSchools() {
   return (
     <Box mt={{xs: 5, md: 10}}>
-      <Typography variant="body2" textAlign="center" fontWeight="bold" color="text.secondary">
+      <Typography variant="body1" textAlign="center" fontWeight="bold" color="text.secondary">
         Join other parents from local schools who already use OOSCCA
       </Typography>
 

@@ -45,10 +45,10 @@ export default function Benefits() {
             <Grid item xs={12} md={4}>
               <Paper variant="outlined" sx={{p: 3}}>
                 <img src={benefit.icon} />
-                <Typography variant="body1" fontWeight="bold" color="text.secondary" mt={1}>
+                <Typography variant="h6" fontWeight="bold" color="text.secondary" mt={1}>
                   {benefit.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">{benefit.description}</Typography>
+                <Typography variant="body1" color="text.secondary">{benefit.description}</Typography>
               </Paper>
             </Grid>
           ))}

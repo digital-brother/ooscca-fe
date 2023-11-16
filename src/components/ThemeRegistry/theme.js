@@ -15,13 +15,6 @@ const theme = createTheme({
     fontFamily: libreFranklin.style.fontFamily,
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        html {
-          font-size: 20px;
-        }
-      `,
-    },
     MuiAlert: {
       styleOverrides: {
         root: ({ownerState}) => ({
