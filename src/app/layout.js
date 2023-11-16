@@ -16,7 +16,7 @@ export default function RootLayout({children}) {
     <body>
     <ThemeRegistry>
       <Header/>
-      <Box maxWidth={1200} sx={{mx: "auto", p: {xs:5, md: 10}}}>
+      <Box maxWidth={1200} sx={{mx: "auto", p: {xs:2, sm:5, md: 10}}}>
         {children}
       </Box>
       <Footer/>
