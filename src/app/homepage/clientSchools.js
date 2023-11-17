@@ -28,9 +28,6 @@ export default function ClientSchools() {
             lg: "repeat(6, 160px)"
           },
           gap: 2,
-          mx: "auto",
-          width: "fit-content",
-          alignItems: "center",
           justifyContent: "center",
           mt: 5,
         }}
