@@ -6,7 +6,7 @@ import {Button, Checkbox, TextField} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import {useTheme} from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import Link from "@/app/homepage/components";
+import Link from "@/app/homepage/Link";
 
 
 function SignUpForm() {

@@ -1,8 +1,8 @@
-import Intro from "@/app/homepage/intro";
-import ClientSchools from "@/app/homepage/clientSchools";
-import SchoolStats from "@/app/homepage/schoolStats";
-import Benefits from "@/app/homepage/benefits";
-import SignUp from "@/app/homepage/signUp";
+import Intro from "@/app/homepage/Intro";
+import ClientSchools from "@/app/homepage/ClientSchools";
+import SchoolStats from "@/app/homepage/SchoolStats";
+import Benefits from "@/app/homepage/Benefits";
+import SignUp from "@/app/homepage/SignUp";
 
 
 export default function Homepage() {
