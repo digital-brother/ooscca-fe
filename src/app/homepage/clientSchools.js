@@ -32,11 +32,7 @@ export default function ClientSchools() {
           mt: 5,
         }}
       >
-        {SCHOOLS.map(school => (
-          <Box>
-            <School {...school}/>
-          </Box>
-        ))}
+        {SCHOOLS.map((school, key) => <School key={key}  {...school}/>)}
       </Box>
 
     </Box>
