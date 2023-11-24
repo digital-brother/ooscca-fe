@@ -2,13 +2,11 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {Button, Checkbox, FormControlLabel, TextField} from "@mui/material";
+import {Button, Checkbox, TextField} from "@mui/material";
 import Divider from "@mui/material/Divider";
-import Link from "next/link";
-import MUILink from '@mui/material/Link';
 import {useTheme} from "@mui/material/styles";
-import Image from "next/image";
 import Grid from "@mui/material/Grid";
+import Link from "@/app/homepage/components";
 
 
 function SignUpForm() {
@@ -24,10 +22,8 @@ function SignUpForm() {
 
       <Box sx={{display: "flex", alignItems: "center", justifyContent: {xs: "center", md: "left"}}}>
         <Checkbox size="small" sx={{ml: -1}}/>
-        <Typography variant="body2" color="text.secondary" sx={{lineHeight: 1, textAlign: "left"}}>
-          I accept the &nbsp;
-          <Link href="#" passHref><MUILink color="text.secondary">Terms and Conditions</MUILink></Link> and &nbsp;
-          <Link href="#" passHref><MUILink color="text.secondary">Privacy Policy</MUILink></Link>.
+        <Typography variant="body2">
+          I accept the <Link href="#" label="Terms and Conditions"/> and <Link href="#" label="Privacy Policy"/>
         </Typography>
       </Box>
 
