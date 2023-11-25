@@ -19,6 +19,7 @@ export default function Header() {
       {/* TODO: Add menu */}
       <IconButton>
         {/*TODO: Fix color*/}
+        {/*Why setting font size here?*/}
         <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
       </IconButton>
     </Box>
