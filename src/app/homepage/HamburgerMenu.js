@@ -49,21 +49,19 @@ export default function HamburgerMenu() {
   );
 
   return (
-    <div>
-      <React.Fragment>
-        <IconButton onClick={toggleDrawer(true)}>
-          {/*TODO: Fix color*/}
-          {/*Why setting font size here?*/}
-          <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
-        </IconButton>
-        <Drawer
-          anchor="top"
-          open={isOpened}
-          onClose={toggleDrawer(false)}
-        >
-          {menuItems}
-        </Drawer>
-      </React.Fragment>
-    </div>
+    <>
+      <IconButton onClick={toggleDrawer(true)} sx={{mr:-1}}>
+        {/*TODO: Fix color*/}
+        {/*Why setting font size here?*/}
+        <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
+      </IconButton>
+      <Drawer
+        anchor="top"
+        open={isOpened}
+        onClose={toggleDrawer(false)}
+      >
+        {menuItems}
+      </Drawer>
+    </>
   );
 }
