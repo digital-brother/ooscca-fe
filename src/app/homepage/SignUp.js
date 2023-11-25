@@ -29,7 +29,7 @@ function SignUpForm() {
 
       <Divider sx={{mt: 2}}/>
       <Typography variant="h6" fontWeight="bold" mt={2}>
-        Already using OOSCAA? &nbsp;
+        Already using OOSCCA? &nbsp;
         <span style={{color: theme.palette.warning.main}}>Sign in</span>
       </Typography>
     </Box>
