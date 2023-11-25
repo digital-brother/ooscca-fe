@@ -1,6 +1,6 @@
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import {Box, IconButton} from "@mui/material";
+import {Box} from "@mui/material";
 import Image from "next/image";
+import HamburgerMenu from "@/app/homepage/HamburgerMenu";
 
 export default function Header() {
   return (
@@ -17,11 +17,7 @@ export default function Header() {
     >
       <Image src="/logo.png" width={117} height={27} alt="OOSCCA logo"/>
       {/* TODO: Add menu */}
-      <IconButton>
-        {/*TODO: Fix color*/}
-        {/*Why setting font size here?*/}
-        <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
-      </IconButton>
+      <HamburgerMenu/>
     </Box>
   )
 }

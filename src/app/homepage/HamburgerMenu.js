@@ -1,13 +1,16 @@
+'use client'
+
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import {IconButton} from "@mui/material";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
-export default function TemporaryDrawer() {
+export default function HamburgerMenu() {
   const [isOpened, setIsOpened] = React.useState(false);
 
   const toggleDrawer = (isOpened) => (event) => {
@@ -20,7 +23,6 @@ export default function TemporaryDrawer() {
 
   const menuItems = (
     <Box
-      sx={{width: 'auto'}}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
@@ -49,7 +51,11 @@ export default function TemporaryDrawer() {
   return (
     <div>
       <React.Fragment>
-        <Button onClick={toggleDrawer(true)}>Menu</Button>
+        <IconButton onClick={toggleDrawer(true)}>
+          {/*TODO: Fix color*/}
+          {/*Why setting font size here?*/}
+          <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
+        </IconButton>
         <Drawer
           anchor="top"
           open={isOpened}
