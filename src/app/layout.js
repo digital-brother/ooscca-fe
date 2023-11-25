@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/app/Header";
+import Footer from "@/app/Footer";
 
 export const metadata = {
   title: 'OOSCCA',
