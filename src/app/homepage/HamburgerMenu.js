@@ -12,27 +12,22 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
 export default function TemporaryDrawer() {
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
+  const [isOpened, setIsOpened] = React.useState(false);
 
-  const toggleDrawer = (anchor, open) => (event) => {
+  const toggleDrawer = (isOpened) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
 
-    setState({...state, [anchor]: open});
+    setIsOpened(isOpened);
   };
 
-  const list = (anchor) => (
+  const menuItems = (
     <Box
-      sx={{width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250}}
+      sx={{width: 'auto'}}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
     >
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -62,18 +57,16 @@ export default function TemporaryDrawer() {
     </Box>
   );
 
-  const anchor = 'top';
-
   return (
     <div>
-      <React.Fragment key={anchor}>
-        <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+      <React.Fragment>
+        <Button onClick={toggleDrawer(true)}>Menu</Button>
         <Drawer
-          anchor={anchor}
-          open={state[anchor]}
-          onClose={toggleDrawer(anchor, false)}
+          anchor="top"
+          open={isOpened}
+          onClose={toggleDrawer(false)}
         >
-          {list(anchor)}
+          {menuItems}
         </Drawer>
       </React.Fragment>
     </div>
