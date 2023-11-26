@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image";
 import HamburgerMenu from "@/app/(homepage)/HamburgerMenu";
 import AppBar from "@mui/material/AppBar";
@@ -11,15 +13,26 @@ export const NAV_LINKS = [
   {text: 'About', path: '/'},
   {text: 'Providers', path: '#'},
   {text: 'Contact', path: '#'},
-  {text: 'Sign in', path: '#', icon: <AccountChildIcon/>},
+  {text: 'Sign in', path: '#', icon: AccountChildIcon, border: true},
 ];
 
 export function NavLinks() {
+  const border_sx = {
+    border: "2px solid #FF8919",
+    borderRadius: 1.5,
+    px: 2,
+    py: 1,
+  }
   return (
     <>
       {NAV_LINKS.map(item => (
-        <Box sx={{display: "flex", alignItems: "center"}}>
-          {item.icon}
+        <Box sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+        ...(item.border && border_sx),
+        }}>
+          {item.icon && <item.icon sx={{mr: 10}}/>}
           <Link href="#" sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
             {item.text}
           </Link>
