@@ -1,10 +1,10 @@
 import Image from "next/image";
-import HamburgerMenu from "@/app/homepage/HamburgerMenu";
+import HamburgerMenu from "@/app/(homepage)/HamburgerMenu";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import Link from "@/app/homepage/Link";
+import Link from "@/app/(homepage)/Link";
 
 
 export default function Header() {
