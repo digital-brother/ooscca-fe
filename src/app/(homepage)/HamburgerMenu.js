@@ -52,7 +52,7 @@ export default function HamburgerMenu({sx}) {
         >
           {/*================ HAMBURGER MENU CLOSE ICON ================ */}
           <IconButton sx={{position: "absolute", top: 32, right: 32, fontSize: 15}}>
-            <CloseIcon/>
+            <CloseIcon sx={{fontSize: 20}}/>
           </IconButton>
           {/*================ HAMBURGER MENU LINKS ================*/}
           <NavLinks/>
