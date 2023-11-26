@@ -72,7 +72,7 @@ export default function Header() {
             <NavLinks/>
           </Box>
 
-          <HamburgerMenu sx={{display: {xs: "block", sm: "none"}}}/>
+          <HamburgerMenu sx={{display: {xs: "inherit", sm: "none"}}}/>
         </Toolbar>
       </AppBar>
     </>
