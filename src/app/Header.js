@@ -53,7 +53,7 @@ export default function Header() {
             alignItems: "center",
             borderBottom: 1,
             borderColor: "#CED4DA",
-            py: {xs: 1, sm: 3},
+            py: {xs: 2, sm: 3},
             // TODO: Fix color
           }}
         >
