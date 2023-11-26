@@ -41,7 +41,7 @@ export default function Header() {
             mr: 5,
           }}>
             {NAV_LINKS.map(item =>
-              <Link href="#" sx={{whiteSpace: "nowrap"}}>
+              <Link href="#" sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
                 {item.text}
               </Link>
             )}

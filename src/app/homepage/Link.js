@@ -5,11 +5,11 @@ import MuiLink from "@mui/material/Link";
 import {useTheme} from "@mui/material/styles";
 
 
-export default async function Link({children, href, sx}) {
+export default function Link({children, href, sx}) {
   const theme = useTheme();
 
   return (
-    <NextLink href={href} passHref>
+    <NextLink href={href} passHref style={{textDecoration: "none"}}>
       <MuiLink
         component="span"
         sx={{color: "text.secondary", textDecorationColor: theme.palette.text.secondary, ...sx}}
