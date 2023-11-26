@@ -35,7 +35,6 @@ export default function HamburgerMenu({sx}) {
         {/*================ HAMBURGER MENU CONTAINER ================ */}
         <Box
           role="presentation"
-          onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
           sx={{
             display: "flex",
@@ -51,7 +50,7 @@ export default function HamburgerMenu({sx}) {
           }}
         >
           {/*================ HAMBURGER MENU CLOSE ICON ================ */}
-          <IconButton sx={{position: "absolute", top: 32, right: 32, fontSize: 15}}>
+          <IconButton onClick={toggleDrawer(false)} sx={{position: "absolute", top: 32, right: 32, fontSize: 15}}>
             <CloseIcon sx={{fontSize: 20}}/>
           </IconButton>
           {/*================ HAMBURGER MENU LINKS ================*/}
