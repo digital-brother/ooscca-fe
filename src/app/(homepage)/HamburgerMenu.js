@@ -3,12 +3,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import {IconButton} from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import {NavLinks} from "@/app/Header";
+import CloseIcon from "@/assets/CloseIcon";
+import {manrope} from "@/components/ThemeRegistry/theme";
 
 export default function HamburgerMenu({sx}) {
   const [isOpened, setIsOpened] = React.useState(false);
@@ -17,51 +16,46 @@ export default function HamburgerMenu({sx}) {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     setIsOpened(isOpened);
   };
 
-  const menuItems = (
-    <Box
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {['About us', 'Providers', 'Contuct us', 'Sign in'].map((text, index) => (
-          // <ListItem key={text} disablePadding>
-          //   <ListItemButton>
-          //     <ListItemIcon>
-          //       {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-          //     </ListItemIcon>
-          //     <ListItemText primary={text}/>
-          //   </ListItemButton>
-          // </ListItem>
-
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text}/>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
   return (
     <>
-      <IconButton onClick={toggleDrawer(true)} sx={{mr:-1, ...sx}}>
+      <IconButton onClick={toggleDrawer(true)} sx={{mr: -1, ...sx}}>
         {/*TODO: Fix color*/}
         {/*Why setting font size here?*/}
         <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
       </IconButton>
+
       <Drawer
         anchor="top"
         open={isOpened}
         onClose={toggleDrawer(false)}
       >
-        {menuItems}
+        <Box
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 5,
+            pt: 30,
+            pb: 38,
+            position: "relative",
+            bgcolor: "#F8F9FA",
+            fontSize: 24,
+            fontWeight: 600,
+          }}
+        >
+          <IconButton sx={{position: "absolute", top: 32, right: 32, fontSize: 15}}>
+            <CloseIcon/>
+          </IconButton>
+          <NavLinks/>
+        </Box>
       </Drawer>
+
     </>
   );
 }
