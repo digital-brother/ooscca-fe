@@ -7,7 +7,6 @@ import {IconButton} from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import {NavLinks} from "@/app/Header";
 import CloseIcon from "@/assets/CloseIcon";
-import {manrope} from "@/components/ThemeRegistry/theme";
 
 export default function HamburgerMenu({sx}) {
   const [isOpened, setIsOpened] = React.useState(false);
@@ -21,6 +20,7 @@ export default function HamburgerMenu({sx}) {
 
   return (
     <>
+      {/*================ HAMBURGER MENU ICON ================ */}
       <IconButton onClick={toggleDrawer(true)} sx={{mr: -1, ...sx}}>
         {/*TODO: Fix color*/}
         {/*Why setting font size here?*/}
@@ -32,6 +32,7 @@ export default function HamburgerMenu({sx}) {
         open={isOpened}
         onClose={toggleDrawer(false)}
       >
+        {/*================ HAMBURGER MENU CONTAINER ================ */}
         <Box
           role="presentation"
           onClick={toggleDrawer(false)}
@@ -49,13 +50,14 @@ export default function HamburgerMenu({sx}) {
             fontWeight: 600,
           }}
         >
+          {/*================ HAMBURGER MENU CLOSE ICON ================ */}
           <IconButton sx={{position: "absolute", top: 32, right: 32, fontSize: 15}}>
             <CloseIcon/>
           </IconButton>
+          {/*================ HAMBURGER MENU LINKS ================*/}
           <NavLinks/>
         </Box>
       </Drawer>
-
     </>
   );
 }
