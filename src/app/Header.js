@@ -2,8 +2,19 @@ import Image from "next/image";
 import HamburgerMenu from "@/app/homepage/HamburgerMenu";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import * as React from "react";
+import Link from "@/app/homepage/Link";
+
 
 export default function Header() {
+  const NAV_LINKS = [
+    {text: 'About', path: '#'},
+    {text: 'Providers', path: '#'},
+    {text: 'Contact', path: '#'},
+    {text: 'Sign in', path: '#'},
+  ];
+
   return (
     <>
       {/*TODO: p={1} - how much px?*/}
@@ -13,13 +24,30 @@ export default function Header() {
             justifyContent: "space-between",
             borderBottom: 1,
             borderColor: "#CED4DA",
-            minHeight: 70,
+            py: {xs: 1, sm: 3},
             // TODO: Fix color
           }}
         >
-          <Image src="/logo.png" width={117} height={27} alt="OOSCCA logo"/>
+          <Box sx={{flexGrow: 1, display: "flex", alignItems: "center"}} >
+            <Image src="/logo.png" width={117} height={27} alt="OOSCCA logo"/>
+          </Box>
           {/* TODO: Add menu */}
-          <HamburgerMenu/>
+
+          <Box sx={{
+            flexGrow: 1,
+            display: {xs: "none", sm: "flex"},
+            justifyContent: "space-between",
+            maxWidth: 500,
+            mr: 5,
+          }}>
+            {NAV_LINKS.map(item =>
+              <Link href="#" sx={{whiteSpace: "nowrap"}}>
+                {item.text}
+              </Link>
+            )}
+          </Box>
+
+          <HamburgerMenu sx={{display: {xs: "block", sm: "none"}}}/>
         </Toolbar>
       </AppBar>
     </>

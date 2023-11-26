@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import {IconButton} from "@mui/material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
-export default function HamburgerMenu() {
+export default function HamburgerMenu({sx}) {
   const [isOpened, setIsOpened] = React.useState(false);
 
   const toggleDrawer = (isOpened) => (event) => {
@@ -50,7 +50,7 @@ export default function HamburgerMenu() {
 
   return (
     <>
-      <IconButton onClick={toggleDrawer(true)} sx={{mr:-1}}>
+      <IconButton onClick={toggleDrawer(true)} sx={{mr:-1, ...sx}}>
         {/*TODO: Fix color*/}
         {/*Why setting font size here?*/}
         <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
