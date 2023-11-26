@@ -9,7 +9,7 @@ import Link from "@/app/homepage/Link";
 
 export default function Header() {
   const NAV_LINKS = [
-    {text: 'About', path: '#'},
+    {text: 'About', path: '/'},
     {text: 'Providers', path: '#'},
     {text: 'Contact', path: '#'},
     {text: 'Sign in', path: '#'},

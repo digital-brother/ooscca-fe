@@ -12,7 +12,17 @@ export default function Link({children, href, sx}) {
     <NextLink href={href} passHref style={{textDecoration: "none"}}>
       <MuiLink
         component="span"
-        sx={{color: "text.secondary", textDecorationColor: theme.palette.text.secondary, ...sx}}
+        sx={{
+          color: "text.secondary",
+          textDecorationColor: theme.palette.text.secondary,
+          '&:hover': {
+            color: '#343A40',
+          },
+          '&:active': {
+            color: '#FF8919',
+          },
+          ...sx
+        }}
       >
         {children}
       </MuiLink>
