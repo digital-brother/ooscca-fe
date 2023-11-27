@@ -41,25 +41,23 @@ function BenefitText({benefit, sx}) {
 
 export default function Benefits() {
   return (
-    <>
-      <Container sx={{py: {xs: 6, md: 10}}}>
-        <Box sx={{display: "flex", flexDirection: "column", gap: 12, maxWidth: {xs: 500, md: "100%"}, mx: "auto"}}>
-          {BENEFITS.map((benefit, index) => (
-            <Grid container rowSpacing={8} columnSpacing={6} sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: index % 2 ? "row-reverse" : "row",
-            }}>
-              <Grid item xs={12} md={6}>
-                <BenefitText benefit={benefit} sx={{textAlign: {xs: "center", md: "left"}, maxWidth: {md:"90%"}}}/>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Box component="img" src="/benefit.png" width="100%" sx={{maxWidth: 500}}/>
-              </Grid>
+    <Container sx={{py: {xs: 6, md: 10}}}>
+      <Box sx={{display: "flex", flexDirection: "column", gap: 12, maxWidth: {xs: 500, md: "100%"}, mx: "auto"}}>
+        {BENEFITS.map((benefit, index) => (
+          <Grid container rowSpacing={8} columnSpacing={6} sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: index % 2 ? "row-reverse" : "row",
+          }}>
+            <Grid item xs={12} md={6}>
+              <BenefitText benefit={benefit} sx={{textAlign: {xs: "center", md: "left"}, maxWidth: {md: "90%"}}}/>
             </Grid>
-          ))}
-        </Box>
-      </Container>
-    </>
+            <Grid item xs={12} md={6}>
+              <Box component="img" src="/benefit.png" width="100%" sx={{maxWidth: 500}}/>
+            </Grid>
+          </Grid>
+        ))}
+      </Box>
+    </Container>
   )
 }
