@@ -8,6 +8,9 @@ import Box from "@mui/material/Box";
 import * as React from "react";
 import Link from "@/app/(homepage)/Link";
 import AccountChildIcon from "@/assets/AccountChildIcon";
+import NextLink from "next/link";
+import {Button} from "@mui/material";
+import {useTheme} from "@mui/material/styles";
 
 export const NAV_LINKS = [
   {text: 'About', path: '/'},
@@ -17,6 +20,7 @@ export const NAV_LINKS = [
 ];
 
 function NavLink({link}) {
+  const theme = useTheme()
   const linkElement = (
     <Link href="#" sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
       {link.text}
@@ -26,28 +30,31 @@ function NavLink({link}) {
   if (!link.border) return linkElement
 
   else return (
-    <Box sx={{
-      display: "flex",
-      alignItems: "center",
-      gap: 0.5,
-      border: "2px solid #FF8919",
-      borderRadius: 1.5,
-      px: 2,
-      py: 1,
-    }}>
-      {link.icon && <link.icon sx={{color: "red"}}/>}
-      {linkElement}
-    </Box>
+    // <Box sx={{
+    //   display: "flex",
+    //   alignItems: "center",
+    //   gap: 0.5,
+    //   border: "2px solid #FF8919",
+    //   borderRadius: 1.5,
+    //   px: 2,
+    //   py: 1,
+    //   ...linkColorsSx,
+    // }}>
+    //   {link.icon && <link.icon/>}
+    //   {linkElement}
+    // </Box>
+    <NextLink href="/" passHref>
+      <Button variant="outlined" color="warning" sx={{
+        textTransform: 'none',
+        fontSize: theme.typography.htmlFontSize,
+      }}>
+        {link.text}
+      </Button>
+    </NextLink>
   )
 }
 
 export function NavLinks() {
-  const border_sx = {
-    border: "2px solid #FF8919",
-    borderRadius: 1.5,
-    px: 2,
-    py: 1,
-  }
   return (
     <>
       {NAV_LINKS.map(item => (
