@@ -8,7 +8,7 @@ import {useTheme} from '@mui/material/styles';
 function IntroText(props) {
   return (
     <Box textAlign={{xs: "center", md: "left"}} {...props}>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="warning.main" fontWeight="bold">
         Bringing activity planning into 21st century.
       </Typography>
       <Typography mt={2} variant="h4" fontWeight="bold">
@@ -27,15 +27,10 @@ function IntroText(props) {
 function IntroImage() {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
-
-  const image = lgUp ? "/demo-md.svg" : "/demo.svg"
-  const maxWidth = mdUp ? 700 : 500
+  const src = mdUp ? "/intro-desktop.png" : "/intro-mobile.png"
 
   return (
-    <Box width="100%" maxWidth={maxWidth}>
-      <img src={image} width="100%" />
-    </Box>
+    <Box component="img" src={src} width="100%" sx={{maxWidth: {xs: 390, md: "100%"}, mx: "auto"}}/>
   )
 }
 
