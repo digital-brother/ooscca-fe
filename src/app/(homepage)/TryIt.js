@@ -52,10 +52,21 @@ function TryItText({benefit, sx}) {
   )
 }
 
+function ComingSoon() {
+  return (
+    <Box sx={{mt: {xs: 6, md: 12}, border: 1, borderRadius: 1, borderColor: "#CED4DA"}}>
+      <Typography color="text.secondary" sx={{textAlign: "center", py: {xs: 6, md: 10}}}>
+        Coming soon
+      </Typography>
+    </Box>
+  )
+}
+
 export default function TryIt() {
   return (
     <Container sx={{py: {xs: 6, md: 10}}}>
       <TryItText sx={{maxWidth: 730, textAlign: "center", mx: "auto"}}/>
+      <ComingSoon/>
     </Container>
   )
 }

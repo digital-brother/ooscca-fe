@@ -2,11 +2,12 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {Button, Checkbox, TextField} from "@mui/material";
+import {Button, Checkbox, Container, TextField} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import {useTheme} from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Link from "@/app/(homepage)/Link";
+import React from "react";
 
 
 function SignUpForm() {
@@ -38,22 +39,23 @@ function SignUpForm() {
 
 export default function SignUp() {
   return (
-    <Grid container spacing={{xs: 10, md: 5}} sx={{
-      pt: {xs: 10, md: 10},
-      textAlign: "center",
-    }}>
-      <Grid item xs={12} md={6}>
-        <SignUpForm/>
+    <Container sx={{pt: 14}}>
+      <Grid container spacing={{xs: 10, md: 5}} sx={{
+        textAlign: "center",
+      }}>
+        <Grid item xs={12} md={6}>
+          <SignUpForm/>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box sx={{
+            maxWidth: {xs: 370, md: 520},
+            mx: "auto",
+            mb: -1,
+          }}>
+            <img src="/signup.svg" style={{width: "100%"}}/>
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Box sx={{
-          maxWidth: {xs: 370, md: 520},
-          mx: "auto",
-          mb: -1,
-        }}>
-          <img src="/signup.svg" style={{width: "100%"}}/>
-        </Box>
-      </Grid>
-    </Grid>
+    </Container>
   )
 }
