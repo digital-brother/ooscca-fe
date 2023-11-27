@@ -29,7 +29,7 @@ function BenefitText({benefit}) {
       <Typography variant="body1" color="warning.main" fontWeight="bold">
         {benefit.subheader}
       </Typography>
-      <Typography mt={2} variant="h3" fontWeight="bold">
+      <Typography mt={2} variant="h4" fontWeight="bold">
         {benefit.header}
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
