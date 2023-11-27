@@ -1,6 +1,6 @@
-import Grid from "@mui/material/Grid";
 import {Box, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 const BENEFITS = [
   {
@@ -23,9 +23,9 @@ const BENEFITS = [
   },
 ]
 
-function BenefitText({benefit}) {
+function BenefitText({benefit, sx}) {
   return (
-    <Box>
+    <Box {...sx}>
       <Typography variant="body1" color="warning.main" fontWeight="bold">
         {benefit.subheader}
       </Typography>
@@ -43,18 +43,22 @@ export default function Benefits() {
   return (
     <>
       <Container sx={{py: {xs: 6, md: 10}}}>
-        <Grid container rowSpacing={{md: 12}}>
-          {BENEFITS.map(benefit => (
-            <>
+        <Box sx={{display: "flex", flexDirection: "column", gap: 12, maxWidth: {xs: 500, md: "100%"}, mx: "auto"}}>
+          {BENEFITS.map((benefit, index) => (
+            <Grid container rowSpacing={8} columnSpacing={6} sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: index % 2 ? "row-reverse" : "row",
+            }}>
               <Grid item xs={12} md={6}>
-                <BenefitText benefit={benefit}/>
+                <BenefitText benefit={benefit} sx={{textAlign: {xs: "center", md: "left"}, maxWidth: {md:"90%"}}}/>
               </Grid>
-              <Grid item>
-                <Box component="img" src="/benefit.png" width="100%"/>
+              <Grid item xs={12} md={6}>
+                <Box component="img" src="/benefit.png" width="100%" sx={{maxWidth: 500}}/>
               </Grid>
-            </>
+            </Grid>
           ))}
-        </Grid>
+        </Box>
       </Container>
     </>
   )
