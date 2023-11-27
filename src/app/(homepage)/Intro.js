@@ -4,6 +4,7 @@ import {Box, Button} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {useTheme} from '@mui/material/styles';
+import Grid from "@mui/material/Grid";
 
 function IntroText(props) {
   return (
@@ -11,7 +12,7 @@ function IntroText(props) {
       <Typography variant="body2" color="warning.main" fontWeight="bold">
         Bringing activity planning into 21st century.
       </Typography>
-      <Typography mt={2} variant="h4" fontWeight="bold">
+      <Typography mt={2} variant="h2" fontWeight="bold">
         Effortless to find and manage Out Of School Activities
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
@@ -37,11 +38,22 @@ function IntroImage() {
 export default function Intro() {
   return (
     <Box sx={{
-      display: "flex", flexDirection: {xs: "column", md: "row-reverse"},
-      justifyContent: "space-evenly", alignItems: "center",
+      pt: {xs: 0, md: 14},
+      pb: {xs: 6, md: 14},
     }}>
-        <IntroImage/>
-        <IntroText sx={{mr: {xs: 0, md: 5}, mt: {xs: 5, md: 0}}}/>
+      <Grid container spacing={{xs: 6, md: 8}} sx={{
+        flexDirection: {md: "row-reverse"},
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      >
+        <Grid item xs={12} md={6} textAlign="center">
+          <IntroImage/>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <IntroText/>
+        </Grid>
+      </Grid>
     </Box>
   )
 }
