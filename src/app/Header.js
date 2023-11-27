@@ -11,6 +11,7 @@ import AccountChildIcon from "@/assets/AccountChildIcon";
 import NextLink from "next/link";
 import {Button} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
 export const NAV_LINKS = [
   {text: 'About', path: '/'},
@@ -75,14 +76,24 @@ export default function Header() {
             alignItems: "center",
             borderBottom: 1,
             borderColor: "#CED4DA",
-            py: {xs: 2, sm: 3},
+            py: {xs: 1.5, md: 3},
+            px: {xs: 2, md: 7.5},
             // TODO: Fix color
           }}
         >
-          <Box sx={{flexGrow: 1, display: "flex", alignItems: "center"}}>
-            <Image src="/logo.png" width={117} height={27} alt="OOSCCA logo"/>
+          <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "start"}}>
+            <Box component="img" sx={{width: {xs: 117, md: 190}, height: 'auto'}} src="/logo.png" alt="OOSCCA logo"/>
+            <Typography sx={{
+              display: {xs: "none", md: "inherit"},
+              fontSize: 9,
+              fontWeight: "bold",
+              letterSpacing: 0.27,
+              color: "text.secondary",
+              mt: 0.75
+            }}>
+              Out Of School Clubs, Classes & Activities
+            </Typography>
           </Box>
-          {/* TODO: Add menu */}
 
           <Box sx={{
             flexGrow: 1,
