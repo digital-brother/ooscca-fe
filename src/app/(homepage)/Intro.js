@@ -1,6 +1,6 @@
 'use client'
 
-import {Box, Button} from "@mui/material";
+import {Box, Button, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {useTheme} from '@mui/material/styles';
@@ -37,7 +37,7 @@ function IntroImage() {
 
 export default function Intro() {
   return (
-    <Box sx={{
+    <Container sx={{
       pt: {xs: 0, md: 14},
       pb: {xs: 6, md: 14},
     }}>
@@ -54,6 +54,6 @@ export default function Intro() {
           <IntroText/>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   )
 }
