@@ -1,15 +1,13 @@
 'use client'
 
-import Image from "next/image";
 import HamburgerMenu from "@/app/(homepage)/HamburgerMenu";
 import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import Link from "@/app/(homepage)/Link";
 import AccountChildIcon from "@/assets/AccountChildIcon";
 import NextLink from "next/link";
-import {Button} from "@mui/material";
+import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
@@ -65,6 +63,23 @@ export function NavLinks() {
   )
 }
 
+export function Logo({textColor}) {
+  return (
+    <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "start"}}>
+      <Box component="img" sx={{width: {xs: 117, md: 190}, height: 'auto'}} src="/logo.png" alt="OOSCCA logo"/>
+      <Typography sx={{
+        display: {xs: "none", md: "inherit"},
+        fontSize: 9,
+        fontWeight: "bold",
+        letterSpacing: 0.27,
+        color: textColor,
+      }}>
+        Out Of School Clubs, Classes & Activities
+      </Typography>
+    </Box>
+  )
+}
+
 export default function Header() {
   return (
     <>
@@ -81,18 +96,8 @@ export default function Header() {
             // TODO: Fix color
           }}
         >
-          <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "start"}}>
-            <Box component="img" sx={{width: {xs: 117, md: 190}, height: 'auto'}} src="/logo.png" alt="OOSCCA logo"/>
-            <Typography sx={{
-              display: {xs: "none", md: "inherit"},
-              fontSize: 9,
-              fontWeight: "bold",
-              letterSpacing: 0.27,
-              color: "text.secondary",
-              mt: 0.75
-            }}>
-              Out Of School Clubs, Classes & Activities
-            </Typography>
+          <Box sx={{color: "#6D6D6D"}}>
+            <Logo/>
           </Box>
 
           <Box sx={{
