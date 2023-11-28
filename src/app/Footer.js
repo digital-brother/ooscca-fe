@@ -1,7 +1,11 @@
+'use client'
+
 import {Box, Container} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import * as React from "react";
-import {Logo} from "@/app/Header";
+import {HEADER_NAV_LINKS, Logo, NavLinks} from "@/app/Header";
+
+const FOOTER_NAV_LINKS = HEADER_NAV_LINKS.filter(link => ["about", "providers", "contact"].includes(link.name))
 
 export default function Footer() {
   return (
@@ -12,7 +16,7 @@ export default function Footer() {
             <Logo/>
           </Grid>
           <Grid item xs={6} md={4}>
-            222
+            <NavLinks links={FOOTER_NAV_LINKS}/>
           </Grid>
           <Grid item xs={6} md={4}>
             333
