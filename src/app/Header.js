@@ -79,7 +79,7 @@ export default function Header() {
             // TODO: Fix color
           }}
         >
-          <Box sx={{color: "#6D6D6D"}}>
+          <Box sx={{color: "#6D6D6D", flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "start"}}>
             <Logo/>
           </Box>
 
