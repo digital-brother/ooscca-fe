@@ -53,10 +53,10 @@ function NavLink({link}) {
   )
 }
 
-export function NavLinks({links}) {
+export function NavLinks() {
   return (
     <>
-      {links.map((link, index) => (
+      {HEADER_NAV_LINKS.map((link, index) => (
         <NavLink key={index} link={link}/>
       ))}
     </>
@@ -91,7 +91,7 @@ export default function Header() {
             maxWidth: 500,
             mr: 5,
           }}>
-            <NavLinks links={HEADER_NAV_LINKS}/>
+            <NavLinks/>
           </Box>
 
           <HamburgerMenu sx={{display: {xs: "inherit", sm: "none"}}}/>
