@@ -44,7 +44,7 @@ export default function Benefits() {
     <Container sx={{py: {xs: 6, md: 10}}}>
       <Box sx={{display: "flex", flexDirection: "column", gap: 12, maxWidth: {xs: 500, md: "100%"}, mx: "auto"}}>
         {BENEFITS.map((benefit, index) => (
-          <Grid container rowSpacing={8} columnSpacing={6} sx={{
+          <Grid key={index} container rowSpacing={8} columnSpacing={6} sx={{
             justifyContent: "center",
             alignItems: "center",
             flexDirection: index % 2 ? "row-reverse" : "row",
