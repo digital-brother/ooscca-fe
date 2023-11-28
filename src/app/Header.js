@@ -11,11 +11,11 @@ import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-export const NAV_LINKS = [
-  {text: 'About', path: '/'},
-  {text: 'Providers', path: '#'},
-  {text: 'Contact', path: '#'},
-  {text: 'Sign in', path: '#', icon: AccountChildIcon, border: true},
+export const HEADER_NAV_LINKS = [
+  {name: "about", text: 'About', path: '/'},
+  {name: "providers", text: 'Providers', path: '#'},
+  {name: "contact", text: 'Contact', path: '#'},
+  {name: "signIn", text: 'Sign in', path: '#', icon: AccountChildIcon, border: true},
 ];
 
 function NavLink({link}) {
@@ -53,11 +53,11 @@ function NavLink({link}) {
   )
 }
 
-export function NavLinks() {
+export function NavLinks({links}) {
   return (
     <>
-      {NAV_LINKS.map(item => (
-        <NavLink link={item}/>
+      {links.map((link, index) => (
+        <NavLink key={index} link={link}/>
       ))}
     </>
   )
@@ -108,7 +108,7 @@ export default function Header() {
             maxWidth: 500,
             mr: 5,
           }}>
-            <NavLinks/>
+            <NavLinks links={HEADER_NAV_LINKS}/>
           </Box>
 
           <HamburgerMenu sx={{display: {xs: "inherit", sm: "none"}}}/>
