@@ -2,9 +2,12 @@
 
 import React from 'react'
 import Box from '@mui/material/Box';
-import {Container} from "@mui/material";
+import {Container, styled} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {ComingSoon} from "@/app/(homepage)/components/ComingSoon";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Tab from "@mui/material/Tab";
 
 
 function TryItText({benefit, sx}) {
@@ -23,11 +26,56 @@ function TryItText({benefit, sx}) {
   )
 }
 
+const CustomTab = styled(Tab)({
+  textTransform: 'none',
+  '&.Mui-selected': {
+    color: "#FFFFFF",
+    backgroundColor: "#BD54C2",
+  },
+  borderRight: '1px #CED4DA solid',
+  '&:last-child': {borderRight: 'none'},
+  fontWeight: "bold",
+  fontSize: 16,
+  // py: 1.5,
+  // height: 60,
+})
+
+function Tabs(props) {
+  const [value, setValue] = React.useState('oosCalendar');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Box {...props}>
+      <TabContext value={value}>
+        <Box>
+          <TabList
+            onChange={handleChange}
+            aria-label="lab API tabs example"
+            variant="fullWidth"
+            TabIndicatorProps={{sx: {display: 'none'}}}
+            sx={{border: '1px #CED4DA solid', borderRadius: 2}}
+          >
+            <CustomTab label="OOS calendar" value="oosCalendar"/>
+            <CustomTab label="Class birthday calendar" value="classBirthdayCalendar"/>
+            <CustomTab label="Whose who" value="whoseWho"/>
+          </TabList>
+        </Box>
+        <TabPanel value="oosCalendar">OOS calendar</TabPanel>
+        <TabPanel value="classBirthdayCalendar">Class birthday calendar</TabPanel>
+        <TabPanel value="whoseWho">Whose who</TabPanel>
+      </TabContext>
+    </Box>
+  );
+}
+
 export default function TryIt() {
   return (
     <Container sx={{py: {xs: 6, md: 10}}}>
       <TryItText sx={{maxWidth: 730, textAlign: "center", mx: "auto"}}/>
-      <ComingSoon/>
+      <Tabs sx={{mt: 5}}/>
     </Container>
   )
 }
