@@ -9,7 +9,7 @@ import AccountChildIcon from "@/assets/AccountChildIcon";
 import NextLink from "next/link";
 import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Logo} from "@/app/(homepage)/components";
+import {Logo} from "@/app/(homepage)/components/Logo";
 
 export const HEADER_NAV_LINKS = [
   {name: "about", text: 'About', path: '/'},
