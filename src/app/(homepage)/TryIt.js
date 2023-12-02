@@ -10,6 +10,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import Tab from "@mui/material/Tab";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import SchoolStats from "@/app/(homepage)/SchoolStats";
 
 
 function TryItText({benefit, sx}) {
@@ -78,7 +79,9 @@ function Tabs(props) {
             <CustomTab label="Whose who" value="whoseWho"/>
           </TabList>
         </Box>
-        <TabPanel value="oosCalendar">OOS calendar</TabPanel>
+        <TabPanel value="oosCalendar">
+          <SchoolStats />
+        </TabPanel>
         <TabPanel value="classBirthdayCalendar">Class birthday calendar</TabPanel>
         <TabPanel value="whoseWho">Whose who</TabPanel>
       </TabContext>
