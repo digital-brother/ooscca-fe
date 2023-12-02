@@ -76,6 +76,7 @@ export default function SchoolStats() {
             order: { xs: 3, sm: 1 },
             display: "flex",
             alignItems: "center",
+            mt: {xs: 1, sm: 0},
           }}
         >
           <SquareRoundedIcon sx={{ color: "#FFB41A" }} />
@@ -86,6 +87,7 @@ export default function SchoolStats() {
           xs={6}
           sx={{
             order: { xs: 4, sm: 2 },
+            mt: {xs: 1, sm: 0},
             display: "flex",
             justifyContent: "space-between",
           }}
