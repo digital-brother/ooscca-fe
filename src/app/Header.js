@@ -4,7 +4,7 @@ import HamburgerMenu from "@/app/(homepage)/HamburgerMenu";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import Link from "@/app/(homepage)/Link";
+import Link from "@/app/(homepage)/components/Link";
 import AccountChildIcon from "@/assets/AccountChildIcon";
 import NextLink from "next/link";
 import {Button, Toolbar} from "@mui/material";
