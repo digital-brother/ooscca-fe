@@ -49,28 +49,22 @@ function IntroImage() {
 
 export default function Intro() {
   return (
-    <Container
+    <Grid
+      container
       sx={{
-        pt: { xs: 0, md: 14 },
-        pb: { xs: 6, md: 14 },
+        flexDirection: { md: "row-reverse" },
       }}
     >
-      <Grid
-        container
-        spacing={{ xs: 6, md: 8 }}
-        sx={{
-          flexDirection: { md: "row-reverse" },
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Grid item xs={12} md={6} textAlign="center">
-          <IntroImage />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <IntroText />
-        </Grid>
+      <Grid item xs={12} md={6} textAlign="center">
+        <IntroImage />
       </Grid>
-    </Container>
+      <Grid item xs={12} md={6} sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "right",
+      }}>
+        <IntroText sx={{ maxWidth: 600 }} />
+      </Grid>
+    </Grid>
   );
 }
