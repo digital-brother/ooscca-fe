@@ -9,18 +9,24 @@ import Grid from "@mui/material/Grid";
 function IntroText(props) {
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
-      <Typography variant="body2" color="warning.main" fontWeight="bold">
-        Bringing activity planning into 21st century.
+      <Typography variant="body1" color="warning.main" fontWeight="bold">
+        OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
       </Typography>
-      <Typography mt={2} variant="h2" fontWeight="bold">
-        Effortless to find and manage Out Of School Activities
+      <Typography mt={3} variant="h3" fontWeight="bold">
+        All-in-one platform that brings kids’ activity providers and parents
+        under one roof
       </Typography>
-      <Typography mt={2} variant="body1" color="text.secondary">
-        All-in-one platform that reimagines the way to arrange and pay
-        activities.
+      <Typography mt={3} variant="h5" color="text.secondary">
+        AOOSCCA makes it super easy to discover, pay and manage activities with
+        multiple providers — because parenting is hard enough.
       </Typography>
-      <Button sx={{ mt: 2 }} variant="contained" color="warning">
-        Sign in to plan better
+      <Button
+        sx={{ mt: 5, textTransform: "none", fontSize: 24, fontWieght: 700 }}
+        variant="contained"
+        color="warning"
+        size="large"
+      >
+        Sign in and start relaxing
       </Button>
     </Box>
   );
