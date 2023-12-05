@@ -41,30 +41,29 @@ function IntroImage() {
     <Box
       component="img"
       src={src}
-      width="100%"
-      sx={{ maxWidth: { xs: 390, md: "100%" }, mx: "auto" }}
+      sx={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      }}
     />
   );
 }
 
 export default function Intro() {
   return (
-    <Grid
-      container
-      sx={{
-        flexDirection: { md: "row-reverse" },
-      }}
-    >
-      <Grid item xs={12} md={6} textAlign="center">
+    <Grid container sx={{ flexDirection: { md: "row-reverse" } }}>
+      <Grid item xs={12} md={5} sx={{maxHeight: 818}}>
         <IntroImage />
       </Grid>
-      <Grid item xs={12} md={6} sx={{
+      <Grid item xs={12} md={7} sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "right",
-      }}>
-        <Container maxWidth="sm" sx={{mx:0}}>
-          <IntroText/>
+        }}
+      >
+        <Container maxWidth="sm" sx={{ mx: 0, pr: { xs: 0 } }}>
+          <IntroText />
         </Container>
       </Grid>
     </Grid>
