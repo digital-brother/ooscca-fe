@@ -53,18 +53,25 @@ function IntroImage() {
 
 export default function Intro() {
   return (
-    <Grid container sx={{flexDirection: {md: "row-reverse"}}}>
-      <Grid item xs={12} md={5} sx={{maxHeight: 818}}>
+    <Grid container sx={{ flexDirection: { md: "row-reverse" } }}>
+      <Grid item xs={12} md={5} sx={{
+        maxHeight: { md: 818 },
+        height: {xs: 595, md: "auto"}
+      }}>
         <IntroImage />
       </Grid>
-      <Grid item xs={12} md={7} sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "right",
-      }}
+      <Grid
+        item
+        xs={12}
+        md={7}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: {xs: "center", md: "right"},
+        }}
       >
-        <Container maxWidth="sm" sx={{mx: 0, pr: {xs: 0}}}>
-          <IntroText py={{xs: 6, md: 10}}/>
+        <Container sx={{ mx: 0, maxWidth: { xs: 735, md: "sm"}}}>
+          <IntroText py={{ xs: 6, md: 10 }} />
         </Container>
       </Grid>
     </Grid>
