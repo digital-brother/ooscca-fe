@@ -63,7 +63,9 @@ export default function Intro() {
           alignItems: "center",
           justifyContent: "right",
       }}>
-        <IntroText sx={{ maxWidth: 600 }} />
+        <Container maxWidth="sm" sx={{mx:0}}>
+          <IntroText/>
+        </Container>
       </Grid>
     </Grid>
   );
