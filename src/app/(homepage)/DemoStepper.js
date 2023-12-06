@@ -22,12 +22,12 @@ const STEPS = [
 
 const StepConnector = styled(MUIStepConnector)({
   [`&.${MUIStepConnectorClasses.horizontal}`]: {
-    top: 26,
+    top: 30,
     left: "calc(-50% + 30px)",
     right: "calc(50% + 30px)",
   },
   [`&.${MUIStepConnectorClasses.vertical}`]: {
-    top: "calc(-100% + 95px)",
+    top: "calc(-100% + 100px)",
     left: "calc(50% - 12px)",
   },
   [`& .${MUIStepConnectorClasses.line}`]: {
@@ -37,13 +37,13 @@ const StepConnector = styled(MUIStepConnector)({
 
 function StepIcon({ icon }) {
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <Box
       sx={{
-        width: { xs: 37, md: 54 },
-        height: { xs: 37, md: 54 },
+        width: { xs: 37, sm: 54 },
+        height: { xs: 37, sm: 54 },
         borderRadius: "50%",
         backgroundColor: "#000000",
         display: "flex",
@@ -52,7 +52,7 @@ function StepIcon({ icon }) {
       }}
     >
       <Typography
-        variant={ mdUp ? "h4" : "h5" }
+        variant={ smUp ? "h4" : "h5" }
         sx={{
           color: "#FFFFFF",
           fontWeight: 600,
@@ -67,16 +67,16 @@ function StepIcon({ icon }) {
 
 export default function DemoStepper({ sx }) {
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <Box {...sx}>
       <MUIStepper
         alternativeLabel
         connector={<StepConnector />}
-        orientation={mdUp ? "horizontal" : "vertical"}
+        orientation={smUp ? "horizontal" : "vertical"}
         sx={{
-          minHeight: { xs: 393, md: 0 },
+          minHeight: { xs: 393, sm: 0 },
           alignItems: "center",
         }}
       >
@@ -85,7 +85,7 @@ export default function DemoStepper({ sx }) {
             <Step key={index}>
               <StepLabel
                 StepIconComponent={StepIcon}
-                sx={{ py: 0, "& .MuiStepLabel-label": { mt: 0.5 } }}
+                sx={{ py: 0, "& .MuiStepLabel-alternativeLabel": { mt: 0.5 } }}
               >
                 <Typography
                   sx={{
