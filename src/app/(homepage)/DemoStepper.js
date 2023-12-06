@@ -85,7 +85,7 @@ export default function DemoStepper({ sx }) {
             <Step key={index}>
               <StepLabel
                 StepIconComponent={StepIcon}
-                sx={{ py: 0, "& .MuiStepLabel-alternativeLabel": { mt: 0.5 } }}
+                sx={{ py: 0, "& .MuiStepLabel-label": { mt: 0.5 } }}
               >
                 <Typography
                   sx={{
