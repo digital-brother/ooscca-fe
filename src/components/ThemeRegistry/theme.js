@@ -24,6 +24,35 @@ const theme = createTheme({
         }),
       },
     },
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          // color: '#FFC50A',
+          borderRadius: 2,
+          borderWidth: 1,
+          // border: '1px solid',
+          // backgroundColor: '#bbdefb',
+          color: "#666",
+          textAlign: "center",
+          fontFamily: "Inter",
+          fontSize: "14.752px",
+          fontStyle: "normal",
+          fontWeight: "500",
+          lineHeight: "normal",
+          selected: {
+            color: "red",
+            backgroundColor: "red",
+          },
+        },
+      }
+    },
+    MuiPickersCalendarHeader: {
+      styleOverrides: {
+        root: {
+          // display: "none",
+        }
+      }
+    }
   },
 });
 

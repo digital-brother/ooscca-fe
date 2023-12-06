@@ -9,19 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@date-io/date-fns": "^2.17.0",
     "@emotion/cache": "latest",
-    "@emotion/react": "latest",
-    "@emotion/styled": "latest",
-    "@mui/icons-material": "latest",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.19",
     "@mui/lab": "^5.0.0-alpha.153",
-    "@mui/material": "latest",
+    "@mui/material": "^5.14.20",
     "@mui/x-date-pickers": "^6.18.3",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "eslint-config-prettier": "^9.0.0",
