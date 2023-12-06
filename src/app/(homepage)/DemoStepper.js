@@ -21,10 +21,14 @@ const STEPS = [
 ];
 
 const StepConnector = styled(MUIStepConnector)({
-  [`&.${MUIStepConnectorClasses.alternativeLabel}`]: {
+  [`&.${MUIStepConnectorClasses.horizontal}`]: {
     top: 26,
     left: "calc(-50% + 30px)",
     right: "calc(50% + 30px)",
+  },
+  [`&.${MUIStepConnectorClasses.vertical}`]: {
+    top: "calc(-100% + 95px)",
+    left: "calc(50% - 12px)",
   },
   [`& .${MUIStepConnectorClasses.line}`]: {
     borderColor: "#6C757D",
@@ -73,6 +77,7 @@ export default function DemoStepper({ sx }) {
         orientation={mdUp ? "horizontal" : "vertical"}
         sx={{
           minHeight: { xs: 393, md: 0 },
+          alignItems: "center",
         }}
       >
         {STEPS.map((label, index) => {
