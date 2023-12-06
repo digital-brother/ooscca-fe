@@ -42,7 +42,22 @@ function BenefitText({benefit, sx}) {
 export default function Benefits() {
   return (
     <Container sx={{py: {xs: 6, md: 10}}}>
-      <Box sx={{display: "flex", flexDirection: "column", gap: 12, maxWidth: {xs: 500, md: "100%"}, mx: "auto"}}>
+      <Box sx={{textAlign: "center"}}>
+        <Typography color="warning.main" sx={{fontWeight: 700}}>
+          Built by parents, for parents
+        </Typography>
+        <Typography variant="h4" sx={{fontWeight: 700, mt: 2}}>
+          Why join OOSCCA for parents
+        </Typography>
+      </Box>
+      <Box sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        maxWidth: {xs: 500, md: "100%"},
+        mx: "auto",
+        mt: {xs: 3, md: 5}
+      }}>
         {BENEFITS.map((benefit, index) => (
           <Grid key={index} container rowSpacing={8} columnSpacing={6} sx={{
             justifyContent: "center",
