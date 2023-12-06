@@ -20,7 +20,7 @@ export default function Demo() {
     <Container sx={{py: {xs: 6, md: 10}}}>
       <DemoHeader sx={{mx: "auto"}}/>
       <DemoStepper sx={{mt: 4, maxWidth: 700, mx: "auto"}}/>
-      <Box component="img" src="/demo.png" sx={{mt: {xs: 7, md: 13}, width: "100%"}}/>
+      <Box component="img" src="/demo.png" sx={{mt: {xs: 2, sm: 10}, width: "100%"}}/>
     </Container>
   )
 }
