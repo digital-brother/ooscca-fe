@@ -11,6 +11,8 @@ import { manrope } from "@/components/ThemeRegistry/theme";
 import MUIStepConnector, {
   stepConnectorClasses as MUIStepConnectorClasses,
 } from "@mui/material/StepConnector";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const STEPS = [
   "Find the activities your child will love",
@@ -29,12 +31,12 @@ const StepConnector = styled(MUIStepConnector)({
   },
 });
 
-function StepIcon({icon}) {
+function StepIcon({ icon }) {
   return (
     <Box
       sx={{
-        width: 54,
-        height: 54,
+        width: { xs: 41, md: 54 },
+        height: { xs: 41, md: 54 },
         borderRadius: "50%",
         backgroundColor: "#000000",
         display: "flex",
@@ -56,16 +58,26 @@ function StepIcon({icon}) {
   );
 }
 
-export default function DemoStepper({sx}) {
+export default function DemoStepper({ sx }) {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
-    <Box {...sx }>
-      <MUIStepper alternativeLabel connector={<StepConnector />}>
+    <Box {...sx}>
+      <MUIStepper
+        alternativeLabel
+        connector={<StepConnector />}
+        orientation={mdUp ? "horizontal" : "vertical"}
+        sx={{
+          minHeight: { sm: 393, md: 0 },
+        }}
+      >
         {STEPS.map((label, index) => {
           return (
             <Step key={index}>
               <StepLabel
                 StepIconComponent={StepIcon}
-                sx={{ "& .MuiStepLabel-label": { mt: 0.5 } }}
+                sx={{ py: 0, "& .MuiStepLabel-label": { mt: 0.5 } }}
               >
                 <Typography
                   sx={{
