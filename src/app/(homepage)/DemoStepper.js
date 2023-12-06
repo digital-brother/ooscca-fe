@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -32,11 +32,14 @@ const StepConnector = styled(MUIStepConnector)({
 });
 
 function StepIcon({ icon }) {
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <Box
       sx={{
-        width: { xs: 41, md: 54 },
-        height: { xs: 41, md: 54 },
+        width: { xs: 37, md: 54 },
+        height: { xs: 37, md: 54 },
         borderRadius: "50%",
         backgroundColor: "#000000",
         display: "flex",
@@ -45,7 +48,7 @@ function StepIcon({ icon }) {
       }}
     >
       <Typography
-        variant="h4"
+        variant={ mdUp ? "h4" : "h5" }
         sx={{
           color: "#FFFFFF",
           fontWeight: 600,
@@ -69,7 +72,7 @@ export default function DemoStepper({ sx }) {
         connector={<StepConnector />}
         orientation={mdUp ? "horizontal" : "vertical"}
         sx={{
-          minHeight: { sm: 393, md: 0 },
+          minHeight: { xs: 393, md: 0 },
         }}
       >
         {STEPS.map((label, index) => {
