@@ -12,18 +12,20 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
 
-function TryItText({ benefit, sx }) {
+function HomepageTabsHeader({ sx }) {
   return (
     <Box {...sx}>
       <Typography variant="body1" color="warning.main" fontWeight="bold">
-        Try it for yourself
+        Effortless tracking of every important detail
       </Typography>
       <Typography mt={2} variant="h4" fontWeight="bold">
-        OOSCCA helps your remember all the important details.
+        Your central hub for key school details
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
-        You shouldn’t have your work cut out finding and matching dates and
-        timings, birthdates or the parents’ name
+        You shouldn’t have your work cut out finding and syncing holidays,
+        birthdays and contacts. Once you're on board, you'll have access to
+        crucial information like school holiday schedules, classmates'
+        birthdays, and parents' contact details at your fingertips.
       </Typography>
     </Box>
   );
@@ -96,10 +98,10 @@ function Tabs(props) {
   );
 }
 
-export default function TryIt() {
+export default function HomepageTabs() {
   return (
     <Container sx={{ py: { xs: 6, md: 10 } }}>
-      <TryItText sx={{ maxWidth: 730, textAlign: "center", mx: "auto" }} />
+      <HomepageTabsHeader sx={{ maxWidth: 730, textAlign: "center", mx: "auto" }} />
       <Tabs sx={{ mt: 5 }} />
     </Container>
   );
