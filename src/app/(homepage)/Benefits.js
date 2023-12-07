@@ -1,6 +1,7 @@
 import {Box, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import {SubHeader} from "@/app/(homepage)/Intro";
 
 const BENEFITS = [
   {
@@ -26,9 +27,9 @@ const BENEFITS = [
 function BenefitText({benefit, sx}) {
   return (
     <Box {...sx}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <SubHeader>
         {benefit.subheader}
-      </Typography>
+      </SubHeader>
       <Typography mt={2} variant="h4" fontWeight="bold">
         {benefit.header}
       </Typography>
@@ -42,9 +43,9 @@ function BenefitText({benefit, sx}) {
 function BenefitsHeader() {
   return (
     <Box sx={{textAlign: "center"}}>
-      <Typography color="warning.main" sx={{fontWeight: 700}}>
+      <SubHeader>
         Built by parents, for parents
-      </Typography>
+      </SubHeader>
       <Typography variant="h4" sx={{fontWeight: 700, mt: 2}}>
         Why join OOSCCA for parents
       </Typography>

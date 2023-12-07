@@ -1,13 +1,14 @@
 import {Box, Button, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import DemoStepper from "@/app/(homepage)/DemoStepper";
+import {SubHeader} from "@/app/(homepage)/Intro";
 
 function DemoHeader({sx}) {
   return (
     <Box sx={{textAlign: "center", maxWidth: 735, ...sx}}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <SubHeader>
         Directly from the calendar
-      </Typography>
+      </SubHeader>
       <Typography mt={2} variant="h3" fontWeight="bold">
         Discover the ease of booking activities without the text and email tennis
       </Typography>

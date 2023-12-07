@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import {Container, Tabs} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import {SubHeader} from "@/app/(homepage)/Intro";
 
 function OOSCalendar() {
   return (
@@ -39,9 +40,9 @@ function SchoolStats() {
 function TryItText({benefit, sx}) {
   return (
     <Box {...sx}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <SubHeader>
         Try it for yourself
-      </Typography>
+      </SubHeader>
       <Typography mt={2} variant="h4" fontWeight="bold">
         OOSCCA helps your remember all the important details.
       </Typography>

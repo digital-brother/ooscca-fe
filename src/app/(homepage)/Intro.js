@@ -6,7 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 
-function SubHeader({children}) {
+export function SubHeader({children}) {
   return (
     <Typography variant="body1" color="warning.main" fontWeight={700}>
       {children}
