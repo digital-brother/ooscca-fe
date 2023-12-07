@@ -8,27 +8,49 @@ const montserrat = Montserrat({subsets: ['latin']});
 const securityInlineStyles = {
     textAlign: "center",
     maxWidth: "638px",
+    '@media (max-width: 900px)': {
+        textAlign: "center",
+        maxWidth: "358px",
+    }
 };
 
-const headerStyles = {
+const inlineStyles = {
     textAlign: "center",
     fontFamily: montserrat.style,
     fontSize: "16px",
     fontStyle: "normal",
     fontWeight: "700",
-    lineHeight: "24px", /* 150% */
+    lineHeight: "24px",
     letterSpacing: "0.16px",
-    color: "#FF8919"
+    color: "#FF8919",
+    '@media (max-width: 900px)': {
+        fontSize: "16px",
+        fontStyle: "normal",
+        fontWeight: 700,
+        lineHeight: "24px",
+        letterSpacing: "0.16px",
+        fontFamily: montserrat.style,
+        color: "#FF8919",
+    },
 }
 
 const titleStyles = {
     fontSize: "48px",
     fontStyle: "normal",
     fontWeight: 700,
-    lineHeight: "56px", /* 116.667% */
+    lineHeight: "56px",
     letterSpacing: "-0.72px",
     color: "#FFF",
     fontFamily: montserrat.style,
+    '@media (max-width: 900px)': {
+        fontSize: "32px",
+        fontStyle: "normal",
+        fontWeight: 700,
+        lineHeight: "44px",
+        letterSpacing: "0.16px",
+        fontFamily: montserrat.style,
+        color: "#FFF",
+    },
 };
 
 const contentStyles = {
@@ -38,12 +60,70 @@ const contentStyles = {
     lineHeight: "32px",
     color: "#FFF",
     fontFamily: manrope.style,
+    '@media (max-width: 900px)': {
+        fontSize: "16px",
+        fontStyle: "normal",
+        fontWeight: 400,
+        lineHeight: "24px",
+        fontFamily: manrope.style,
+        color: "#FFF",
+        marginBottom: "73px"
+    },
 };
+
+const imageSecurity3Styles = {
+    width: "327px",
+    height: "239px",
+    overflow: "hidden",
+    '@media (max-width: 900px)': {
+        width: "175px",
+        height: "127px",
+    }
+
+}
+
+const imageSecurity4Styles = {
+    width: "376px",
+    height: "221px",
+    overflow: "hidden",
+    '@media (max-width: 900px)': {
+        width: "298px",
+        height: "175px",
+        marginRight: "50px",
+        position: "relative",
+        bottom: "55px",
+    }
+
+}
+
+const containerInlineSlytes = {
+    display: "flex",
+    background: "#0C0E0F",
+    py: {
+        xs: 6,
+        md: 10,
+    },
+    px: {
+        sm: 0,
+        md: 0,
+    },
+    mx: {
+        sm: 0,
+        md: 0,
+    },
+    '@media (max-width: 900px)': {
+        maxWidth: "900px",
+        display: "flex",
+        flexDirection: "column-reverse",
+        alignItems: "center",
+        paddingTop: "0px",
+    },
+}
 
 function SecurityHeader({sx}) {
     return (
         <Box sx={{...securityInlineStyles, ...sx}}>
-            <Typography variant="body2" className={montserrat.className} sx={headerStyles}>
+            <Typography variant="body2" className={montserrat.className} sx={inlineStyles}>
                 Your Trust, Our Commitment
             </Typography>
             <Typography mt={2} variant="h3" sx={titleStyles} className={montserrat.className}>
@@ -61,35 +141,14 @@ function SecurityHeader({sx}) {
 export default function Security() {
     return (
         <Container
-            sx={{
-                py: {
-                    xs: 6,
-                    md: 10,
-                    display: "flex",
-                    background: "black",
-                },
-                '@media (max-width: 900px)': {
-                    maxWidth: "900px",
-                    paddingLeft: "0px",
-                    paddingRight: "0px",
-                    marginRight: "0px",
-                    marginLeft: "0px",
-                    display: "flex",
-                    flexDirection: "column-reverse",
-                    alignItems: "center",
-                },
-            }} style={{
+            sx={containerInlineSlytes} style={{
             maxWidth: "1441px",
-            paddingLeft: "0px",
-            paddingRight: "0px",
-            marginRight: "0px",
-            marginLeft: "0px",
             alignItems: "center",
         }}
         >
-            <Box component="img" src="/security3.png" sx={{width: "327px", height: "239px", overflow: "hidden"}}/>
+            <Box component="img" src="/security3.png" sx={imageSecurity3Styles}/>
             <SecurityHeader sx={{mx: "auto"}}/>
-            <Box component="img" src="/security4.png" sx={{width: "376px", height: "221px", overflow: "hidden"}}/>
+            <Box component="img" src="/security4.png" sx={imageSecurity4Styles}/>
         </Container>
     );
 }
