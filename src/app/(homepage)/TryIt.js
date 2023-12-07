@@ -44,7 +44,7 @@ function TryItText({benefit, sx}) {
       <SubHeader>
         Try it for yourself
       </SubHeader>
-      <Typography mt={2} variant="h4" fontWeight="bold">
+      <Typography mt={2} variant="h2">
         OOSCCA helps your remember all the important details.
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">

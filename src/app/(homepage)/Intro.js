@@ -13,7 +13,7 @@ function IntroText(props) {
       <SubHeader>
         OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
       </SubHeader>
-      <Typography mt={3} variant="h3" fontWeight="bold">
+      <Typography mt={3} variant="h1">
         All-in-one platform that brings kids’ activity providers and parents
         under one roof
       </Typography>

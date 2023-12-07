@@ -10,7 +10,7 @@ function DemoHeader({sx}) {
       <SubHeader>
         Directly from the calendar
       </SubHeader>
-      <Typography mt={2} variant="h3" fontWeight="bold">
+      <Typography mt={2} variant="h2">
         Discover the ease of booking activities without the text and email tennis
       </Typography>
     </Box>

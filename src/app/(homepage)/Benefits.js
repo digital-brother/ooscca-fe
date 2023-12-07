@@ -31,7 +31,7 @@ function BenefitText({benefit, sx}) {
       <SubHeader>
         {benefit.subheader}
       </SubHeader>
-      <Typography mt={2} variant="h4" fontWeight="bold">
+      <Typography mt={2} variant="h3">
         {benefit.header}
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
@@ -47,7 +47,7 @@ function BenefitsHeader() {
       <SubHeader>
         Built by parents, for parents
       </SubHeader>
-      <Typography variant="h4" sx={{fontWeight: 700, mt: 2}}>
+      <Typography variant="h2" sx={{mt: 2}}>
         Why join OOSCCA for parents
       </Typography>
     </Box>
