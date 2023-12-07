@@ -5,7 +5,8 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import {Container, Tabs} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {SubHeader} from "@/app/(homepage)/Intro";
+
+import {SubHeader} from "@/app/(homepage)/components";
 
 function OOSCalendar() {
   return (

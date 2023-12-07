@@ -35,3 +35,11 @@ export function FooterLogo() {
     </Box>
   )
 }
+
+export function SubHeader({ children }) {
+  return (
+    <Typography variant="body1" color="warning.main" fontWeight={700}>
+      {children}
+    </Typography>
+  );
+}

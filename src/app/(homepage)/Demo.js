@@ -1,7 +1,8 @@
 import {Box, Button, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import DemoStepper from "@/app/(homepage)/DemoStepper";
-import {SubHeader} from "@/app/(homepage)/Intro";
+
+import {SubHeader} from "@/app/(homepage)/components";
 
 function DemoHeader({sx}) {
   return (

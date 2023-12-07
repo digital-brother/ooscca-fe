@@ -1,7 +1,8 @@
 import {Box, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import {SubHeader} from "@/app/(homepage)/Intro";
+
+import {SubHeader} from "@/app/(homepage)/components";
 
 const BENEFITS = [
   {

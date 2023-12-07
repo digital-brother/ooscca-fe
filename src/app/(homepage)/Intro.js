@@ -5,14 +5,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-
-export function SubHeader({children}) {
-  return (
-    <Typography variant="body1" color="warning.main" fontWeight={700}>
-      {children}
-    </Typography>
-  )
-}
+import { SubHeader } from "@/app/(homepage)/components";
 
 function IntroText(props) {
   return (
