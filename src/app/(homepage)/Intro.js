@@ -5,14 +5,13 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import { SubHeader } from "@/app/(homepage)/components";
 
 function IntroText(props) {
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
-      <SubHeader>
+      <Typography variant="subheading">
         OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
-      </SubHeader>
+      </Typography>
       <Typography mt={3} variant="h1">
         All-in-one platform that brings kids’ activity providers and parents
         under one roof

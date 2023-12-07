@@ -31,6 +31,11 @@ const theme = createTheme({
       fontSize: '2rem', // 32px
       fontWeight: 700,
     },
+    subheading: {
+      fontSize: '1rem', // 16px
+      fontWeight: 700,
+      color: (theme) => theme.palette.warning.main,
+    }
   },
   components: {
     MuiAlert: {

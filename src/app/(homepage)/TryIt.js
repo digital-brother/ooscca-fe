@@ -6,8 +6,6 @@ import Tab from '@mui/material/Tab';
 import {Container, Tabs} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import {SubHeader} from "@/app/(homepage)/components";
-
 function OOSCalendar() {
   return (
     <Box textAlign="center">OOS Calendar</Box>
@@ -41,9 +39,9 @@ function SchoolStats() {
 function TryItText({benefit, sx}) {
   return (
     <Box {...sx}>
-      <SubHeader>
+      <Typography variant="subheading">
         Try it for yourself
-      </SubHeader>
+      </Typography>
       <Typography mt={2} variant="h2">
         OOSCCA helps your remember all the important details.
       </Typography>
