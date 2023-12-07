@@ -6,12 +6,20 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 
+function SubHeader({children}) {
+  return (
+    <Typography variant="body1" color="warning.main" fontWeight={700}>
+      {children}
+    </Typography>
+  )
+}
+
 function IntroText(props) {
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <SubHeader>
         OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
-      </Typography>
+      </SubHeader>
       <Typography mt={3} variant="h3" fontWeight="bold">
         All-in-one platform that brings kids’ activity providers and parents
         under one roof
