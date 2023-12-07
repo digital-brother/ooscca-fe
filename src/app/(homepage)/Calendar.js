@@ -47,7 +47,8 @@ const Calendar = () => {
                 views={['day']}
                 sx={{
                   width: "350px",
-                  height: "550px",
+                  // height: "400px",
+                  minHeight: "400px",
 
                   '.MuiPickersCalendarHeader-root': {
                     justifyContent: "center",
@@ -119,6 +120,9 @@ const Calendar = () => {
                     backgroundColor: "00A8DE",
                     opacity: "100%",
                   },
+                  ".MuiPickersSlideTransition-root": {
+                    height: "300px",
+                  }
                 }}
               />
 
