@@ -33,7 +33,7 @@ const Calendar = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 1,
+    slidesToScroll: 3,
   };
 
   return (
@@ -41,14 +41,89 @@ const Calendar = () => {
       {months.map((month, index) => (
         <div key={index}>
           <Paper style={{ padding: '20px', textAlign: 'center' }}>
-            <Typography variant="h6">{month[0]}</Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 defaultValue={dayjs(month[1])}
                 minDate={dayjs(month[1]).startOf("month")}
                 maxDate={dayjs(month[1]).endOf("month")}
                 dayOfWeekFormatter={(_day, weekday) => `${weekday.format("dd")}`}
+                views={['day']}
+                sx={{
+                  width: "350px",
+                  height: "550px",
+
+                  '.MuiPickersCalendarHeader-root': {
+                    justifyContent: "center",
+                    m: 0,
+                    mb: "15px",
+
+                    color: "var(--light-primary, var(--bg-black-80, #333))",
+                    fontFamily: "Inter",
+                    fontSize: "14.752px",
+                    fontStyle: "normal",
+                    fontWeight: "700",
+                    lineHeight: "normal",
+
+                  },
+                  ".MuiPickersCalendarHeader-labelContainer": {
+                    justifyContent: "center",
+                    m: 0,
+                    color: "var(--light-primary, var(--bg-black-80, #333))",
+                    fontFamily: "Inter, inherit",
+                    fontSize: "14.752px",
+                    fontStyle: "normal",
+                    fontWeight: "700",
+                    lineHeight: "normal",
+                  },
+                  ".MuiDayCalendar-weekDayLabel": {
+                    color: "var(--light-primary, var(--bg-black-80, #333))",
+                    textAlign: "center",
+                    fontFamily: "Inter, inherit",
+                    fontSize: "14.752px",
+                    fontStyle: "normal",
+                    fontWeight: "500",
+                    lineHeight: "normal",
+                    height: "45px",
+                    width: "45px",
+                  },
+                  ".MuiPickersArrowSwitcher-root": { // buttons < > on header
+                    display: "none",
+                  },
+                  ".MuiPickersDay-root": {
+                    color: '#1565c0',
+                    borderRadius: 2,
+                    borderWidth: 1,
+                    color: "#666",
+                    textAlign: "center",
+                    fontFamily: "Inter, inherit",
+                    fontSize: "14.752px",
+                    fontStyle: "normal",
+                    fontWeight: "500",
+                    lineHeight: "normal",
+                    height: "45px",
+                    width: "45px",
+                  },
+                  ".MuiPickersDay-root.Mui-selected": {
+                    borderRadius: "6px",
+                    backgroundColor: "#FFC50A",
+                    flexShrink: 0,
+
+                    color: "var(--primary-black, #0C0E0F)",
+                    textAlign: "center",
+                    fontFamily: "Inter, inherit",
+                    fontSize: "14.752px",
+                    fontStyle: "normal",
+                    fontWeight: "700",
+                    lineHeight: "normal",
+                    height: "45px",
+                    width: "45px",
+                  },
+                  ".MuiPickersDay-root.Mui-selected:hover": {
+                    backgroundColor: "00A8DE",
+                  },
+                }}
               />
+
             </LocalizationProvider>
             {/* Add your calendar content for each month here */}
             {/* You may use other MUI components like DatePicker, Grid, etc. */}
