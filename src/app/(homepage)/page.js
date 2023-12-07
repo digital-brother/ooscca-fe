@@ -13,7 +13,7 @@ export default function Homepage() {
       <Intro/>
       <ClientSchools/>
       <Demo/>
-        <Security/>
+      <Security/>
       <Benefits/>
       <TryIt/>
       <SignUp/>
