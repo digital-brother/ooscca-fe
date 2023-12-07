@@ -13,6 +13,8 @@ export const manrope = Manrope({
   display: 'swap',
 });
 
+const baseTheme = createTheme();
+
 const theme = createTheme({
   palette: {
     mode: 'light',
@@ -34,7 +36,7 @@ const theme = createTheme({
     subheading: {
       fontSize: '1rem', // 16px
       fontWeight: 700,
-      color: (theme) => theme.palette.warning.main,
+      color: baseTheme.palette.warning.main,
     }
   },
   components: {
