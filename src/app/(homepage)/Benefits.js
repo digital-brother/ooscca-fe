@@ -26,10 +26,10 @@ const BENEFITS = [
 function BenefitText({benefit, sx}) {
   return (
     <Box {...sx}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <Typography variant="subheading">
         {benefit.subheader}
       </Typography>
-      <Typography mt={2} variant="h4" fontWeight="bold">
+      <Typography mt={2} variant="h3">
         {benefit.header}
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
@@ -42,10 +42,10 @@ function BenefitText({benefit, sx}) {
 function BenefitsHeader() {
   return (
     <Box sx={{textAlign: "center"}}>
-      <Typography color="warning.main" sx={{fontWeight: 700}}>
+      <Typography variant="subheading">
         Built by parents, for parents
       </Typography>
-      <Typography variant="h4" sx={{fontWeight: 700, mt: 2}}>
+      <Typography variant="h2" sx={{mt: 2}}>
         Why join OOSCCA for parents
       </Typography>
     </Box>
