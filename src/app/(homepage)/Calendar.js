@@ -1,5 +1,3 @@
-// Calendar.js
-
 import React from 'react';
 import Slider from 'react-slick';
 import { Paper, Typography } from '@mui/material';
@@ -13,7 +11,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const Calendar = () => {
-  // Dummy data for three months
   const months = [
     ["January", "2023-01-01",],
     ["February", "2023-02-01",],
@@ -120,13 +117,12 @@ const Calendar = () => {
                   },
                   ".MuiPickersDay-root.Mui-selected:hover": {
                     backgroundColor: "00A8DE",
+                    opacity: "100%",
                   },
                 }}
               />
 
             </LocalizationProvider>
-            {/* Add your calendar content for each month here */}
-            {/* You may use other MUI components like DatePicker, Grid, etc. */}
           </Paper>
         </div>
       ))}
