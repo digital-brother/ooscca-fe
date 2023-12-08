@@ -9,10 +9,10 @@ import Grid from "@mui/material/Grid";
 function IntroText(props) {
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <Typography variant="subheading">
         OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
       </Typography>
-      <Typography mt={3} variant="h3" fontWeight="bold">
+      <Typography mt={3} variant="h1">
         All-in-one platform that brings kids’ activity providers and parents
         under one roof
       </Typography>
