@@ -20,5 +20,6 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
-  }
+  },
+  "packageManager": "yarn@4.0.2"
 }
