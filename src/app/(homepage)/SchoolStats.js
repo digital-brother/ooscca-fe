@@ -36,12 +36,11 @@ function SchoolSelect({ label, schools }) {
         IconComponent={KeyboardArrowDownIcon}
         sx={{
           borderRadius: 1,
-          // bgcolor: "#E9ECEF",
           color: school ? "#0C0E0F" : "#6C757D",
           fontWeight: 700,
           textAlign: "center",
           "& .MuiSelect-icon": {
-            color: school ? "#0C0E0F" : "#6C757D", // Change icon color conditionally
+            color: school ? "#0C0E0F" : "#6C757D",
           },
         }}
       >

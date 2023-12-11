@@ -15,10 +15,10 @@ import SchoolStats from "@/app/(homepage)/SchoolStats";
 function HomepageTabsHeader({ sx }) {
   return (
     <Box {...sx}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <Typography variant="subheading">
         Effortless tracking of every important detail
       </Typography>
-      <Typography mt={2} variant="h4" fontWeight="bold">
+      <Typography mt={2} variant="h2">
         Your central hub for key school details
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
@@ -51,8 +51,6 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   },
   fontWeight: "bold",
   fontSize: 16,
-  // py: 1.5,
-  // height: 60,
 }));
 
 function Tabs(props) {
