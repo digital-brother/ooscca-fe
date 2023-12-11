@@ -18,17 +18,10 @@ function SecurityHeader() {
             <Typography mt={2} mb={3} variant="securityTitle" sx={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: {md: 48, xs: 32},
-                lineHeight: {md: "56px", xs: "44px"},
-                letterSpacing: {md: "-0.72px", xs: "0.16px"},
-
             }}>
                 Uncompromised Security
             </Typography>
-            <Typography variant="securityBody" sx={{
-                fontSize: {md: 24, xs: 16},
-                lineHeight: {md: "32px", xs: "24px"},
-            }}>
+            <Typography variant="securityBody">
                 At OOSCCA, we understand that security isn't just a feature; it's a foundation. In a digital world
                 where your family's safety and privacy are paramount, we are steadfast in our commitment to
                 protecting your information with the utmost rigor.
@@ -62,7 +55,7 @@ export default function Security() {
                 flexDirection: {md: "initial", xs: "column-reverse"},
             }}
         >
-            <Box component="img" src="/security3xs.png" sx={{
+            <Box component="img" src="/security3.png" sx={{
                 width: {md: "327px", xs: "175px"},
                 height: {md: "264px", xs: "127px"},
                 objectFit: "cover",
@@ -70,12 +63,12 @@ export default function Security() {
             }
             }/>
             <SecurityHeader/>
-            <Box component="img" src="/security4xs.png" sx={{
+            <Box component="img" src="/security4.png" sx={{
                 width: {md: "376px", xs: "298px"},
                 height: {md: "241px", xs: "175px"},
                 mr: {
-                    md: "0px",
-                    xs: "50px",
+                    md: 0,
+                    xs: 5,
                 },
                 position: {xs: "relative"},
                 bottom: {md: "0px", xs: "103px"},
