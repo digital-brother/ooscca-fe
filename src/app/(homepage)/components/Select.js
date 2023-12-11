@@ -1,8 +1,8 @@
 import React from "react";
-import {FormControl, MenuItem, Select} from "@mui/material";
+import {FormControl, MenuItem, Select as MUISelect} from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-export function SchoolSelect({label, items}) {
+export function Select({label, items, sx}) {
   const [item, setItem] = React.useState("");
 
   const handleChange = (event) => {
@@ -10,8 +10,8 @@ export function SchoolSelect({label, items}) {
   };
 
   return (
-    <FormControl sx={{minWidth: 120}} fullWidth>
-      <Select
+    <FormControl sx={{minWidth: 120, ...sx}} fullWidth>
+      <MUISelect
         value={item}
         onChange={handleChange}
         displayEmpty
@@ -35,7 +35,7 @@ export function SchoolSelect({label, items}) {
             {item.name}
           </MenuItem>
         ))}
-      </Select>
+      </MUISelect>
     </FormControl>
   );
 }

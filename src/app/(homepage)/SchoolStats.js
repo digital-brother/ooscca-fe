@@ -8,7 +8,7 @@ import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {SchoolSelect} from "@/app/(homepage)/components/Select";
+import {Select} from "@/app/(homepage)/components/Select";
 
 const SCHOOLS = [
   { id: 1, name: "Lyceum" },
@@ -63,10 +63,10 @@ function SchoolPicker() {
   return (
     <Grid container columnSpacing={4} rowSpacing={3}>
       <Grid item xs={12} sm={6} sx={{ order: { xs: 1, sm: 3 } }}>
-        <SchoolSelect label="Select a school" items={SCHOOLS} />
+        <Select label="Select a school" items={SCHOOLS} />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ order: { xs: 2, sm: 4 } }}>
-        <SchoolSelect label="Select another school" items={SCHOOLS} />
+        <Select label="Select another school" items={SCHOOLS} />
       </Grid>
       <Grid
         item
