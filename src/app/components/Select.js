@@ -1,23 +1,24 @@
 import React from "react";
-import {FormControl, MenuItem, Select as MUISelect} from "@mui/material";
+import { FormControl, MenuItem, Select as MUISelect } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-export function Select({label, items, sx}) {
+export function Select({ label, items, sx, onSelect }) {
   const [item, setItem] = React.useState("");
 
   const handleChange = (event) => {
     setItem(event.target.value);
+    if (onSelect) onSelect();
   };
 
   return (
-    <FormControl sx={{minWidth: 120, ...sx}} fullWidth>
+    <FormControl sx={{ minWidth: 120, ...sx }} fullWidth>
       <MUISelect
         value={item}
         onChange={handleChange}
         displayEmpty
         variant="filled"
         disableUnderline
-        inputProps={{sx: {py: 2}}}
+        inputProps={{ sx: { py: 2 } }}
         IconComponent={KeyboardArrowDownIcon}
         sx={{
           borderRadius: 1,

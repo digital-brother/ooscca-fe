@@ -41,8 +41,8 @@ function ActivitiesFirst() {
           label="Pick activity from list"
           items={ACTIVITIES_TYPES}
           sx={{mt: 4}}
+          onSelect={scrollNext}
         />
-        <Button onClick={scrollNext}>Next</Button>
       </Box>
     </ActivitiesBox>
   );
@@ -53,6 +53,7 @@ export default function Activities() {
     <Box sx={{m: 10}}>
       <Carousel>
         <ActivitiesFirst/>
+        <ActivitiesBox>123</ActivitiesBox>
       </Carousel>
     </Box>
   );
