@@ -1,13 +1,13 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Select } from "@/app/components/Select";
 import Carousel, {
   EmblaApiContext,
 } from "@/app/activities/components/Carousel";
 import { useContext } from "react";
+import { TextField } from "@mui/material";
 
 const ACTIVITIES_TYPES = [
   { id: 1, name: "Football" },
@@ -15,15 +15,32 @@ const ACTIVITIES_TYPES = [
   { id: 2, name: "Swimming" },
 ];
 
-const ActivitiesBox = styled(Box)({
-  border: "1px solid #6C757D",
-  borderRadius: 16,
-  width: 541,
-  height: 597,
-});
+function ActivitiesBox({ children, sx }) {
+  return (
+    <Box
+      sx={{
+        border: "1px solid #6C757D",
+        borderRadius: 4,
+        width: 541,
+        height: 597,
+        padding: 4,
+        ...sx,
+      }}
+    >
+      { children }
+    </Box>
+  );
+}
 
 function ActivitiesSecond() {
-  return <ActivitiesBox>2</ActivitiesBox>;
+  return (
+    <ActivitiesBox>
+      <Box>
+        <Typography>Provider</Typography>
+        <TextField />
+      </Box>
+    </ActivitiesBox>
+  );
 }
 
 function ActivitiesFirst() {
@@ -58,7 +75,7 @@ export default function Activities() {
     <Box sx={{ m: 10 }}>
       <Carousel>
         <ActivitiesFirst />
-        <ActivitiesSectond />
+        <ActivitiesSecond />
       </Carousel>
     </Box>
   );
