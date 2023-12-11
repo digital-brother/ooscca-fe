@@ -1,17 +1,18 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import {styled} from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import {Select} from "@/app/components/Select";
-import Carousel, {EmblaApiContext} from "@/app/activities/components/Carousel";
-import {useContext} from "react";
-import {Button} from "@mui/material";
+import { Select } from "@/app/components/Select";
+import Carousel, {
+  EmblaApiContext,
+} from "@/app/activities/components/Carousel";
+import { useContext } from "react";
 
 const ACTIVITIES_TYPES = [
-  {id: 1, name: "Football"},
-  {id: 2, name: "Basketball"},
-  {id: 2, name: "Swimming"},
+  { id: 1, name: "Football" },
+  { id: 2, name: "Basketball" },
+  { id: 2, name: "Swimming" },
 ];
 
 const ActivitiesBox = styled(Box)({
@@ -21,8 +22,12 @@ const ActivitiesBox = styled(Box)({
   height: 597,
 });
 
+function ActivitiesSecond() {
+  return <ActivitiesBox>2</ActivitiesBox>;
+}
+
 function ActivitiesFirst() {
-  const {scrollNext} = useContext(EmblaApiContext)
+  const { scrollNext } = useContext(EmblaApiContext);
 
   return (
     <ActivitiesBox
@@ -33,14 +38,14 @@ function ActivitiesFirst() {
         textAlign: "center",
       }}
     >
-      <Box sx={{maxWidth: 341}}>
+      <Box sx={{ maxWidth: 341 }}>
         <Typography variant="h5">
           Create your first activity and let’s get going
         </Typography>
         <Select
           label="Pick activity from list"
           items={ACTIVITIES_TYPES}
-          sx={{mt: 4}}
+          sx={{ mt: 4 }}
           onSelect={scrollNext}
         />
       </Box>
@@ -50,10 +55,10 @@ function ActivitiesFirst() {
 
 export default function Activities() {
   return (
-    <Box sx={{m: 10}}>
+    <Box sx={{ m: 10 }}>
       <Carousel>
-        <ActivitiesFirst/>
-        <ActivitiesBox>123</ActivitiesBox>
+        <ActivitiesFirst />
+        <ActivitiesSectond />
       </Carousel>
     </Box>
   );
