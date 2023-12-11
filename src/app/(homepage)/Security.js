@@ -1,9 +1,4 @@
 import {Box, Container, Typography} from "@mui/material";
-import {Manrope, Montserrat} from "@next/font/google";
-
-
-const manrope = Manrope({subsets: ['latin']});
-const montserrat = Montserrat({subsets: ['latin']});
 
 function SecurityHeader() {
     return (
@@ -11,48 +6,29 @@ function SecurityHeader() {
             textAlign: "center",
             mx: {
                 xs: "auto",
-                md: "auto",
             },
             maxWidth: {
-                xs: "358px",
-                md: "638px",
+                xs: 358,
+                md: 638,
             }
         }}>
-            <Typography variant="body2" className={montserrat.className} sx={{
-                textAlign: "center",
-                fontFamily: montserrat.style,
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "24px",
-                letterSpacing: "0.16px",
-                color: "#FF8919",
-            }}>
+            <Typography variant="securityHeading">
                 Your Trust, Our Commitment
             </Typography>
-            <Typography mt={2} variant="h3" sx={{
-                color: "#FFF",
-                fontFamily: montserrat.style,
-                fontStyle: "normal",
-                fontWeight: 700,
-                fontSize: {md: "48px", xs: "32px"},
+            <Typography mt={2} mb={3} variant="securityTitle" sx={{
+                display: "flex",
+                justifyContent: "center",
+                fontSize: {md: 48, xs: 32},
                 lineHeight: {md: "56px", xs: "44px"},
                 letterSpacing: {md: "-0.72px", xs: "0.16px"},
 
-            }} className={montserrat.className}>
+            }}>
                 Uncompromised Security
             </Typography>
-            <Typography mt={3} variant="body1" sx={{
-                color: "#FFF",
-                fontFamily: manrope.style,
-                fontStyle: "normal",
-                fontWeight: 400,
-                fontSize: {md: "24px", xs: "16px"},
+            <Typography variant="securityBody" sx={{
+                fontSize: {md: 24, xs: 16},
                 lineHeight: {md: "32px", xs: "24px"},
-                mb: {
-                    xs: "72px"
-                }
-            }} className={manrope.className}>
+            }}>
                 At OOSCCA, we understand that security isn't just a feature; it's a foundation. In a digital world
                 where your family's safety and privacy are paramount, we are steadfast in our commitment to
                 protecting your information with the utmost rigor.
@@ -82,30 +58,27 @@ export default function Security() {
                     lg: "auto",
                     xl: "auto",
                 },
-                maxWidth: {md: "1441px", xs: "900px"},
+                maxWidth: {md: 1441, xs: 900},
                 flexDirection: {md: "initial", xs: "column-reverse"},
             }}
         >
-            <Box component="img" sx={{
+            <Box component="img" src="/security3xs.png" sx={{
                 width: {md: "327px", xs: "175px"},
                 height: {md: "264px", xs: "127px"},
-                backgroundImage: {md: `url('/security3.png')`, xs: `url('/security3xs.png')`},
-                backgroundSize: "cover",
-
+                objectFit: "cover",
+                mt: {md: 0, xs: 9}
             }
             }/>
             <SecurityHeader/>
-            <Box component="img" sx={{
+            <Box component="img" src="/security4xs.png" sx={{
                 width: {md: "376px", xs: "298px"},
                 height: {md: "241px", xs: "175px"},
-                marginRight: {
+                mr: {
                     md: "0px",
                     xs: "50px",
                 },
                 position: {xs: "relative"},
                 bottom: {md: "0px", xs: "103px"},
-                backgroundImage: {md: `url('/security4.png')`, xs: `url('/security4xs.png')`},
-                backgroundSize: "cover",
 
             }}/>
         </Container>
