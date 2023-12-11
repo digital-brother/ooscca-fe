@@ -3,7 +3,6 @@ import Slider from 'react-slick';
 import { Paper, Typography, Box } from '@mui/material';
 import dayjs from 'dayjs';
 
-import MultiCalendar from "@/app/(homepage)/MultiCalendar";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -44,54 +43,50 @@ const Calendar = () => {
     arrows: true,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
-    initialSlide: 1,
-    lazyLoad: true,
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: {
-          arrows: true,
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 900,
-        settings: {
-          arrows: true,
-          slidesToShow: 1
-        }
-      },
-    ]
   };
 
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
-    console.log(this);
-    console.log(props);
-
+    function nextOnClick() {
+      if (sliceValues[1] < months.length) {
+        setSliceValues(sliceValues => [sliceValues[0]+1, sliceValues[1]+1])
+        setRenderedMonths(renderedMonths => [
+          ...renderedMonths.slice(1),
+          (<CustomDataCalendar date={months[sliceValues[1]]} />)
+        ]);
+      }
+    }
     return (
       <Box
         className={className}
         style={{ ...style, display: "block", background: "black" }}
-        onClick={onClick}
+        onClick={nextOnClick}
       />
     );
   }
 
   function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
+    function prevOnClick() {
+      if (sliceValues[0] > 0) {
+        setSliceValues(sliceValues => [sliceValues[0]-1, sliceValues[1]-1])
+        setRenderedMonths(renderedMonths => [
+          (<CustomDataCalendar date={months[sliceValues[0]-1]} />),
+          ...renderedMonths.slice(0, -1),
+        ]);
+      }
+    }
     return (
       <Box
         className={className}
         style={{ ...style, display: "block", background: "black" }}
-        onClick={onClick}
+        onClick={prevOnClick}
       />
     );
   }
 
   function CustomDataCalendar({date}) {
-    return (
-      <DateCalendar
+    return (<DateCalendar
       onChange={(newValue) => setValue(newValue)}
       value={dayjs(date)}
       minDate={dayjs(date).startOf("month")}
@@ -101,12 +96,8 @@ const Calendar = () => {
       disableHighlightToday
       disabled
       sx={{
-        width: "330px",
+        width: "350px",
         minHeight: "400px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "59px",
 
         '.MuiPickersCalendarHeader-root': {
           justifyContent: "center",
@@ -185,13 +176,14 @@ const Calendar = () => {
           opacity: "100%",
         }
       }}
-    />
-    );
+    />);
   };
 
-  const renderedMonths = months.map((month, index) => (
-    <CustomDataCalendar date={month} />
-  ));
+  const [renderedMonths, setRenderedMonths] = useState(
+    months.slice(sliceValues[0], sliceValues[1]).map((month, index) => (
+      <CustomDataCalendar date={month} />
+    ))
+  );
 
   return (
     <Slider {...settings}>
