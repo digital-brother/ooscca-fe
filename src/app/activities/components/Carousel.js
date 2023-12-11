@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { createContext, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Box from "@mui/material/Box";
 
@@ -17,7 +17,9 @@ const emblaSlideSx = {
   minWidth: 0,
 };
 
-export default function Carousel() {
+export const EmblaApiContext = createContext(undefined);
+
+export default function Carousel({ children }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     watchDrag: false,
@@ -36,17 +38,15 @@ export default function Carousel() {
       <Box sx={emblaSx}>
         <div className="embla__viewport" ref={emblaRef}>
           <Box sx={emblaContainerSx}>
-            <Box sx={emblaSlideSx}>Slide 1</Box>
-            <Box sx={emblaSlideSx}>Slide 2</Box>
-            <Box sx={emblaSlideSx}>Slide 3</Box>
+            <EmblaApiContext.Provider value={{ scrollPrev, scrollNext }}>
+              {React.Children.map(children, (child, index) => (
+                <Box key={index} sx={emblaSlideSx}>
+                  {child}
+                </Box>
+              ))}
+            </EmblaApiContext.Provider>
           </Box>
         </div>
-        <button className="embla__prev" onClick={scrollPrev}>
-          Prev
-        </button>
-        <button className="embla__next" onClick={scrollNext}>
-          Next
-        </button>
       </Box>
     </Box>
   );
