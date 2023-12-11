@@ -8,7 +8,7 @@ import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {Select} from "@/app/(homepage)/components/Select";
+import {Select} from "@/app/components/Select";
 
 const SCHOOLS = [
   { id: 1, name: "Lyceum" },

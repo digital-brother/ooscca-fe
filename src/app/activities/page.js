@@ -3,7 +3,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import {Select} from "@/app/(homepage)/components/Select";
+import {Select} from "@/app/components/Select";
 
 const ACTIVITIES_TYPES = [
   {id: 1, name: "Football"},
