@@ -39,10 +39,10 @@ function SchoolStats() {
 function TryItText({benefit, sx}) {
   return (
     <Box {...sx}>
-      <Typography variant="body1" color="warning.main" fontWeight="bold">
+      <Typography variant="subheading">
         Try it for yourself
       </Typography>
-      <Typography mt={2} variant="h4" fontWeight="bold">
+      <Typography mt={2} variant="h2">
         OOSCCA helps your remember all the important details.
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
