@@ -21,5 +21,9 @@
     "react": "latest",
     "react-dom": "latest"
   },
+  "devDependencies": {
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "3.1.0"
+  },
   "packageManager": "yarn@4.0.2"
 }
