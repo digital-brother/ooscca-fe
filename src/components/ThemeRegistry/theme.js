@@ -48,7 +48,6 @@ const theme = createTheme({
             fontFamily: manrope.style.fontFamily,
             color: "#FF8919",
             fontStyle: "normal",
-            fontSize: 16,
             fontWeight: 700,
             letterSpacing: "0.16px",
         },
@@ -57,17 +56,13 @@ const theme = createTheme({
             color: "#FFF",
             fontStyle: "normal",
             fontWeight: 700,
-            fontSize: {md: 48, xs: 32},
-            lineHeight: {md: "56px", xs: "44px"},
-            letterSpacing: {md: "-0.72px", xs: "0.16px"},
+
         },
         securityBody: {
             fontFamily: manrope.style.fontFamily,
             color: "#FFF",
             fontStyle: "normal",
             fontWeight: 400,
-            fontSize: {md: 24, xs: 16},
-            lineHeight: {md: "32px"},
         },
     },
     components: {
