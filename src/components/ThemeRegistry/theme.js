@@ -13,12 +13,35 @@ export const manrope = Manrope({
   display: 'swap',
 });
 
+const baseTheme = createTheme();
+
 const theme = createTheme({
   palette: {
     mode: 'light',
   },
   typography: {
     fontFamily: libreFranklin.style.fontFamily,
+    h1: {
+      fontSize: '3rem', // 48px
+      fontWeight: 700,
+    },
+    h2: {
+      fontSize: '2.5rem', // 40px
+      fontWeight: 700,
+    },
+    h3: {
+      fontSize: '2rem', // 32px
+      fontWeight: 700,
+    },
+    h5: {
+      fontSize: '1.5rem', //24
+      fontWeight: 700,
+    },
+    subheading: {
+      fontSize: '1rem', // 16px
+      fontWeight: 700,
+      color: baseTheme.palette.warning.main,
+    }
   },
   components: {
     MuiAlert: {

@@ -15,7 +15,7 @@ function SignUpForm() {
 
   return (
     <Box sx={{flex: 1, textAlign: {xs: "center", md: "left"}}}>
-      <Typography variant="h4" fontWeight="bold">Easy to get started. And it’s free.</Typography>
+      <Typography variant="h2">Easy to get started. And it’s free.</Typography>
       <Box sx={{mt: 3, mb: 1}}>
         <TextField label="Email address" variant="outlined" size="small" sx={{mr: 2, mb: 1}}/>
         <Button variant="contained" color="warning" size="large">Sign up</Button>

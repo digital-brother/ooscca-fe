@@ -3,58 +3,18 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import React from "react";
-import { FormControl, MenuItem, Select } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SquareRoundedIcon from "@mui/icons-material/SquareRounded";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {Select} from "@/app/components/Select";
 
 const SCHOOLS = [
   { id: 1, name: "Lyceum" },
   { id: 2, name: "Gymnasium" },
   { id: 3, name: "College" },
 ];
-
-function SchoolSelect({ label, schools }) {
-  const [school, setSchool] = React.useState("");
-
-  const handleChange = (event) => {
-    setSchool(event.target.value);
-  };
-
-  return (
-    <FormControl sx={{ minWidth: 120 }} fullWidth>
-      <Select
-        value={school}
-        onChange={handleChange}
-        displayEmpty
-        variant="filled"
-        disableUnderline
-        inputProps={{ sx: { py: 2 } }}
-        IconComponent={KeyboardArrowDownIcon}
-        sx={{
-          borderRadius: 1,
-          // bgcolor: "#E9ECEF",
-          color: school ? "#0C0E0F" : "#6C757D",
-          fontWeight: 700,
-          textAlign: "center",
-          "& .MuiSelect-icon": {
-            color: school ? "#0C0E0F" : "#6C757D", // Change icon color conditionally
-          },
-        }}
-      >
-        <MenuItem value="">{label}</MenuItem>
-        {schools.map((school, index) => (
-          <MenuItem key={index} value={school.id}>
-            {school.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-}
 
 function SchoolStatsTable(props) {
   const indicators = [
@@ -103,10 +63,10 @@ function SchoolPicker() {
   return (
     <Grid container columnSpacing={4} rowSpacing={3}>
       <Grid item xs={12} sm={6} sx={{ order: { xs: 1, sm: 3 } }}>
-        <SchoolSelect label="Select a school" schools={SCHOOLS} />
+        <Select label="Select a school" items={SCHOOLS} />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ order: { xs: 2, sm: 4 } }}>
-        <SchoolSelect label="Select another school" schools={SCHOOLS} />
+        <Select label="Select another school" items={SCHOOLS} />
       </Grid>
       <Grid
         item
