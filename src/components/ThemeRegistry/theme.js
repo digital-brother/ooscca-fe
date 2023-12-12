@@ -56,6 +56,14 @@ const theme = createTheme({
             color: "#FFF",
             fontStyle: "normal",
             fontWeight: 700,
+            [baseTheme.breakpoints.up('xs')]: {
+                fontSize: 32,
+                letterSpacing: 0.16,
+            },
+            [baseTheme.breakpoints.up('md')]: {
+                fontSize: 48,
+                letterSpacing: -0.72,
+            },
 
         },
         securityBody: {
@@ -63,6 +71,9 @@ const theme = createTheme({
             color: "#FFF",
             fontStyle: "normal",
             fontWeight: 400,
+            [baseTheme.breakpoints.up('md')]: {
+                fontSize: 24,
+            },
         },
     },
     components: {

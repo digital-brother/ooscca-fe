@@ -18,17 +18,11 @@ function SecurityHeader() {
             <Typography mt={2} mb={3} variant="securityTitle" sx={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: {md: 48, xs: 32},
-                lineHeight: {md: "56px", xs: "44px"},
-                letterSpacing: {md: -0.72, xs: 0.16},
 
             }}>
                 Uncompromised Security
             </Typography>
-            <Typography variant="securityBody" sx={{
-                fontSize: {md: 24},
-                lineHeight: {md: "32px"},
-            }}>
+            <Typography variant="securityBody">
                 At OOSCCA, we understand that security isn't just a feature; it's a foundation. In a digital world
                 where your family's safety and privacy are paramount, we are steadfast in our commitment to
                 protecting your information with the utmost rigor.
@@ -39,7 +33,7 @@ function SecurityHeader() {
 
 export default function Security() {
     return (
-        <Container
+        <Box
             sx={{
                 display: "flex",
                 background: "#0C0E0F",
@@ -47,9 +41,6 @@ export default function Security() {
                 py: {
                     xs: 6,
                     md: 10,
-                },
-                px: {
-                    xs: 0,
                 },
                 mx: {
                     xs: 0,
@@ -78,6 +69,6 @@ export default function Security() {
                 bottom: {md: 0, xs: 103},
 
             }}/>
-        </Container>
+        </Box>
     );
 }
