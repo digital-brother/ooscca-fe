@@ -10,6 +10,8 @@ export default function BasicDateCalendar() {
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <DateCalendar
         views={["day"]}
+        disableHighlightToday
+        disabled
         sx={{
           ".MuiPickersArrowSwitcher-root": {
             display: "none",
@@ -27,7 +29,7 @@ export default function BasicDateCalendar() {
             color: "#333333",
             fontFamily: manrope.style.fontFamily,
           },
-          ".MuiPickersDay-root": {
+          ".MuiPickersDay-root.Mui-disabled": {
             fontWeight: 600,
             fontSize: 15,
             color: "#666666",
