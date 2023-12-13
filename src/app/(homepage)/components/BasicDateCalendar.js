@@ -3,10 +3,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import {manrope} from "@/components/ThemeRegistry/theme";
+import 'dayjs/locale/en-gb';
 
 export default function BasicDateCalendar() {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <DateCalendar
         views={["day"]}
         sx={{
