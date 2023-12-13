@@ -12,7 +12,8 @@ export default function DateCalendar({ displayDate }) {
         views={["day"]}
         disableHighlightToday
         disabled
-        referenceDate={displayDate}
+        value={displayDate}
+        dayOfWeekFormatter={(_, date) => date.format("dd")}
         sx={{
           ".MuiPickersArrowSwitcher-root": {
             display: "none",
@@ -35,6 +36,9 @@ export default function DateCalendar({ displayDate }) {
             fontSize: 15,
             color: "#666666",
             fontFamily: manrope.style.fontFamily,
+          },
+          ".MuiPickersDay-root.Mui-selected": {
+            bgcolor: "transparent",
           },
         }}
       />
