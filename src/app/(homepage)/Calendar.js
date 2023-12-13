@@ -1,112 +1,47 @@
-import React, { useState } from 'react';
-import Slider from 'react-slick';
+import React, { useState, useRef } from 'react';
 import { Paper, Typography, Box } from '@mui/material';
 import dayjs from 'dayjs';
-
-import MultiCalendar from "@/app/(homepage)/MultiCalendar";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import { LeftArrow, RightArrow } from '@/app/(homepage)/components/Arrows';
 
 const Calendar = () => {
   // from backend
-  const months = [
+  const firstSchoolHolidays = [
     "2023-01-01",
     "2023-02-12",
     "2023-03-01",
     "2023-04-12",
     "2023-05-23",
-    "2023-06-01",
-    "2023-07-25",
-    "2023-08-25",
-    "2023-09-01",
-    "2023-10-01",
-    "2023-11-01",
-    "2023-12-01",
-    "2024-01-01",
-    "2024-02-01",
-    "2024-03-01",
-    "2024-04-01",
-    "2024-05-01",
-    "2024-06-01",
-    "2024-07-01",
   ];
-  const [sliceValues, setSliceValues] = useState([0, 4]);
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: true,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    initialSlide: 1,
-    lazyLoad: true,
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: {
-          arrows: true,
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 900,
-        settings: {
-          arrows: true,
-          slidesToShow: 1
-        }
-      },
-    ]
-  };
+  // from backend
+  const secondSchoolHolidays = [
+    "2023-01-03",
+    "2023-02-11",
+    "2023-03-01",
+    "2023-04-15",
+    "2023-05-23",
+  ];
 
-  function SampleNextArrow(props) {
-    const { className, style, onClick } = props;
-    console.log(this);
-    console.log(props);
+  const calendarsRefs = [useRef(null), useRef(null), useRef(null),]
 
-    return (
-      <Box
-        className={className}
-        style={{ ...style, display: "block", background: "black" }}
-        onClick={onClick}
-      />
-    );
-  }
-
-  function SamplePrevArrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <Box
-        className={className}
-        style={{ ...style, display: "block", background: "black" }}
-        onClick={onClick}
-      />
-    );
-  }
-
-  function CustomDataCalendar({date}) {
-    return (
-      <DateCalendar
-      onChange={(newValue) => setValue(newValue)}
-      value={dayjs(date)}
-      minDate={dayjs(date).startOf("month")}
-      maxDate={dayjs(date).endOf("month")}
+  const CustomDataCalendar = (props) =>
+    <DateCalendar {...props}
+      ref={props?.calendarRef}
+      value={dayjs(props?.date)}
       dayOfWeekFormatter={(_day, weekday) => `${weekday.format("dd")}`}
       views={['day']}
       disableHighlightToday
-      disabled
+      // disabled
       sx={{
         width: "330px",
         minHeight: "400px",
-        display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "59px",
 
         '.MuiPickersCalendarHeader-root': {
           justifyContent: "center",
@@ -183,29 +118,51 @@ const Calendar = () => {
         ".MuiPickersSlideTransition-root": {
           height: "300px",
           opacity: "100%",
-        }
+        },
+
+        ...props.sx,
       }}
     />
-    );
-  };
 
-  const renderedMonths = months.map((month, index) => (
-    <CustomDataCalendar date={month} />
-  ));
+  const CalendarBlock = [
+    <Box
+      sx={{
+        ml: -14,
+        width: "120%",
+        display: "flex",
+        flexDirection: "row",
+        // alignContent: "center",
+        // justifyContent: "center",
+        gap: "25px",
+      }}>
+      <Box sx={{ pt: 25 }} onClick={ PreviousButtonClick } ><LeftArrow /></Box>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CustomDataCalendar calendarRef={calendarsRefs[0]} key={1} date={"2023-01-01"} sx={{
+          display: { xs: "none", md: "flex" }
+        }}/>
+        <CustomDataCalendar key={2} calendarRef={calendarsRefs[1]} date="2023-02-01"/>
+        <CustomDataCalendar key={3} calendarRef={calendarsRefs[2]} date="2023-03-01" sx={{
+          display: { xs: "none", lg: "flex" }
+        }}/>
+      </LocalizationProvider>
+      <Box sx={{ pt: 25 }} onClick={ NextButtonClick } ><RightArrow /></Box>
+    </Box>
+  ];
 
-  return (
-    <Slider {...settings}>
-      {renderedMonths.map((month, index) => (
-        <Box key={index}>
-          <Paper style={{ padding: '20px', textAlign: 'center' }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              {month}
-            </LocalizationProvider>
-          </Paper>
-        </Box>
-      ))}
-    </Slider>
-  );
+
+  function NextButtonClick(event) {
+    calendarsRefs.map((calendarRef) => {
+      calendarRef.current.getElementsByClassName("MuiIconButton-edgeStart")[0].click()
+    });
+  }
+
+  function PreviousButtonClick(event) {
+    calendarsRefs.map((calendarRef) => {
+      calendarRef.current.getElementsByClassName("MuiIconButton-edgeEnd")[0].click()
+    });
+  }
+
+  return CalendarBlock
 };
 
 export default Calendar;

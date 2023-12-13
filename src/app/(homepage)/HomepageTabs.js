@@ -11,6 +11,7 @@ import Tab from "@mui/material/Tab";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
+import Calendar from "@/app/(homepage)/Calendar";
 
 function HomepageTabsHeader({ sx }) {
   return (
@@ -87,7 +88,7 @@ function Tabs(props) {
             <SchoolStats />
           </TabPanel>
           <TabPanel value="classBirthdayCalendar">
-            Class birthday calendar
+            <Calendar />
           </TabPanel>
           <TabPanel value="whoseWho">Whose who</TabPanel>
         </Box>
