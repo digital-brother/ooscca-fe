@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { LeftArrow, RightArrow } from '@/app/(homepage)/components/Arrows';
 
 const Calendar = () => {
