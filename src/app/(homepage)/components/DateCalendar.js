@@ -19,19 +19,20 @@ function PickersDayHighlighted({ schoolHolidays, ...props }) {
     !props.outsideCurrentMonth &&
     firstSchoolHolidays.some((date) => date.isSame(props.day, "day"));
 
-    const isSecondSchoolHoliday =
+  const isSecondSchoolHoliday =
     !props.outsideCurrentMonth &&
     secondSchoolHolidays.some((date) => date.isSame(props.day, "day"));
 
-    if (isFirstSchoolHoliday || isSecondSchoolHoliday) {
-      return (
-        <Box sx={{border: 1}}>
-          <PickersDay {...props} />
-        </Box>
-      )
-    }
+  let className = "";
+  if (isFirstSchoolHoliday && isSecondSchoolHoliday) {
+    className = "isBothSchoolsHoliday";
+  } else if (isFirstSchoolHoliday) {
+    className = "isFirstSchoolHoliday";
+  } else if (isSecondSchoolHoliday) {
+    className = "isSecondSchoolHoliday";
+  }
 
-  return <PickersDay {...props} />;
+  return <PickersDay className={className} {...props} />;
 }
 
 export default function DateCalendar({ displayDate, schoolHolidays }) {
@@ -76,6 +77,23 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
           },
           ".MuiPickersDay-root.Mui-selected": {
             bgcolor: "transparent",
+            color: "#666666",
+          },
+
+          ".MuiPickersDay-root": {
+            borderRadius: 1.5,
+          },
+          ".MuiPickersDay-root.Mui-disabled.isFirstSchoolHoliday": {
+            bgcolor: "#FFC50A",
+            color: "#FFFFFF",
+          },
+          ".MuiPickersDay-root.Mui-disabled.isSecondSchoolHoliday": {
+            bgcolor: "#00A8DE",
+            color: "#FFFFFF",
+          },
+          ".MuiPickersDay-root.Mui-disabled.isBothSchoolsHoliday": {
+            background: "linear-gradient(to bottom right, #FFC50A 50%, #00A8DE 50%)",
+            color: "#FFFFFF",
           },
         }}
       />
