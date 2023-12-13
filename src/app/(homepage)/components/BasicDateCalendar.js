@@ -5,13 +5,14 @@ import * as React from "react";
 import {manrope} from "@/components/ThemeRegistry/theme";
 import 'dayjs/locale/en-gb';
 
-export default function BasicDateCalendar() {
+export default function BasicDateCalendar({referenceDate}) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <DateCalendar
         views={["day"]}
         disableHighlightToday
         disabled
+        referenceDate={referenceDate}
         sx={{
           ".MuiPickersArrowSwitcher-root": {
             display: "none",
