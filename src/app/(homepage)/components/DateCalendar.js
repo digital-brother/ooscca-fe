@@ -2,10 +2,10 @@ import { DateCalendar as MUIDateCalendar } from "@mui/x-date-pickers/DateCalenda
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
-import {manrope} from "@/components/ThemeRegistry/theme";
-import 'dayjs/locale/en-gb';
+import { manrope } from "@/components/ThemeRegistry/theme";
+import "dayjs/locale/en-gb";
 
-export default function DateCalendar({displayDate}) {
+export default function DateCalendar({ displayDate }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <MUIDateCalendar
