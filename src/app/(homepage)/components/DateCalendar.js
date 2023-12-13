@@ -69,15 +69,16 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
             color: "#333333",
             fontFamily: manrope.style.fontFamily,
           },
-          ".MuiPickersDay-root.Mui-disabled": {
+          ".MuiButtonBase-root.MuiPickersDay-root.Mui-disabled": {
             fontWeight: 600,
             fontSize: 15,
             color: "#666666",
             fontFamily: manrope.style.fontFamily,
           },
-          ".MuiPickersDay-root.Mui-selected": {
+          ".MuiButtonBase-root.MuiPickersDay-root.Mui-disabled.Mui-selected": {
             bgcolor: "transparent",
             color: "#666666",
+            opacity: 1,
           },
 
           ".MuiPickersDay-root": {
@@ -117,8 +118,8 @@ export function DateCalendarSet({ schoolHolidays }) {
   }
 
   return (
-    <Box sx={{ m: 10, display: "flex", alignItems: "center" }}>
-      <IconButton onClick={handlePrevious}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 7 }}>
+      <IconButton size="large" onClick={handlePrevious}>
         <KeyboardArrowLeftIcon />
       </IconButton>
       <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} />
@@ -130,7 +131,7 @@ export function DateCalendarSet({ schoolHolidays }) {
         displayDate={twoMonthsFromTodayDate}
         schoolHolidays={schoolHolidays}
       />
-      <IconButton onClick={handleNext}>
+      <IconButton size="large" onClick={handleNext}>
         <KeyboardArrowRightIcon />
       </IconButton>
     </Box>
