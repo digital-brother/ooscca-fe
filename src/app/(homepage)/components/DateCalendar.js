@@ -10,8 +10,31 @@ import Box from "@mui/material/Box";
 import { IconButton } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { PickersDay } from "@mui/x-date-pickers";
 
-export default function DateCalendar({ displayDate }) {
+function PickersDayHighlighted({ schoolHolidays, ...props }) {
+  const { firstSchoolHolidays, secondSchoolHolidays } = schoolHolidays;
+
+  const isFirstSchoolHoliday =
+    !props.outsideCurrentMonth &&
+    firstSchoolHolidays.some((date) => date.isSame(props.day, "day"));
+
+    const isSecondSchoolHoliday =
+    !props.outsideCurrentMonth &&
+    secondSchoolHolidays.some((date) => date.isSame(props.day, "day"));
+
+    if (isFirstSchoolHoliday || isSecondSchoolHoliday) {
+      return (
+        <Box sx={{border: 1}}>
+          <PickersDay {...props} />
+        </Box>
+      )
+    }
+
+  return <PickersDay {...props} />;
+}
+
+export default function DateCalendar({ displayDate, schoolHolidays }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <MUIDateCalendar
@@ -20,6 +43,14 @@ export default function DateCalendar({ displayDate }) {
         disabled
         value={displayDate}
         dayOfWeekFormatter={(_, date) => date.format("dd")}
+        slots={{
+          day: PickersDayHighlighted,
+        }}
+        slotProps={{
+          day: {
+            schoolHolidays,
+          },
+        }}
         sx={{
           ".MuiPickersArrowSwitcher-root": {
             display: "none",
@@ -52,7 +83,7 @@ export default function DateCalendar({ displayDate }) {
   );
 }
 
-export function DateCalendarSet() {
+export function DateCalendarSet({ schoolHolidays }) {
   const [monthDate, setMonthDate] = useState(dayjs());
   const nextMonthDate = monthDate.add(1, "month");
   const twoMonthsFromTodayDate = monthDate.add(2, "month");
@@ -72,9 +103,15 @@ export function DateCalendarSet() {
       <IconButton onClick={handlePrevious}>
         <KeyboardArrowLeftIcon />
       </IconButton>
-      <DateCalendar displayDate={monthDate} />
-      <DateCalendar displayDate={nextMonthDate} />
-      <DateCalendar displayDate={twoMonthsFromTodayDate} />
+      <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} />
+      <DateCalendar
+        displayDate={nextMonthDate}
+        schoolHolidays={schoolHolidays}
+      />
+      <DateCalendar
+        displayDate={twoMonthsFromTodayDate}
+        schoolHolidays={schoolHolidays}
+      />
       <IconButton onClick={handleNext}>
         <KeyboardArrowRightIcon />
       </IconButton>
