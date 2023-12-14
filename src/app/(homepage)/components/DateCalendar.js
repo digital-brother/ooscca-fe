@@ -131,7 +131,6 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
         justifyContent: "center",
         alignItems: "center",
         mt: mt,
-        position: { xs: "relative", sm: "static" },
       }}
     >
       <IconButton size="large" onClick={handlePrevious}>
