@@ -13,6 +13,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { PickersDay } from "@mui/x-date-pickers";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { RightArrow, LeftArrow } from "@/app/(homepage)/components/Arrows";
 
 function PickersDayHighlighted({ schoolHolidays, ...props }) {
   const { firstSchoolHolidays, secondSchoolHolidays } = schoolHolidays;
@@ -55,6 +56,7 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
           },
         }}
         sx={{
+          mx: {sm: 3},
           ".MuiPickersArrowSwitcher-root": {
             display: "none",
           },
@@ -122,6 +124,7 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
 
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"))
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"))
 
   return (
     <Box
@@ -130,24 +133,37 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
         justifyContent: "center",
         alignItems: "center",
         mt: mt,
+        position: { xs: "relative", sm: "static" },
       }}
     >
-      <IconButton size="large" onClick={handlePrevious}>
-        <KeyboardArrowLeftIcon />
+      <IconButton size="large" onClick={handlePrevious} sx={{
+        position: { xs: "absolute", sm: "static" },
+        top: -7,
+        left: "calc(50% - 140px)",
+        mx: 0,
+      }}>
+        <LeftArrow />
       </IconButton>
       <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} />
-      <DateCalendar
-        displayDate={nextMonthDate}
-        schoolHolidays={schoolHolidays}
-      />
+      {mdUp && (
+        <DateCalendar
+          displayDate={nextMonthDate}
+          schoolHolidays={schoolHolidays}
+        />
+      )}
       {lgUp && (
         <DateCalendar
           displayDate={twoMonthsFromTodayDate}
           schoolHolidays={schoolHolidays}
         />
       )}
-      <IconButton size="large" onClick={handleNext}>
-        <KeyboardArrowRightIcon />
+      <IconButton size="large" onClick={handleNext} sx={{
+        position: { xs: "absolute", sm: "static" },
+        top: -7,
+        right: "calc(50% - 140px)",
+        mx: 0,
+      }}>
+        <RightArrow />
       </IconButton>
     </Box>
   );
