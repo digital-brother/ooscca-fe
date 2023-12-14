@@ -105,7 +105,7 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
   );
 }
 
-export function DateCalendarSet({ schoolHolidays }) {
+export function DateCalendarSet({ schoolHolidays, mt }) {
   const [monthDate, setMonthDate] = useState(dayjs());
   const nextMonthDate = monthDate.add(1, "month");
   const twoMonthsFromTodayDate = monthDate.add(2, "month");
@@ -129,6 +129,7 @@ export function DateCalendarSet({ schoolHolidays }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        mt: mt,
       }}
     >
       <IconButton size="large" onClick={handlePrevious}>
