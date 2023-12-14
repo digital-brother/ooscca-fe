@@ -11,6 +11,8 @@ import { IconButton } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { PickersDay } from "@mui/x-date-pickers";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function PickersDayHighlighted({ schoolHolidays, ...props }) {
   const { firstSchoolHolidays, secondSchoolHolidays } = schoolHolidays;
@@ -93,7 +95,8 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
             color: "#FFFFFF",
           },
           ".MuiPickersDay-root.Mui-disabled.isBothSchoolsHoliday": {
-            background: "linear-gradient(to bottom right, #FFC50A 50%, #00A8DE 50%)",
+            background:
+              "linear-gradient(to bottom right, #FFC50A 50%, #00A8DE 50%)",
             color: "#FFFFFF",
           },
         }}
@@ -117,8 +120,17 @@ export function DateCalendarSet({ schoolHolidays }) {
     setMonthDate(newMonthDate);
   }
 
+  const theme = useTheme();
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"))
+
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 7 }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <IconButton size="large" onClick={handlePrevious}>
         <KeyboardArrowLeftIcon />
       </IconButton>
@@ -127,10 +139,12 @@ export function DateCalendarSet({ schoolHolidays }) {
         displayDate={nextMonthDate}
         schoolHolidays={schoolHolidays}
       />
-      <DateCalendar
-        displayDate={twoMonthsFromTodayDate}
-        schoolHolidays={schoolHolidays}
-      />
+      {lgUp && (
+        <DateCalendar
+          displayDate={twoMonthsFromTodayDate}
+          schoolHolidays={schoolHolidays}
+        />
+      )}
       <IconButton size="large" onClick={handleNext}>
         <KeyboardArrowRightIcon />
       </IconButton>
