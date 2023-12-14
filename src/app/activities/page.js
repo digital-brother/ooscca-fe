@@ -15,7 +15,7 @@ const ACTIVITIES_TYPES = [
   { id: 2, name: "Swimming" },
 ];
 
-function ActivitiesBox({ children, sx }) {
+function ActivitiesSlideContainer({ children, sx }) {
   return (
     <Box
       sx={{
@@ -32,22 +32,22 @@ function ActivitiesBox({ children, sx }) {
   );
 }
 
-function ActivitiesSecond() {
+function ActivitiesSecondSlide() {
   return (
-    <ActivitiesBox>
+    <ActivitiesSlideContainer>
       <Box>
         <Typography>Provider</Typography>
         <TextField />
       </Box>
-    </ActivitiesBox>
+    </ActivitiesSlideContainer>
   );
 }
 
-function ActivitiesFirst() {
+function ActivitiesFirstSlide() {
   const { scrollNext } = useContext(EmblaApiContext);
 
   return (
-    <ActivitiesBox
+    <ActivitiesSlideContainer
       sx={{
         display: "flex",
         alignItems: "center",
@@ -66,7 +66,7 @@ function ActivitiesFirst() {
           onSelect={scrollNext}
         />
       </Box>
-    </ActivitiesBox>
+    </ActivitiesSlideContainer>
   );
 }
 
@@ -74,8 +74,8 @@ export default function Activities() {
   return (
     <Box sx={{ m: 10 }}>
       <Carousel>
-        <ActivitiesFirst />
-        <ActivitiesSecond />
+        <ActivitiesFirstSlide />
+        <ActivitiesSecondSlide />
       </Carousel>
     </Box>
   );
