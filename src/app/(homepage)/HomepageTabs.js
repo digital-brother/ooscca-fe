@@ -11,8 +11,6 @@ import Tab from "@mui/material/Tab";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
-import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendar";
-import dayjs from "dayjs";
 
 function HomepageTabsHeader({ sx }) {
   return (
@@ -64,20 +62,6 @@ function Tabs(props) {
     setValue(newValue);
   };
 
-  const schoolHolidays = {
-    firstSchoolHolidays: [
-      dayjs("2023-12-10"),
-      dayjs("2023-12-25"),
-      dayjs("2024-01-10"),
-      dayjs("2024-01-25"),
-    ],
-    secondSchoolHolidays: [
-      dayjs("2023-12-10"),
-      dayjs("2024-01-04"),
-      dayjs("2024-01-05"),
-    ],
-  };
-
   return (
     <Box {...props}>
       <TabContext value={value}>
@@ -103,7 +87,7 @@ function Tabs(props) {
             <SchoolStats />
           </TabPanel>
           <TabPanel value="classBirthdayCalendar">
-            <DateCalendarSet schoolHolidays={schoolHolidays} mt={1} />
+            Class birthday calendar
           </TabPanel>
           <TabPanel value="whoseWho">Whose who</TabPanel>
         </Box>
