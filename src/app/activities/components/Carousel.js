@@ -34,20 +34,18 @@ export default function Carousel({ children }) {
   }, [emblaApi]);
 
   return (
-    <Box sx={{ m: 10 }}>
+    <EmblaApiContext.Provider value={{ scrollPrev, scrollNext }}>
       <Box sx={emblaSx}>
-        <div className="embla__viewport" ref={emblaRef}>
+        <Box className="embla__viewport" ref={emblaRef}>
           <Box sx={emblaContainerSx}>
-            <EmblaApiContext.Provider value={{ scrollPrev, scrollNext }}>
-              {React.Children.map(children, (child, index) => (
-                <Box key={index} sx={emblaSlideSx}>
-                  {child}
-                </Box>
-              ))}
-            </EmblaApiContext.Provider>
+            {React.Children.map(children, (child, index) => (
+              <Box key={index} sx={emblaSlideSx}>
+                {child}
+              </Box>
+            ))}
           </Box>
-        </div>
+        </Box>
       </Box>
-    </Box>
+    </EmblaApiContext.Provider>
   );
 }
