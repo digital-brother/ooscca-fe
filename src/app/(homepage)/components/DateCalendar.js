@@ -55,6 +55,7 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
           },
         }}
         sx={{
+          mx: 3.5,
           ".MuiPickersArrowSwitcher-root": {
             display: "none",
           },
@@ -133,8 +134,8 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
         mt: mt,
       }}
     >
-      <IconButton size="large" onClick={handlePrevious}>
-        <LeftArrow />
+      <IconButton onClick={handlePrevious}>
+        <LeftArrow sx={{fontSize: 40}} />
       </IconButton>
       <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} />
       {mdUp && (
@@ -149,8 +150,8 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
           schoolHolidays={schoolHolidays}
         />
       )}
-      <IconButton size="large" onClick={handleNext}>
-        <RightArrow />
+      <IconButton onClick={handleNext}>
+        <RightArrow sx={{fontSize: 40}} />
       </IconButton>
     </Box>
   );
