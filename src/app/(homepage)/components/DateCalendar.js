@@ -8,12 +8,11 @@ import "dayjs/locale/en-gb";
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import { IconButton } from "@mui/material";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { PickersDay } from "@mui/x-date-pickers";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { RightArrow, LeftArrow } from "@/app/(homepage)/components/Arrows";
+import {LeftArrow} from "@/assets/LeftArrow";
+import {RightArrow} from "@/assets/RightArrow";
 
 function PickersDayHighlighted({ schoolHolidays, ...props }) {
   const { firstSchoolHolidays, secondSchoolHolidays } = schoolHolidays;
