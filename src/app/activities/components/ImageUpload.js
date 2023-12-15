@@ -2,17 +2,24 @@
 
 import { useState } from "react";
 
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
 export default function ImageUpload() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file && file.type.match("image.*")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
+
+      const dataURL = await getBase64(file)
+      setImagePreviewUrl(dataURL)
     }
   };
 
