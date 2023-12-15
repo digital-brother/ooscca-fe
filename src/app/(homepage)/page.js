@@ -9,12 +9,12 @@ import Demo from "@/app/(homepage)/Demo";
 export default function Homepage() {
   return (
     <>
-      <Intro/>
-      <ClientSchools/>
-      <Demo/>
-      <Benefits/>
+      {/*<Intro/>*/}
+      {/*<ClientSchools/>*/}
+      {/*<Demo/>*/}
+      {/*<Benefits/>*/}
       <HomepageTabs/>
-      <SignUp/>
+      {/*<SignUp/>*/}
     </>
   )
 }
