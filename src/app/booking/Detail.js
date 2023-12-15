@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import React, {useCallback, useState} from 'react';
 import { useDropzone } from 'react-dropzone';
-import './index.css';
 
 const dragAndDropContainer = {
   borderRadius: '6px',
@@ -11,6 +10,17 @@ const dragAndDropContainer = {
   minHeight: '110px',
   maxWidth: '380px',
   flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const textStyle = {
+  fontWeight: 'bold',
+  textAlign: 'center',
+};
+
+const browseStyle = {
+  color: 'purple',
 };
 
 function MyComponent(props) {
@@ -27,10 +37,6 @@ function MyComponent(props) {
   const confirmRemoveImage = () => {
     setImage(null);
     setModalOpen(false); // Close modal on confirmation
-  };
-
-  const removeImage = () => {
-    setModalOpen(true); // Show confirmation modal
   };
 
   const askRemoveImage = (event) => {
@@ -57,36 +63,45 @@ function MyComponent(props) {
     );
   };
 
-  return (
-    <>
+  if (image && isModalOpen === false) {
+    return (
       <div style={dragAndDropContainer} {...getRootProps()}>
-        {image ? (
-          <div>
-            <img
-              src={URL.createObjectURL(image)}
-              alt="Preview"
-              style={{ width: '100%', height: 'auto' }}
-            />
-            <button onClick={askRemoveImage}>Remove Image</button>
-          </div>
-        ) : (
-          <div className="dropzone">
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p>Drop the file here...</p>
-            ) : (
-              <p>Drag 'n' drop an image here, or click to select an image</p>
-            )}
-          </div>
-        )}
+        <div>
+          <img
+            src={URL.createObjectURL(image)}
+            alt="Preview"
+            style={{ width: '100%', height: 'auto' }}
+          />
+          <button onClick={askRemoveImage}>Remove Image</button>
+        </div>
       </div>
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={confirmRemoveImage}
-      />
-    </>
-  );
+    );
+  } else if (image && isModalOpen === true) {
+      return (
+        <div style={dragAndDropContainer}>
+          <ConfirmationModal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            onConfirm={confirmRemoveImage}
+          />
+        </div>
+      );
+  } else {
+    return (
+      <div style={dragAndDropContainer} {...getRootProps()}>
+        <div className="dropzone">
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <p style={textStyle}>Drop the file here...</p>
+          ) : (
+            <p style={textStyle}>
+              Drop your logo file here or <span style={browseStyle}>browse</span>
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
 }
 
 // ========================================
