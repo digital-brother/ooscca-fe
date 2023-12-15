@@ -44,37 +44,6 @@ const theme = createTheme({
             fontWeight: 700,
             color: baseTheme.palette.warning.main,
         },
-        securityHeading: {
-            fontFamily: manrope.style.fontFamily,
-            color: "#FF8919",
-            fontStyle: "normal",
-            fontWeight: 700,
-            letterSpacing: "0.16px",
-        },
-        securityTitle: {
-            fontFamily: montserrat.style.fontFamily,
-            color: "#FFF",
-            fontStyle: "normal",
-            fontWeight: 700,
-            [baseTheme.breakpoints.up('xs')]: {
-                fontSize: 32,
-                letterSpacing: 0.16,
-            },
-            [baseTheme.breakpoints.up('md')]: {
-                fontSize: 48,
-                letterSpacing: -0.72,
-            },
-
-        },
-        securityBody: {
-            fontFamily: manrope.style.fontFamily,
-            color: "#FFF",
-            fontStyle: "normal",
-            fontWeight: 400,
-            [baseTheme.breakpoints.up('md')]: {
-                fontSize: 24,
-            },
-        },
     },
     components: {
         MuiAlert: {
