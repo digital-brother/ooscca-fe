@@ -77,7 +77,7 @@ function ImagePreview({ imagePreviewUrl }) {
   );
 }
 
-export default function ImageUpload() {
+export default function LogoUploadWidget() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
   return (
