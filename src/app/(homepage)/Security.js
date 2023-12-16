@@ -8,11 +8,13 @@ function SecurityHeader() {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   return (
-    <Container sx={{ textAlign: "center" }}>
+    <Container
+      sx={{ textAlign: "center", maxWidth: 730, minWidth: { lg: 530 } }}
+    >
       <Typography variant="subheading">Your Trust, Our Commitment</Typography>
       <Typography
         variant={smUp ? "h1" : "h3"}
-        sx={{ mt: 2, color: "#FFF", letterSpacing: -1 }}
+        sx={{ mt: 2, color: "#FFF", letterSpacing: -3 }}
       >
         Uncompromised Security
       </Typography>
@@ -41,7 +43,7 @@ export default function Security() {
           py: { xs: 7, md: 10 },
           display: "flex",
           flexDirection: { xs: "column", lg: "row-reverse" },
-          columnGap: 10,
+          columnGap: { lg: 5, xl: 10 },
           rowGap: 7,
           alignItems: "center",
           maxWidth: 1505,
@@ -51,8 +53,8 @@ export default function Security() {
           component="img"
           src="/security4.png"
           sx={{
-            width: { xs: 298, md: 376 },
-            height: { xs: 175, md: 221 },
+            width: { xs: 298, lg: 376 },
+            height: { xs: 175, lg: 221 },
           }}
         />
         <SecurityHeader />
@@ -60,8 +62,8 @@ export default function Security() {
           component="img"
           src="/security3.png"
           sx={{
-            width: { xs: 174, md: 327 },
-            height: { xs: 127, md: 239 },
+            width: { xs: 174, lg: 327 },
+            height: { xs: 127, lg: 239 },
           }}
         />
       </Box>
