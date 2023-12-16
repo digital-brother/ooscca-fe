@@ -1,51 +1,55 @@
 "use client"
 
-import React, {useEffect, useState} from 'react';
-import {useDropzone} from 'react-dropzone';
+import React, { useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import Box from "@mui/material/Box";
 
 const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  marginTop: 16,
 };
 
 const thumb = {
-  display: 'inline-flex',
+  display: "inline-flex",
   borderRadius: 2,
-  border: '1px solid #eaeaea',
+  border: "1px solid #eaeaea",
   marginBottom: 8,
   marginRight: 8,
   width: 100,
   height: 100,
   padding: 4,
-  boxSizing: 'border-box'
+  boxSizing: "border-box",
 };
 
 const thumbInner = {
-  display: 'flex',
+  display: "flex",
   minWidth: 0,
-  overflow: 'hidden'
+  overflow: "hidden",
 };
 
 const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
+  display: "block",
+  width: "auto",
+  height: "100%",
 };
-
 
 export default function DropZoneLogoUpload(props) {
   const [files, setFiles] = useState([]);
-  const {getRootProps, getInputProps} = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'image/*': []
+      "image/*": [],
     },
-    onDrop: acceptedFiles => {
-      setFiles(acceptedFiles.map(file => Object.assign(file, {
-        preview: URL.createObjectURL(file)
-      })));
-    }
+    onDrop: (acceptedFiles) => {
+      setFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        ),
+      );
+    },
   });
 
   const thumbs = files.map(file => (
@@ -63,7 +67,7 @@ export default function DropZoneLogoUpload(props) {
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => files.forEach(file => URL.revokeObjectURL(file.preview));
+    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);
 
   return (
