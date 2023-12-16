@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -11,7 +13,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-function App() {
+export default function LogoUploadFilepond() {
     const [files, setFiles] = useState([]);
     return (
         <div className="App">
