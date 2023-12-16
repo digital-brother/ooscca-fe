@@ -40,9 +40,10 @@ export default function Security() {
         sx={{
           py: { xs: 7, md: 10 },
           display: "flex",
-          flexDirection: { xs: "column", xl: "row-reverse" },
+          flexDirection: { xs: "column", lg: "row-reverse" },
+          columnGap: 10,
+          rowGap: 7,
           alignItems: "center",
-          gap: 10,
           maxWidth: 1505,
         }}
       >
