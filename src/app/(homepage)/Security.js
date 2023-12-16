@@ -11,7 +11,7 @@ function SecurityHeader() {
   return (
     <Box sx={{textAlign: "center"}}>
       <Typography variant="subheading">Your Trust, Our Commitment</Typography>
-      <Typography variant={smUp ? "h1" : "h3"} sx={{mt: 2, color: "#FFF", letterSpacing: -4 }}>
+      <Typography variant={smUp ? "h1" : "h3"} sx={{mt: 2, color: "#FFF", letterSpacing: -1 }}>
         Uncompromised Security
       </Typography>
       <Typography sx={{ mt: 3, fontSize: 24, color: "#FFF" }}>
@@ -26,8 +26,8 @@ function SecurityHeader() {
 
 export default function Security() {
   return (
-    <Box sx={{ background: "#0C0E0F", display: "flex", justifyContent: "center" }}>
-      <Box sx={{py: {md: 10}, display: "flex", alignItems: "center", gap: 10, maxWidth: 1440}}>
+    <Box sx={{ background: "#0C0E0F", display: "flex", justifyContent: "center", overflowX: "hidden" }}>
+      <Box sx={{py: {md: 10}, display: "flex", alignItems: "center", gap: 10, maxWidth: 1505}}>
           <Box
             component="img"
             src="/security3.png"
