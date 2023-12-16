@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { Libre_Franklin, Manrope } from "next/font/google";
+import { Libre_Franklin, Manrope, Montserrat } from "next/font/google";
 
 const libreFranklin = Libre_Franklin({
   weight: ["300", "400", "500", "700"],
@@ -8,7 +8,13 @@ const libreFranklin = Libre_Franklin({
 });
 
 export const manrope = Manrope({
-  weight: ["600"],
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const montserrat = Montserrat({
+  weight: ["700"],
   subsets: ["latin"],
   display: "swap",
 });
