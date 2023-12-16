@@ -8,7 +8,7 @@ const libreFranklin = Libre_Franklin({
 });
 
 export const manrope = Manrope({
-    weight: ['600'],
+    weight: ['400', '600', '700'],
     subsets: ['latin'],
     display: 'swap',
 });
@@ -48,30 +48,6 @@ const theme = createTheme({
             fontWeight: 700,
             color: baseTheme.palette.warning.main,
         },
-        birthdayCalendarHeading: {
-            fontFamily: montserrat.style.fontFamily,
-            fontWeight: 700,
-            letterSpacing: 0.16,
-            color: "#FF8919"
-        },
-        birthdayCalendarTitle: {
-            fontFamily: montserrat.style.fontFamily,
-            fontSize: 32,
-            fontWeight: 700,
-            color: "#0C0E0F"
-        },
-        birthdayCalendarBody: {
-            fontFamily: manrope.style.fontFamily,
-            fontWeight: 400,
-            color: "#6C757D",
-        },
-        birthdayCalendarButtonText: {
-            textAlign: "center",
-            fontFamily: manrope.style.fontFamily,
-            fontWeight: 700,
-            color: "#FF8919"
-        }
-
     },
     components: {
         MuiAlert: {
