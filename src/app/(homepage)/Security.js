@@ -9,36 +9,12 @@ function SecurityHeader() {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
   return (
-    <Box
-      sx={{
-        textAlign: "center",
-        mx: {
-          xs: "auto",
-        },
-        maxWidth: {
-          xs: 358,
-          md: 638,
-        },
-      }}
-    >
+    <Box sx={{textAlign: "center"}}>
       <Typography variant="subheading">Your Trust, Our Commitment</Typography>
-      <Typography
-        mt={2}
-        mb={3}
-        variant={smUp ? "h1" : "h3"}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          color: "#FFF",
-          fontFamily: montserrat.style.fontFamily,
-        }}
-      >
+      <Typography variant={smUp ? "h1" : "h3"} sx={{mt: 2, color: "#FFF", letterSpacing: -4 }}>
         Uncompromised Security
       </Typography>
-      <Typography
-        variant="h5"
-        sx={{ fontFamily: manrope.style.fontFamily, color: "#FFF" }}
-      >
+      <Typography sx={{ mt: 3, fontSize: 24, color: "#FFF" }}>
         At OOSCCA, we understand that security isn't just a feature; it's a
         foundation. In a digital world where your family's safety and privacy
         are paramount, we are steadfast in our commitment to protecting your
@@ -50,14 +26,14 @@ function SecurityHeader() {
 
 export default function Security() {
   return (
-    <Box sx={{ background: "#0C0E0F" }}>
-      <Container sx={{py: {md: 10}, display: "flex"}}>
+    <Box sx={{ background: "#0C0E0F", display: "flex", justifyContent: "center" }}>
+      <Box sx={{py: {md: 10}, display: "flex", alignItems: "center", gap: 10, maxWidth: 1440}}>
           <Box
             component="img"
             src="/security3.png"
             sx={{
-              width: { md: 327, xs: 175 },
-              height: { md: 264, xs: 127 },
+              width: { xs: 175, md: 327 },
+              height: { xs: 127, md: 239 },
               objectFit: "cover",
               mt: { md: 0, xs: 9 },
             }}
@@ -67,13 +43,13 @@ export default function Security() {
             component="img"
             src="/security4.png"
             sx={{
-              width: { md: 376, xs: 298 },
-              height: { md: 241, xs: 175 },
+              width: { xs: 298, md: 406 },
+              height: { xs: 175, md: 235, },
               mt: { md: 0, xs: -13 },
               mb: { md: 0, xs: 7.5 },
             }}
           />
-      </Container>
+      </Box>
     </Box>
   );
 }

@@ -30,22 +30,27 @@ const theme = createTheme({
     h1: {
       fontSize: "3rem", // 48px
       fontWeight: 700,
+      fontFamily: montserrat.style.fontFamily,
     },
     h2: {
       fontSize: "2.5rem", // 40px
       fontWeight: 700,
+      fontFamily: montserrat.style.fontFamily,
     },
     h3: {
       fontSize: "2rem", // 32px
       fontWeight: 700,
+      fontFamily: montserrat.style.fontFamily,
     },
     h5: {
       fontSize: "1.5rem", //24
       fontWeight: 700,
+      fontFamily: montserrat.style.fontFamily,
     },
     subheading: {
       fontSize: "1rem", // 16px
       fontWeight: 700,
+      fontFamily: montserrat.style.fontFamily,
       color: baseTheme.palette.warning.main,
     },
   },
