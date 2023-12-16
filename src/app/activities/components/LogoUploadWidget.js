@@ -8,19 +8,10 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 function ImageInput({ setImagePreviewUrl }) {
   const inputFileRef = useRef(null);
 
-  const getBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file && file.type.match("image.*")) {
-      const dataURL = await getBase64(file);
+      const dataURL = URL.createObjectURL(file)
       setImagePreviewUrl(dataURL);
     }
   };
