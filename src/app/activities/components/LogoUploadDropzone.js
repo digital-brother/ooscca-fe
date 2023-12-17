@@ -50,6 +50,7 @@ function LogoInput({ setFiles }) {
         ),
       );
     },
+    multiple: false,
   });
 
   return (
@@ -81,20 +82,21 @@ function LogoInput({ setFiles }) {
 }
 
 function LogoPreview({ files }) {
-  return files.map((file) => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img
+  return (
+    <>
+      {files.map((file) => (
+        <Box
+          component="img"
           src={file.preview}
-          style={img}
-          // Revoke data uri after image is loaded
-          onLoad={() => {
-            URL.revokeObjectURL(file.preview);
-          }}
+          alt="Preview"
+          sx={{ objectFit: "contain", width: "100%", height: "100%" }}
+
+          onLoad={() => URL.revokeObjectURL(file.preview)}
+          key={file.name}
         />
-      </div>
-    </div>
-  ));
+      ))}
+    </>
+  );
 }
 
 export default function DropZoneLogoUpload(props) {
