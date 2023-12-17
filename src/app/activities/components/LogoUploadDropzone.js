@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const thumbsContainer = {
   display: "flex",
@@ -51,12 +53,32 @@ function LogoInput({ setFiles }) {
   });
 
   return (
-    <section className="container">
-      <div {...getRootProps({ className: "dropzone" })}>
+    <>
+      <Box
+        {...getRootProps({
+          sx: {
+            bgcolor: "#DEE2E6",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 1,
+          },
+        })}
+      >
         <input {...getInputProps()} />
-        <p>Drag n drop some files here, or click to select files</p>
-      </div>
-    </section>
+
+        <Typography sx={{ fontWeight: 700 }}>
+          Drop your logo file here or &nbsp;
+          <span style={{ cursor: "pointer", color: "#B01FB8" }}>browse</span>
+        </Typography>
+
+        <Typography variant="caption">
+          Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px
+        </Typography>
+      </Box>
+    </>
   );
 }
 
@@ -86,9 +108,17 @@ export default function DropZoneLogoUpload(props) {
   }, []);
 
   return (
-    <>
+    <Box
+      sx={{
+        width: 380,
+        height: 110,
+        borderRadius: 1.5,
+        border: "1px #ADB5BD solid",
+        overflow: "hidden",
+      }}
+    >
       {files.length === 0 && <LogoInput setFiles={setFiles} />}
       {files.length !== 0 && <LogoPreview files={files} />}
-    </>
+    </Box>
   );
 }
