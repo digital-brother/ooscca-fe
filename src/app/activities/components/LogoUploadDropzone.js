@@ -53,32 +53,30 @@ function LogoInput({ setFiles }) {
   });
 
   return (
-    <>
-      <Box
-        {...getRootProps({
-          sx: {
-            bgcolor: "#DEE2E6",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-          },
-        })}
-      >
-        <input {...getInputProps()} />
+    <Box
+      {...getRootProps({
+        sx: {
+          bgcolor: "#DEE2E6",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 1,
+        },
+      })}
+    >
+      <input {...getInputProps()} />
 
-        <Typography sx={{ fontWeight: 700 }}>
-          Drop your logo file here or &nbsp;
-          <span style={{ cursor: "pointer", color: "#B01FB8" }}>browse</span>
-        </Typography>
+      <Typography sx={{ fontWeight: 700 }}>
+        Drop your logo file here or &nbsp;
+        <span style={{ cursor: "pointer", color: "#B01FB8" }}>browse</span>
+      </Typography>
 
-        <Typography variant="caption">
-          Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px
-        </Typography>
-      </Box>
-    </>
+      <Typography variant="caption">
+        Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px
+      </Typography>
+    </Box>
   );
 }
 
