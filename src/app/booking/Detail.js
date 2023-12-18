@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import React, {useCallback, useState} from 'react';
 import { useDropzone } from 'react-dropzone';
+import './index.css';
 
 const dragAndDropContainer = {
   borderRadius: '6px',
@@ -10,8 +11,6 @@ const dragAndDropContainer = {
   minHeight: '110px',
   maxWidth: '380px',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
 };
 
 const textStyle = {
@@ -23,14 +22,16 @@ const browseStyle = {
   color: 'purple',
 };
 
-function MyComponent(props) {
+export default function MyComponent(props) {
   const [image, setImage] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const onDrop = useCallback(acceptedFiles => {
     const file = acceptedFiles[0];
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       setImage(file); // Update the state with the new image
+    } else {
+      alert('Please upload only image files.');
     }
   }, []);
 
@@ -46,6 +47,7 @@ function MyComponent(props) {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    accept: 'image/*',
     maxSize: 5242880 // 5MB in bytes
   });
 
@@ -56,8 +58,8 @@ function MyComponent(props) {
       <div className="modal">
         <div className="modal-content">
           <p>Are you sure you want to delete the file?</p>
-          <button onClick={onClose}>No</button>
           <button onClick={onConfirm}>Yes</button>
+          <button onClick={onClose}>No</button>
         </div>
       </div>
     );
@@ -103,8 +105,3 @@ function MyComponent(props) {
     );
   }
 }
-
-// ========================================
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<MyComponent />);
