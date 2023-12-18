@@ -52,7 +52,11 @@ function LogoInput({ setFiles }) {
   );
 }
 
-function LogoPreview({ files }) {
+function LogoPreview({ files, setFiles }) {
+  function deleteLogo() {
+    setFiles([])
+  }
+  
   return (
     <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
       {files.map((file) => (
@@ -65,7 +69,7 @@ function LogoPreview({ files }) {
           key={file.name}
         />
       ))}
-      <IconButton
+      <IconButton onClick={deleteLogo}
         sx={{
           position: "absolute",
           top: 10,
@@ -97,7 +101,7 @@ export default function DropZoneLogoUpload(props) {
       }}
     >
       {files.length === 0 && <LogoInput setFiles={setFiles} />}
-      {files.length !== 0 && <LogoPreview files={files} />}
+      {files.length !== 0 && <LogoPreview files={files} setFiles={setFiles} />}
     </Box>
   );
 }
