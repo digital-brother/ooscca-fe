@@ -41,7 +41,7 @@ function PickersDayHighlighted({ schoolHolidays, ...props }) {
   return <PickersDay className={className} {...props} />;
 }
 
-export default function DateCalendar({ displayDate, schoolHolidays, previousIconButton, nextIconButton }) {
+export default function DateCalendar({ displayDate, schoolHolidays, previousOnClick, nextOnClick }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <MUIDateCalendar
@@ -54,8 +54,6 @@ export default function DateCalendar({ displayDate, schoolHolidays, previousIcon
           day: PickersDayHighlighted,
           leftArrowIcon: LeftArrow,
           rightArrowIcon: RightArrow,
-          previousIconButton: previousIconButton,
-          nextIconButton: nextIconButton,
         }}
         slotProps={{
           day: {
@@ -64,10 +62,12 @@ export default function DateCalendar({ displayDate, schoolHolidays, previousIcon
           previousIconButton: {
             size: "large",
             disabled: false,
+            onClick: previousOnClick,
           },
           nextIconButton: {
             size: "large",
             disabled: false,
+            onClick: nextOnClick,
           },
         }}
         sx={{
@@ -145,7 +145,6 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
   const mdUp = useMediaQuery(theme.breakpoints.up("md"))
 
   function PreviousIconButton({ ...props }) {
-    console.log(props);
     return (
       <IconButton onClick={handlePrevious} sx={{ display: {xs: "none", sm: "flex"} }} {...props}>
         <LeftArrow sx={{fontSize: 40}} />
@@ -154,10 +153,11 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
   }
 
   function NextIconButton({ ...props }) {
-    return
-      <IconButton onClick={handleNext}  sx={{ display: {xs: "none", sm: "flex"} }} {...props}>
-        <RightArrow sx={{fontSize: 40}} />
+    return (
+      <IconButton onClick={handleNext} sx={{ display: { xs: "none", sm: "flex" } }} {...props}>
+        <RightArrow sx={{ fontSize: 40 }} />
       </IconButton>
+    );
   }
 
   return (
@@ -170,7 +170,7 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
       }}
     >
       <PreviousIconButton />
-      <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} previousIconButton={PreviousIconButton} nextIconButton={NextIconButton}/>
+      <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} previousOnClick={handlePrevious} nextOnClick={handleNext}/>
       {mdUp && (
         <DateCalendar
           displayDate={nextMonthDate}
