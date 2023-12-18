@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 
 function LogoInput({ setFiles }) {
   const { getRootProps, getInputProps } = useDropzone({
@@ -52,11 +52,11 @@ function LogoInput({ setFiles }) {
   );
 }
 
-function LogoPreview({ files, setFiles }) {
-  function deleteLogo() {
-    setFiles([])
+function LogoPreview({ files, setConfirmDelete }) {
+  function showLogoDeleteConfirmation() {
+    setConfirmDelete(true);
   }
-  
+
   return (
     <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
       {files.map((file) => (
@@ -69,7 +69,8 @@ function LogoPreview({ files, setFiles }) {
           key={file.name}
         />
       ))}
-      <IconButton onClick={deleteLogo}
+      <IconButton
+        onClick={showLogoDeleteConfirmation}
         sx={{
           position: "absolute",
           top: 10,
@@ -82,8 +83,39 @@ function LogoPreview({ files, setFiles }) {
   );
 }
 
+function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
+  function logoDeleteConfirm() {
+    setFiles([]);
+    setConfirmDelete(false);
+  }
+
+  function logoDeleteCancel() {
+    setConfirmDelete(false);
+  }
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Typography sx={{ fontWeight: 700 }}>
+        Are you sure you want to delete the file?
+      </Typography>
+      <Button variant="outlined" onClick={logoDeleteCancel} color="success">
+        Cancel
+      </Button>
+      <Button variant="contained" color="error" onClick={logoDeleteConfirm}>
+        Confirm
+      </Button>
+    </Box>
+  );
+}
+
 export default function DropZoneLogoUpload(props) {
   const [files, setFiles] = useState([]);
+  const [confirmDelete, setConfirmDelete] = useState();
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
@@ -100,8 +132,16 @@ export default function DropZoneLogoUpload(props) {
         overflow: "hidden",
       }}
     >
+      {confirmDelete && (
+        <LogoDeleteConfirm
+          setFiles={setFiles}
+          setConfirmDelete={setConfirmDelete}
+        />
+      )}
       {files.length === 0 && <LogoInput setFiles={setFiles} />}
-      {files.length !== 0 && <LogoPreview files={files} setFiles={setFiles} />}
+      {files.length !== 0 && (
+        <LogoPreview files={files} setConfirmDelete={setConfirmDelete} />
+      )}
     </Box>
   );
 }
