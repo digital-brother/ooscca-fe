@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { IconButton } from "@mui/material";
 
 function LogoInput({ setFiles }) {
   const { getRootProps, getInputProps } = useDropzone({
@@ -52,19 +54,27 @@ function LogoInput({ setFiles }) {
 
 function LogoPreview({ files }) {
   return (
-    <>
+    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
       {files.map((file) => (
         <Box
           component="img"
           src={file.preview}
           alt="Preview"
           sx={{ objectFit: "contain", width: "100%", height: "100%" }}
-
           onLoad={() => URL.revokeObjectURL(file.preview)}
           key={file.name}
         />
       ))}
-    </>
+      <IconButton
+        sx={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+        }}
+      >
+        <DeleteForeverIcon />
+      </IconButton>
+    </Box>
   );
 }
 
