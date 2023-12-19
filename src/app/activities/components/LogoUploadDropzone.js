@@ -16,7 +16,7 @@ function LogoInput({ setFiles }) {
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
-            preview: URL.createObjectURL(file),
+            url: URL.createObjectURL(file),
           }),
         ),
       );
@@ -62,10 +62,10 @@ function LogoPreview({ files, setConfirmDelete }) {
       {files.map((file) => (
         <Box
           component="img"
-          src={file.preview}
+          src={file.url}
           alt="Preview"
           sx={{ objectFit: "contain", width: "100%", height: "100%" }}
-          onLoad={() => URL.revokeObjectURL(file.preview)}
+          onLoad={() => URL.revokeObjectURL(file.url)}
           key={file.name}
         />
       ))}
@@ -119,7 +119,7 @@ export default function DropZoneLogoUpload(props) {
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
+    return () => files.forEach((file) => URL.revokeObjectURL(file.url));
   }, []);
 
   return (
