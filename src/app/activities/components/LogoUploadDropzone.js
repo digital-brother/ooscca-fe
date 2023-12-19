@@ -14,7 +14,7 @@ import {
 } from "@/app/activities/api.mjs";
 
 function LogoInput({ setFiles }) {
-  const mutation = useMutation((file) => patchProvider(TEST_PROVIDER_ID, file));
+  const mutation = useMutation((file) => patchProvider(TEST_PROVIDER_ID, null, file));
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -75,7 +75,7 @@ function LogoPreview({ files, setConfirmDelete }) {
           alt="Preview"
           sx={{ objectFit: "contain", width: "100%", height: "100%" }}
           onLoad={() => URL.revokeObjectURL(file.url)}
-          key={file.name}
+          key={file.url}
         />
       ))}
       <IconButton
@@ -93,9 +93,12 @@ function LogoPreview({ files, setConfirmDelete }) {
 }
 
 function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
+  const mutation = useMutation(() => patchProvider(TEST_PROVIDER_ID, {'logo': ''}))
+
   function logoDeleteConfirm() {
     setFiles([]);
     setConfirmDelete(false);
+    mutation.mutate()
   }
 
   function logoDeleteCancel() {
@@ -136,7 +139,7 @@ export default function DropZoneLogoUpload(props) {
   });
 
   useEffect(() => {
-    if (!isLoading && !isError && provider) {
+    if (!isLoading && !isError && provider.logo) {
       setFiles([{ url: provider.logo }]);
     }
   }, [provider, isLoading, isError]);

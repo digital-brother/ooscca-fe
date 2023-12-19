@@ -3,7 +3,7 @@ import axios from "axios";
 const API_HOST = "http://localhost:8000/";
 const PROVIDERS_PATH = "providers/";
 
-export const TEST_PROVIDER_ID = 1
+export const TEST_PROVIDER_ID = 2
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -28,11 +28,15 @@ export async function postProvider(url, {arg: data}) {
   return response.data;
 }
 
-export async function patchProvider(providerId, file) {
-  const config = {headers: {'Content-Type': 'multipart/form-data'}}
-
+export async function patchProvider(providerId, data, file) {
   let formData = new FormData();
-  formData.append("logo", file, file.fileName)
+  if (file) formData.append("logo", file, file.name)
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      formData.append(key, data[key]);
+    }
+  }
 
   // TODO: Refactor to a generic solution
   // for (const key in data) {
@@ -41,7 +45,7 @@ export async function patchProvider(providerId, file) {
   //   }
   // }
 
-  const response = await client.patch(`${PROVIDERS_PATH}${providerId}/`, formData, config)
+  const response = await client.patch(`${PROVIDERS_PATH}${providerId}/`, formData)
   return response.data;
 }
 
