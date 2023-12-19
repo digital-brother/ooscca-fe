@@ -14,13 +14,25 @@ export async function getProviders() {
   return response.data;
 }
 
-export async function postProvider(url, { arg: data }) {
+export async function postProvider(url, {arg: data}) {
   const response = await client.post(PROVIDERS_PATH, data);
   return response.data;
 }
 
-export async function patchProvider(providerId, data) {
-  const response = await client.patch(`${PROVIDERS_PATH}${providerId}/`, data);
+export async function patchProvider(providerId, file) {
+  const config = {headers: {'Content-Type': 'multipart/form-data'}}
+
+  let formData = new FormData();
+  formData.append("logo", file, file.fileName)
+
+  // TODO: Refactor to a generic solution
+  // for (const key in data) {
+  //   if (data.hasOwnProperty(key)) {
+  //     formData.append(key, data[key]);
+  //   }
+  // }
+
+  const response = await client.patch(`${PROVIDERS_PATH}${providerId}/`, formData, config)
   return response.data;
 }
 
