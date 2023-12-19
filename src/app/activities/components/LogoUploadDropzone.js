@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton } from "@mui/material";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
   getProvider,
   patchProvider,
@@ -14,6 +14,8 @@ import {
 } from "@/app/activities/api.mjs";
 
 function LogoInput({ setFiles }) {
+  const mutation = useMutation((file) => patchProvider(TEST_PROVIDER_ID, file));
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
@@ -26,7 +28,7 @@ function LogoInput({ setFiles }) {
           }),
         ),
       );
-      patchProvider(TEST_PROVODER_ID, acceptedFiles[0]);
+      mutation.mutate(acceptedFiles[0])
     },
     multiple: false,
   });
