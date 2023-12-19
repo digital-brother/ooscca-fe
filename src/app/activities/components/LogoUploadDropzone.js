@@ -6,6 +6,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton } from "@mui/material";
+import { useQuery } from "react-query";
+import {
+  getProvider,
+  patchProvider,
+  TEST_PROVIDER_ID,
+} from "@/app/activities/api.mjs";
 
 function LogoInput({ setFiles }) {
   const { getRootProps, getInputProps } = useDropzone({
@@ -20,6 +26,7 @@ function LogoInput({ setFiles }) {
           }),
         ),
       );
+      patchProvider(TEST_PROVODER_ID, acceptedFiles[0]);
     },
     multiple: false,
   });
@@ -116,6 +123,21 @@ function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
 export default function DropZoneLogoUpload(props) {
   const [files, setFiles] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState();
+
+  const {
+    data: provider,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["provider", TEST_PROVIDER_ID],
+    queryFn: () => getProvider(TEST_PROVIDER_ID),
+  });
+
+  useEffect(() => {
+    if (!isLoading && !isError && provider) {
+      setFiles([{ url: provider.logo }]);
+    }
+  }, [provider, isLoading, isError]);
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount

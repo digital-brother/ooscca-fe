@@ -3,6 +3,8 @@ import axios from "axios";
 const API_HOST = "http://localhost:8000/";
 const PROVIDERS_PATH = "providers/";
 
+export const TEST_PROVIDER_ID = 1
+
 const client = axios.create({
   baseURL: API_HOST,
   timeout: 1000,
@@ -13,6 +15,11 @@ const client = axios.create({
 
 export async function getProviders() {
   const response = await client.get(PROVIDERS_PATH);
+  return response.data;
+}
+
+export async function getProvider(providerId) {
+  const response = await client.get(`${PROVIDERS_PATH}${providerId}/`);
   return response.data;
 }
 
