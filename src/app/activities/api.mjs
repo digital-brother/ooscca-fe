@@ -5,8 +5,10 @@ const PROVIDERS_PATH = "providers/";
 
 const client = axios.create({
   baseURL: API_HOST,
-  withCredentials: true,
   timeout: 1000,
+  headers: {
+    'Authorization': `Token fc4b8a24c6ca26d888feb082dc2ff30836953f48`
+  }
 });
 
 export async function getProviders() {
