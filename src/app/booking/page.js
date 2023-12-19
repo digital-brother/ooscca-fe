@@ -1,15 +1,16 @@
-import ReactDOM from 'react-dom/client';
+"use client";
+
 import React, {useCallback, useState} from 'react';
 import { useDropzone } from 'react-dropzone';
-import './index.css';
+import Box from "@mui/material/Box";
 
 const dragAndDropContainer = {
-  borderRadius: '6px',
+  borderRadius: 6,
   backgroundColor: 'rgba(222, 226, 230, 1)',
-  border: '1px solid rgba(173, 181, 189, 1)',
+  border: '1px dashed rgba(173, 181, 189, 1)',
   display: 'flex',
-  minHeight: '110px',
-  maxWidth: '380px',
+  minHeight: 110,
+  maxWidth: 380,
   flexDirection: 'column',
 };
 
@@ -55,43 +56,43 @@ export default function MyComponent(props) {
     if (!isOpen) return null;
 
     return (
-      <div className="modal">
-        <div className="modal-content">
+      <Box className="modal">
+        <Box className="modal-content">
           <p>Are you sure you want to delete the file?</p>
           <button onClick={onConfirm}>Yes</button>
           <button onClick={onClose}>No</button>
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   };
 
   if (image && isModalOpen === false) {
     return (
-      <div style={dragAndDropContainer} {...getRootProps()}>
-        <div>
+      <Box style={dragAndDropContainer} {...getRootProps()}>
+        <Box>
           <img
             src={URL.createObjectURL(image)}
             alt="Preview"
             style={{ width: '100%', height: 'auto' }}
           />
           <button onClick={askRemoveImage}>Remove Image</button>
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   } else if (image && isModalOpen === true) {
       return (
-        <div style={dragAndDropContainer}>
+        <Box style={dragAndDropContainer}>
           <ConfirmationModal
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
             onConfirm={confirmRemoveImage}
           />
-        </div>
+        </Box>
       );
   } else {
     return (
-      <div style={dragAndDropContainer} {...getRootProps()}>
-        <div className="dropzone">
+      <Box style={dragAndDropContainer} {...getRootProps()}>
+        <Box className="dropzone">
           <input {...getInputProps()} />
           {isDragActive ? (
             <p style={textStyle}>Drop the file here...</p>
@@ -100,8 +101,8 @@ export default function MyComponent(props) {
               Drop your logo file here or <span style={browseStyle}>browse</span>
             </p>
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
     );
   }
 }
