@@ -10,12 +10,6 @@ import { Select } from "@/app/components/Select";
 import { useQuery } from "react-query";
 import { getActivityTypes } from "@/app/activities/api.mjs";
 
-const ACTIVITIES_TYPES = [
-  { id: 1, name: "Football" },
-  { id: 2, name: "Basketball" },
-  { id: 2, name: "Swimming" },
-];
-
 function ActivitiesSlideContainer({ children, sx }) {
   return (
     <Box
