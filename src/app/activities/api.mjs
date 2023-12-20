@@ -1,9 +1,11 @@
 import axios from "axios";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+// TODO: Remove once auth is set
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 const PROVIDERS_PATH = "providers/";
 
+// TODO: Remove once providers page is set
 export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
 
 const client = axios.create({
@@ -14,6 +16,7 @@ const client = axios.create({
   }
 });
 
+// TODO: remove once providers page is set
 // export async function getProviders() {
 //   const response = await client.get(PROVIDERS_PATH);
 //   return response.data;
@@ -24,6 +27,7 @@ export async function getProvider(providerId) {
   return response.data;
 }
 
+// TODO: remove once providers page is set
 // export async function postProvider(url, {arg: data}) {
 //   const response = await client.post(PROVIDERS_PATH, data);
 //   return response.data;
@@ -45,6 +49,7 @@ export async function patchProvider(providerId, data, file) {
   return response.data;
 }
 
+// TODO: remove once providers page is set
 // export async function deleteProvider(providerId) {
 //   const response = await client.delete(`${PROVIDERS_PATH}${providerId}/`);
 //   return response.data;
