@@ -1,25 +1,22 @@
-import { DateCalendar as MUIDateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import {DateCalendar as MUIDateCalendar} from "@mui/x-date-pickers/DateCalendar";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
-import { useState } from "react";
-import { manrope } from "@/components/ThemeRegistry/theme";
+import {useState} from "react";
+import {manrope} from "@/components/ThemeRegistry/theme";
 import "dayjs/locale/en-gb";
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
-import { IconButton } from "@mui/material";
-import { PickersDay } from "@mui/x-date-pickers";
-import { useTheme } from "@mui/material/styles";
+import {IconButton} from "@mui/material";
+import {PickersDay} from "@mui/x-date-pickers";
+import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {LeftArrow} from "@/assets/LeftArrow";
 import {RightArrow} from "@/assets/RightArrow";
-import { TimeClock, TimeClockProps } from '@mui/x-date-pickers/TimeClock';
-import ArrowLeft from '@mui/icons-material/ArrowLeft';
-import ArrowRight from '@mui/icons-material/ArrowRight';
 
 
-function PickersDayHighlighted({ schoolHolidays, ...props }) {
-  const { firstSchoolHolidays, secondSchoolHolidays } = schoolHolidays;
+function PickersDayHighlighted({schoolHolidays, ...props}) {
+  const {firstSchoolHolidays, secondSchoolHolidays} = schoolHolidays;
 
   const isFirstSchoolHoliday =
     !props.outsideCurrentMonth &&
@@ -41,7 +38,7 @@ function PickersDayHighlighted({ schoolHolidays, ...props }) {
   return <PickersDay className={className} {...props} />;
 }
 
-export default function DateCalendar({ displayDate, schoolHolidays, previousOnClick, nextOnClick }) {
+export default function DateCalendar({displayDate, schoolHolidays, previousOnClick, nextOnClick}) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <MUIDateCalendar
@@ -125,7 +122,7 @@ export default function DateCalendar({ displayDate, schoolHolidays, previousOnCl
   );
 }
 
-export function DateCalendarSet({ schoolHolidays, mt }) {
+export function DateCalendarSet({schoolHolidays, mt}) {
   const [monthDate, setMonthDate] = useState(dayjs());
   const nextMonthDate = monthDate.add(1, "month");
   const twoMonthsFromTodayDate = monthDate.add(2, "month");
@@ -144,22 +141,6 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"))
   const mdUp = useMediaQuery(theme.breakpoints.up("md"))
 
-  function PreviousIconButton({ ...props }) {
-    return (
-      <IconButton onClick={handlePrevious} sx={{ display: {xs: "none", sm: "flex"} }} {...props}>
-        <LeftArrow sx={{fontSize: 40}} />
-      </IconButton>
-    )
-  }
-
-  function NextIconButton({ ...props }) {
-    return (
-      <IconButton onClick={handleNext} sx={{ display: { xs: "none", sm: "flex" } }} {...props}>
-        <RightArrow sx={{ fontSize: 40 }} />
-      </IconButton>
-    );
-  }
-
   return (
     <Box
       sx={{
@@ -169,8 +150,11 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
         mt: mt,
       }}
     >
-      <PreviousIconButton />
-      <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} previousOnClick={handlePrevious} nextOnClick={handleNext}/>
+      <IconButton onClick={handlePrevious} sx={{display: {xs: "none", sm: "flex"}}}>
+        <LeftArrow sx={{fontSize: 40}}/>
+      </IconButton>
+      <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} previousOnClick={handlePrevious}
+                    nextOnClick={handleNext}/>
       {mdUp && (
         <DateCalendar
           displayDate={nextMonthDate}
@@ -183,7 +167,9 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
           schoolHolidays={schoolHolidays}
         />
       )}
-      <NextIconButton />
+      <IconButton onClick={handleNext} sx={{display: {xs: "none", sm: "flex"}}}>
+        <RightArrow sx={{fontSize: 40}}/>
+      </IconButton>
     </Box>
   );
 }
