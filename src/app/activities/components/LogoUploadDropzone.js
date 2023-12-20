@@ -110,17 +110,45 @@ function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
       sx={{
         width: "100%",
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Typography sx={{ fontWeight: 700 }}>
+      <Typography sx={{ fontWeight: 700, marginBottom: 2 }}>
         Are you sure you want to delete the file?
       </Typography>
-      <Button variant="outlined" onClick={logoDeleteCancel} color="success">
-        Cancel
-      </Button>
-      <Button variant="contained" color="error" onClick={logoDeleteConfirm}>
-        Confirm
-      </Button>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "75%",
+        }}
+      >
+        <Button
+          variant="outlined"
+          onClick={logoDeleteCancel}
+          sx={{
+            flexGrow: 1,
+            color: "black",
+            borderColor: "black",
+            marginRight: 1,
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={logoDeleteConfirm}
+          sx={{
+            flexGrow: 1,
+          }}
+        >
+          Confirm
+        </Button>
+      </Box>
     </Box>
   );
 }
