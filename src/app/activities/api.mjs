@@ -4,7 +4,7 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 const PROVIDERS_PATH = "providers/";
 
-export const TEST_PROVIDER_ID = 2;
+export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
 
 const client = axios.create({
   baseURL: API_HOST,
