@@ -1,15 +1,16 @@
 import axios from "axios";
 
-const API_HOST = "http://localhost:8000/";
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 const PROVIDERS_PATH = "providers/";
 
-export const TEST_PROVIDER_ID = 2
+export const TEST_PROVIDER_ID = 2;
 
 const client = axios.create({
   baseURL: API_HOST,
   timeout: 1000,
   headers: {
-    'Authorization': `Token fc4b8a24c6ca26d888feb082dc2ff30836953f48`
+    "Authorization": `Token ${AUTH_TOKEN}`
   }
 });
 
@@ -32,7 +33,7 @@ export async function patchProvider(providerId, data, file) {
   let formData = new FormData();
 
   // TODO: Refactor to a generic solution
-  if (file) formData.append("logo", file, file.name)
+  if (file) formData.append("logo", file, file.name);
 
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
@@ -40,7 +41,7 @@ export async function patchProvider(providerId, data, file) {
     }
   }
 
-  const response = await client.patch(`${PROVIDERS_PATH}${providerId}/`, formData)
+  const response = await client.patch(`${PROVIDERS_PATH}${providerId}/`, formData);
   return response.data;
 }
 
