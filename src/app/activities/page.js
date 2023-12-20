@@ -3,9 +3,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Select } from "@/app/components/Select";
-import Carousel, {
-  EmblaApiContext,
-} from "@/app/activities/components/Carousel";
+import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import { useContext } from "react";
 import { TextField } from "@mui/material";
 
@@ -27,7 +25,7 @@ function ActivitiesSlideContainer({ children, sx }) {
         ...sx,
       }}
     >
-      { children }
+      {children}
     </Box>
   );
 }
@@ -56,15 +54,8 @@ function ActivitiesFirstSlide() {
       }}
     >
       <Box sx={{ maxWidth: 341 }}>
-        <Typography variant="h5">
-          Create your first activity and let’s get going
-        </Typography>
-        <Select
-          label="Pick activity from list"
-          items={ACTIVITIES_TYPES}
-          sx={{ mt: 4 }}
-          onSelect={scrollNext}
-        />
+        <Typography variant="h5">Create your first activity and let’s get going</Typography>
+        <Select label="Pick activity from list" items={ACTIVITIES_TYPES} sx={{ mt: 4 }} onSelect={scrollNext} />
       </Box>
     </ActivitiesSlideContainer>
   );
