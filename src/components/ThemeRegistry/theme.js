@@ -64,6 +64,13 @@ const theme = createTheme({
         }),
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none", // overrides the default uppercase transformation
+        },
+      },
+    },
   },
 });
 
