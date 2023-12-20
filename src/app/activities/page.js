@@ -6,6 +6,9 @@ import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel"
 import { useContext } from "react";
 import { Button, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { Select } from "@/app/components/Select";
+import { useQuery } from "react-query";
+import { getActivityTypes } from "@/app/activities/api.mjs";
 
 const ACTIVITIES_TYPES = [
   { id: 1, name: "Football" },
@@ -30,9 +33,14 @@ function ActivitiesSlideContainer({ children, sx }) {
 }
 
 function ActivitiesSecondSlide() {
+  // TODO: Add error handling
+  const query = useQuery("activityTypes", getActivityTypes);
+
   return (
     <ActivitiesSlideContainer>
       <Box>
+        <Select label="Pick activity from list" items={query.data || []} sx={{ mt: 4 }} />
+
         <Typography>Provider</Typography>
         <TextField />
       </Box>
@@ -57,7 +65,6 @@ function ActivitiesFirstSlide() {
         <Button variant="contained" color="warning" size="large" onClick={scrollNext} sx={{ mt: 3 }}>
           Start here
         </Button>
-        {/*  <Select label="Pick activity from list" items={ACTIVITIES_TYPES} sx={{ mt: 4 }} onSelect={scrollNext} />*/}
       </Box>
     </ActivitiesSlideContainer>
   );

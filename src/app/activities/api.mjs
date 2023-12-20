@@ -3,10 +3,12 @@ import axios from "axios";
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 // TODO: Remove once auth is set
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
+export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
+
 const PROVIDERS_PATH = "providers/";
+const ACTIVITY_TYPES_PATH = "activity-types/";
 
 // TODO: Remove once providers page is set
-export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -15,6 +17,12 @@ const client = axios.create({
     "Authorization": `Token ${AUTH_TOKEN}`
   }
 });
+
+// TODO: Unify logic with provider api functions
+export async function getActivityTypes() {
+  const response = await client.get(ACTIVITY_TYPES_PATH);
+  return response.data;
+}
 
 // TODO: remove once providers page is set
 // export async function getProviders() {
