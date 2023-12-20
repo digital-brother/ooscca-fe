@@ -11,8 +11,8 @@ import { IconButton } from "@mui/material";
 import { PickersDay } from "@mui/x-date-pickers";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {LeftArrow} from "@/assets/LeftArrow";
-import {RightArrow} from "@/assets/RightArrow";
+import { LeftArrow } from "@/assets/LeftArrow";
+import { RightArrow } from "@/assets/RightArrow";
 
 function PickersDayHighlighted({ schoolHolidays, ...props }) {
   const { firstSchoolHolidays, secondSchoolHolidays } = schoolHolidays;
@@ -37,7 +37,12 @@ function PickersDayHighlighted({ schoolHolidays, ...props }) {
   return <PickersDay className={className} {...props} />;
 }
 
-export default function DateCalendar({ displayDate, schoolHolidays }) {
+export default function DateCalendar({
+  displayDate,
+  schoolHolidays,
+  previousOnClick,
+  nextOnClick,
+}) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <MUIDateCalendar
@@ -48,16 +53,31 @@ export default function DateCalendar({ displayDate, schoolHolidays }) {
         dayOfWeekFormatter={(_, date) => date.format("dd")}
         slots={{
           day: PickersDayHighlighted,
+          leftArrowIcon: LeftArrow,
+          rightArrowIcon: RightArrow,
         }}
         slotProps={{
           day: {
             schoolHolidays,
           },
+          previousIconButton: {
+            size: "large",
+            disabled: false,
+            onClick: previousOnClick,
+          },
+          nextIconButton: {
+            size: "large",
+            disabled: false,
+            onClick: nextOnClick,
+          },
         }}
         sx={{
           mx: 3.5,
           ".MuiPickersArrowSwitcher-root": {
-            display: "none",
+            display: {
+              xs: "flex",
+              sm: "none",
+            },
           },
           ".MuiPickersCalendarHeader-labelContainer": {
             mx: "auto",
@@ -122,8 +142,8 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
   }
 
   const theme = useTheme();
-  const lgUp = useMediaQuery(theme.breakpoints.up("lg"))
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"))
+  const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
     <Box
@@ -134,10 +154,18 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
         mt: mt,
       }}
     >
-      <IconButton onClick={handlePrevious}>
-        <LeftArrow sx={{fontSize: 40}} />
+      <IconButton
+        onClick={handlePrevious}
+        sx={{ display: { xs: "none", sm: "flex" } }}
+      >
+        <LeftArrow sx={{ fontSize: 40 }} />
       </IconButton>
-      <DateCalendar displayDate={monthDate} schoolHolidays={schoolHolidays} />
+      <DateCalendar
+        displayDate={monthDate}
+        schoolHolidays={schoolHolidays}
+        previousOnClick={handlePrevious}
+        nextOnClick={handleNext}
+      />
       {mdUp && (
         <DateCalendar
           displayDate={nextMonthDate}
@@ -150,8 +178,11 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
           schoolHolidays={schoolHolidays}
         />
       )}
-      <IconButton onClick={handleNext}>
-        <RightArrow sx={{fontSize: 40}} />
+      <IconButton
+        onClick={handleNext}
+        sx={{ display: { xs: "none", sm: "flex" } }}
+      >
+        <RightArrow sx={{ fontSize: 40 }} />
       </IconButton>
     </Box>
   );

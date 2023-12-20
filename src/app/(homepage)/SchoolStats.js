@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Select } from "@/app/components/Select";
-import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendar";
+import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendarSet";
 import dayjs from "dayjs";
 
 const SCHOOLS = [
