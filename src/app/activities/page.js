@@ -6,6 +6,7 @@ import { Select } from "@/app/components/Select";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import { useContext } from "react";
 import { TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 const ACTIVITIES_TYPES = [
   { id: 1, name: "Football" },
@@ -64,10 +65,17 @@ function ActivitiesFirstSlide() {
 export default function Activities() {
   return (
     <Box sx={{ m: 10 }}>
-      <Carousel>
-        <ActivitiesFirstSlide />
-        <ActivitiesSecondSlide />
-      </Carousel>
+      <Grid container>
+        <Grid item xs={6}>
+          Description
+        </Grid>
+        <Grid item xs={6}>
+          <Carousel>
+            <ActivitiesFirstSlide />
+            <ActivitiesSecondSlide />
+          </Carousel>
+        </Grid>
+      </Grid>
     </Box>
   );
 }
