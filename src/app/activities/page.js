@@ -17,8 +17,6 @@ function ActivitiesSlideContainer({ children, sx }) {
   return (
     <Box
       sx={{
-        border: "1px solid #6C757D",
-        borderRadius: 4,
         // width: 541,
         width: "100%",
         height: 597,
@@ -73,7 +71,7 @@ export default function Activities() {
           Description
         </Grid>
         <Grid item xs={6}>
-          <Carousel>
+          <Carousel viewportSx={{ border: "1px solid #6C757D", borderRadius: 4 }}>
             <ActivitiesFirstSlide />
             <ActivitiesSecondSlide />
           </Carousel>
