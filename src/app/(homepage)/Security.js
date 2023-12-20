@@ -19,8 +19,8 @@ function SecurityHeader() {
         Uncompromised Security
       </Typography>
       <Typography sx={{ mt: 3, fontSize: 24, color: "#FFF" }}>
-        At OOSCCA, we understand that security isn't just a feature; it's a
-        foundation. In a digital world where your family's safety and privacy
+        At OOSCCA, we understand that security isn&apos;t just a feature; it&apos;s a
+        foundation. In a digital world where your family&apos;s safety and privacy
         are paramount, we are steadfast in our commitment to protecting your
         information with the utmost rigor.
       </Typography>
