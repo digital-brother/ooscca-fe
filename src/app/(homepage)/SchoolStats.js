@@ -6,9 +6,11 @@ import React from "react";
 import SquareRoundedIcon from "@mui/icons-material/SquareRounded";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {Select} from "@/app/components/Select";
+import { Select } from "@/app/components/Select";
+import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendarSet";
+import dayjs from "dayjs";
 
 const SCHOOLS = [
   { id: 1, name: "Lyceum" },
@@ -108,10 +110,25 @@ function SchoolPicker() {
 }
 
 export default function SchoolStats() {
+  const schoolHolidays = {
+    firstSchoolHolidays: [
+      dayjs("2023-12-10"),
+      dayjs("2023-12-25"),
+      dayjs("2024-01-10"),
+      dayjs("2024-01-25"),
+    ],
+    secondSchoolHolidays: [
+      dayjs("2023-12-10"),
+      dayjs("2024-01-04"),
+      dayjs("2024-01-05"),
+    ],
+  };
+
   return (
     <Box>
       <SchoolPicker />
       <SchoolStatsTable mt={5} />
+      <DateCalendarSet schoolHolidays={schoolHolidays} mt={8} />
     </Box>
   );
 }
