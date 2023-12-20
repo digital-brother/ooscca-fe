@@ -2,12 +2,10 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Select } from "@/app/components/Select";
-import Carousel, {
-  EmblaApiContext,
-} from "@/app/activities/components/Carousel";
+import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import { useContext } from "react";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 const ACTIVITIES_TYPES = [
   { id: 1, name: "Football" },
@@ -15,39 +13,40 @@ const ACTIVITIES_TYPES = [
   { id: 2, name: "Swimming" },
 ];
 
-function ActivitiesBox({ children, sx }) {
+function ActivitiesSlideContainer({ children, sx }) {
   return (
     <Box
       sx={{
         border: "1px solid #6C757D",
         borderRadius: 4,
-        width: 541,
+        // width: 541,
+        width: "100%",
         height: 597,
         padding: 4,
         ...sx,
       }}
     >
-      { children }
+      {children}
     </Box>
   );
 }
 
-function ActivitiesSecond() {
+function ActivitiesSecondSlide() {
   return (
-    <ActivitiesBox>
+    <ActivitiesSlideContainer>
       <Box>
         <Typography>Provider</Typography>
         <TextField />
       </Box>
-    </ActivitiesBox>
+    </ActivitiesSlideContainer>
   );
 }
 
-function ActivitiesFirst() {
+function ActivitiesFirstSlide() {
   const { scrollNext } = useContext(EmblaApiContext);
 
   return (
-    <ActivitiesBox
+    <ActivitiesSlideContainer
       sx={{
         display: "flex",
         alignItems: "center",
@@ -56,27 +55,30 @@ function ActivitiesFirst() {
       }}
     >
       <Box sx={{ maxWidth: 341 }}>
-        <Typography variant="h5">
-          Create your first activity and let’s get going
-        </Typography>
-        <Select
-          label="Pick activity from list"
-          items={ACTIVITIES_TYPES}
-          sx={{ mt: 4 }}
-          onSelect={scrollNext}
-        />
+        <Typography variant="h5">Create your first activity and let’s get going</Typography>
+        <Button variant="contained" color="warning" size="large" onClick={scrollNext} sx={{ mt: 3 }}>
+          Start here
+        </Button>
+        {/*  <Select label="Pick activity from list" items={ACTIVITIES_TYPES} sx={{ mt: 4 }} onSelect={scrollNext} />*/}
       </Box>
-    </ActivitiesBox>
+    </ActivitiesSlideContainer>
   );
 }
 
 export default function Activities() {
   return (
     <Box sx={{ m: 10 }}>
-      <Carousel>
-        <ActivitiesFirst />
-        <ActivitiesSecond />
-      </Carousel>
+      <Grid container>
+        <Grid item xs={6}>
+          Description
+        </Grid>
+        <Grid item xs={6}>
+          <Carousel>
+            <ActivitiesFirstSlide />
+            <ActivitiesSecondSlide />
+          </Carousel>
+        </Grid>
+      </Grid>
     </Box>
   );
 }
