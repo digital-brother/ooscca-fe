@@ -19,6 +19,12 @@ const client = axios.create({
   }
 });
 
+export async function getActivity(activityId) {
+  const url = `${ACTIVITIES_PATH}${activityId}/`;
+  const response = await client.get(url)
+  return response.data
+}
+
 export async function patchActivity(activityId, data) {
   const url = `${ACTIVITIES_PATH}${activityId}/`;
   const response = await client.patch(url, data)
@@ -29,7 +35,6 @@ export async function patchActivity(activityId, data) {
 export async function getActivityTypes() {
   const response = await client.get(ACTIVITY_TYPES_PATH);
   return response.data
-
 }
 
 export async function getProvider(providerId) {
