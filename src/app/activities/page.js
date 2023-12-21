@@ -29,14 +29,13 @@ function ActivitiesSlideContainer({ children, sx }) {
 function ActivityFirstFormSlide() {
   // TODO: Add error handling
   const query = useQuery("activityTypes", getActivityTypes);
+  const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
-  const data = { type: 2 };
-  const mutation = useMutation(() => patchActivity(TEST_ACTIVITY_ID, data));
-
   function handleConfirm() {
-    mutation.mutate();
-    scrollNext();
+    const data = { type: 2 };
+    mutation.mutate(data);
+    // scrollNext();
   }
 
   return (

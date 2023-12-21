@@ -21,16 +21,16 @@ const client = axios.create({
 
 export function patchActivity(activityId, data) {
   const url = `${ACTIVITIES_PATH}${activityId}/`;
-  return client.patch(url, data);
+  return client.patch(url, data).data
 }
 
 // TODO: Unify logic with provider api functions
 export function getActivityTypes() {
-  return client.get(ACTIVITY_TYPES_PATH);
+  return client.get(ACTIVITY_TYPES_PATH).data;
 }
 
 export function getProvider(providerId) {
-  return client.get(`${PROVIDERS_PATH}${providerId}/`);
+  return client.get(`${PROVIDERS_PATH}${providerId}/`).data;
 }
 
 export async function patchProvider(providerId, data, file) {
