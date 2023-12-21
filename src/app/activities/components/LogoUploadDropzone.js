@@ -116,7 +116,7 @@ function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
         justifyContent: "center",
       }}
     >
-      <Typography sx={{ fontWeight: 700, marginBottom: 2 }}>
+      <Typography sx={{ fontWeight: 700}}>
         Are you sure you want to delete the file?
       </Typography>
       <Box
