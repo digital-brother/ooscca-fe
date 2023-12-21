@@ -4,11 +4,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import { useContext } from "react";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
-import { useQuery } from "react-query";
-import { getActivityTypes } from "@/app/activities/api.mjs";
+import { useMutation, useQuery } from "react-query";
+import { getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -26,23 +26,32 @@ function ActivitiesSlideContainer({ children, sx }) {
   );
 }
 
-function ActivitiesSecondSlide() {
+function ActivityFirstFormSlide() {
   // TODO: Add error handling
   const query = useQuery("activityTypes", getActivityTypes);
+  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+
+  const data = { type: 2 };
+  const mutation = useMutation(() => patchActivity(TEST_ACTIVITY_ID, data));
+
+  function handleConfirm() {
+    mutation.mutate();
+    scrollNext();
+  }
 
   return (
     <ActivitiesSlideContainer>
       <Box>
         <Select label="Pick activity from list" items={query.data || []} sx={{ mt: 4 }} />
 
-        <Typography>Provider</Typography>
-        <TextField />
+        <Button onClick={scrollPrev}>Go back</Button>
+        <Button onClick={handleConfirm}>Confirm</Button>
       </Box>
     </ActivitiesSlideContainer>
   );
 }
 
-function ActivitiesFirstSlide() {
+function ActivityStartCreationSlide() {
   const { scrollNext } = useContext(EmblaApiContext);
 
   return (
@@ -73,8 +82,8 @@ export default function Activities() {
         </Grid>
         <Grid item xs={6}>
           <Carousel viewportSx={{ border: "1px solid #6C757D", borderRadius: 4 }}>
-            <ActivitiesFirstSlide />
-            <ActivitiesSecondSlide />
+            <ActivityStartCreationSlide />
+            <ActivityFirstFormSlide />
           </Carousel>
         </Grid>
       </Grid>

@@ -4,9 +4,12 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 // TODO: Remove once auth is set
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
+export const TEST_ACTIVITY_ID = process.env.NEXT_PUBLIC_TEST_ACTIVITY_ID;
 
+// TODO: Update, so that urls explicitly include slashes
 const PROVIDERS_PATH = "providers/";
 const ACTIVITY_TYPES_PATH = "activity-types/";
+const ACTIVITIES_PATH = "activities/";
 
 // TODO: Remove once providers page is set
 
@@ -17,6 +20,11 @@ const client = axios.create({
     "Authorization": `Token ${AUTH_TOKEN}`
   }
 });
+
+export function patchActivity(activityId, data) {
+  const url = `${ACTIVITIES_PATH}${activityId}/`
+  return client.patch(url, data);
+}
 
 // TODO: Unify logic with provider api functions
 export async function getActivityTypes() {
