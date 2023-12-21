@@ -28,7 +28,7 @@ function LogoInput({ setFiles }) {
           }),
         ),
       );
-      mutation.mutate(acceptedFiles[0])
+      mutation.mutate(acceptedFiles[0]);
     },
     multiple: false,
   });
@@ -98,7 +98,7 @@ function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
   function logoDeleteConfirm() {
     setFiles([]);
     setConfirmDelete(false);
-    mutation.mutate()
+    mutation.mutate();
   }
 
   function logoDeleteCancel() {
@@ -124,6 +124,7 @@ function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
           display: "flex",
           justifyContent: "center",
           width: "75%",
+          mt: 2,
         }}
       >
         <Button
@@ -133,7 +134,14 @@ function LogoDeleteConfirm({ setFiles, setConfirmDelete }) {
             flexGrow: 1,
             color: "black",
             borderColor: "black",
-            marginRight: 1,
+            mr: 1,
+            "&:hover": {
+              bg: "rgba(0, 0, 0, 0.04)",
+              borderColor: "black",
+            },
+            "&:active": {
+              bg: "rgba(0, 0, 0, 0.12)",
+            },
           }}
         >
           Cancel
