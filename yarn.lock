@@ -2952,6 +2952,7 @@ __metadata:
     react: "npm:latest"
     react-dom: "npm:latest"
     react-dropzone: "npm:^14.2.3"
+    react-multi-date-picker: "npm:^4.4.1"
     react-query: "npm:^3.39.3"
   languageName: unknown
   linkType: soft
@@ -3457,6 +3458,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-date-object@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "react-date-object@npm:2.1.8"
+  checksum: a8a65d5e8fd8ff6c0021e5bf86a40fa0da0c9339540f1b42ea3f6f6b240ac10f9f0559937c3dc632bec17d8d271e15c6d93777c0f562722ae6d94c4f668ade2e
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:latest":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
@@ -3482,6 +3490,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-element-popper@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "react-element-popper@npm:2.1.6"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 31b4b38a5b0ba3b8f98d6fb52ea1cac9143bba3e3f76cdc425edc72e00779d11cf0572dc125121f5e458db5bf72e070e859a4de84894f72e742e1ea757370210
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^2.0.1":
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
@@ -3500,6 +3518,19 @@ __metadata:
   version: 18.2.0
   resolution: "react-is@npm:18.2.0"
   checksum: 6eb5e4b28028c23e2bfcf73371e72cd4162e4ac7ab445ddae2afe24e347a37d6dc22fae6e1748632cd43c6d4f9b8f86dcf26bf9275e1874f436d129952528ae0
+  languageName: node
+  linkType: hard
+
+"react-multi-date-picker@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "react-multi-date-picker@npm:4.4.1"
+  dependencies:
+    react-date-object: "npm:^2.1.8"
+    react-element-popper: "npm:^2.1.6"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: fd3a0e1a9daea95f17c3723bea2297634030a3757dc94e2c6afe1f04c932f91f64d92e96961018379ca0018946334b8b98565c3c1c96512c9207f476525daafc
   languageName: node
   linkType: hard
 

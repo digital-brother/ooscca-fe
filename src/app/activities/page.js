@@ -10,6 +10,7 @@ import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
 import { Form, Formik, useFormikContext } from "formik";
+import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -60,8 +61,9 @@ function ActivityFirstFormSlide() {
       <Formik initialValues={{ type: activity?.type || "" }} enableReinitialize onSubmit={handleConfirm}>
         <Form>
           <Select label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
+          <MultiDateRangeCalendar containerSx={{ mt: 3 }} />
           <NonFieldErrors />
-          <Box sx={{ mt: 2 }}>
+          <Box sx={{ mt: 3 }}>
             <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
               Go back
             </Button>
