@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
-import { Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -34,8 +34,11 @@ function ActivityFirstFormSlide() {
   const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
-  function handleConfirm(data) {
-    mutation.mutate(data);
+  function handleConfirm(data, { setErrors }) {
+    const lata = { type: 100 };
+    mutation.mutate(data, {
+      onError: (error) => setErrors(error.response.data),
+    });
     // scrollNext();
   }
 
@@ -46,6 +49,7 @@ function ActivityFirstFormSlide() {
           <Select label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
           <Button onClick={scrollPrev}>Go back</Button>
           <Button type="submit">Confirm</Button>
+          <ErrorMessage name="nonFieldErrors" />
         </Form>
       </Formik>
     </ActivitiesSlideContainer>

@@ -1,7 +1,7 @@
 import React from "react";
-import { FormControl, MenuItem, Select as MUISelect } from "@mui/material";
+import { FormControl, FormHelperText, MenuItem, Select as MUISelect } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useField } from "formik";
+import { ErrorMessage, useField } from "formik";
 
 export function Select({ label, items, sx, name }) {
   const [field, meta] = useField({ name });
@@ -32,6 +32,9 @@ export function Select({ label, items, sx, name }) {
           </MenuItem>
         ))}
       </MUISelect>
+      <FormHelperText>
+        <ErrorMessage name={name} />
+      </FormHelperText>
     </FormControl>
   );
 }
