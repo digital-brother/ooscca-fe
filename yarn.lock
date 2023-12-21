@@ -327,7 +327,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/base@npm:5.0.0-beta.28":
+"@mui/base@npm:5.0.0-beta.28, @mui/base@npm:^5.0.0-beta.22":
   version: 5.0.0-beta.28
   resolution: "@mui/base@npm:5.0.0-beta.28"
   dependencies:
@@ -512,7 +512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.15.1":
+"@mui/utils@npm:^5.14.16, @mui/utils@npm:^5.15.1":
   version: 5.15.1
   resolution: "@mui/utils@npm:5.15.1"
   dependencies:
@@ -527,6 +527,54 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 46a66c488ece0d5be5f179316495220ff95d5276f452ea1cf48836ed6aade63ceb5dd3cd0d3970eb958272eb4455deb657effcf52b7eb2355d9b99bef9d61909
+  languageName: node
+  linkType: hard
+
+"@mui/x-date-pickers@npm:^6.18.5":
+  version: 6.18.5
+  resolution: "@mui/x-date-pickers@npm:6.18.5"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.2"
+    "@mui/base": "npm:^5.0.0-beta.22"
+    "@mui/utils": "npm:^5.14.16"
+    "@types/react-transition-group": "npm:^4.4.8"
+    clsx: "npm:^2.0.0"
+    prop-types: "npm:^15.8.1"
+    react-transition-group: "npm:^4.4.5"
+  peerDependencies:
+    "@emotion/react": ^11.9.0
+    "@emotion/styled": ^11.8.1
+    "@mui/material": ^5.8.6
+    "@mui/system": ^5.8.0
+    date-fns: ^2.25.0
+    date-fns-jalali: ^2.13.0-0
+    dayjs: ^1.10.7
+    luxon: ^3.0.2
+    moment: ^2.29.4
+    moment-hijri: ^2.1.2
+    moment-jalaali: ^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+    date-fns:
+      optional: true
+    date-fns-jalali:
+      optional: true
+    dayjs:
+      optional: true
+    luxon:
+      optional: true
+    moment:
+      optional: true
+    moment-hijri:
+      optional: true
+    moment-jalaali:
+      optional: true
+  checksum: f27ce41fb9c25927402efa05255fe5b386dc25aad43928534933b63a368fa5b6c22e045c53248e630deba1b75a40c5ee6684e00bccd69b9403ebfcca8d7405a6
   languageName: node
   linkType: hard
 
@@ -713,7 +761,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.10":
+"@types/react-transition-group@npm:^4.4.10, @types/react-transition-group@npm:^4.4.8":
   version: 4.4.10
   resolution: "@types/react-transition-group@npm:4.4.10"
   dependencies:
@@ -2888,6 +2936,8 @@ __metadata:
     "@mui/icons-material": "npm:latest"
     "@mui/lab": "npm:^5.0.0-alpha.153"
     "@mui/material": "npm:latest"
+    "@mui/system": "npm:^5.15.1"
+    "@mui/x-date-pickers": "npm:^6.18.5"
     "@next/font": "npm:^14.0.3"
     axios: "npm:^1.6.2"
     dayjs: "npm:^1.11.10"
