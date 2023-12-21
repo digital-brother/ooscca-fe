@@ -34,19 +34,18 @@ function ActivityFirstFormSlide() {
   const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
-  function handleConfirm() {
-    const data = { type: 2 };
+  function handleConfirm(data) {
     mutation.mutate(data);
     // scrollNext();
   }
 
   return (
     <ActivitiesSlideContainer>
-      <Formik initialValues={{ type: activity?.type || "" }} enableReinitialize>
+      <Formik initialValues={{ type: activity?.type || "" }} enableReinitialize onSubmit={handleConfirm}>
         <Form>
           <Select label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
           <Button onClick={scrollPrev}>Go back</Button>
-          <Button onClick={handleConfirm}>Confirm</Button>
+          <Button type="submit">Confirm</Button>
         </Form>
       </Formik>
     </ActivitiesSlideContainer>
