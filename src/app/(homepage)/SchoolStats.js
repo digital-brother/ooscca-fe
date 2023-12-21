@@ -11,6 +11,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { Select } from "@/app/components/Select";
 import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendarSet";
 import dayjs from "dayjs";
+import { Formik, Form } from "formik";
 
 const SCHOOLS = [
   { id: 1, name: "Lyceum" },
@@ -64,12 +65,16 @@ function SchoolPicker() {
 
   return (
     <Grid container columnSpacing={4} rowSpacing={3}>
-      <Grid item xs={12} sm={6} sx={{ order: { xs: 1, sm: 3 } }}>
-        <Select label="Select a school" items={SCHOOLS} />
-      </Grid>
-      <Grid item xs={12} sm={6} sx={{ order: { xs: 2, sm: 4 } }}>
-        <Select label="Select another school" items={SCHOOLS} />
-      </Grid>
+      <Formik>
+        <Form>
+          <Grid item xs={12} sm={6} sx={{ order: { xs: 1, sm: 3 } }}>
+            <Select label="Select a school" items={SCHOOLS} name="schoolOne" />
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ order: { xs: 2, sm: 4 } }}>
+            <Select label="Select another school" items={SCHOOLS} name="schoolTwo" />
+          </Grid>
+        </Form>
+      </Formik>
       <Grid
         item
         xs={6}
@@ -111,17 +116,8 @@ function SchoolPicker() {
 
 export default function SchoolStats() {
   const schoolHolidays = {
-    firstSchoolHolidays: [
-      dayjs("2023-12-10"),
-      dayjs("2023-12-25"),
-      dayjs("2024-01-10"),
-      dayjs("2024-01-25"),
-    ],
-    secondSchoolHolidays: [
-      dayjs("2023-12-10"),
-      dayjs("2024-01-04"),
-      dayjs("2024-01-05"),
-    ],
+    firstSchoolHolidays: [dayjs("2023-12-10"), dayjs("2023-12-25"), dayjs("2024-01-10"), dayjs("2024-01-25")],
+    secondSchoolHolidays: [dayjs("2023-12-10"), dayjs("2024-01-04"), dayjs("2024-01-05")],
   };
 
   return (
