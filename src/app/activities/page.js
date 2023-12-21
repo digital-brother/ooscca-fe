@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
-import { ErrorMessage, Form, Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -60,10 +60,15 @@ function ActivityFirstFormSlide() {
       <Formik initialValues={{ type: activity?.type || "" }} enableReinitialize onSubmit={handleConfirm}>
         <Form>
           <Select label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
-          <Button onClick={scrollPrev}>Go back</Button>
-          <Button type="submit">Confirm</Button>
-          <ErrorMessage name="nonFieldErrors" />
           <NonFieldErrors />
+          <Box sx={{ mt: 2 }}>
+            <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
+              Go back
+            </Button>
+            <Button variant="contained" type="submit" color="success">
+              Confirm
+            </Button>
+          </Box>
         </Form>
       </Formik>
     </ActivitiesSlideContainer>
