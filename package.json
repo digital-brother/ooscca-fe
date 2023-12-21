@@ -15,19 +15,23 @@
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "latest",
+    "@mui/system": "^5.15.0",
+    "@mui/x-date-pickers": "^6.18.4",
+    "@next/font": "^14.0.3",
+    "axios": "^1.6.2",
+    "dayjs": "^1.11.10",
+    "embla-carousel-react": "^8.0.0-rc15",
     "eslint": "latest",
     "eslint-config-next": "latest",
-    "filepond": "^4.30.6",
-    "filepond-plugin-image-exif-orientation": "^1.0.11",
-    "filepond-plugin-image-preview": "^4.6.12",
-    "next": "latest",
+    "next": "^14.0.3",
     "react": "latest",
     "react-dom": "latest",
     "react-dropzone": "^14.2.3",
-    "react-filepond": "^7.1.2"
+    "react-query": "^3.39.3"
   },
   "devDependencies": {
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.1.0",
     "prettier": "3.1.0"
   },
   "packageManager": "yarn@4.0.2"

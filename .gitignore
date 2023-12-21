@@ -4,3 +4,5 @@
 todo.txt
 src/app/sandbox/
 src/app/snippet/
+.yarn/
+.env.local
