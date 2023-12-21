@@ -9,6 +9,7 @@ import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
 import { getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
+import { Form, Formik } from "formik";
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -40,12 +41,13 @@ function ActivityFirstFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
-      <Box>
-        <Select label="Pick activity from list" items={query.data || []} sx={{ mt: 4 }} />
-
-        <Button onClick={scrollPrev}>Go back</Button>
-        <Button onClick={handleConfirm}>Confirm</Button>
-      </Box>
+      <Formik initialValues={{ type: "" }}>
+        <Form>
+          <Select label="Pick activity from list" items={query.data || []} sx={{ mt: 4 }} name="type" />
+          <Button onClick={scrollPrev}>Go back</Button>
+          <Button onClick={handleConfirm}>Confirm</Button>
+        </Form>
+      </Formik>
     </ActivitiesSlideContainer>
   );
 }

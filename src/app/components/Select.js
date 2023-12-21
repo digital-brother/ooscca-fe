@@ -1,20 +1,15 @@
 import React from "react";
 import { FormControl, MenuItem, Select as MUISelect } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useField } from "formik";
 
-export function Select({ label, items, sx, onSelect }) {
-  const [item, setItem] = React.useState("");
-
-  const handleChange = (event) => {
-    setItem(event.target.value);
-    if (onSelect) onSelect();
-  };
+export function Select({ label, items, sx, name }) {
+  const [field, meta] = useField({ name });
 
   return (
     <FormControl sx={{ minWidth: 120, ...sx }} fullWidth>
       <MUISelect
-        value={item}
-        onChange={handleChange}
+        {...field}
         displayEmpty
         variant="filled"
         disableUnderline
@@ -22,11 +17,11 @@ export function Select({ label, items, sx, onSelect }) {
         IconComponent={KeyboardArrowDownIcon}
         sx={{
           borderRadius: 1,
-          color: item ? "#0C0E0F" : "#6C757D",
+          color: field.value ? "#0C0E0F" : "#6C757D",
           fontWeight: 700,
           textAlign: "center",
           "& .MuiSelect-icon": {
-            color: item ? "#0C0E0F" : "#6C757D",
+            color: field.value ? "#0C0E0F" : "#6C757D",
           },
         }}
       >
