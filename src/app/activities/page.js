@@ -3,13 +3,13 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
-import { useContext } from "react";
+import React, { useContext } from "react"; // added useEffect
 import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
-import { ErrorMessage, Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik, useFormikContext } from "formik";
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -23,6 +23,19 @@ function ActivitiesSlideContainer({ children, sx }) {
       }}
     >
       {children}
+    </Box>
+  );
+}
+
+function NonFieldErrors() {
+  const { errors } = useFormikContext();
+
+  if (!errors.nonFieldErrors) return null;
+  return (
+    <Box>
+      {errors.nonFieldErrors.map((error, index) => (
+        <Typography key={index}>{error}</Typography>
+      ))}
     </Box>
   );
 }
@@ -50,6 +63,7 @@ function ActivityFirstFormSlide() {
           <Button onClick={scrollPrev}>Go back</Button>
           <Button type="submit">Confirm</Button>
           <ErrorMessage name="nonFieldErrors" />
+          <NonFieldErrors />
         </Form>
       </Formik>
     </ActivitiesSlideContainer>
