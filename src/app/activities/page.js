@@ -58,10 +58,10 @@ function ActivityFirstFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
-      <Formik initialValues={{ type: activity?.type || "" }} enableReinitialize onSubmit={handleConfirm}>
+      <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleConfirm}>
         <Form>
           <Select label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
-          <MultiDateRangeCalendar containerSx={{ mt: 3 }} />
+          <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
           <NonFieldErrors />
           <Box sx={{ mt: 3 }}>
             <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
