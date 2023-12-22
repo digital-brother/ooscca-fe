@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import React, { useContext } from "react"; // added useEffect
-import { Button, Checkbox, FormControlLabel, IconButton, InputAdornment, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
@@ -15,7 +15,6 @@ import { TimeField } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 function ActivitySecondFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
@@ -68,16 +67,7 @@ function ActivitySecondFormSlide() {
         <Box sx={{ mt: 3 }}>
           <TextField sx={{ width: 67, mr: 2 }} label="2" type="number" />
           <TextField sx={{ width: 67, mr: 2 }} label="4" type="number" />
-          <IconButton>
-            <DeleteForeverIcon />
-          </IconButton>
-          <Box>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Single age" />
-          </Box>
         </Box>
-        <Button variant="contained" color="success">
-          Add
-        </Button>
       </Box>
 
       <TextField sx={{ mt: 3 }} label="Level" />
