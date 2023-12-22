@@ -4,16 +4,74 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import React, { useContext } from "react"; // added useEffect
-import { Button } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Select } from "@/app/components/Select";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
 import { Form, Formik, useFormikContext } from "formik";
 import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
+import { TimeField } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/en-gb";
 
 function ActivitySecondFormSlide() {
-  return <ActivitiesSlideContainer>Third</ActivitiesSlideContainer>;
+  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+
+  return (
+    <ActivitiesSlideContainer>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+        <TimeField label="Time" />
+      </LocalizationProvider>
+      <TextField
+        sx={{ mt: 3 }}
+        label="Price"
+        InputProps={{
+          startAdornment: <InputAdornment position="start">£</InputAdornment>,
+        }}
+        type="number"
+      />
+      <Box>
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Early drop off" />
+      </Box>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+        <TimeField label="Early drop off time" />
+      </LocalizationProvider>
+      <TextField
+        sx={{ mt: 3 }}
+        label="Early drop off price"
+        InputProps={{
+          startAdornment: <InputAdornment position="start">£</InputAdornment>,
+        }}
+        type="number"
+      />
+      <Box>
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Late pick up" />
+      </Box>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+        <TimeField label="Late pick up time" />
+      </LocalizationProvider>
+      <TextField
+        sx={{ mt: 3 }}
+        label="Late pick up price"
+        InputProps={{
+          startAdornment: <InputAdornment position="start">£</InputAdornment>,
+        }}
+        type="number"
+      />
+      <TextField sx={{ mt: 3 }} label="Level" />
+      <TextField sx={{ mt: 3 }} label="# of available place" type="number" />
+      <Box sx={{ mt: 3 }}>
+        <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
+          Go back
+        </Button>
+        <Button variant="contained" type="submit" color="success">
+          Confirm
+        </Button>
+      </Box>
+    </ActivitiesSlideContainer>
+  );
 }
 
 function ActivitiesSlideContainer({ children, sx }) {
@@ -22,7 +80,8 @@ function ActivitiesSlideContainer({ children, sx }) {
       sx={{
         // width: 541,
         width: "100%",
-        height: 597,
+        // TODO: Back to height once element completed
+        minHeight: 597,
         padding: 4,
         ...sx,
       }}
