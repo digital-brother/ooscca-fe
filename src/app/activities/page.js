@@ -12,6 +12,10 @@ import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "
 import { Form, Formik, useFormikContext } from "formik";
 import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
 
+function ActivitySecondFormSlide() {
+  return <ActivitiesSlideContainer>Third</ActivitiesSlideContainer>;
+}
+
 function ActivitiesSlideContainer({ children, sx }) {
   return (
     <Box
@@ -52,8 +56,8 @@ function ActivityFirstFormSlide() {
     const lata = { type: 100 };
     mutation.mutate(data, {
       onError: (error) => setErrors(error.response.data),
+      onSuccess: () => scrollNext(),
     });
-    // scrollNext();
   }
 
   return (
@@ -110,6 +114,7 @@ export default function Activities() {
           <Carousel viewportSx={{ border: "1px solid #6C757D", borderRadius: 4 }}>
             <ActivityStartCreationSlide />
             <ActivityFirstFormSlide />
+            <ActivitySecondFormSlide />
           </Carousel>
         </Grid>
       </Grid>
