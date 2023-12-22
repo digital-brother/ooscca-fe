@@ -8,7 +8,7 @@ import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Select } from "@/app/components/Select";
+import { FormikSelect } from "@/app/components/FormikSelect";
 import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendarSet";
 import dayjs from "dayjs";
 import { Formik, Form } from "formik";
@@ -68,10 +68,10 @@ function SchoolPicker() {
       <Formik>
         <Form>
           <Grid item xs={12} sm={6} sx={{ order: { xs: 1, sm: 3 } }}>
-            <Select label="Select a school" items={SCHOOLS} name="schoolOne" />
+            <FormikSelect label="FormikSelect a school" items={SCHOOLS} name="schoolOne" />
           </Grid>
           <Grid item xs={12} sm={6} sx={{ order: { xs: 2, sm: 4 } }}>
-            <Select label="Select another school" items={SCHOOLS} name="schoolTwo" />
+            <FormikSelect label="FormikSelect another school" items={SCHOOLS} name="schoolTwo" />
           </Grid>
         </Form>
       </Formik>

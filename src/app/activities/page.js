@@ -6,7 +6,7 @@ import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel"
 import React, { useContext } from "react"; // added useEffect
 import { Button, Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { Select } from "@/app/components/Select";
+import { FormikSelect } from "@/app/components/FormikSelect";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
 import { Form, Formik, useFormikContext } from "formik";
@@ -133,7 +133,7 @@ function ActivityFirstFormSlide() {
     <ActivitiesSlideContainer>
       <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleConfirm}>
         <Form>
-          <Select label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
+          <FormikSelect label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
           <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
           <NonFieldErrors />
           <Box sx={{ mt: 3 }}>
