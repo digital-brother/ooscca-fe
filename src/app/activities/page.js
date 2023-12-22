@@ -34,44 +34,50 @@ function ActivitySecondFormSlide() {
         type="number"
       />
 
-      <Box>
+      <Box sx={{ mt: 3 }}>
         <FormControlLabel control={<Checkbox defaultChecked />} label="Early drop off" />
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+          <TimeField label="00:00" sx={{ width: 80, mr: 2 }} />
+        </LocalizationProvider>
+        <TextField
+          sx={{ width: 134 }}
+          label="Early drop off price"
+          InputProps={{
+            startAdornment: <InputAdornment position="start">£</InputAdornment>,
+          }}
+          type="number"
+        />
       </Box>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-        <TimeField label="Early drop off time" />
-      </LocalizationProvider>
-      <TextField
-        sx={{ mt: 3 }}
-        label="Early drop off price"
-        InputProps={{
-          startAdornment: <InputAdornment position="start">£</InputAdornment>,
-        }}
-        type="number"
-      />
-      <Box>
-        <FormControlLabel control={<Checkbox defaultChecked />} label="Late pick up" />
-      </Box>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-        <TimeField label="Late pick up time" />
-      </LocalizationProvider>
-      <TextField
-        sx={{ mt: 3 }}
-        label="Late pick up price"
-        InputProps={{
-          startAdornment: <InputAdornment position="start">£</InputAdornment>,
-        }}
-        type="number"
-      />
 
-      <TextField sx={{ mt: 3 }} label="Agr from" type="number" />
-      <TextField sx={{ mt: 3 }} label="Agr to" type="number" />
-      <Box sx={{ mt: 1 }}>
-        <IconButton>
-          <DeleteForeverIcon />
-        </IconButton>
+      <Box sx={{ mt: 3 }}>
+        <FormControlLabel control={<Checkbox defaultChecked />} label="Late pick up" />
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+          <TimeField label="00:00" sx={{ width: 80, mr: 2 }} />
+        </LocalizationProvider>
+        <TextField
+          sx={{ width: 134 }}
+          label="Late pick up price"
+          InputProps={{
+            startAdornment: <InputAdornment position="start">£</InputAdornment>,
+          }}
+          type="number"
+        />
       </Box>
+
       <Box>
-        <FormControlLabel control={<Checkbox defaultChecked />} label="Single age" />
+        <Box sx={{ mt: 3 }}>
+          <TextField sx={{ width: 67, mr: 2 }} label="2" type="number" />
+          <TextField sx={{ width: 67, mr: 2 }} label="4" type="number" />
+          <IconButton>
+            <DeleteForeverIcon />
+          </IconButton>
+          <Box>
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Single age" />
+          </Box>
+        </Box>
+        <Button variant="contained" color="success">
+          Add
+        </Button>
       </Box>
 
       <TextField sx={{ mt: 3 }} label="Level" />
