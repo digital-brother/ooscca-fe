@@ -61,7 +61,7 @@ function FilesTable({files, setFiles}) {
             >
               <TableCell component="th" scope="row" align="center">
                 <Box component="img"
-                  src={file.preview}
+                  src={file.preview || file.image}
                   sx={{
                     height: "100%",
                     width: "100%",
