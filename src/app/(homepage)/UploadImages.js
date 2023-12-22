@@ -5,6 +5,7 @@ import {Box, Button, Container, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import {ImageInput} from "@/app/activities/components/LogoUploadDropzone";
+import { useMutation, useQuery } from "react-query";
 
 import * as React from 'react';
 import Table from '@mui/material/Table';
@@ -17,6 +18,13 @@ import Paper from '@mui/material/Paper';
 
 import { useDropzone } from "react-dropzone";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {
+  getImages,
+  patchImage,
+  deleteImage,
+  postImage,
+  TEST_ACTIVITY_ID,
+} from "@/app/activities/apiImage.mjs";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -46,7 +54,7 @@ function FilesTable({files, setFiles}) {
         </TableHead>
         <TableBody>
           {console.log(files)}
-          {files.map((file, key) => (
+          {Array.isArray(files) && (files.map((file, key) => (
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               key={key+1}
@@ -74,7 +82,7 @@ function FilesTable({files, setFiles}) {
                 Delete
               </TableCell>
             </TableRow>
-          ))}
+          )))}
         </TableBody>
       </Table>
     </TableContainer>
@@ -83,6 +91,30 @@ function FilesTable({files, setFiles}) {
 
 export default function UploadImages() {
   const [files, setFiles] = useState([]);
+  const [filesLoaded, setFilesLoaded] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState();
+  const mutation = useMutation((data, file) => patchImage(TEST_ACTIVITY_ID, data, file));
+
+  const {
+    data: images,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: "images",
+    queryFn: () => getImages(),
+  });
+
+  useEffect(() => {
+    if (!isLoading && !isError && images) {
+      setFiles(images);
+    }
+  }, [images, isLoading, isError]);
+
+  useEffect(() => {
+    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
+    return () => files.forEach((file) => URL.revokeObjectURL(file.url));
+  }, []);
+
   return (
     <Container sx={{
       py: {xs: 6, md: 3},
