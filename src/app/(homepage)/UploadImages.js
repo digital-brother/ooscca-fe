@@ -102,6 +102,10 @@ export default function UploadImages() {
   } = useQuery({
     queryKey: "images",
     queryFn: () => getImages(),
+    enabled: !filesLoaded,  // disable repeated requests
+    onSuccess: (data) => {
+      setFilesLoaded(true);
+    }
   });
 
   useEffect(() => {
