@@ -4,7 +4,17 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import React, { useContext } from "react"; // added useEffect
-import { Button, Checkbox, FormControlLabel, InputAdornment, TextField } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { FormikSelect } from "@/app/components/FormikSelect";
 import { useMutation, useQuery } from "react-query";
@@ -18,6 +28,11 @@ import "dayjs/locale/en-gb";
 
 function ActivitySecondFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+  const [age, setAge] = React.useState("range");
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
 
   return (
     <ActivitiesSlideContainer>
@@ -63,11 +78,16 @@ function ActivitySecondFormSlide() {
         />
       </Box>
 
-      <Box>
-        <Box sx={{ mt: 3 }}>
-          <TextField sx={{ width: 67, mr: 2 }} label="2" type="number" />
-          <TextField sx={{ width: 67, mr: 2 }} label="4" type="number" />
-        </Box>
+      <Box sx={{ mt: 3 }}>
+        <FormControl sx={{ mr: 2 }}>
+          <InputLabel id="demo-simple-select-label">Agel</InputLabel>
+          <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
+            <MenuItem value="single">Single</MenuItem>
+            <MenuItem value="range">Range</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField sx={{ width: 67, mr: 2 }} label="2" type="number" />
+        {age === "range" && <TextField sx={{ width: 67, mr: 2 }} label="4" type="number" />}
       </Box>
 
       <TextField sx={{ mt: 3 }} label="Level" />
