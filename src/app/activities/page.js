@@ -19,7 +19,7 @@ import Grid from "@mui/material/Grid";
 import { FormikSelect } from "@/app/components/FormikSelect";
 import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
-import { Form, Formik, useFormikContext } from "formik";
+import { Field, Form, Formik, useFormikContext } from "formik";
 import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
 import { TimeField } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -29,78 +29,125 @@ import "dayjs/locale/en-gb";
 function ActivitySecondFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
   const [age, setAge] = React.useState("range");
+  const { data: activity } = useQuery(["activity", TEST_ACTIVITY_ID], () => getActivity(TEST_ACTIVITY_ID));
 
   const handleChange = (event) => {
     setAge(event.target.value);
   };
 
+  function handleSubmit(values) {
+    console.log(values);
+  }
+
+  console.log(activity);
+
   return (
-    <ActivitiesSlideContainer>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-        <TimeField label="Time" />
-      </LocalizationProvider>
-      <TextField
-        sx={{ mt: 3 }}
-        label="Price"
-        InputProps={{
-          startAdornment: <InputAdornment position="start">£</InputAdornment>,
-        }}
-        type="number"
-      />
-
-      <Box sx={{ mt: 3 }}>
-        <FormControlLabel control={<Checkbox defaultChecked />} label="Early drop off" />
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-          <TimeField label="00:00" sx={{ width: 80, mr: 2 }} />
-        </LocalizationProvider>
-        <TextField
-          sx={{ width: 134 }}
-          label="Early drop off price"
-          InputProps={{
-            startAdornment: <InputAdornment position="start">£</InputAdornment>,
+    activity && (
+      <ActivitiesSlideContainer>
+        <Formik
+          initialValues={{
+            startTime: activity.startTime,
+            endTime: activity.endTime,
+            price: activity.price,
+            earlyDropOff: activity.earlyDropOff,
+            earlyDropOffTime: activity.earlyDropOffTime,
+            earlyDropOffPrice: activity.earlyDropOffPrice,
+            latePickUp: activity.latePickUp,
+            latePickUpTime: activity.latePickUpTime,
+            latePickUpPrice: activity.latePickUpPrice,
+            ageFrom: activity.ageFrom,
+            ageTo: activity.ageTo,
+            level: activity.level,
+            capacity: activity.capacity,
           }}
-          type="number"
-        />
-      </Box>
+          onSubmit={handleSubmit}
+        >
+          <Form>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+              <Box>
+                <Field as={TimeField} name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
+                <Field as={TimeField} name="endTime" label="End time" sx={{ width: 180 }} />
+              </Box>
+            </LocalizationProvider>
+            <Field
+              as={TextField}
+              name="price"
+              sx={{ mt: 3 }}
+              label="Price"
+              InputProps={{
+                startAdornment: <InputAdornment position="start">£</InputAdornment>,
+              }}
+              type="number"
+            />
 
-      <Box sx={{ mt: 3 }}>
-        <FormControlLabel control={<Checkbox defaultChecked />} label="Late pick up" />
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-          <TimeField label="00:00" sx={{ width: 80, mr: 2 }} />
-        </LocalizationProvider>
-        <TextField
-          sx={{ width: 134 }}
-          label="Late pick up price"
-          InputProps={{
-            startAdornment: <InputAdornment position="start">£</InputAdornment>,
-          }}
-          type="number"
-        />
-      </Box>
+            <Box sx={{ mt: 3 }}>
+              <FormControlLabel
+                control={<Field as={Checkbox} name="earlyDropOff" defaultChecked />}
+                label="Early drop off"
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                <Field as={TimeField} name="earlyDropOffTime" label="00:00" sx={{ width: 80, mr: 2 }} />
+              </LocalizationProvider>
+              <Field
+                as={TextField}
+                name="earlyDropOffPrice"
+                sx={{ width: 134 }}
+                label="Early drop off price"
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">£</InputAdornment>,
+                }}
+                type="number"
+              />
+            </Box>
 
-      <Box sx={{ mt: 3 }}>
-        <FormControl sx={{ mr: 2 }}>
-          <InputLabel id="demo-simple-select-label">Agel</InputLabel>
-          <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
-            <MenuItem value="single">Single</MenuItem>
-            <MenuItem value="range">Range</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField sx={{ width: 67, mr: 2 }} label="2" type="number" />
-        {age === "range" && <TextField sx={{ width: 67, mr: 2 }} label="4" type="number" />}
-      </Box>
+            <Box sx={{ mt: 3 }}>
+              <FormControlLabel
+                control={<Field as={Checkbox} name="latePickUp" defaultChecked />}
+                label="Late pick up"
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                <Field as={TimeField} name="latePickUpTime" label="00:00" sx={{ width: 80, mr: 2 }} />
+              </LocalizationProvider>
+              <Field
+                as={TextField}
+                name="latePickUpPrice"
+                sx={{ width: 134 }}
+                label="Late pick up price"
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">£</InputAdornment>,
+                }}
+                type="number"
+              />
+            </Box>
 
-      <TextField sx={{ mt: 3 }} label="Level" />
-      <TextField sx={{ mt: 3 }} label="# of available place" type="number" />
-      <Box sx={{ mt: 3 }}>
-        <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
-          Go back
-        </Button>
-        <Button variant="contained" type="submit" color="success">
-          Confirm
-        </Button>
-      </Box>
-    </ActivitiesSlideContainer>
+            <Box sx={{ mt: 3 }}>
+              <FormControl sx={{ mr: 2 }}>
+                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
+                  <MenuItem value="single">Single</MenuItem>
+                  <MenuItem value="range">Range</MenuItem>
+                </Select>
+              </FormControl>
+              <Field as={TextField} name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" type="number" />
+              {age === "range" && (
+                <Field as={TextField} name="ageTo" sx={{ width: 67, mr: 2 }} label="4" type="number" />
+              )}
+            </Box>
+
+            <Field as={TextField} name="level" sx={{ mt: 3 }} label="Level" />
+            <Field as={TextField} name="capacity" sx={{ mt: 3 }} label="# of available place" type="number" />
+            <Box sx={{ mt: 3 }}>
+              <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
+                Go back
+              </Button>
+              <Button variant="contained" type="submit" color="success">
+                Confirm
+              </Button>
+            </Box>
+          </Form>
+        </Formik>
+      </ActivitiesSlideContainer>
+    )
   );
 }
 
