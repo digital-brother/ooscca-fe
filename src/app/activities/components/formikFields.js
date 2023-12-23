@@ -48,3 +48,18 @@ export function FormikCheckboxField({ label, ...props }) {
 
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
 }
+
+// In case if value is edited and erased, "" is set as a value.
+// That causes backend "Valid integer is required" error. DRF does not treat "" as null for IntegerField.
+export function FormikIntegerField(props) {
+  const [field, meta, helpers] = useField(props);
+
+  const fieldValue = field.value ?? "";
+
+  function handleChange(event) {
+    const value = event.target.value;
+    helpers.setValue(value === "" ? null : value);
+  }
+
+  return <TextField type="number" {...field} value={fieldValue} onChange={handleChange} {...props} />;
+}
