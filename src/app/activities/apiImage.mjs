@@ -27,10 +27,8 @@ export async function getImage(ImageId) {
   return response.data;
 }
 
-export async function postImage(data, file) {
+export async function postImage(data) {
   let formData = new FormData();
-
-  formData.append("image", file, data.name);
 
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
@@ -42,11 +40,8 @@ export async function postImage(data, file) {
   return response.data;
 }
 
-export async function patchImage(imageId, data, file) {
+export async function patchImage(data) {
   let formData = new FormData();
-
-  // TODO: Refactor to a generic solution
-  if (file) formData.append("image", file, data.name);
 
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
@@ -54,7 +49,7 @@ export async function patchImage(imageId, data, file) {
     }
   }
 
-  const response = await client.patch(`${IMAGES_PATH}${imageId}/`, formData);
+  const response = await client.patch(`${IMAGES_PATH}${data.id}/`, formData);
   return response.data;
 }
 

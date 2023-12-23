@@ -14,7 +14,6 @@ import {
 } from "@/app/activities/api.mjs";
 
 export function ImageInput({ files, setFiles, ...props }) {
-  const mutation = useMutation((file) => patchProvider(TEST_PROVIDER_ID, null, file));
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],

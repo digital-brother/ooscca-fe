@@ -53,7 +53,6 @@ function FilesTable({files, setFiles}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {console.log(files)}
           {Array.isArray(files) && (files.map((file, key) => (
             <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -93,7 +92,8 @@ export default function UploadImages() {
   const [files, setFiles] = useState([]);
   const [filesLoaded, setFilesLoaded] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState();
-  const mutation = useMutation((data, file) => patchImage(TEST_ACTIVITY_ID, data, file));
+  const patchMutation = useMutation((data, file) => patchImage(data, file));
+  const postMutation = useMutation((data, file) => postImage(data, file));
 
   const {
     data: images,
@@ -118,6 +118,28 @@ export default function UploadImages() {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => files.forEach((file) => URL.revokeObjectURL(file.url));
   }, []);
+
+  function SaveButtonOnClick(event) {
+    if (Array.isArray(files)) {
+      files.map((file, key) => {
+        if (file.id) {  // file from server
+          patchMutation.mutate({
+            "id": file.id,
+            "name": file.name,
+            "position": key,
+          })
+        } else {
+          postMutation.mutate({
+            "name": file.name,
+            "position": key,
+            "size": file.size,
+            "activity": TEST_ACTIVITY_ID,
+            "image": file,
+          })
+        }
+      })
+    }
+  }
 
   return (
     <Container sx={{
@@ -152,7 +174,7 @@ export default function UploadImages() {
         <FilesTable files={files} setFiles={setFiles} />
       )}
       {files.length !== 0 && (
-        <Button sx={{
+        <Button onClick={SaveButtonOnClick} sx={{
           width: "20%",
           height: "37px",
           py: "11px",
