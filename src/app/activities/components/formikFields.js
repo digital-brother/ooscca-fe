@@ -14,7 +14,7 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 // "" - when value is edited and erased
 // DRF IntegerField raises "Valid integer is required" in such case.
 // * DRF DecimalField treats "" as null.
-export function FormikDecimalField(props) {
+export function FormikNumericField(props) {
   const [field, meta, helpers] = useField(props);
 
   const fieldValue = field.value ?? "";
@@ -47,23 +47,11 @@ export function FormikDecimalField(props) {
   );
 }
 
+// Handles initial value is undefined case
 export function FormikCheckboxField({ label, ...props }) {
   const [field, meta] = useField({ ...props, type: "checkbox" });
 
   const fieldValue = field.value ?? false;
 
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
-}
-
-export function FormikIntegerField(props) {
-  const [field, meta, helpers] = useField(props);
-
-  const fieldValue = field.value ?? "";
-
-  function handleChange(event) {
-    const value = event.target.value;
-    helpers.setValue(value === "" ? null : value);
-  }
-
-  return <TextField type="number" {...field} value={fieldValue} onChange={handleChange} {...props} />;
 }
