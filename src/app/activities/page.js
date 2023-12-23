@@ -21,7 +21,6 @@ import { useMutation, useQuery } from "react-query";
 import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
-import { TimeField } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
@@ -36,14 +35,12 @@ function ActivitySecondFormSlide() {
     setAge(event.target.value);
   };
 
-  function handleSubmit(data, { setErrors }) {
-    mutation.mutate(data, {
+  function handleSubmit(values, { setErrors }) {
+    mutation.mutate(values, {
       onError: (error) => setErrors(error.response.data),
       // onSuccess: () => scrollNext(),
     });
   }
-
-  console.log(activity);
 
   return (
     activity && (
@@ -69,8 +66,8 @@ function ActivitySecondFormSlide() {
           <Form>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
               <Box>
-                <Field as={TimeField} name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
-                <Field as={TimeField} name="endTime" label="End time" sx={{ width: 180 }} />
+                <Field as={TextField} type="time" name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
+                <Field as={TextField} type="time" name="endTime" label="End time" sx={{ width: 180 }} />
               </Box>
             </LocalizationProvider>
             <Field
@@ -86,11 +83,11 @@ function ActivitySecondFormSlide() {
 
             <Box sx={{ mt: 3 }}>
               <FormControlLabel
-                control={<Field as={Checkbox} name="earlyDropOff" defaultChecked />}
+                control={<Field as={Checkbox} type="checkbox" name="earlyDropOff" />}
                 label="Early drop off"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                <Field as={TimeField} name="earlyDropOffTime" label="00:00" sx={{ width: 80, mr: 2 }} />
+                <Field as={TextField} type="time" name="earlyDropOffTime" label="Early drop off time" sx={{ width: 130, mr: 2 }} />
               </LocalizationProvider>
               <Field
                 as={TextField}
@@ -106,11 +103,11 @@ function ActivitySecondFormSlide() {
 
             <Box sx={{ mt: 3 }}>
               <FormControlLabel
-                control={<Field as={Checkbox} name="latePickUp" defaultChecked />}
+                control={<Field as={Checkbox} type="checkbox" name="latePickUp" />}
                 label="Late pick up"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                <Field as={TimeField} name="latePickUpTime" label="00:00" sx={{ width: 80, mr: 2 }} />
+                <Field as={TextField} type="time" name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
               </LocalizationProvider>
               <Field
                 as={TextField}
