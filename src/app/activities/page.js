@@ -30,13 +30,17 @@ function ActivitySecondFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
   const [age, setAge] = React.useState("range");
   const { data: activity } = useQuery(["activity", TEST_ACTIVITY_ID], () => getActivity(TEST_ACTIVITY_ID));
+  const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
 
   const handleChange = (event) => {
     setAge(event.target.value);
   };
 
-  function handleSubmit(values) {
-    console.log(values);
+  function handleSubmit(data, { setErrors }) {
+    mutation.mutate(data, {
+      onError: (error) => setErrors(error.response.data),
+      // onSuccess: () => scrollNext(),
+    });
   }
 
   console.log(activity);
@@ -188,8 +192,7 @@ function ActivityFirstFormSlide() {
   const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
-  function handleConfirm(data, { setErrors }) {
-    const lata = { type: 100 };
+  function handleSubmit(data, { setErrors }) {
     mutation.mutate(data, {
       onError: (error) => setErrors(error.response.data),
       onSuccess: () => scrollNext(),
@@ -198,7 +201,7 @@ function ActivityFirstFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
-      <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleConfirm}>
+      <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleSubmit}>
         <Form>
           <FormikSelect label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
           <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
