@@ -60,27 +60,14 @@ export function FormikCheckboxField({ label, ...props }) {
 
 export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
-  // const initialValue = dayjs("22:16:37", "HH:mm")
-  // const initialValue = null
-  // const [value, setValue] = useState(initialValue);
 
-  console.log(field);
-
-  const fieldValue = dayjs(field.value, "HH:mm");
+  const parsedValue = dayjs(field.value, "HH:mm");
+  const fieldValue = parsedValue.isValid() ? parsedValue : null
 
   function handleChange(value) {
     const formikValue = value?.format("HH:mm")
     helpers.setValue(formikValue);
   }
 
-  // const fieldValue = dayjs(value);
-  // const [field, meta] = useField(props);
-
-  // const isString = typeof field.value === "string";
-  // const fieldValue = isString ? dayjs(field.value, "HH:mm") : field.value;
-
-  // return <TimeField {...field} value={fieldValue} {...props} />;
-
   return <TimeField value={fieldValue} onChange={handleChange} />;
-  // return <TimeField value={value} onChange={(value) => setValue(value)} {...props} />;
 }
