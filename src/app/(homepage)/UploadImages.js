@@ -39,6 +39,53 @@ function formatBytes(bytes, decimals) {
    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
+function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
+  file.position = _key
+  const deleteMutation = useMutation((data) => {
+      deleteImage(data?.id)
+      setFiles(files.filter(item => item !== file));
+    }
+  );
+
+  function deleteImageButtonHandler(event) {
+    if (file?.id) {
+      deleteMutation.mutate(file);
+    } else {
+      setFiles(files.filter(item => item !== file));
+    }
+  }
+
+  return <TableRow
+      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+      key={ _key }
+    >
+      <TableCell component="th" scope="row" align="center">
+        <Box component="img"
+          src={file.preview || file.image}
+          sx={{
+            height: "33px",
+            borderRadius: "6px",
+          }}
+          alt={file.name}
+        />
+      </TableCell>
+      <TableCell component="th" scope="row">
+        {file.name}
+      </TableCell>
+      <TableCell component="th" scope="row" align="center">
+        { file.position }
+      </TableCell>
+      <TableCell component="th" scope="row" align="center">
+        {formatBytes(file.size, 1)}
+      </TableCell>
+      <TableCell component="th" scope="row" align="center">
+        <Button onClick={deleteImageButtonHandler} key={_key}>
+          <TrashCanIcon />
+        </Button>
+      </TableCell>
+    </TableRow>
+}
+
 function FilesTable({files, setFiles}) {
   return (
     <TableContainer component={Paper} sx={{ border: "none", boxShadow: "none"}}>
@@ -54,33 +101,7 @@ function FilesTable({files, setFiles}) {
         </TableHead>
         <TableBody>
           {Array.isArray(files) && (files.map((file, key) => (
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              key={key+1}
-            >
-              <TableCell component="th" scope="row" align="center">
-                <Box component="img"
-                  src={file.preview || file.image}
-                  sx={{
-                    height: "100%",
-                    width: "100%",
-                  }}
-                  alt={file.name}
-                />
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {file.name}
-              </TableCell>
-              <TableCell component="th" scope="row" align="center">
-                {key + 1}
-              </TableCell>
-              <TableCell component="th" scope="row" align="center">
-                {formatBytes(file.size, 1)}
-              </TableCell>
-              <TableCell component="th" scope="row" align="center">
-                Delete
-              </TableCell>
-            </TableRow>
+            <ImageDataRow files={files} setFiles={setFiles} file={file} key={key+1} _key={key+1} />
           )))}
         </TableBody>
       </Table>
