@@ -73,8 +73,6 @@ export function FormikTimeField(props) {
 
   function handleChange(value) {
     const formikValue = value?.format("HH:mm")
-    console.log(`  [Set] TimeField-from ${value}`)
-    console.log(`  [Set] formik-to: ${formikValue}`)
     helpers.setValue(formikValue);
   }
 
@@ -87,9 +85,5 @@ export function FormikTimeField(props) {
 
   const parsedDayjs = dayjs(field.value, "HH:mm");
   const displayValue = parsedDayjs.isValid() ? parsedDayjs : null
-
-  console.log(`[Get] formik-from: ${field.value}`)
-  console.log(`[Get] formik-from-parsedDayjs: ${parsedDayjs}`)
-  console.log(`[Get] TimeField-to: ${displayValue}`)
   return <TimeField value={displayValue} onChange={handleChange} onBlur={handleBlur} />;
 }
