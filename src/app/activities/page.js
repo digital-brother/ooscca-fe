@@ -69,82 +69,78 @@ function ActivitySecondFormSlide() {
                 <Field as={TextField} type="time" name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
                 <Field as={TextField} type="time" name="endTime" label="End time" sx={{ width: 180 }} />
               </Box>
-            </LocalizationProvider>
-            <Field
-              as={TextField}
-              name="price"
-              sx={{ mt: 3 }}
-              label="Price"
-              InputProps={{
-                startAdornment: <InputAdornment position="start">£</InputAdornment>,
-              }}
-              type="number"
-            />
-
-            <Box sx={{ mt: 3 }}>
-              <FormControlLabel
-                control={<Field as={Checkbox} type="checkbox" name="earlyDropOff" />}
-                label="Early drop off"
+              <Field
+                as={TextField}
+                name="price"
+                sx={{ mt: 3 }}
+                label="Price"
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">£</InputAdornment>,
+                }}
+                type="number"
               />
-              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+
+              <Box sx={{ mt: 3 }}>
+                <FormControlLabel
+                  control={<Field as={Checkbox} type="checkbox" name="earlyDropOff" />}
+                  label="Early drop off"
+                />
                 <Field as={TextField} type="time" name="earlyDropOffTime" label="Early drop off time" sx={{ width: 130, mr: 2 }} />
-              </LocalizationProvider>
-              <Field
-                as={TextField}
-                name="earlyDropOffPrice"
-                sx={{ width: 134 }}
-                label="Early drop off price"
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">£</InputAdornment>,
-                }}
-                type="number"
-              />
-            </Box>
+                <Field
+                  as={TextField}
+                  name="earlyDropOffPrice"
+                  sx={{ width: 134 }}
+                  label="Early drop off price"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">£</InputAdornment>,
+                  }}
+                  type="number"
+                />
+              </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <FormControlLabel
-                control={<Field as={Checkbox} type="checkbox" name="latePickUp" />}
-                label="Late pick up"
-              />
-              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+              <Box sx={{ mt: 3 }}>
+                <FormControlLabel
+                  control={<Field as={Checkbox} type="checkbox" name="latePickUp" />}
+                  label="Late pick up"
+                />
                 <Field as={TextField} type="time" name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
-              </LocalizationProvider>
-              <Field
-                as={TextField}
-                name="latePickUpPrice"
-                sx={{ width: 134 }}
-                label="Late pick up price"
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">£</InputAdornment>,
-                }}
-                type="number"
-              />
-            </Box>
+                <Field
+                  as={TextField}
+                  name="latePickUpPrice"
+                  sx={{ width: 134 }}
+                  label="Late pick up price"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">£</InputAdornment>,
+                  }}
+                  type="number"
+                />
+              </Box>
 
-            <Box sx={{ mt: 3 }}>
-              <FormControl sx={{ mr: 2 }}>
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
-                  <MenuItem value="single">Single</MenuItem>
-                  <MenuItem value="range">Range</MenuItem>
-                </Select>
-              </FormControl>
-              <Field as={TextField} name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" type="number" />
-              {age === "range" && (
-                <Field as={TextField} name="ageTo" sx={{ width: 67, mr: 2 }} label="4" type="number" />
-              )}
-            </Box>
+              <Box sx={{ mt: 3 }}>
+                <FormControl sx={{ mr: 2 }}>
+                  <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                  <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
+                    <MenuItem value="single">Single</MenuItem>
+                    <MenuItem value="range">Range</MenuItem>
+                  </Select>
+                </FormControl>
+                <Field as={TextField} name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" type="number" />
+                {age === "range" && (
+                  <Field as={TextField} name="ageTo" sx={{ width: 67, mr: 2 }} label="4" type="number" />
+                )}
+              </Box>
 
-            <Field as={TextField} name="level" sx={{ mt: 3 }} label="Level" />
-            <Field as={TextField} name="capacity" sx={{ mt: 3 }} label="# of available place" type="number" />
-            <Box sx={{ mt: 3 }}>
-              <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
-                Go back
-              </Button>
-              <Button variant="contained" type="submit" color="success">
-                Confirm
-              </Button>
-            </Box>
+              <Field as={TextField} name="level" sx={{ mt: 3 }} label="Level" />
+              <Field as={TextField} name="capacity" sx={{ mt: 3 }} label="# of available place" type="number" />
+              <Box sx={{ mt: 3 }}>
+                <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
+                  Go back
+                </Button>
+                <Button variant="contained" type="submit" color="success">
+                  Confirm
+                </Button>
+              </Box>
+            </LocalizationProvider>
           </Form>
         </Formik>
       </ActivitiesSlideContainer>
