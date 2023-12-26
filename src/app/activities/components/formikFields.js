@@ -6,7 +6,6 @@ import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 
 // TODO: Rationalize on how to handle errors
-// Handles cases, when value initial value is:
 // Passes null / undefined from formik value to inputs as "".
 // - null - returned by DRF for empty DecimalField
 // - undefined - returned by react-query while response is loading
@@ -58,16 +57,39 @@ export function FormikCheckboxField({ label, ...props }) {
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
 }
 
+// Passes data from formik value to input:
+// - null / invalid dayjs object - as null
+// - vailid date string - as datejs object
+//
+// Passes data from input to formik value:
+// - null - as null
+// - invalid dayjs object - as "Invalid date"
+// - valid dayjs object - as data string
+//
+// When TextField is erased, value is set to hh:mm, so presented as "Invalid date" in formik.
+// TextField value is set to null when loses focus, handleBlur addresses this case.
 export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
 
-  const parsedValue = dayjs(field.value, "HH:mm");
-  const fieldValue = parsedValue.isValid() ? parsedValue : null
-
   function handleChange(value) {
     const formikValue = value?.format("HH:mm")
+    console.log(`  [Set] TimeField-from ${value}`)
+    console.log(`  [Set] formik-to: ${formikValue}`)
     helpers.setValue(formikValue);
   }
 
-  return <TimeField value={fieldValue} onChange={handleChange} />;
+  function handleBlur(event) {
+    helpers.setTouched(true);
+    if (event.target.value === null) {
+      setValue(null);
+    }
+  }
+
+  const parsedDayjs = dayjs(field.value, "HH:mm");
+  const displayValue = parsedDayjs.isValid() ? parsedDayjs : null
+
+  console.log(`[Get] formik-from: ${field.value}`)
+  console.log(`[Get] formik-from-parsedDayjs: ${parsedDayjs}`)
+  console.log(`[Get] TimeField-to: ${displayValue}`)
+  return <TimeField value={displayValue} onChange={handleChange} onBlur={handleBlur} />;
 }
