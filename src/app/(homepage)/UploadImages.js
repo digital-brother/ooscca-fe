@@ -15,6 +15,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { TrashCanIcon } from "@/assets/TrashCanIcon";
 
 import { useDropzone } from "react-dropzone";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -112,9 +113,35 @@ function FilesTable({files, setFiles}) {
 export default function UploadImages() {
   const [files, setFiles] = useState([]);
   const [filesLoaded, setFilesLoaded] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState();
-  const patchMutation = useMutation((data, file) => patchImage(data, file));
-  const postMutation = useMutation((data, file) => postImage(data, file));
+
+  const patchMutation = useMutation((file) => patchImage({
+      "id": file.id,
+      "name": file.name,
+      "position": file.position,
+    }), {
+    onSuccess: (data, variables, context) => {
+      variables.error = null
+    },
+    onError: (error, variables, context) => {
+      variables.error = error
+    },
+  });
+
+  const postMutation = useMutation((file) => postImage({
+      "name": file.name,
+      "position": file.position,
+      "size": file.size,
+      "activity": TEST_ACTIVITY_ID,
+      "image": file,
+    }), {
+    onSuccess: (data, variables, context) => {
+      variables.error = null
+      variables.id = data.id
+    },
+    onError: (error, variables, context) => {
+      variables.error = error
+    },
+  });
 
   const {
     data: images,
