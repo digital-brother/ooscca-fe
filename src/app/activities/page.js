@@ -18,7 +18,15 @@ import {
 import Grid from "@mui/material/Grid";
 import { FormikSelect } from "@/app/components/FormikSelect";
 import { useMutation, useQuery } from "react-query";
-import { getActivity, getActivityTypes, patchActivity, TEST_ACTIVITY_ID } from "@/app/activities/api.mjs";
+import {
+  getActivity,
+  getActivityTypes,
+  patchActivity,
+  patchDiscount,
+  getDiscount,
+  TEST_ACTIVITY_ID,
+  TEST_DISCOUNT_ID,
+} from "@/app/activities/api.mjs";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -28,20 +36,37 @@ import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./comp
 
 function ActivityThirdFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+  const { data: discount } = useQuery(["discount", TEST_DISCOUNT_ID], () => getDiscount(TEST_DISCOUNT_ID));
+  const mutation = useMutation((data) => patchDiscount(TEST_DISCOUNT_ID, data));
 
   const typeSelectItems = [
     { id: "days", name: "Days" },
     { id: "seats", name: "Seats" },
     { id: "tickets", name: "Tickets" },
-  ]
+  ];
+
+  function handleSubmit(values, { setErrors }) {
+    console.log(values);
+    mutation.mutate(values, {
+      onError: (error) => setErrors(error.response.data),
+      onSuccess: (response) => {
+        console.log(response);
+        // scrollNext()
+      },
+    });
+  }
 
   return (
     <ActivitiesSlideContainer>
-      <Formik initialValues={{ percent: null, quantity: null, type: "days" }} onSubmit={() => { }}>
+      <Formik
+        initialValues={{ percent: discount?.percent, quantity: discount?.quantity, type: discount?.type || "days" }}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
         <Form>
           <Typography>Discounts</Typography>
-
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
+
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
           <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
@@ -54,6 +79,7 @@ function ActivityThirdFormSlide() {
               Confirm
             </Button>
           </Box>
+        
         </Form>
       </Formik>
     </ActivitiesSlideContainer>
@@ -114,10 +140,7 @@ function ActivitySecondFormSlide() {
               />
 
               <Box sx={{ mt: 3 }}>
-                <FormControlLabel
-                  control={<FormikCheckboxField name="earlyDropOff" />}
-                  label="Early drop off"
-                />
+                <FormControlLabel control={<FormikCheckboxField name="earlyDropOff" />} label="Early drop off" />
                 <FormikTimeField name="earlyDropOffTime" label="Early drop off time" sx={{ width: 130, mr: 2 }} />
                 <FormikNumericField
                   name="earlyDropOffPrice"
@@ -130,10 +153,7 @@ function ActivitySecondFormSlide() {
               </Box>
 
               <Box sx={{ mt: 3 }}>
-                <FormControlLabel
-                  control={<FormikCheckboxField name="latePickUp" />}
-                  label="Late pick up"
-                />
+                <FormControlLabel control={<FormikCheckboxField name="latePickUp" />} label="Late pick up" />
                 <FormikTimeField name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
                 <FormikNumericField
                   name="latePickUpPrice"
@@ -154,9 +174,7 @@ function ActivitySecondFormSlide() {
                   </Select>
                 </FormControl>
                 <FormikNumericField name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" />
-                {age === "range" && (
-                  <FormikNumericField name="ageTo" sx={{ width: 67, mr: 2 }} label="4" />
-                )}
+                {age === "range" && <FormikNumericField name="ageTo" sx={{ width: 67, mr: 2 }} label="4" />}
               </Box>
 
               <Field as={TextField} name="level" sx={{ mt: 3, display: "block" }} label="Level" />

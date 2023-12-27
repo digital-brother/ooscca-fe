@@ -5,11 +5,13 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
 export const TEST_ACTIVITY_ID = process.env.NEXT_PUBLIC_TEST_ACTIVITY_ID;
+export const TEST_DISCOUNT_ID = process.env.NEXT_PUBLIC_TEST_DISCOUNT_ID;
 
 // TODO: Update, so that urls explicitly include slashes
 const PROVIDERS_PATH = "providers/";
 const ACTIVITY_TYPES_PATH = "activity-types/";
 const ACTIVITIES_PATH = "activities/";
+const DISCOUNTS_PATH = "discounts/";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -18,6 +20,18 @@ const client = axios.create({
     "Authorization": `Token ${AUTH_TOKEN}`
   }
 });
+
+export async function getDiscount(discountId) {
+  const url = `${DISCOUNTS_PATH}${discountId}/`;
+  const response = await client.get(url)
+  return response.data
+}
+
+export async function patchDiscount(discountId, data) {
+  const url = `${DISCOUNTS_PATH}${discountId}/`;
+  const response = await client.patch(url, data)
+  return response.data
+}
 
 export async function getActivity(activityId) {
   const url = `${ACTIVITIES_PATH}${activityId}/`;
