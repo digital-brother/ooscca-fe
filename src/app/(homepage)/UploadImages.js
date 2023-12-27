@@ -200,25 +200,20 @@ export default function UploadImages() {
     return () => files.forEach((file) => URL.revokeObjectURL(file.url));
   }, []);
 
-  function SaveButtonHandler(event) {
+  async function SaveButtonHandler(event) {
     if (Array.isArray(files)) {
       const promises = files.map((file, key) => {
         if (file.id) {  // file from server
-          patchMutation.mutate({
-            "id": file.id,
-            "name": file.name,
-            "position": key,
-          })
+          patchMutation.mutateAsync(file)
         } else {
-          postMutation.mutate({
-            "name": file.name,
-            "position": key,
-            "size": file.size,
-            "activity": TEST_ACTIVITY_ID,
-            "image": file,
-          })
+          postMutation.mutateAsync(file)
         }
       })
+      await Promise.all(promises);
+      setFiles(files)
+    }
+  }
+
     }
   }
 
