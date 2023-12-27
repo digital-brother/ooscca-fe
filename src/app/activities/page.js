@@ -100,7 +100,7 @@ function ActivitySecondFormSlide() {
                   control={<FormikCheckboxField name="latePickUp" />}
                   label="Late pick up"
                 />
-                <FormikCheckboxField name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
+                <FormikTimeField name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
                 <FormikNumericField
                   name="latePickUpPrice"
                   sx={{ width: 134 }}
@@ -125,7 +125,7 @@ function ActivitySecondFormSlide() {
                 )}
               </Box>
 
-              <Field as={TextField} name="level" sx={{ mt: 3 }} label="Level" />
+              <Field as={TextField} name="level" sx={{ mt: 3, display: "block" }} label="Level" />
               <FormikNumericField name="capacity" sx={{ mt: 3 }} label="# of available place" />
               <Box sx={{ mt: 3 }}>
                 <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
