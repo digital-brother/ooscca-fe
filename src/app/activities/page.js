@@ -24,6 +24,7 @@ import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCa
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
+import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 
 function ActivitySecondFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
@@ -66,53 +67,47 @@ function ActivitySecondFormSlide() {
           <Form>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
               <Box>
-                <Field as={TextField} type="time" name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
-                <Field as={TextField} type="time" name="endTime" label="End time" sx={{ width: 180 }} />
+                <FormikTimeField name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
+                <FormikTimeField name="endTime" label="End time" sx={{ width: 180 }} />
               </Box>
-              <Field
-                as={TextField}
+              <FormikNumericField
                 name="price"
                 sx={{ mt: 3 }}
                 label="Price"
                 InputProps={{
                   startAdornment: <InputAdornment position="start">£</InputAdornment>,
                 }}
-                type="number"
               />
 
               <Box sx={{ mt: 3 }}>
                 <FormControlLabel
-                  control={<Field as={Checkbox} type="checkbox" name="earlyDropOff" />}
+                  control={<FormikCheckboxField name="earlyDropOff" />}
                   label="Early drop off"
                 />
-                <Field as={TextField} type="time" name="earlyDropOffTime" label="Early drop off time" sx={{ width: 130, mr: 2 }} />
-                <Field
-                  as={TextField}
+                <FormikTimeField name="earlyDropOffTime" label="Early drop off time" sx={{ width: 130, mr: 2 }} />
+                <FormikNumericField
                   name="earlyDropOffPrice"
                   sx={{ width: 134 }}
                   label="Early drop off price"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">£</InputAdornment>,
                   }}
-                  type="number"
                 />
               </Box>
 
               <Box sx={{ mt: 3 }}>
                 <FormControlLabel
-                  control={<Field as={Checkbox} type="checkbox" name="latePickUp" />}
+                  control={<FormikCheckboxField name="latePickUp" />}
                   label="Late pick up"
                 />
-                <Field as={TextField} type="time" name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
-                <Field
-                  as={TextField}
+                <FormikCheckboxField name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
+                <FormikNumericField
                   name="latePickUpPrice"
                   sx={{ width: 134 }}
                   label="Late pick up price"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">£</InputAdornment>,
                   }}
-                  type="number"
                 />
               </Box>
 
@@ -124,14 +119,14 @@ function ActivitySecondFormSlide() {
                     <MenuItem value="range">Range</MenuItem>
                   </Select>
                 </FormControl>
-                <Field as={TextField} name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" type="number" />
+                <FormikNumericField name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" />
                 {age === "range" && (
-                  <Field as={TextField} name="ageTo" sx={{ width: 67, mr: 2 }} label="4" type="number" />
+                  <FormikNumericField name="ageTo" sx={{ width: 67, mr: 2 }} label="4" />
                 )}
               </Box>
 
               <Field as={TextField} name="level" sx={{ mt: 3 }} label="Level" />
-              <Field as={TextField} name="capacity" sx={{ mt: 3 }} label="# of available place" type="number" />
+              <FormikNumericField name="capacity" sx={{ mt: 3 }} label="# of available place" />
               <Box sx={{ mt: 3 }}>
                 <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
                   Go back
