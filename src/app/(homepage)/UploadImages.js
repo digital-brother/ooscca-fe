@@ -42,17 +42,37 @@ function formatBytes(bytes, decimals) {
 
 function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   file.position = _key
-  const deleteMutation = useMutation((data) => {
-      deleteImage(data?.id)
+  const deleteMutation = useMutation((data) => deleteImage(data?.id), {
+    onSuccess: (data, variables, context) => {
       setFiles(files.filter(item => item !== file));
-    }
-  );
+    },
+    onError: (error, variables, context) => {
+      variables.error = error
+    },
+  });
 
   function deleteImageButtonHandler(event) {
     if (file?.id) {
       deleteMutation.mutate(file);
     } else {
       setFiles(files.filter(item => item !== file));
+    }
+  }
+
+  let messageColor = ""
+  let messageText = ""
+
+  if (file?.error) {
+    messageColor = "#E72A2A"
+    if (file?.error?.response?.data?.detail) {  // 2 types errors: from backend & if network failed
+      messageText = file?.error?.response?.data?.detail
+    } else {
+      messageText = file?.error?.message
+    }
+  } else {
+    messageColor = "#196B40"
+    if (file.hasOwnProperty("error")) {
+      messageText = "Image approved"
     }
   }
 
@@ -72,6 +92,19 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
       </TableCell>
       <TableCell component="th" scope="row">
         {file.name}
+        <Box sx={{
+            color: messageColor,
+            fontFamily: "Manrope",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "14px", /* 155.556% */
+            letterSpacing: "0.09px",
+            mt: "5px",
+          }}
+        >
+          {messageText}
+        </Box>
       </TableCell>
       <TableCell component="th" scope="row" align="center">
         { file.position }
@@ -167,9 +200,9 @@ export default function UploadImages() {
     return () => files.forEach((file) => URL.revokeObjectURL(file.url));
   }, []);
 
-  function SaveButtonOnClick(event) {
+  function SaveButtonHandler(event) {
     if (Array.isArray(files)) {
-      files.map((file, key) => {
+      const promises = files.map((file, key) => {
         if (file.id) {  // file from server
           patchMutation.mutate({
             "id": file.id,
@@ -222,7 +255,7 @@ export default function UploadImages() {
         <FilesTable files={files} setFiles={setFiles} />
       )}
       {files.length !== 0 && (
-        <Button onClick={SaveButtonOnClick} sx={{
+        <Button onClick={SaveButtonHandler} sx={{
           width: "20%",
           height: "37px",
           py: "11px",
