@@ -26,6 +26,40 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
 import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 
+function ActivityThirdFormSlide() {
+  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+
+  const typeSelectItems = [
+    { id: "days", name: "Days" },
+    { id: "seats", name: "Seats" },
+    { id: "tickets", name: "Tickets" },
+  ]
+
+  return (
+    <ActivitiesSlideContainer>
+      <Formik initialValues={{ percent: null, quantity: null, type: "days" }} onSubmit={() => { }}>
+        <Form>
+          <Typography>Discounts</Typography>
+
+          <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
+          <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
+          <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
+          <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+
+          <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+            <Button variant="outlined" sx={{ mr: 2 }} onClick={scrollPrev}>
+              Go back
+            </Button>
+            <Button variant="contained" type="submit" color="success">
+              Confirm
+            </Button>
+          </Box>
+        </Form>
+      </Formik>
+    </ActivitiesSlideContainer>
+  );
+}
+
 function ActivitySecondFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
   const [age, setAge] = React.useState("range");
@@ -39,7 +73,7 @@ function ActivitySecondFormSlide() {
   function handleSubmit(values, { setErrors }) {
     mutation.mutate(values, {
       onError: (error) => setErrors(error.response.data),
-      // onSuccess: () => scrollNext(),
+      onSuccess: () => scrollNext(),
     });
   }
 
@@ -242,6 +276,7 @@ export default function Activities() {
             <ActivityStartCreationSlide />
             <ActivityFirstFormSlide />
             <ActivitySecondFormSlide />
+            <ActivityThirdFormSlide />
           </Carousel>
         </Grid>
       </Grid>
