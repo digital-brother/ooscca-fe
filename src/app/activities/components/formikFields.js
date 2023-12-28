@@ -79,7 +79,7 @@ export function FormikTimeField(props) {
   function handleBlur(event) {
     helpers.setTouched(true);
     if (event.target.value === null) {
-      setValue(null);
+      helpers.setValue(null);
     }
   }
 
