@@ -43,7 +43,7 @@ const theme = createTheme({
       fontFamily: montserrat.style.fontFamily,
     },
     h5: {
-      fontSize: "1.5rem", //24
+      fontSize: "1.5rem", // 24
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },

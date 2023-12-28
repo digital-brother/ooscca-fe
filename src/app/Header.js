@@ -66,7 +66,7 @@ export function NavLinks() {
 export default function Header() {
   return (
     <>
-      {/*TODO: p={1} - how much px?*/}
+      {/* TODO: p={1} - how much px? */}
       <AppBar elevation={0} color="transparent" position="static">
         <Toolbar
           sx={{

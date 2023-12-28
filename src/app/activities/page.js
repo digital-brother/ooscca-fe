@@ -63,7 +63,6 @@ function ActivityThirdFormSlide() {
         onSubmit={handleSubmit}
         enableReinitialize
       >
-        <Custom />
         <Form>
           <Typography>Discounts</Typography>
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
