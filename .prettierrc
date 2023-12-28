@@ -1,4 +1,3 @@
 {
-  "extends": ["prettier-config-airbnb"],
   "printWidth": 120
 }
