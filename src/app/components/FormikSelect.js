@@ -10,7 +10,7 @@ export function FormikSelect({ label, items, sx, name }) {
     <FormControl sx={{ minWidth: 120, ...sx }} fullWidth>
       <MUISelect
         {...field}
-                displayEmpty
+        displayEmpty
         variant="filled"
         disableUnderline
         inputProps={{ sx: { py: 2 } }}
@@ -23,7 +23,7 @@ export function FormikSelect({ label, items, sx, name }) {
           "& .MuiSelect-icon": {
             color: field.value ? "#0C0E0F" : "#6C757D",
           },
-        }}
+                  }}
       >
         {label && <MenuItem value="">{label}</MenuItem>}
         {items.map((item, index) => (
