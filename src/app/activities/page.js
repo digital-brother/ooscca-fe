@@ -57,34 +57,42 @@ function ActivityThirdFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
+      <Typography>Discounts</Typography>
+      
       <Formik
         initialValues={{ percent: discount?.percent, quantity: discount?.quantity, type: discount?.type || "days" }}
         onSubmit={handleSubmit}
         enableReinitialize
       >
         <Form>
-          <Typography>Discounts</Typography>
-
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
           <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+        </Form>
+      </Formik>
 
+      <Formik
+        initialValues={{ percent: discount?.percent, quantity: discount?.quantity, type: discount?.type || "days" }}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        <Form>
           <FormControlLabel control={<Checkbox />} label="Ending" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
           <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
-
-          <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
-            <Button variant="outlined" sx={{ mr: 2 }} onClick={scrollPrev}>
-              Go back
-            </Button>
-            <Button variant="contained" type="submit" color="success">
-              Confirm
-            </Button>
-          </Box>
         </Form>
       </Formik>
+
+      <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+        <Button variant="outlined" sx={{ mr: 2 }} onClick={scrollPrev}>
+          Go back
+        </Button>
+        <Button variant="contained" type="submit" color="success">
+          Confirm
+        </Button>
+      </Box>
     </ActivitiesSlideContainer>
   );
 }
