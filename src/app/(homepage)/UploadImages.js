@@ -202,18 +202,40 @@ export default function UploadImages() {
 
   async function SaveButtonHandler(event) {
     if (Array.isArray(files)) {
-      const promises = files.map((file, key) => {
-        if (file.id) {  // file from server
-          patchMutation.mutateAsync(file)
-        } else {
-          postMutation.mutateAsync(file)
-        }
-      })
-      await Promise.all(promises);
-      setFiles(files)
-    }
-  }
+      try {
+        files.map((file, index) => {
+          delete file.error
+        });
 
+        const patchPromises = files
+          .filter(file => file.id)
+          .map(file => patchMutation.mutateAsync(file));
+
+        const postPromises = files
+          .filter(file => !file.id)
+          .map(file => postMutation.mutateAsync(file));
+
+        // Wait for all patch mutations to complete
+        const patchResults = await Promise.all(patchPromises);
+
+        // Wait for all post mutations to complete
+        const postResults = await Promise.all(postPromises);
+
+        // Update state after all mutations are complete
+        const updatedFiles = files.map((file, index) => ({
+          error: file.error,
+          id: file.id,
+          image: file.preview || file.image,
+          name: file.path || file.name,
+          position: file.positon,
+          size: file.size,
+          activity: TEST_ACTIVITY_ID,
+        }));
+        setFiles(updatedFiles);
+      } catch (error) {
+        // Handle errors if needed
+        console.error("Error saving images:", error);
+      }
     }
   }
 
