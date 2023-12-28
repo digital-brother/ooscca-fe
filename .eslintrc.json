@@ -1,13 +1,14 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": ["next/core-web-vitals", "airbnb", "prettier"],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "rules": {
-    }
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["airbnb", "next/core-web-vitals", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+  }
 }
