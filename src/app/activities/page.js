@@ -2,7 +2,6 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import React, { useContext } from "react"; // added useEffect
 import {
   Button,
@@ -16,8 +15,11 @@ import {
   TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { FormikSelect } from "@/app/components/FormikSelect";
 import { useMutation, useQuery } from "react-query";
+import { Field, Form, Formik, useFormikContext } from "formik";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
 import {
   getActivity,
   getActivityTypes,
@@ -27,10 +29,8 @@ import {
   TEST_ACTIVITY_ID,
   TEST_DISCOUNT_ID,
 } from "@/app/activities/api.mjs";
-import { Field, Form, Formik, useFormikContext } from "formik";
-import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { FormikSelect } from "@/app/components/FormikSelect";
+import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
 import "dayjs/locale/en-gb";
 import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 
@@ -63,6 +63,7 @@ function ActivityThirdFormSlide() {
         onSubmit={handleSubmit}
         enableReinitialize
       >
+        <Custom />
         <Form>
           <Typography>Discounts</Typography>
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
@@ -79,7 +80,6 @@ function ActivityThirdFormSlide() {
               Confirm
             </Button>
           </Box>
-        
         </Form>
       </Formik>
     </ActivitiesSlideContainer>
@@ -243,7 +243,8 @@ function ActivityFirstFormSlide() {
     <ActivitiesSlideContainer>
       <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleSubmit}>
         <Form>
-          <FormikSelect label="Pick activity from list" items={activityTypes || []} sx={{ mt: 4 }} name="type" />
+          <Typography variant="h6">Keep editing</Typography>
+          <FormikSelect label="Pick activity from list" items={activityTypes || []} sx={{ mt: 3 }} name="type" />
           <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
           <NonFieldErrors />
           <Box sx={{ mt: 3 }}>
