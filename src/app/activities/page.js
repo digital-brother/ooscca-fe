@@ -42,7 +42,6 @@ function ActivityThirdFormSlide() {
   const typeSelectItems = [
     { id: "days", name: "Days" },
     { id: "seats", name: "Seats" },
-    { id: "tickets", name: "Tickets" },
   ];
 
   function handleSubmit(values, { setErrors }) {
@@ -65,8 +64,13 @@ function ActivityThirdFormSlide() {
       >
         <Form>
           <Typography>Discounts</Typography>
-          <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
 
+          <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
+          <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
+          <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
+          <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+
+          <FormControlLabel control={<Checkbox />} label="Ending" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
           <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
