@@ -3,12 +3,14 @@ import { GoogleMap, Marker, LoadScript, StandaloneSearchBox } from "@react-googl
 import Box from "@mui/material/Box";
 import { Button, TextField } from "@mui/material";
 
-const defaultCenter = {
-  lat: -34.397,
-  lng: 150.644,
+const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
+
+const defaultMapLocation = {
+  lat: 51.5074,
+  lng: -0.1278,
 };
 
-export default function MyMapComponent() {
+export default function Map() {
   const [map, setMap] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);
   const searchBoxRef = useRef(null);
@@ -40,7 +42,7 @@ export default function MyMapComponent() {
 
   return (
     <Box sx={{ width: "100%", height: 700, padding: 5, display: "flex", flexDirection: "column" }}>
-      <LoadScript googleMapsApiKey="AIzaSyCvRilixYTq-080gFVs6uWf_WybV-t8y-g" libraries={["places"]}>
+      <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={["places"]}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ width: "65%", mr: 2 }}>
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
@@ -65,7 +67,7 @@ export default function MyMapComponent() {
         <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
-            center={defaultCenter}
+            center={defaultMapLocation}
             zoom={10}
             onLoad={setMap}
             onClick={handleMapClick}
