@@ -2,7 +2,7 @@
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useContext } from "react"; // added useEffect
+import React, { useContext, useRef } from "react"; // added useEffect
 import {
   Button,
   Checkbox,
@@ -25,9 +25,8 @@ import {
   getActivityTypes,
   patchActivity,
   patchDiscount,
-  getDiscount,
+  getActivityDiscounts,
   TEST_ACTIVITY_ID,
-  TEST_DISCOUNT_ID,
 } from "@/app/activities/api.mjs";
 import { FormikSelect } from "@/app/components/FormikSelect";
 import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
@@ -36,10 +35,15 @@ import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./comp
 
 function ActivityThirdFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
-  const { data: discount } = useQuery(["discount", TEST_DISCOUNT_ID], () => getDiscount(TEST_DISCOUNT_ID));
-  const mutation = useMutation((data) => patchDiscount(TEST_DISCOUNT_ID, data));
+  const { data: discounts } = useQuery(["activityDiscounts", TEST_ACTIVITY_ID], () =>
+    getActivityDiscounts(TEST_ACTIVITY_ID),
+  );
+  const mutation = useMutation((discount) => patchDiscount(TEST_ACTIVITY_ID, discount.id, discount));
 
-  const typeSelectItems = [
+  const earlyBirdDiscount = discounts?.find((discount) => discount.type === "early");
+  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+  
+  const unitSelectItems = [
     { id: "days", name: "Days" },
     { id: "seats", name: "Seats" },
   ];
@@ -55,33 +59,53 @@ function ActivityThirdFormSlide() {
     });
   }
 
+  const earlyBirdDiscountFormRef = useRef();
+  const endingDiscountFormRef = useRef();
+
+  function handleMultipleSubmit() {
+    earlyBirdDiscountFormRef.current.submitForm();
+    endingDiscountFormRef.current.submitForm();
+  }
+
   return (
     <ActivitiesSlideContainer>
       <Typography>Discounts</Typography>
-      
+
       <Formik
-        initialValues={{ percent: discount?.percent, quantity: discount?.quantity, type: discount?.type || "days" }}
-        onSubmit={handleSubmit}
+        initialValues={{
+          id: earlyBirdDiscount?.id,
+          percent: earlyBirdDiscount?.percent,
+          quantity: earlyBirdDiscount?.quantity,
+          unit: earlyBirdDiscount?.unit || "days",
+        }}
         enableReinitialize
+        onSubmit={handleSubmit}
+        innerRef={earlyBirdDiscountFormRef}
       >
         <Form>
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
-          <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+          <FormikSelect name="unit" items={unitSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
         </Form>
       </Formik>
 
       <Formik
-        initialValues={{ percent: discount?.percent, quantity: discount?.quantity, type: discount?.type || "days" }}
-        onSubmit={handleSubmit}
+        initialValues={{
+          id: endingDiscount?.id,
+          percent: endingDiscount?.percent,
+          quantity: endingDiscount?.quantity,
+          unit: endingDiscount?.unit || "days",
+        }}
         enableReinitialize
+        onSubmit={handleSubmit}
+        innerRef={endingDiscountFormRef}
       >
         <Form>
           <FormControlLabel control={<Checkbox />} label="Ending" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
-          <FormikSelect name="type" items={typeSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+          <FormikSelect name="unit" items={unitSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
         </Form>
       </Formik>
 
@@ -89,7 +113,7 @@ function ActivityThirdFormSlide() {
         <Button variant="outlined" sx={{ mr: 2 }} onClick={scrollPrev}>
           Go back
         </Button>
-        <Button variant="contained" type="submit" color="success">
+        <Button onClick={handleMultipleSubmit} variant="contained" color="success">
           Confirm
         </Button>
       </Box>

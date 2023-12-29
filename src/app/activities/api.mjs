@@ -17,43 +17,43 @@ const client = axios.create({
   baseURL: API_HOST,
   timeout: 1000,
   headers: {
-    "Authorization": `Token ${AUTH_TOKEN}`
-  }
+    Authorization: `Token ${AUTH_TOKEN}`,
+  },
 });
 
-export async function getDiscount(discountId) {
-  const url = `${DISCOUNTS_PATH}${discountId}/`;
-  const response = await client.get(url)
-  return response.data
+export async function getActivityDiscounts(activityId) {
+  const url = `${ACTIVITIES_PATH}${activityId}/${DISCOUNTS_PATH}`;
+  const response = await client.get(url);
+  return response.data;
 }
 
-export async function patchDiscount(discountId, data) {
-  const url = `${DISCOUNTS_PATH}${discountId}/`;
-  const response = await client.patch(url, data)
-  return response.data
+export async function patchDiscount(activityId, discountId, data) {
+  const url = `${ACTIVITIES_PATH}${activityId}/${DISCOUNTS_PATH}${discountId}/`;
+  const response = await client.patch(url, data);
+  return response.data;
 }
 
 export async function getActivity(activityId) {
   const url = `${ACTIVITIES_PATH}${activityId}/`;
-  const response = await client.get(url)
-  return response.data
+  const response = await client.get(url);
+  return response.data;
 }
 
 export async function patchActivity(activityId, data) {
   const url = `${ACTIVITIES_PATH}${activityId}/`;
-  const response = await client.patch(url, data)
-  return response.data
+  const response = await client.patch(url, data);
+  return response.data;
 }
 
 // TODO: Unify logic with provider api functions
 export async function getActivityTypes() {
   const response = await client.get(ACTIVITY_TYPES_PATH);
-  return response.data
+  return response.data;
 }
 
 export async function getProvider(providerId) {
-  const response = await client.get(`${PROVIDERS_PATH}${providerId}/`)
-  return response.data
+  const response = await client.get(`${PROVIDERS_PATH}${providerId}/`);
+  return response.data;
 }
 
 export async function patchProvider(providerId, data, file) {
