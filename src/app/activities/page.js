@@ -24,6 +24,7 @@ import {
   getActivity,
   getActivityTypes,
   patchActivity,
+  createDiscount,
   patchDiscount,
   getActivityDiscounts,
   TEST_ACTIVITY_ID,
@@ -38,7 +39,8 @@ function ActivityThirdFormSlide() {
   const { data: discounts } = useQuery(["activityDiscounts", TEST_ACTIVITY_ID], () =>
     getActivityDiscounts(TEST_ACTIVITY_ID),
   );
-  const mutation = useMutation((discount) => patchDiscount(TEST_ACTIVITY_ID, discount.id, discount));
+  const patchMutation = useMutation((discount) => patchDiscount(TEST_ACTIVITY_ID, discount.id, discount));
+  const createMutation = useMutation((discount) => createDiscount(TEST_ACTIVITY_ID, discount));
 
   const earlyBirdDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
@@ -49,7 +51,7 @@ function ActivityThirdFormSlide() {
   ];
 
   function handleSubmit(values, { setErrors }) {
-    console.log(values);
+    const mutation = values.id ? patchMutation : createMutation;
     mutation.mutate(values, {
       onError: (error) => setErrors(error.response.data),
       onSuccess: (response) => {
@@ -74,6 +76,8 @@ function ActivityThirdFormSlide() {
       <Formik
         initialValues={{
           id: earlyBirdDiscount?.id,
+          activity: earlyBirdDiscount?.activity || TEST_ACTIVITY_ID,
+          type: earlyBirdDiscount?.type || "early",
           percent: earlyBirdDiscount?.percent,
           quantity: earlyBirdDiscount?.quantity,
           unit: earlyBirdDiscount?.unit || "days",
@@ -93,6 +97,8 @@ function ActivityThirdFormSlide() {
       <Formik
         initialValues={{
           id: endingDiscount?.id,
+          activity: endingDiscount?.activity || TEST_ACTIVITY_ID,
+          type: endingDiscount?.type || "ending",
           percent: endingDiscount?.percent,
           quantity: endingDiscount?.quantity,
           unit: endingDiscount?.unit || "days",

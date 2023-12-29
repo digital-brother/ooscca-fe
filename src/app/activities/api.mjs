@@ -21,6 +21,12 @@ const client = axios.create({
   },
 });
 
+export async function createDiscount(activityId, data) {
+    const url = `${ACTIVITIES_PATH}${activityId}/${DISCOUNTS_PATH}`;
+    const response = await client.post(url, data);
+    return response.data;
+ }
+
 export async function getActivityDiscounts(activityId) {
   const url = `${ACTIVITIES_PATH}${activityId}/${DISCOUNTS_PATH}`;
   const response = await client.get(url);
