@@ -8,6 +8,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -33,6 +34,7 @@ import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/compone
 import "dayjs/locale/en-gb";
 import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 import { useParams } from "next/navigation";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 function ActivityThirdFormSlide() {
   const { activityId } = useParams();
@@ -41,7 +43,7 @@ function ActivityThirdFormSlide() {
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
-  
+
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
   const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
@@ -248,7 +250,8 @@ function ActivitiesSlideContainer({ children, sx }) {
         width: "100%",
         // TODO: Back to height once element completed
         minHeight: 597,
-        padding: 4,
+        px: 4,
+        py: 2.5,
         ...sx,
       }}
     >
@@ -287,9 +290,14 @@ function ActivityFirstFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
+      <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <Typography variant="h6">Keep editing</Typography>
+        <IconButton>
+          <HighlightOffRoundedIcon sx={{ color: "#000000" }} />
+        </IconButton>
+      </Box>
       <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleSubmit}>
         <Form>
-          <Typography variant="h6">Keep editing</Typography>
           <FormikSelect label="Pick activity from list" items={activityTypes || []} sx={{ mt: 3 }} name="type" />
           <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
           <NonFieldErrors />

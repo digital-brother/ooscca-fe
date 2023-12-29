@@ -48,6 +48,7 @@ const theme = createTheme({
       fontFamily: montserrat.style.fontFamily,
     },
     h6: {
+      fontSize: "1.25rem", // 20px
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },
