@@ -27,24 +27,25 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
-  TEST_ACTIVITY_ID,
 } from "@/app/activities/[activityId]/api.mjs";
 import { FormikSelect } from "@/app/components/FormikSelect";
 import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
 import "dayjs/locale/en-gb";
 import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
+import { useParams } from "next/navigation";
 
 function ActivityThirdFormSlide() {
+  const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
-  const { data: discounts } = useQuery(["activityDiscounts", TEST_ACTIVITY_ID], () =>
-    getActivityDiscounts(TEST_ACTIVITY_ID),
+  const { data: discounts } = useQuery(["activityDiscounts", activityId], () =>
+    getActivityDiscounts(activityId)
   );
-  const patchMutation = useMutation((discount) => patchDiscount(TEST_ACTIVITY_ID, discount.id, discount));
-  const createMutation = useMutation((discount) => createDiscount(TEST_ACTIVITY_ID, discount));
+  const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
+  const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
-  
+
   const unitSelectItems = [
     { id: "days", name: "Days" },
     { id: "seats", name: "Seats" },
@@ -76,7 +77,7 @@ function ActivityThirdFormSlide() {
       <Formik
         initialValues={{
           id: earlyDiscount?.id,
-          activity: earlyDiscount?.activity || TEST_ACTIVITY_ID,
+          activity: earlyDiscount?.activity || activityId,
           type: earlyDiscount?.type || "early",
           percent: earlyDiscount?.percent,
           quantity: earlyDiscount?.quantity,
@@ -97,7 +98,7 @@ function ActivityThirdFormSlide() {
       <Formik
         initialValues={{
           id: endingDiscount?.id,
-          activity: endingDiscount?.activity || TEST_ACTIVITY_ID,
+          activity: endingDiscount?.activity || activityId,
           type: endingDiscount?.type || "ending",
           percent: endingDiscount?.percent,
           quantity: endingDiscount?.quantity,
@@ -128,10 +129,11 @@ function ActivityThirdFormSlide() {
 }
 
 function ActivitySecondFormSlide() {
+  const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
   const [age, setAge] = React.useState("range");
-  const { data: activity } = useQuery(["activity", TEST_ACTIVITY_ID], () => getActivity(TEST_ACTIVITY_ID));
-  const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const mutation = useMutation((data) => patchActivity(activityId, data));
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -267,10 +269,11 @@ function NonFieldErrors() {
 }
 
 function ActivityFirstFormSlide() {
+  const { activityId } = useParams();
   // TODO: Add error handling
   const { data: activityTypes } = useQuery("activityTypes", getActivityTypes);
-  const { data: activity } = useQuery(["activity", TEST_ACTIVITY_ID], () => getActivity(TEST_ACTIVITY_ID));
-  const mutation = useMutation((data) => patchActivity(TEST_ACTIVITY_ID, data));
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const mutation = useMutation((data) => patchActivity(activityId, data));
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
   function handleSubmit(data, { setErrors }) {
