@@ -37,9 +37,8 @@ import { useParams } from "next/navigation";
 function ActivityThirdFormSlide() {
   const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
-  const { data: discounts } = useQuery(["activityDiscounts", activityId], () =>
-    getActivityDiscounts(activityId)
-  );
+  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
+  
   const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
   const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
@@ -51,23 +50,35 @@ function ActivityThirdFormSlide() {
     { id: "seats", name: "Seats" },
   ];
 
-  function handleSubmit(values, { setErrors }) {
+  async function handleSubmit(values, { setSubmitting, setErrors }) {
     const mutation = values.id ? patchMutation : createMutation;
-    mutation.mutate(values, {
-      onError: (error) => setErrors(error.response.data),
-      onSuccess: (response) => {
-        console.log(response);
-        // scrollNext()
-      },
-    });
+    try {
+      const response = await mutation.mutateAsync(values);
+      console.log(response);
+      setSubmitting(false);
+    } catch (error) {
+      console.log(error.response.data);
+      setErrors(error.response.data);
+      setSubmitting(false);
+    }
   }
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
 
-  function handleMultipleSubmit() {
-    earlyDiscountFormRef.current.submitForm();
-    endingDiscountFormRef.current.submitForm();
+  async function handleMultipleSubmit() {
+    await earlyDiscountFormRef.current.submitForm();
+    await endingDiscountFormRef.current.submitForm();
+
+    console.log("Forms submitted");
+
+    if (
+      Object.keys(earlyDiscountFormRef.current.errors).length === 0 &&
+      Object.keys(endingDiscountFormRef.current.errors).length === 0
+    ) {
+      // scrollNext();
+      console.log("Scroll next");
+    }
   }
 
   return (
