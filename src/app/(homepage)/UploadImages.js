@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import {Box, Button, Container, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { useDrag, useDrop } from 'react-dnd';
 
 import {ImageInput} from "@/app/activities/components/LogoUploadDropzone";
 import { useMutation, useQuery } from "react-query";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import * as React from 'react';
 import Table from '@mui/material/Table';
@@ -41,6 +44,26 @@ function formatBytes(bytes, decimals) {
 }
 
 function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
+  const [collectedProps, drag] = useDrag({
+    type: 'ROW',
+    item: file,
+  });
+
+  const [, drop] = useDrop({
+    accept: 'ROW',
+    hover: (draggedItem) => {
+      if (draggedItem.id !== _key) {
+        // Reorder the rows
+        const draggedIndex = files.findIndex((item) => item.position === draggedItem.position);
+        const hoverIndex = files.findIndex((item) => item.position === _key);
+
+        const newFiles = [...files];
+        newFiles.splice(hoverIndex, 0, newFiles.splice(draggedIndex, 1)[0]);
+        setFiles(newFiles);
+      }
+    },
+  });
+
   file.position = _key
   const deleteMutation = useMutation((data) => deleteImage(data?.id), {
     onSuccess: (data, variables, context) => {
@@ -79,6 +102,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   return <TableRow
       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       key={ _key }
+      ref={(node) => drag(drop(node))}
     >
       <TableCell component="th" scope="row" align="center">
         <Box component="img"
@@ -121,25 +145,32 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
 }
 
 function FilesTable({files, setFiles}) {
+  const [isDndReady, setIsDndReady] = useState(false);
+  useEffect(() => {
+    setIsDndReady(true);
+  }, []);
+
   return (
-    <TableContainer component={Paper} sx={{ border: "none", boxShadow: "none"}}>
-      <Table sx={{ border: "none", boxShadow: "none"}} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center" width="15%">Thumbnail</TableCell>
-            <TableCell align="left" width="50%">Name and status </TableCell>
-            <TableCell align="center">Position</TableCell>
-            <TableCell align="center">Size</TableCell>
-            <TableCell align="center">Delete</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Array.isArray(files) && (files.map((file, key) => (
-            <ImageDataRow files={files} setFiles={setFiles} file={file} key={key+1} _key={key+1} />
-          )))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <DndProvider backend={HTML5Backend}>
+      <TableContainer component={Paper} sx={{ border: "none", boxShadow: "none"}}>
+        <Table sx={{ border: "none", boxShadow: "none"}} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" width="15%">Thumbnail</TableCell>
+              <TableCell align="left" width="50%">Name and status </TableCell>
+              <TableCell align="center">Position</TableCell>
+              <TableCell align="center">Size</TableCell>
+              <TableCell align="center">Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(files) && (files.map((file, key) => (
+              <ImageDataRow files={files} setFiles={setFiles} file={file} key={key+1} _key={key+1} />
+            )))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </DndProvider>
   );
 }
 
