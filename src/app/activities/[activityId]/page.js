@@ -19,7 +19,7 @@ import { useMutation, useQuery } from "react-query";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import MultiDateRangeCalendar from "@/app/activities/components/MultiDateRangeCalendar";
+import MultiDateRangeCalendar from "@/app/activities/[activityId]/components/MultiDateRangeCalendar";
 import {
   getActivity,
   getActivityTypes,
@@ -28,9 +28,9 @@ import {
   patchDiscount,
   getActivityDiscounts,
   TEST_ACTIVITY_ID,
-} from "@/app/activities/api.mjs";
+} from "@/app/activities/[activityId]/api.mjs";
 import { FormikSelect } from "@/app/components/FormikSelect";
-import Carousel, { EmblaApiContext } from "@/app/activities/components/Carousel";
+import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
 import "dayjs/locale/en-gb";
 import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 

@@ -11,7 +11,7 @@ import {
   getProvider,
   patchProvider,
   TEST_PROVIDER_ID,
-} from "@/app/activities/api.mjs";
+} from "@/app/activities/[activityId]/api.mjs";
 
 function LogoInput({ setFiles }) {
   const mutation = useMutation((file) => patchProvider(TEST_PROVIDER_ID, null, file));
