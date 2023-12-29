@@ -42,7 +42,7 @@ function ActivityThirdFormSlide() {
   const patchMutation = useMutation((discount) => patchDiscount(TEST_ACTIVITY_ID, discount.id, discount));
   const createMutation = useMutation((discount) => createDiscount(TEST_ACTIVITY_ID, discount));
 
-  const earlyBirdDiscount = discounts?.find((discount) => discount.type === "early");
+  const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
   
   const unitSelectItems = [
@@ -61,11 +61,11 @@ function ActivityThirdFormSlide() {
     });
   }
 
-  const earlyBirdDiscountFormRef = useRef();
+  const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
 
   function handleMultipleSubmit() {
-    earlyBirdDiscountFormRef.current.submitForm();
+    earlyDiscountFormRef.current.submitForm();
     endingDiscountFormRef.current.submitForm();
   }
 
@@ -75,16 +75,16 @@ function ActivityThirdFormSlide() {
 
       <Formik
         initialValues={{
-          id: earlyBirdDiscount?.id,
-          activity: earlyBirdDiscount?.activity || TEST_ACTIVITY_ID,
-          type: earlyBirdDiscount?.type || "early",
-          percent: earlyBirdDiscount?.percent,
-          quantity: earlyBirdDiscount?.quantity,
-          unit: earlyBirdDiscount?.unit || "days",
+          id: earlyDiscount?.id,
+          activity: earlyDiscount?.activity || TEST_ACTIVITY_ID,
+          type: earlyDiscount?.type || "early",
+          percent: earlyDiscount?.percent,
+          quantity: earlyDiscount?.quantity,
+          unit: earlyDiscount?.unit || "days",
         }}
         enableReinitialize
         onSubmit={handleSubmit}
-        innerRef={earlyBirdDiscountFormRef}
+        innerRef={earlyDiscountFormRef}
       >
         <Form>
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
