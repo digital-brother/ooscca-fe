@@ -290,7 +290,7 @@ function ActivityFirstFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
-      <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h6">Keep editing</Typography>
         <IconButton>
           <HighlightOffRoundedIcon sx={{ color: "#000000" }} />
@@ -298,7 +298,16 @@ function ActivityFirstFormSlide() {
       </Box>
       <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleSubmit}>
         <Form>
-          <FormikSelect label="Pick activity from list" items={activityTypes || []} sx={{ mt: 3 }} name="type" />
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
+            <Typography sx={{ fontWeight: 700 }}>Activity</Typography>
+            <FormikSelect
+              label="Pick activity from list"
+              items={activityTypes || []}
+              name="type"
+              size="small"
+              sx={{ width: "62%" }}
+            />
+          </Box>
           <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
           <NonFieldErrors />
           <Box sx={{ mt: 3 }}>

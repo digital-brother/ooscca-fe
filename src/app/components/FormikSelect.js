@@ -6,6 +6,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 export function FormikSelect({ label, items, sx, name }) {
   const [field, meta] = useField({ name });
 
+  // TODO: Fix main page selects
+
   return (
     <FormControl sx={{ minWidth: 120, ...sx }} fullWidth>
       <MUISelect
@@ -13,7 +15,7 @@ export function FormikSelect({ label, items, sx, name }) {
         displayEmpty
         variant="filled"
         disableUnderline
-        inputProps={{ sx: { py: 2 } }}
+        inputProps={{ sx: { py: 1 } }}
         IconComponent={KeyboardArrowDownIcon}
         sx={{
           borderRadius: 1,
@@ -23,7 +25,7 @@ export function FormikSelect({ label, items, sx, name }) {
           "& .MuiSelect-icon": {
             color: field.value ? "#0C0E0F" : "#6C757D",
           },
-                  }}
+        }}
       >
         {label && <MenuItem value="">{label}</MenuItem>}
         {items.map((item, index) => (
