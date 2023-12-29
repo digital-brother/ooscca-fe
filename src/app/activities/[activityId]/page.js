@@ -37,13 +37,15 @@ import { useParams } from "next/navigation";
 function ActivityThirdFormSlide() {
   const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
-  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
-  
-  const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
-  const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
+  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+  
+  const earlyDiscountFormRef = useRef();
+  const endingDiscountFormRef = useRef();
+  const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
+  const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
   const unitSelectItems = [
     { id: "days", name: "Days" },
@@ -55,30 +57,19 @@ function ActivityThirdFormSlide() {
     try {
       const response = await mutation.mutateAsync(values);
       console.log(response);
-      setSubmitting(false);
     } catch (error) {
       console.log(error.response.data);
       setErrors(error.response.data);
-      setSubmitting(false);
+      throw error;
     }
   }
 
-  const earlyDiscountFormRef = useRef();
-  const endingDiscountFormRef = useRef();
-
   async function handleMultipleSubmit() {
-    await earlyDiscountFormRef.current.submitForm();
-    await endingDiscountFormRef.current.submitForm();
-
-    console.log("Forms submitted");
-
-    if (
-      Object.keys(earlyDiscountFormRef.current.errors).length === 0 &&
-      Object.keys(endingDiscountFormRef.current.errors).length === 0
-    ) {
-      // scrollNext();
-      console.log("Scroll next");
-    }
+    try {
+      await earlyDiscountFormRef.current.submitForm();
+      await endingDiscountFormRef.current.submitForm();
+      scrollNext();
+    } catch (error) {}
   }
 
   return (
