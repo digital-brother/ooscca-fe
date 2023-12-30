@@ -1,80 +1,40 @@
-:root {
-    --rmdp-primary-red: #ea0034;
-    --rmdp-secondary-red: #ad8787;
-    --rmdp-shadow-red: #cfb6b6;
-    --rmdp-today-red: #ff5638;
-    --rmdp-hover-red: #ff6687;
-    --rmdp-deselect-red: #af1738;
+.ooscca.rmdp-wrapper {
+  box-shadow: none;
 }
 
-.red .rmdp-wrapper {
-    border: 1px solid var(--rmdp-secondary-red);
-    box-shadow: 0 0 5px var(--rmdp-secondary-red);
+.ooscca .rmdp-header {
+  font-size: 15px;
+  color: #333;
+  font-weight: 700;
 }
 
-.red .rmdp-panel-body li {
-    background-color: var(--rmdp-primary-red);
-    box-shadow: 0 0 2px var(--rmdp-secondary-red);
+.ooscca .rmdp-week-day {
+  color: #333;
+  /* TODO: use theme */
+  font-size: 15px;
 }
 
-.red .rmdp-week-day {
-    color: var(--rmdp-primary-red);
+.ooscca .rmdp-day span {
+  font-size: 15px;
+  color: #666;
 }
 
-.red .rmdp-day.rmdp-deactive {
-    color: var(--rmdp-secondary-red);
+.ooscca .rmdp-range {
+  background-color: #ffc50a;
+  box-shadow: none;
 }
 
-.red .rmdp-range {
-    background-color: var(--rmdp-primary-red);
-    box-shadow: 0 0 3px var(--rmdp-shadow-red);
+.ooscca .rmdp-range.end:not(.force) {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
-.red .rmdp-arrow {
-    border: solid var(--rmdp-primary-red);
-    border-width: 0 2px 2px 0;
+.ooscca .rmdp-range.start:not(.force) {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
 }
 
-.red .rmdp-arrow-container:hover {
-    background-color: var(--rmdp-primary-red);
-    box-shadow: 0 0 3px var(--rmdp-secondary-red);
-}
-
-.red .rmdp-panel-body::-webkit-scrollbar-thumb {
-    background: var(--rmdp-primary-red);
-}
-
-.red .rmdp-day.rmdp-today span {
-    background-color: var(--rmdp-today-red);
-}
-
-.red .rmdp-rtl .rmdp-panel {
-    border-left: unset;
-    border-right: 1px solid var(--rmdp-secondary-red);
-}
-
-.red .rmdp-day.rmdp-selected span:not(.highlight) {
-    background-color: var(--rmdp-primary-red);
-    box-shadow: 0 0 3px var(--rmdp-shadow-red);
-}
-
-.red .rmdp-day:not(.rmdp-day-hidden) span:hover {
-    background-color: var(--rmdp-hover-red) !important;
-}
-
-.red .b-deselect {
-    color: var(--rmdp-deselect-red);
-    background-color: white;
-}
-
-.red .rmdp-action-button {
-    color: var(--rmdp-primary-red);
-}
-
-.red .rmdp-button:not(.rmdp-action-button) {
-    background-color: var(--rmdp-primary-red);
-}
-
-.red .rmdp-button:not(.rmdp-action-button):hover {
-    background-color: var(--rmdp-deselect-red);
+.ooscca .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover {
+  background-color: #fee593;
+  color: #666;
 }

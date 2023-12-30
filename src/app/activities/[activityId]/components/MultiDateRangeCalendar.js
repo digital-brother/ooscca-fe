@@ -4,9 +4,26 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { Calendar } from "react-multi-date-picker";
 import { useField, useFormikContext } from "formik";
+import { IconButton } from "@mui/material";
+import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
+import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
+import "@/app/activities/[activityId]/react-multi-date-picker.css";
 
-export default function MultiDateRangeCalendar({ containerSx, name }) {
-  const [field, meta] = useField({ name });
+function CalendarButton({ direction, handleClick, disabled }) {
+  const iconProps = { sx: { color: "#333", fontSize: 30 } };
+  return (
+    <IconButton onClick={handleClick} size="small" sx={{ p: 0 }}>
+      {direction === "left" ? (
+        <KeyboardArrowLeftRoundedIcon {...iconProps} />
+      ) : (
+        <KeyboardArrowRightRoundedIcon {...iconProps} />
+      )}
+    </IconButton>
+  );
+}
+
+export default function MultiDateRangeCalendar({ containerSx, name, ...props }) {
+  const [field] = useField({ name });
   const { setFieldValue } = useFormikContext();
 
   const mapDays = ({ date }) => {
@@ -27,6 +44,9 @@ export default function MultiDateRangeCalendar({ containerSx, name }) {
         weekStartDayIndex={1}
         mapDays={mapDays}
         highlightToday={false}
+        className="ooscca"
+        renderButton={<CalendarButton />}
+        {...props}
       />
     </Box>
   );
