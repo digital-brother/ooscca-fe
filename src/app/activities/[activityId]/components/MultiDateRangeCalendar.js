@@ -22,7 +22,7 @@ function CalendarButton({ direction, handleClick, disabled }) {
   );
 }
 
-export default function MultiDateRangeCalendar({ containerSx, name, ...props }) {
+export default function MultiDateRangeCalendar({ name, ...props }) {
   const [field] = useField({ name });
   const { setFieldValue } = useFormikContext();
 
@@ -34,19 +34,17 @@ export default function MultiDateRangeCalendar({ containerSx, name, ...props }) 
   };
 
   return (
-    <Box sx={containerSx}>
-      <Calendar
-        {...field}
-        onChange={(newValue) => setFieldValue(name, newValue)} // overwrites formik function to work with react-multi-date-picker
-        multiple
-        range
-        weekStartDayIndex={1}
-        mapDays={mapDays}
-        highlightToday={false}
-        className="ooscca"
-        renderButton={<CalendarButton />}
-        {...props}
-      />
-    </Box>
+    <Calendar
+      {...field}
+      onChange={(newValue) => setFieldValue(name, newValue)} // overwrites formik function to work with react-multi-date-picker
+      multiple
+      range
+      weekStartDayIndex={1}
+      mapDays={mapDays}
+      highlightToday={false}
+      className="ooscca"
+      renderButton={<CalendarButton />}
+      {...props}
+    />
   );
 }
