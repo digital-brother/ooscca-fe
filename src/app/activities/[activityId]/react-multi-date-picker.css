@@ -41,25 +41,39 @@
   border-bottom-left-radius: 6px;
 }
 
-/* ============ Layout ============ */
+/* ==================== Layout ==================== */
+
 .ooscca .rmdp-header-values {
   width: 140px;
   margin-left: 8px;
   margin-right: 8px;
 }
-.ooscca .rmdp-header div{
+.ooscca .rmdp-header div {
   justify-content: right;
+}
+
+.ooscca .rmdp-header {
+  padding: 0;
+  margin: 0;
+}
+.ooscca .rmdp-calendar {
+  padding: 0;
+}
+.ooscca .rmdp-day-picker {
+  padding: 0;
+  margin-top: 4px;
 }
 
 .ooscca .rmdp-week {
   margin-top: 4px;
 }
-
-.ooscca .rmdp-day, .ooscca .rmdp-week-day {
+.ooscca .rmdp-day,
+.ooscca .rmdp-week-day {
   height: 36px;
-} 
+}
 
-/* ============ Responsive ============ */
+/* ==================== Responsive ==================== */
+
 .ooscca.rmdp-wrapper {
   width: auto;
 }
