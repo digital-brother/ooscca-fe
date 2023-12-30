@@ -35,6 +35,7 @@ import "dayjs/locale/en-gb";
 import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+import Container from "@mui/material/Container";
 
 function ActivityThirdFormSlide() {
   const { activityId } = useParams();
@@ -348,7 +349,7 @@ function ActivityStartCreationSlide() {
 
 export default function Activities() {
   return (
-    <Box sx={{ m: 10 }}>
+    <Container sx={{ my: 10 }}>
       <Grid container>
         <Grid item xs={6}>
           Description
@@ -362,6 +363,6 @@ export default function Activities() {
           </Carousel>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 }

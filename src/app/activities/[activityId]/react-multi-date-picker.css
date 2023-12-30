@@ -18,6 +18,13 @@
   font-size: 15px;
   color: #666;
 }
+.ooscca .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover {
+  background-color: #fee593;
+  color: #666;
+}
+.ooscca .rmdp-day.rmdp-disabled span {
+  color: #ff0808;
+}
 
 .ooscca .rmdp-range {
   background-color: #ffc50a;
@@ -25,16 +32,28 @@
 }
 
 .ooscca .rmdp-range.end:not(.force) {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 .ooscca .rmdp-range.start:not(.force) {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
-.ooscca .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover {
-  background-color: #fee593;
-  color: #666;
+/* ============ Layout ============ */
+.ooscca .rmdp-week {
+  margin-top: 20px;
+}
+
+.ooscca.rmdp-wrapper {
+  width: auto;
+}
+
+.ooscca .rmdp-calendar {
+  flex: 1;
+}
+
+.ooscca .rmdp-day-picker div {
+  flex: 1;
 }

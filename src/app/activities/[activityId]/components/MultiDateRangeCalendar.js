@@ -30,7 +30,6 @@ export default function MultiDateRangeCalendar({ containerSx, name, ...props }) 
     if (date.weekDay.index === 0 || date.weekDay.index === 6)
       return {
         disabled: true,
-        style: { color: "#ccc", backgroundColor: "#eaeaea" },
       };
   };
 
