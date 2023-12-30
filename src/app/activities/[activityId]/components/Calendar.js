@@ -33,8 +33,8 @@ function Calendar() {
             alignItems: "center",
             border: "1px solid #ddd",
             cursor: "pointer",
-            '&:hover': day !== null ? { backgroundColor: '#AAA' } : {},
-            backgroundColor: isSelected ? '#DDD' : 'white',
+            '&:hover': day !== null ? { backgroundColor: '#BBB' } : {},
+            backgroundColor: isSelected ? '#BBB' : 'white',
         };
     };
 
