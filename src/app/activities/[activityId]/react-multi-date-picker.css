@@ -17,6 +17,7 @@
 .ooscca .rmdp-day span {
   font-size: 15px;
   color: #666;
+  border-radius: 6px;
 }
 .ooscca .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover {
   background-color: #fee593;

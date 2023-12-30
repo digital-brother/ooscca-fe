@@ -309,7 +309,7 @@ function ActivityFirstFormSlide() {
               sx={{ width: "62%" }}
             />
           </Box>
-          <MultiDateRangeCalendar containerSx={{ mt: 3 }} name="dates" />
+          <MultiDateRangeCalendar containerSx={{ mt: 5 }} name="dates" />
           <NonFieldErrors />
           <Box sx={{ mt: 3 }}>
             <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
