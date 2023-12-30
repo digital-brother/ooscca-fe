@@ -42,6 +42,15 @@
 }
 
 /* ============ Layout ============ */
+.ooscca .rmdp-header-values {
+  width: 140px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.ooscca .rmdp-header div{
+  justify-content: right;
+}
+
 .ooscca .rmdp-week {
   margin-top: 4px;
 }
