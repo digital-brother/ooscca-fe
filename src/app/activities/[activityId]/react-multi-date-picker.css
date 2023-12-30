@@ -43,9 +43,14 @@
 
 /* ============ Layout ============ */
 .ooscca .rmdp-week {
-  margin-top: 20px;
+  margin-top: 4px;
 }
 
+.ooscca .rmdp-day, .ooscca .rmdp-week-day {
+  height: 36px;
+} 
+
+/* ============ Responsive ============ */
 .ooscca.rmdp-wrapper {
   width: auto;
 }
