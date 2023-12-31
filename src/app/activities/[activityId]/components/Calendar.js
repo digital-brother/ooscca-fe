@@ -1,22 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
+import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
+import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 
-function CalendarCssGrid({ children, sx, props }) {
+function CalendarCssGrid({ children, sx, ...props }) {
   return (
-    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", ...sx }} {...props}>
+    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 1, ...sx }} {...props}>
       {children}
     </Box>
   );
 }
 
-function DayNames() {
+function DayNames({ ...props }) {
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <CalendarCssGrid sx={{ mt: 3 }}>
+    <CalendarCssGrid {...props}>
       {daysOfWeek.map((day, index) => (
         <Typography sx={{ fontWeight: 700 }} key={`day-${index}`}>
           {day}
@@ -26,38 +28,59 @@ function DayNames() {
   );
 }
 
-function Days() {
-  const now = dayjs();
-
-  const startMonthDayOfWeek = now.startOf("month").day();
+function Days({ month, ...props }) {
+  const startMonthDayOfWeek = month.startOf("month").day();
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek }, (_, index) => index);
 
-  const monthDaysNumber = now.daysInMonth();
+  const monthDaysNumber = month.daysInMonth();
   const monthDaysNumbersArray = Array.from({ length: monthDaysNumber }, (_, index) => index + 1);
 
   return (
-    <CalendarCssGrid sx={{ mt: 1 }}>
-      {emptyDaysNumbersArray.map((_, index) => (
-        <Box key={`empty-${index}`}></Box>
+    <CalendarCssGrid {...props}>
+      {emptyDaysNumbersArray.map((emptyDayNumber) => (
+        <Box key={`empty-${emptyDayNumber}`}></Box>
       ))}
 
-      {monthDaysNumbersArray.map((dayNumber) => (
-        <Typography sx={{ border: "1px solid black" }} key={dayNumber}>
-          {dayNumber}
+      {monthDaysNumbersArray.map((monthDayNumber) => (
+        <Typography sx={{ border: "1px solid #ccc" }} key={monthDayNumber}>
+          {monthDayNumber}
         </Typography>
       ))}
     </CalendarCssGrid>
   );
 }
 
+function MonthSwitcher({ month, setMonth }) {
+  const iconProps = { sx: { color: "#333", fontSize: 35 } };
+
+  const handleNextMonth = () => {
+    setMonth((prevMonth) => prevMonth.add(1, "month"));
+  };
+
+  const handlePrevMonth = () => {
+    setMonth((prevMonth) => prevMonth.subtract(1, "month"));
+  };
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <IconButton size="small" sx={{ p: 0 }} onClick={handlePrevMonth}>
+        <KeyboardArrowLeftRoundedIcon {...iconProps} />
+      </IconButton>
+      <IconButton size="small" sx={{ p: 0 }} onClick={handleNextMonth}>
+        <KeyboardArrowRightRoundedIcon {...iconProps} />
+      </IconButton>
+      <Typography variant="h5">{month.format("MMMM YYYY")}</Typography>
+    </Box>
+  );
+}
+
 export default function Calendar() {
-  const now = dayjs();
+  const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={{ maxWidth: 500, mx: "auto" }}>
-      <Typography variant="h5">{now.format("MMMM YYYY")}</Typography>
-      <DayNames />
-      <Days />
+    <Box sx={{ maxWidth: 300, mx: "auto" }}>
+      <MonthSwitcher month={month} setMonth={setMonth} />
+      <DayNames sx={{ mt: 3 }} />
+      <Days month={month} sx={{ mt: 1 }} />
     </Box>
   );
 }
