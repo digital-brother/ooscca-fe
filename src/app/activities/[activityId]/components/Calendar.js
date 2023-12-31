@@ -72,10 +72,12 @@ function Days({ month, ...props }) {
 
         {monthDaysNumbersArray.map((monthDayNumber) => {
           const date = month.date(monthDayNumber);
+          const isNewDateRangeStartDate = selectedDates.start && date.isSame(selectedDates.start, "day") && !selectedDates.end;
+
           return (
             <Typography
               sx={{
-                border: "1px solid #ccc",
+                border: isNewDateRangeStartDate ? "1px solid black" : "1px solid #ccc",
                 cursor: "pointer",
                 backgroundColor: isDateSelected(date) ? "lightblue" : "transparent",
                 // TODO: Rationalize this
