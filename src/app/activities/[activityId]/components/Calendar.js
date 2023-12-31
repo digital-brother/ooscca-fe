@@ -1,20 +1,23 @@
 import React from "react";
 import dayjs from "dayjs";
 
-const Calendar = () => {
+export default function Calendar() {
   const now = dayjs();
-  const daysInMonthNumber = now.daysInMonth();
-  const days = Array.from({ length: daysInMonthNumber }, (_, index) => index + 1);
-  const startDay = now.startOf("month").day();
+
+  const startMonthDayOfWeek = now.startOf("month").day();
+  const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek }, (_, index) => index);
+
+  const monthDaysNumber = now.daysInMonth();
+  const monthDaysNumbersArray = Array.from({ length: monthDaysNumber }, (_, index) => index + 1);
 
   return (
     <div>
       <h2>{now.format("MMMM YYYY")}</h2>
       <div style={{ display: "flex", flexWrap: "wrap", width: "210px" }}>
-        {Array.from({ length: startDay }, (_, i) => i).map((_, i) => (
-          <div style={{ width: "30px", height: "30px" }} key={`empty-${i}`}></div>
+        {emptyDaysNumbersArray.map((_, index) => (
+          <div style={{ width: "30px", height: "30px" }} key={`empty-${index}`}></div>
         ))}
-        {days.map((day) => (
+        {monthDaysNumbersArray.map((day) => (
           <div style={{ width: "30px", height: "30px", border: "1px solid black" }} key={day}>
             {day}
           </div>
@@ -22,6 +25,4 @@ const Calendar = () => {
       </div>
     </div>
   );
-};
-
-export default Calendar;
+}
