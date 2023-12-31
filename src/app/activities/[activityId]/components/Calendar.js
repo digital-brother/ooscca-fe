@@ -5,6 +5,9 @@ import dayjs from "dayjs";
 import { Box, IconButton, Typography } from "@mui/material";
 import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(isBetween);
 
 function CalendarCssGrid({ children, sx, ...props }) {
   return (
@@ -35,14 +38,21 @@ function Days({ month, ...props }) {
   const monthDaysNumbersArray = Array.from({ length: monthDaysNumber }, (_, index) => index + 1);
 
   const [selectedDates, setSelectedDates] = useState({ start: null, end: null });
+  const setDateRange = (date1, date2) => {
+    if (date1.isBefore(date2, "day")) {
+      setSelectedDates({ start: date1, end: date2 });
+    } else {
+      setSelectedDates({ start: date2, end: date1 });
+    }
+  };
+
   const handleDateClick = (dayNumber) => {
     const clickedDate = month.date(dayNumber);
-    if (!selectedDates.start) {
+    const isFirstDateSelect = !selectedDates.start || selectedDates.end;
+    if (isFirstDateSelect) {
       setSelectedDates({ start: clickedDate, end: null });
-    } else if (!selectedDates.end) {
-      setSelectedDates({ ...selectedDates, end: clickedDate });
     } else {
-      setSelectedDates({ start: clickedDate, end: null });
+      setDateRange(selectedDates.start, clickedDate);
     }
   };
 
@@ -50,9 +60,7 @@ function Days({ month, ...props }) {
     if (!selectedDates.start || !selectedDates.end) {
       return false;
     }
-    const isAfterStart = date.isAfter(selectedDates.start, "day") || date.isSame(selectedDates.start, "day");
-    const isBeforeEnd = date.isBefore(selectedDates.end, "day") || date.isSame(selectedDates.end, "day");
-    return isAfterStart && isBeforeEnd;
+    return date.isBetween(selectedDates.start, selectedDates.end, "day", "[]");
   };
 
   return (
