@@ -46,6 +46,15 @@ function Days({ month, ...props }) {
     }
   };
 
+  const isDateSelected = (date) => {
+    if (!selectedDates.start || !selectedDates.end) {
+      return false;
+    }
+    const isAfterStart = date.isAfter(selectedDates.start, "day") || date.isSame(selectedDates.start, "day");
+    const isBeforeEnd = date.isBefore(selectedDates.end, "day") || date.isSame(selectedDates.end, "day");
+    return isAfterStart && isBeforeEnd;
+  };
+
   return (
     <Box>
       <CalendarCssGrid {...props}>
@@ -53,15 +62,28 @@ function Days({ month, ...props }) {
           <Box key={`empty-${emptyDayNumber}`}></Box>
         ))}
 
-        {monthDaysNumbersArray.map((monthDayNumber) => (
-          <Typography
-            sx={{ border: "1px solid #ccc", cursor: "pointer" }}
-            key={monthDayNumber}
-            onClick={() => handleDateClick(monthDayNumber)}
-          >
-            {monthDayNumber}
-          </Typography>
-        ))}
+        {monthDaysNumbersArray.map((monthDayNumber) => {
+          const date = month.date(monthDayNumber);
+          return (
+            <Typography
+              sx={{
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                backgroundColor: isDateSelected(date) ? "lightblue" : "transparent",
+                // TODO: Rationalize this
+                boxSizing: "border-box",
+                "&:hover": {
+                  border: "1px solid black",
+                  outline: "1px solid black",
+                },
+              }}
+              key={monthDayNumber}
+              onClick={() => handleDateClick(monthDayNumber)}
+            >
+              {monthDayNumber}
+            </Typography>
+          );
+        })}
       </CalendarCssGrid>
       {/* TODO: remove this and wrapper */}
       <Typography>Selected Dates:</Typography>
