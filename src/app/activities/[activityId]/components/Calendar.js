@@ -27,7 +27,6 @@ function DayNames({ ...props }) {
     </CalendarCssGrid>
   );
 }
-
 function Days({ month, ...props }) {
   const startMonthDayOfWeek = month.startOf("month").day();
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek }, (_, index) => index);
@@ -35,18 +34,42 @@ function Days({ month, ...props }) {
   const monthDaysNumber = month.daysInMonth();
   const monthDaysNumbersArray = Array.from({ length: monthDaysNumber }, (_, index) => index + 1);
 
-  return (
-    <CalendarCssGrid {...props}>
-      {emptyDaysNumbersArray.map((emptyDayNumber) => (
-        <Box key={`empty-${emptyDayNumber}`}></Box>
-      ))}
+  const [selectedDates, setSelectedDates] = useState({ start: null, end: null });
+  const handleDateClick = (dayNumber) => {
+    const clickedDate = month.date(dayNumber);
+    if (!selectedDates.start) {
+      setSelectedDates({ start: clickedDate, end: null });
+    } else if (!selectedDates.end) {
+      setSelectedDates({ ...selectedDates, end: clickedDate });
+    } else {
+      setSelectedDates({ start: clickedDate, end: null });
+    }
+  };
 
-      {monthDaysNumbersArray.map((monthDayNumber) => (
-        <Typography sx={{ border: "1px solid #ccc" }} key={monthDayNumber}>
-          {monthDayNumber}
-        </Typography>
-      ))}
-    </CalendarCssGrid>
+  return (
+    <Box>
+      <CalendarCssGrid {...props}>
+        {emptyDaysNumbersArray.map((emptyDayNumber) => (
+          <Box key={`empty-${emptyDayNumber}`}></Box>
+        ))}
+
+        {monthDaysNumbersArray.map((monthDayNumber) => (
+          <Typography
+            sx={{ border: "1px solid #ccc", cursor: "pointer" }}
+            key={monthDayNumber}
+            onClick={() => handleDateClick(monthDayNumber)}
+          >
+            {monthDayNumber}
+          </Typography>
+        ))}
+      </CalendarCssGrid>
+      {/* TODO: remove this and wrapper */}
+      <Typography>Selected Dates:</Typography>
+      <Typography>
+        {selectedDates.start && selectedDates.start.format("YYYY-MM-DD")} -{" "}
+        {selectedDates.end && selectedDates.end.format("YYYY-MM-DD")}
+      </Typography>
+    </Box>
   );
 }
 
@@ -79,8 +102,12 @@ export default function Calendar() {
   return (
     <Box sx={{ maxWidth: 300, mx: "auto" }}>
       <MonthSwitcher month={month} setMonth={setMonth} />
-      <DayNames sx={{ mt: 3 }} />
-      <Days month={month} sx={{ mt: 1 }} />
+
+      {/* TODO: rationalize */}
+      <Box textAlign="center">
+        <DayNames sx={{ mt: 3 }} />
+        <Days month={month} sx={{ mt: 1 }} />
+      </Box>
     </Box>
   );
 }
