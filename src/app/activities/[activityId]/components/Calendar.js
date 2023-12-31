@@ -1,6 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 export default function Calendar() {
   const now = dayjs();
@@ -14,23 +14,28 @@ export default function Calendar() {
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div>
-      <h2>{now.format("MMMM YYYY")}</h2>
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)" }}>
+    <Box sx={{ maxWidth: 500, mx: "auto" }}>
+      <Typography variant="h5">{now.format("MMMM YYYY")}</Typography>
+
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", mt: 3 }}>
         {daysOfWeek.map((day, index) => (
-          <Box key={`day-${index}`} sx={{ fontWeight: "bold" }}>
+          <Typography sx={{ fontWeight: 700 }} key={`day-${index}`}>
             {day}
-          </Box>
+          </Typography>
         ))}
+      </Box>
+
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", mt: 1 }}>
         {emptyDaysNumbersArray.map((_, index) => (
           <Box key={`empty-${index}`}></Box>
         ))}
+
         {monthDaysNumbersArray.map((day) => (
-          <Box sx={{ border: "1px solid black" }} key={day}>
+          <Typography sx={{ border: "1px solid black" }} key={day}>
             {day}
-          </Box>
+          </Typography>
         ))}
       </Box>
-    </div>
+    </Box>
   );
 }
