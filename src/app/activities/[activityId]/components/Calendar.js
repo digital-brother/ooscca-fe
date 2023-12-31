@@ -1,5 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
+import { Box } from "@mui/material";
 
 export default function Calendar() {
   const now = dayjs();
@@ -13,16 +14,16 @@ export default function Calendar() {
   return (
     <div>
       <h2>{now.format("MMMM YYYY")}</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", width: "210px" }}>
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)" }}>
         {emptyDaysNumbersArray.map((_, index) => (
-          <div style={{ width: "30px", height: "30px" }} key={`empty-${index}`}></div>
+          <Box key={`empty-${index}`}></Box>
         ))}
         {monthDaysNumbersArray.map((day) => (
-          <div style={{ width: "30px", height: "30px", border: "1px solid black" }} key={day}>
+          <Box sx={{ border: "1px solid black" }} key={day}>
             {day}
-          </div>
+          </Box>
         ))}
-      </div>
+      </Box>
     </div>
   );
 }
