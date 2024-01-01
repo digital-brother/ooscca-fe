@@ -26,24 +26,6 @@ function CalendarCssGrid({ children, sx, ...props }) {
   );
 }
 
-function WeekDays({ ...props }) {
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  return (
-    <CalendarCssGrid {...props}>
-      {daysOfWeek.map((day, index) => (
-        <Typography
-          // TODO: Refactor sx
-          sx={{ color: "#333", display: "flex", alignItems: "center", justifyContent: "center" }}
-          key={`day-${index}`}
-        >
-          {day}
-        </Typography>
-      ))}
-    </CalendarCssGrid>
-  );
-}
-
 function Day({
   isNewDateRangeStartDate,
   monthDayNumber,
@@ -195,6 +177,24 @@ function Days({ month, ...props }) {
         ))}
       </Box>
     </Box>
+  );
+}
+
+function WeekDays({ ...props }) {
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return (
+    <CalendarCssGrid {...props}>
+      {daysOfWeek.map((day, index) => (
+        <Typography
+          // TODO: Refactor sx
+          sx={{ color: "#333", display: "flex", alignItems: "center", justifyContent: "center" }}
+          key={`day-${index}`}
+        >
+          {day}
+        </Typography>
+      ))}
+    </CalendarCssGrid>
   );
 }
 
