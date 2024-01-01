@@ -35,6 +35,7 @@ function Day({
   isDateRangeMiddle,
   isDayInHoveredDateRange,
   isHovered,
+  disabled,
   setHoveredDay,
 }) {
   let borderRadiusSx = { borderRadius: 999 };
@@ -57,14 +58,14 @@ function Day({
     borderRadiusSx = { borderRadius: 0 };
   }
 
-  let borderSx = { border: "2px solid transparent" };
-  if (!isDayInHoveredDateRange && (isHovered || isNewDateRangeStartDate)) {
-    borderSx = { border: "2px solid #997706" };
+  let borderColorSx = { border: "2px solid transparent" };
+  if (isHovered && !isDayInHoveredDateRange) {
+    borderColorSx = { border: "2px solid #997706" };
   }
 
   const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
   let backgroundColor = "transparent";
-  if (isDayInHoveredDateRange) {
+  if (isDayInHoveredDateRange || isNewDateRangeStartDate) {
     backgroundColor = "#ffe285";
   } else if (isInDateRange) {
     backgroundColor = "#FFC50A";
@@ -73,7 +74,7 @@ function Day({
   return (
     <Typography
       sx={{
-        ...borderSx,
+        ...borderColorSx,
         ...borderRadiusSx,
 
         cursor: "pointer",
@@ -200,6 +201,7 @@ function Days({ month, ...props }) {
           const hoveredDateRange = hoveredDay && dateRanges.find((dateRange) => dateInDateRange(hoveredDay, dateRange));
           const isDayInHoveredDateRange = hoveredDay && hoveredDateRange && dateInDateRange(day, hoveredDateRange);
           const isHovered = hoveredDay && hoveredDay.isSame(day, "day");
+          const disabled = day.day() === 0 || day.day() === 6;
 
           const dayProps = {
             day,
@@ -209,6 +211,7 @@ function Days({ month, ...props }) {
             isDateRangeMiddle,
             isDayInHoveredDateRange,
             isHovered,
+            disabled,
             handleDayClick,
             setHoveredDay,
           };
