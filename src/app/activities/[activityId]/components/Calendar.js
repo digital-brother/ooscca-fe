@@ -28,12 +28,13 @@ function CalendarCssGrid({ children, sx, ...props }) {
 
 function Day({
   isNewDateRangeStartDate,
-  monthDayNumber,
+  dayNumber,
   isSelected,
   handleDateClick,
   isDateRangeStart,
   isDateRangeEnd,
   isDateRangeMiddle,
+  setHoveredDayNumber,
 }) {
   let borderRadiusSx = {};
   if (isDateRangeStart) {
@@ -77,10 +78,12 @@ function Day({
         alignItems: "center",
         justifyContent: "center",
       }}
-      key={monthDayNumber}
-      onClick={() => handleDateClick(monthDayNumber)}
+      key={dayNumber}
+      onClick={() => handleDateClick(dayNumber)}
+      onMouseEnter={() => setHoveredDayNumber(dayNumber)}
+      onMouseLeave={() => setHoveredDayNumber(null)}
     >
-      {monthDayNumber}
+      {dayNumber}
     </Typography>
   );
 }
@@ -93,6 +96,8 @@ function Days({ month, ...props }) {
   const monthDaysNumbersArray = Array.from({ length: monthDaysNumber }, (_, index) => index + 1);
 
   const [dateRanges, setDateRanges] = useState([]);
+  const [hoveredDayNumber, setHoveredDayNumber] = useState([]);
+  
 
   function dateInDateRange(date, dateRange) {
     if (!dateRange.start) {
@@ -163,8 +168,8 @@ function Days({ month, ...props }) {
           <Box key={`empty-${emptyDayNumber}`}></Box>
         ))}
 
-        {monthDaysNumbersArray.map((monthDayNumber) => {
-          const date = month.date(monthDayNumber);
+        {monthDaysNumbersArray.map((dayNumber) => {
+          const date = month.date(dayNumber);
           const lastDateRange = dateRanges[dateRanges.length - 1];
           const lastIncompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
           const isNewDateRangeStartDate =
@@ -175,29 +180,33 @@ function Days({ month, ...props }) {
           const isDateRangeEnd = parentDateRange?.end?.isSame(date, "day");
           const isDateRangeMiddle = parentDateRange && !isDateRangeStart && !isDateRangeEnd;
 
+          // const isDayInHoveredDateRange = dateInDateRange(hoveredDate, parentDateRange);
+
           return (
             <Day
-              monthDayNumber={monthDayNumber}
+              dayNumber={dayNumber}
               isNewDateRangeStartDate={isNewDateRangeStartDate}
               isSelected={isDateSelected(date)}
               isDateRangeStart={isDateRangeStart}
               isDateRangeEnd={isDateRangeEnd}
               isDateRangeMiddle={isDateRangeMiddle}
               handleDateClick={handleDateClick}
-              key={monthDayNumber}
+              setHoveredDayNumber={setHoveredDayNumber}
+              key={dayNumber}
             />
           );
         })}
       </CalendarCssGrid>
       {/* TODO: remove this and wrapper */}
       <Box sx={{ textAlign: "center" }}>
-        <Typography mt={3}>Selected Dates:</Typography>
+        <Typography mt={3}>Selected dates:</Typography>
         {dateRanges.map((dateRange, index) => (
           <Typography key={index}>
             {dateRange.start && dateRange.start.format("YYYY-MM-DD")} -{" "}
             {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
           </Typography>
         ))}
+        <Typography mt={3}>Hovered dates: {hoveredDayNumber}</Typography>
       </Box>
     </Box>
   );
