@@ -17,13 +17,13 @@ function CalendarCssGrid({ children, sx, ...props }) {
   );
 }
 
-function DayNames({ ...props }) {
+function WeekDays({ ...props }) {
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <CalendarCssGrid {...props}>
       {daysOfWeek.map((day, index) => (
-        <Typography sx={{ fontWeight: 700 }} key={`day-${index}`}>
+        <Typography sx={{ color: "#333" }} key={`day-${index}`}>
           {day}
         </Typography>
       ))}
@@ -31,24 +31,33 @@ function DayNames({ ...props }) {
   );
 }
 
-function Day({ isNewDateRangeStartDate, monthDayNumber, isSelected, handleDateClick, isDateRangeStart, isDateRangeEnd }) {
+function Day({
+  isNewDateRangeStartDate,
+  monthDayNumber,
+  isSelected,
+  handleDateClick,
+  isDateRangeStart,
+  isDateRangeEnd,
+}) {
   return (
     <Typography
       sx={{
-        border: isNewDateRangeStartDate ? "1px solid black" : "1px solid transparent",
-        borderTopLeftRadius: isDateRangeStart ? 999 : 0,
-        borderBottomLeftRadius: isDateRangeStart ? 999 : 0,
+        border: isNewDateRangeStartDate ? "2px solid black" : "2px solid transparent",
+        borderTopLeftRadius: !isNewDateRangeStartDate && isDateRangeStart ? 999 : 0,
+        borderBottomLeftRadius: !isNewDateRangeStartDate && isDateRangeStart ? 999 : 0,
         borderTopRightRadius: isDateRangeEnd ? 999 : 0,
         borderBottomRightRadius: isDateRangeEnd ? 999 : 0,
 
         cursor: "pointer",
-        backgroundColor: isSelected ? "lightblue" : "transparent",
+        backgroundColor: isSelected ? "#FFC50A" : "transparent",
         // TODO: Rationalize this
         boxSizing: "border-box",
         "&:hover": {
-          border: "1px solid black",
-          outline: "1px solid black",
+          border: "2px solid black",
+          // outline: "1px solid black",
         },
+
+        color: "#666",
       }}
       key={monthDayNumber}
       onClick={() => handleDateClick(monthDayNumber)}
@@ -144,7 +153,7 @@ function Days({ month, ...props }) {
             lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
           const isDateRangeStart = dateRanges.some((dateRange) => dateRange.start?.isSame(date, "day"));
           const isDateRangeEnd = dateRanges.some((dateRange) => dateRange.end?.isSame(date, "day"));
-          
+
           return (
             <Day
               monthDayNumber={monthDayNumber}
@@ -171,7 +180,7 @@ function Days({ month, ...props }) {
 }
 
 function MonthSwitcher({ month, setMonth }) {
-  const iconProps = { sx: { color: "#333", fontSize: 35 } };
+  const iconProps = { sx: { color: "#333", fontSize: 28 } };
 
   const handleNextMonth = () => {
     setMonth((prevMonth) => prevMonth.add(1, "month"));
@@ -187,8 +196,8 @@ function MonthSwitcher({ month, setMonth }) {
       </IconButton>
       <IconButton size="small" sx={{ p: 0 }} onClick={handleNextMonth}>
         <KeyboardArrowRightRoundedIcon {...iconProps} />
+      <Typography sx={{ color: "#333", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
       </IconButton>
-      <Typography variant="h5">{month.format("MMMM YYYY")}</Typography>
     </Box>
   );
 }
@@ -202,7 +211,7 @@ export default function Calendar() {
 
       {/* TODO: rationalize */}
       <Box textAlign="center">
-        <DayNames sx={{ mt: 3 }} />
+        <WeekDays sx={{ mt: 3 }} />
         <Days month={month} sx={{ mt: 1 }} />
       </Box>
     </Box>
