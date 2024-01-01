@@ -28,13 +28,13 @@ function CalendarCssGrid({ children, sx, ...props }) {
 
 function Day({
   isNewDateRangeStartDate,
-  dayNumber,
+  day,
   isSelected,
-  handleDateClick,
+  handleDayClick,
   isDateRangeStart,
   isDateRangeEnd,
   isDateRangeMiddle,
-  setHoveredDayNumber,
+  setHoveredDay,
 }) {
   let borderRadiusSx = {};
   if (isDateRangeStart) {
@@ -78,12 +78,12 @@ function Day({
         alignItems: "center",
         justifyContent: "center",
       }}
-      key={dayNumber}
-      onClick={() => handleDateClick(dayNumber)}
-      onMouseEnter={() => setHoveredDayNumber(dayNumber)}
-      onMouseLeave={() => setHoveredDayNumber(null)}
+      key={day.format("DD")}
+      onClick={() => handleDayClick(day)}
+      onMouseEnter={() => setHoveredDay(day)}
+      onMouseLeave={() => setHoveredDay(null)}
     >
-      {dayNumber}
+      {day.format("DD")}
     </Typography>
   );
 }
@@ -93,11 +93,12 @@ function Days({ month, ...props }) {
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek }, (_, index) => index);
 
   const monthDaysNumber = month.daysInMonth();
-  const monthDaysNumbersArray = Array.from({ length: monthDaysNumber }, (_, index) => index + 1);
+  const monthDays = Array.from({ length: monthDaysNumber }, (_, index) => {
+    return dayjs().date(index + 1);
+  });
 
   const [dateRanges, setDateRanges] = useState([]);
-  const [hoveredDayNumber, setHoveredDayNumber] = useState([]);
-  
+  const [hoveredDay, setHoveredDay] = useState(null);
 
   function dateInDateRange(date, dateRange) {
     if (!dateRange.start) {
@@ -140,9 +141,8 @@ function Days({ month, ...props }) {
     });
   };
 
-  const handleDateClick = (dayNumber) => {
-    const clickedDate = month.date(dayNumber);
-    const dateRangeToRemoveIndex = dateRanges.findIndex((range) => dateInDateRange(clickedDate, range));
+  const handleDayClick = (day) => {
+    const dateRangeToRemoveIndex = dateRanges.findIndex((range) => dateInDateRange(day, range));
     if (dateRangeToRemoveIndex !== -1) {
       removeDateRange(dateRangeToRemoveIndex);
       return;
@@ -151,9 +151,9 @@ function Days({ month, ...props }) {
     const lastDateRange = dateRanges[dateRanges.length - 1];
     const isFirstDateSelect = !lastDateRange || lastDateRange.end;
     if (isFirstDateSelect) {
-      addDateRange(clickedDate);
+      addDateRange(day);
     } else {
-      completeDateRange(clickedDate);
+      completeDateRange(day);
     }
   };
 
@@ -168,31 +168,30 @@ function Days({ month, ...props }) {
           <Box key={`empty-${emptyDayNumber}`}></Box>
         ))}
 
-        {monthDaysNumbersArray.map((dayNumber) => {
-          const date = month.date(dayNumber);
+        {monthDays.map((day) => {
           const lastDateRange = dateRanges[dateRanges.length - 1];
           const lastIncompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
           const isNewDateRangeStartDate =
-            lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
+            lastIncompleteDateRange?.start && day.isSame(lastIncompleteDateRange.start, "day");
 
-          const parentDateRange = dateRanges.find((dateRange) => dateInDateRange(date, dateRange));
-          const isDateRangeStart = parentDateRange?.start?.isSame(date, "day");
-          const isDateRangeEnd = parentDateRange?.end?.isSame(date, "day");
+          const parentDateRange = dateRanges.find((dateRange) => dateInDateRange(day, dateRange));
+          const isDateRangeStart = parentDateRange?.start?.isSame(day, "day");
+          const isDateRangeEnd = parentDateRange?.end?.isSame(day, "day");
           const isDateRangeMiddle = parentDateRange && !isDateRangeStart && !isDateRangeEnd;
 
-          // const isDayInHoveredDateRange = dateInDateRange(hoveredDate, parentDateRange);
+          // const isDayInHoveredDateRange = dateInDateRange(hoveredDay, parentDateRange);
 
           return (
             <Day
-              dayNumber={dayNumber}
+              day={day}
               isNewDateRangeStartDate={isNewDateRangeStartDate}
-              isSelected={isDateSelected(date)}
+              isSelected={isDateSelected(day)}
               isDateRangeStart={isDateRangeStart}
               isDateRangeEnd={isDateRangeEnd}
               isDateRangeMiddle={isDateRangeMiddle}
-              handleDateClick={handleDateClick}
-              setHoveredDayNumber={setHoveredDayNumber}
-              key={dayNumber}
+              handleDayClick={handleDayClick}
+              setHoveredDay={setHoveredDay}
+              key={day.format("DD")}
             />
           );
         })}
@@ -206,7 +205,7 @@ function Days({ month, ...props }) {
             {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
           </Typography>
         ))}
-        <Typography mt={3}>Hovered dates: {hoveredDayNumber}</Typography>
+        <Typography mt={3}>Hovered dates: {hoveredDay?.format("DD")}</Typography>
       </Box>
     </Box>
   );
