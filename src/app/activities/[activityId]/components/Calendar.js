@@ -38,7 +38,8 @@ function Day({
   setHoveredDay,
 }) {
   let borderRadiusSx = { borderRadius: 999 };
-  if (isDateRangeStart) {
+  if (isDateRangeStart && isDateRangeEnd);
+  else if (isDateRangeStart) {
     borderRadiusSx = {
       borderTopLeftRadius: 999,
       borderBottomLeftRadius: 999,
@@ -60,7 +61,7 @@ function Day({
   if (!isDayInHoveredDateRange && (isHovered || isNewDateRangeStartDate)) {
     borderSx = { border: "2px solid #997706" };
   }
-  
+
   const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
   let backgroundColor = "transparent";
   if (isDayInHoveredDateRange) {
@@ -126,7 +127,7 @@ function Days({ month, ...props }) {
     setDateRanges((previousDateRanges) => [...previousDateRanges, { start: startDate, end: null }]);
   }
 
-  const completeDateRange = (endDate) => {
+  const completeDateRange = (day) => {
     setDateRanges((previousDateRanges) => {
       const newDateRanges = [...previousDateRanges];
 
@@ -139,12 +140,16 @@ function Days({ month, ...props }) {
         throw new Error("Invalid date range: start date not set");
       }
 
-      if (endDate.isBefore(lastDateRange.start, "day")) {
-        newDateRanges[newDateRanges.length - 1] = { start: endDate, end: lastDateRange.start };
+      let startDate, endDate;
+      if (day.isBefore(lastDateRange.start, "day")) {
+        startDate = day;
+        endDate = lastDateRange.start;
       } else {
-        newDateRanges[newDateRanges.length - 1] = { ...lastDateRange, end: endDate };
+        endDate = day;
+        startDate = lastDateRange.start;
       }
-
+      
+      newDateRanges[newDateRanges.length - 1] = { start: startDate, end: endDate };
       return newDateRanges;
     });
   };
