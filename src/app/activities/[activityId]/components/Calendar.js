@@ -29,15 +29,15 @@ function CalendarCssGrid({ children, sx, ...props }) {
 function Day({
   isNewDateRangeStartDate,
   day,
-  isSelected,
   handleDayClick,
   isDateRangeStart,
   isDateRangeEnd,
   isDateRangeMiddle,
   isDayInHoveredDateRange,
+  isHovered,
   setHoveredDay,
 }) {
-  let borderRadiusSx = {};
+  let borderRadiusSx = { borderRadius: 999 };
   if (isDateRangeStart) {
     borderRadiusSx = {
       borderTopLeftRadius: 999,
@@ -54,31 +54,31 @@ function Day({
     };
   } else if (isDateRangeMiddle) {
     borderRadiusSx = { borderRadius: 0 };
-  } else {
-    borderRadiusSx = { borderRadius: 999 };
   }
 
+  let borderSx = { border: "2px solid transparent" };
+  if (!isDayInHoveredDateRange && (isHovered || isNewDateRangeStartDate)) {
+    borderSx = { border: "2px solid #997706" };
+  }
+  
+  const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
   let backgroundColor = "transparent";
   if (isDayInHoveredDateRange) {
     backgroundColor = "#ffe285";
-  } else if (isDateRangeStart || isDateRangeMiddle || isDateRangeEnd) {
+  } else if (isInDateRange) {
     backgroundColor = "#FFC50A";
   }
 
   return (
     <Typography
       sx={{
-        border: isNewDateRangeStartDate ? "2px solid #997706" : "2px solid transparent",
+        ...borderSx,
         ...borderRadiusSx,
 
         cursor: "pointer",
         backgroundColor,
         // TODO: Rationalize this
         boxSizing: "border-box",
-        "&:hover": {
-          border: "2px solid #997706",
-          // outline: "1px solid #997706",
-        },
 
         color: "#666",
         // TODO: Ratinalize with CssGrid
@@ -182,10 +182,9 @@ function Days({ month, ...props }) {
           const isDateRangeEnd = parentDateRange?.end?.isSame(day, "day");
           const isDateRangeMiddle = parentDateRange && !isDateRangeStart && !isDateRangeEnd;
 
-          console.log(dateRanges);
-
           const hoveredDateRange = hoveredDay && dateRanges.find((dateRange) => dateInDateRange(hoveredDay, dateRange));
           const isDayInHoveredDateRange = hoveredDay && hoveredDateRange && dateInDateRange(day, hoveredDateRange);
+          const isHovered = hoveredDay && hoveredDay.isSame(day, "day");
 
           return (
             <Day
@@ -195,6 +194,7 @@ function Days({ month, ...props }) {
               isDateRangeEnd={isDateRangeEnd}
               isDateRangeMiddle={isDateRangeMiddle}
               isDayInHoveredDateRange={isDayInHoveredDateRange}
+              isHovered={isHovered}
               handleDayClick={handleDayClick}
               setHoveredDay={setHoveredDay}
               key={day.format("DD")}
