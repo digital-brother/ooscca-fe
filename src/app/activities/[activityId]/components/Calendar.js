@@ -201,20 +201,19 @@ function Days({ month, ...props }) {
           const isDayInHoveredDateRange = hoveredDay && hoveredDateRange && dateInDateRange(day, hoveredDateRange);
           const isHovered = hoveredDay && hoveredDay.isSame(day, "day");
 
-          return (
-            <Day
-              day={day}
-              isNewDateRangeStartDate={isNewDateRangeStartDate}
-              isDateRangeStart={isDateRangeStart}
-              isDateRangeEnd={isDateRangeEnd}
-              isDateRangeMiddle={isDateRangeMiddle}
-              isDayInHoveredDateRange={isDayInHoveredDateRange}
-              isHovered={isHovered}
-              handleDayClick={handleDayClick}
-              setHoveredDay={setHoveredDay}
-              key={day.format("DD")}
-            />
-          );
+          const dayProps = {
+            day,
+            isNewDateRangeStartDate,
+            isDateRangeStart,
+            isDateRangeEnd,
+            isDateRangeMiddle,
+            isDayInHoveredDateRange,
+            isHovered,
+            handleDayClick,
+            setHoveredDay,
+          };
+
+          return <Day {...dayProps} key={day.format("DD")} />;
         })}
       </CalendarCssGrid>
       {/* TODO: remove this and wrapper */}
