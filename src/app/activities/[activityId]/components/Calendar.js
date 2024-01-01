@@ -78,13 +78,16 @@ function Day({
   }
 
   let borderColorSx = { border: "2px solid transparent" };
-  if (isHovered && !isDayInHoveredDateRange && !disabled) {
+  if (disabled);
+  else if (isHovered && !isDayInHoveredDateRange) {
     borderColorSx = { border: "2px solid #997706" };
+  } else if (isNewDateRangeStartDate) {
+    borderColorSx = { border: "2px solid #FFC50A" };
   }
 
   let backgroundColor = "transparent";
   if (disabled);
-  else if (isDayInHoveredDateRange || isNewDateRangeStartDate) {
+  else if (isDayInHoveredDateRange) {
     backgroundColor = "#ffe285";
   } else if (isInDateRange) {
     backgroundColor = "#FFC50A";
@@ -99,7 +102,7 @@ function Day({
         cursor: disabled ? "default" : "pointer",
         backgroundColor,
         // TODO: Rationalize this
-        boxSizing: "border-box",
+        // boxSizing: "border-box",
 
         color: disabled ? "#AAA" : "#666",
         // TODO: Ratinalize with CssGrid
