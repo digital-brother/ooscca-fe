@@ -39,6 +39,20 @@ function Days({ month, ...props }) {
 
   const [dateRanges, setDateRanges] = useState([]);
 
+  function dateInDateRange(date, dateRange) {
+    if (!dateRange.start) {
+      throw new Error("Invalid date range: start date not set");
+    }
+    if (!dateRange.end) {
+      return false;
+    }
+    return date.isBetween(dateRange.start, dateRange.end, "day", "[]");
+  }
+
+  function removeDateRange(dateRangeIndex) {
+    setDateRanges((prevRanges) => prevRanges.filter((_, index) => index !== dateRangeIndex));
+  }
+
   function addDateRange(startDate) {
     setDateRanges((previousDateRanges) => [...previousDateRanges, { start: startDate, end: null }]);
   }
@@ -68,6 +82,12 @@ function Days({ month, ...props }) {
 
   const handleDateClick = (dayNumber) => {
     const clickedDate = month.date(dayNumber);
+    const dateRangeToRemoveIndex = dateRanges.findIndex((range) => dateInDateRange(clickedDate, range));
+    if (dateRangeToRemoveIndex !== -1) {
+      removeDateRange(dateRangeToRemoveIndex);
+      return;
+    }
+
     const lastDateRange = dateRanges[dateRanges.length - 1];
     const isFirstDateSelect = !lastDateRange || lastDateRange.end;
     if (isFirstDateSelect) {
@@ -78,15 +98,7 @@ function Days({ month, ...props }) {
   };
 
   const isDateSelected = (date) => {
-    return dateRanges.some((dateRange) => {
-      if (!dateRange.start) {
-        throw new Error("Invalid date range: start date not set");
-      }
-      if (!dateRange.end) {
-        return false;
-      }
-      return date.isBetween(dateRange.start, dateRange.end, "day", "[]");
-    });
+    return dateRanges.some((dateRange) => dateInDateRange(date, dateRange));
   };
 
   return (
@@ -100,7 +112,8 @@ function Days({ month, ...props }) {
           const date = month.date(monthDayNumber);
           const lastDateRange = dateRanges[dateRanges.length - 1];
           const lastIncompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
-          const isNewDateRangeStartDate = lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
+          const isNewDateRangeStartDate =
+            lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
 
           return (
             <Typography
@@ -124,10 +137,11 @@ function Days({ month, ...props }) {
         })}
       </CalendarCssGrid>
       {/* TODO: remove this and wrapper */}
-      <Typography>Selected Dates:</Typography>
+      <Typography mt={3}>Selected Dates:</Typography>
       {dateRanges.map((dateRange, index) => (
         <Typography key={index}>
-          {dateRange.start && dateRange.start.format("YYYY-MM-DD")} - {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
+          {dateRange.start && dateRange.start.format("YYYY-MM-DD")} -{" "}
+          {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
         </Typography>
       ))}
     </Box>
