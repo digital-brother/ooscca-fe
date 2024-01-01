@@ -33,23 +33,42 @@ function Day({
   handleDateClick,
   isDateRangeStart,
   isDateRangeEnd,
+  isDateRangeMiddle,
 }) {
+  let borderRadiusSx = {};
+  if (isDateRangeStart) {
+    borderRadiusSx = {
+      borderTopLeftRadius: 999,
+      borderBottomLeftRadius: 999,
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+    };
+  } else if (isDateRangeEnd) {
+    borderRadiusSx = {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      borderTopRightRadius: 999,
+      borderBottomRightRadius: 999,
+    };
+  } else if (isDateRangeMiddle) {
+    borderRadiusSx = { borderRadius: 0 };
+  } else {
+    borderRadiusSx = { borderRadius: 999 };
+  }
+
   return (
     <Typography
       sx={{
-        border: isNewDateRangeStartDate ? "2px solid black" : "2px solid transparent",
-        borderTopLeftRadius: !isNewDateRangeStartDate && isDateRangeStart ? 999 : 0,
-        borderBottomLeftRadius: !isNewDateRangeStartDate && isDateRangeStart ? 999 : 0,
-        borderTopRightRadius: isDateRangeEnd ? 999 : 0,
-        borderBottomRightRadius: isDateRangeEnd ? 999 : 0,
+        border: isNewDateRangeStartDate ? "2px solid #997706" : "2px solid transparent",
+        ...borderRadiusSx,
 
         cursor: "pointer",
         backgroundColor: isSelected ? "#FFC50A" : "transparent",
         // TODO: Rationalize this
         boxSizing: "border-box",
         "&:hover": {
-          border: "2px solid black",
-          // outline: "1px solid black",
+          border: "2px solid #997706",
+          // outline: "1px solid #997706",
         },
 
         color: "#666",
@@ -150,8 +169,11 @@ function Days({ month, ...props }) {
           const lastIncompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
           const isNewDateRangeStartDate =
             lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
-          const isDateRangeStart = dateRanges.some((dateRange) => dateRange.start?.isSame(date, "day"));
-          const isDateRangeEnd = dateRanges.some((dateRange) => dateRange.end?.isSame(date, "day"));
+
+          const parentDateRange = dateRanges.find((dateRange) => dateInDateRange(date, dateRange));
+          const isDateRangeStart = parentDateRange?.start?.isSame(date, "day");
+          const isDateRangeEnd = parentDateRange?.end?.isSame(date, "day");
+          const isDateRangeMiddle = parentDateRange && !isDateRangeStart && !isDateRangeEnd;
 
           return (
             <Day
@@ -160,6 +182,7 @@ function Days({ month, ...props }) {
               isSelected={isDateSelected(date)}
               isDateRangeStart={isDateRangeStart}
               isDateRangeEnd={isDateRangeEnd}
+              isDateRangeMiddle={isDateRangeMiddle}
               handleDateClick={handleDateClick}
               key={monthDayNumber}
             />
