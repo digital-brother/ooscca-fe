@@ -59,18 +59,21 @@ function Day({
   } else if (isDateRangeMiddle) {
     borderRadiusSx = { borderRadius: 0 };
   }
-  if (isDateRangeMiddle && isNextDayDisabled) {
+
+  const isLastDayOfMonth = day.isSame(day.endOf('month'), 'day');
+  const isFirstDayOfMonth = day.isSame(day.startOf('month'), 'day');
+  if (isDateRangeMiddle && (isNextDayDisabled || isLastDayOfMonth)) {
     borderRadiusSx = {
       ...borderRadiusSx,
-      borderTopRightRadius: 3,
-      borderBottomRightRadius: 3,
+      borderTopRightRadius: 6,
+      borderBottomRightRadius: 6,
     };
   }
-  if (isDateRangeMiddle && isPreviousDayDisabled) {
+  if (isDateRangeMiddle && (isPreviousDayDisabled || isFirstDayOfMonth)) {
     borderRadiusSx = {
       ...borderRadiusSx,
-      borderTopLeftRadius: 3,
-      borderBottomLeftRadius: 3,
+      borderTopLeftRadius: 6,
+      borderBottomLeftRadius: 6,
     };
   }
 
