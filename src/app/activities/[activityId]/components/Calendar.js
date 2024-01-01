@@ -103,7 +103,7 @@ function Days({ month, ...props }) {
 
   const monthDaysNumber = month.daysInMonth();
   const monthDays = Array.from({ length: monthDaysNumber }, (_, index) => {
-    return dayjs().date(index + 1);
+    return month.date(index + 1);
   });
 
   const [dateRanges, setDateRanges] = useState([]);
