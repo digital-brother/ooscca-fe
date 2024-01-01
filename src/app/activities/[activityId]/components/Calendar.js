@@ -129,7 +129,7 @@ function Days({ month, ...props }) {
 
   const completeDateRange = (day) => {
     setDateRanges((previousDateRanges) => {
-      const newDateRanges = [...previousDateRanges];
+      let newDateRanges = [...previousDateRanges];
 
       const lastDateRange = newDateRanges[newDateRanges.length - 1];
       if (!lastDateRange || lastDateRange.end) {
@@ -148,11 +148,21 @@ function Days({ month, ...props }) {
         endDate = day;
         startDate = lastDateRange.start;
       }
-      
+
+      newDateRanges = removeDateRangesBetween(newDateRanges, startDate, endDate);
       newDateRanges[newDateRanges.length - 1] = { start: startDate, end: endDate };
       return newDateRanges;
     });
   };
+
+  function removeDateRangesBetween(dateRanges, startDate, endDate) {
+    return dateRanges.filter((dateRange) => {
+      if (!dateRange.end) return true;
+      const isStartDateInRange = dateInDateRange(dateRange.start, { start: startDate, end: endDate });
+      const isEndDateInRange = dateInDateRange(dateRange.end, { start: startDate, end: endDate });
+      return !(isStartDateInRange && isEndDateInRange);
+    });
+  }
 
   const handleDayClick = (day) => {
     const dateRangeToRemoveIndex = dateRanges.findIndex((range) => dateInDateRange(day, range));
