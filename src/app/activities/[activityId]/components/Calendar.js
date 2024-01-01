@@ -36,36 +36,52 @@ function Day({
   isDayInHoveredDateRange,
   isHovered,
   disabled,
+  isNextDayDisabled,
+  isPreviousDayDisabled,
   setHoveredDay,
 }) {
+  const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
+
   let borderRadiusSx = { borderRadius: 999 };
   if (isDateRangeStart && isDateRangeEnd);
   else if (isDateRangeStart) {
     borderRadiusSx = {
-      borderTopLeftRadius: 999,
-      borderBottomLeftRadius: 999,
+      ...borderRadiusSx,
       borderTopRightRadius: 0,
       borderBottomRightRadius: 0,
     };
   } else if (isDateRangeEnd) {
     borderRadiusSx = {
+      ...borderRadiusSx,
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
-      borderTopRightRadius: 999,
-      borderBottomRightRadius: 999,
     };
   } else if (isDateRangeMiddle) {
     borderRadiusSx = { borderRadius: 0 };
   }
+  if (isDateRangeMiddle && isNextDayDisabled) {
+    borderRadiusSx = {
+      ...borderRadiusSx,
+      borderTopRightRadius: 3,
+      borderBottomRightRadius: 3,
+    };
+  }
+  if (isDateRangeMiddle && isPreviousDayDisabled) {
+    borderRadiusSx = {
+      ...borderRadiusSx,
+      borderTopLeftRadius: 3,
+      borderBottomLeftRadius: 3,
+    };
+  }
 
   let borderColorSx = { border: "2px solid transparent" };
-  if (isHovered && !isDayInHoveredDateRange) {
+  if (isHovered && !isDayInHoveredDateRange && !disabled) {
     borderColorSx = { border: "2px solid #997706" };
   }
 
-  const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
   let backgroundColor = "transparent";
-  if (isDayInHoveredDateRange || isNewDateRangeStartDate) {
+  if (disabled);
+  else if (isDayInHoveredDateRange || isNewDateRangeStartDate) {
     backgroundColor = "#ffe285";
   } else if (isInDateRange) {
     backgroundColor = "#FFC50A";
@@ -77,21 +93,21 @@ function Day({
         ...borderColorSx,
         ...borderRadiusSx,
 
-        cursor: "pointer",
+        cursor: disabled ? "default" : "pointer",
         backgroundColor,
         // TODO: Rationalize this
         boxSizing: "border-box",
 
-        color: "#666",
+        color: disabled ? "#AAA" : "#666",
         // TODO: Ratinalize with CssGrid
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
       key={day.format("DD")}
-      onClick={() => handleDayClick(day)}
-      onMouseEnter={() => setHoveredDay(day)}
-      onMouseLeave={() => setHoveredDay(null)}
+      onClick={() => !disabled && handleDayClick(day)}
+      onMouseEnter={() => !disabled && setHoveredDay(day)}
+      onMouseLeave={() => !disabled && setHoveredDay(null)}
     >
       {day.format("DD")}
     </Typography>
@@ -100,7 +116,7 @@ function Day({
 
 function Days({ month, ...props }) {
   const startMonthDayOfWeek = month.startOf("month").day();
-  const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek }, (_, index) => index);
+  const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek - 1 }, (_, index) => index);
 
   const monthDaysNumber = month.daysInMonth();
   const monthDays = Array.from({ length: monthDaysNumber }, (_, index) => {
@@ -118,6 +134,10 @@ function Days({ month, ...props }) {
       return false;
     }
     return date.isBetween(dateRange.start, dateRange.end, "day", "[]");
+  }
+
+  function isDisabled(day) {
+    return day.day() === 0 || day.day() === 6;
   }
 
   function removeDateRange(dateRangeIndex) {
@@ -201,7 +221,13 @@ function Days({ month, ...props }) {
           const hoveredDateRange = hoveredDay && dateRanges.find((dateRange) => dateInDateRange(hoveredDay, dateRange));
           const isDayInHoveredDateRange = hoveredDay && hoveredDateRange && dateInDateRange(day, hoveredDateRange);
           const isHovered = hoveredDay && hoveredDay.isSame(day, "day");
-          const disabled = day.day() === 0 || day.day() === 6;
+          const disabled = isDisabled(day);
+
+          const nextDay = day.add(1, "day");
+          const isNextDayDisabled = isDisabled(nextDay);
+
+          const previousDay = day.subtract(1, "day");
+          const isPreviousDayDisabled = isDisabled(previousDay);
 
           const dayProps = {
             day,
@@ -212,6 +238,8 @@ function Days({ month, ...props }) {
             isDayInHoveredDateRange,
             isHovered,
             disabled,
+            isNextDayDisabled,
+            isPreviousDayDisabled,
             handleDayClick,
             setHoveredDay,
           };
@@ -235,7 +263,7 @@ function Days({ month, ...props }) {
 }
 
 function WeekDays({ ...props }) {
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <CalendarCssGrid {...props}>
