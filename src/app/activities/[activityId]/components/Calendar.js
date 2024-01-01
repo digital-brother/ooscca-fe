@@ -31,11 +31,16 @@ function DayNames({ ...props }) {
   );
 }
 
-function Day({ isNewDateRangeStartDate, monthDayNumber, isSelected, handleDateClick }) {
+function Day({ isNewDateRangeStartDate, monthDayNumber, isSelected, handleDateClick, isDateRangeStart, isDateRangeEnd }) {
   return (
     <Typography
       sx={{
         border: isNewDateRangeStartDate ? "1px solid black" : "1px solid transparent",
+        borderTopLeftRadius: isDateRangeStart ? 999 : 0,
+        borderBottomLeftRadius: isDateRangeStart ? 999 : 0,
+        borderTopRightRadius: isDateRangeEnd ? 999 : 0,
+        borderBottomRightRadius: isDateRangeEnd ? 999 : 0,
+
         cursor: "pointer",
         backgroundColor: isSelected ? "lightblue" : "transparent",
         // TODO: Rationalize this
@@ -137,12 +142,16 @@ function Days({ month, ...props }) {
           const lastIncompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
           const isNewDateRangeStartDate =
             lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
-
+          const isDateRangeStart = dateRanges.some((dateRange) => dateRange.start?.isSame(date, "day"));
+          const isDateRangeEnd = dateRanges.some((dateRange) => dateRange.end?.isSame(date, "day"));
+          
           return (
             <Day
               monthDayNumber={monthDayNumber}
               isNewDateRangeStartDate={isNewDateRangeStartDate}
               isSelected={isDateSelected(date)}
+              isDateRangeStart={isDateRangeStart}
+              isDateRangeEnd={isDateRangeEnd}
               handleDateClick={handleDateClick}
               key={monthDayNumber}
             />
