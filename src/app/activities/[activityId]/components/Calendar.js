@@ -34,6 +34,7 @@ function Day({
   isDateRangeStart,
   isDateRangeEnd,
   isDateRangeMiddle,
+  isDayInHoveredDateRange,
   setHoveredDay,
 }) {
   let borderRadiusSx = {};
@@ -57,6 +58,13 @@ function Day({
     borderRadiusSx = { borderRadius: 999 };
   }
 
+  let backgroundColor = "transparent";
+  if (isDayInHoveredDateRange) {
+    backgroundColor = "#ffe285";
+  } else if (isDateRangeStart || isDateRangeMiddle || isDateRangeEnd) {
+    backgroundColor = "#FFC50A";
+  }
+
   return (
     <Typography
       sx={{
@@ -64,7 +72,7 @@ function Day({
         ...borderRadiusSx,
 
         cursor: "pointer",
-        backgroundColor: isSelected ? "#FFC50A" : "transparent",
+        backgroundColor,
         // TODO: Rationalize this
         boxSizing: "border-box",
         "&:hover": {
@@ -157,10 +165,6 @@ function Days({ month, ...props }) {
     }
   };
 
-  const isDateSelected = (date) => {
-    return dateRanges.some((dateRange) => dateInDateRange(date, dateRange));
-  };
-
   return (
     <Box>
       <CalendarCssGrid {...props}>
@@ -170,25 +174,27 @@ function Days({ month, ...props }) {
 
         {monthDays.map((day) => {
           const lastDateRange = dateRanges[dateRanges.length - 1];
-          const lastIncompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
-          const isNewDateRangeStartDate =
-            lastIncompleteDateRange?.start && day.isSame(lastIncompleteDateRange.start, "day");
+          const incompleteDateRange = lastDateRange && !lastDateRange.end ? lastDateRange : null;
+          const isNewDateRangeStartDate = incompleteDateRange?.start && day.isSame(incompleteDateRange.start, "day");
 
           const parentDateRange = dateRanges.find((dateRange) => dateInDateRange(day, dateRange));
           const isDateRangeStart = parentDateRange?.start?.isSame(day, "day");
           const isDateRangeEnd = parentDateRange?.end?.isSame(day, "day");
           const isDateRangeMiddle = parentDateRange && !isDateRangeStart && !isDateRangeEnd;
 
-          // const isDayInHoveredDateRange = dateInDateRange(hoveredDay, parentDateRange);
+          console.log(dateRanges);
+
+          const hoveredDateRange = hoveredDay && dateRanges.find((dateRange) => dateInDateRange(hoveredDay, dateRange));
+          const isDayInHoveredDateRange = hoveredDay && hoveredDateRange && dateInDateRange(day, hoveredDateRange);
 
           return (
             <Day
               day={day}
               isNewDateRangeStartDate={isNewDateRangeStartDate}
-              isSelected={isDateSelected(day)}
               isDateRangeStart={isDateRangeStart}
               isDateRangeEnd={isDateRangeEnd}
               isDateRangeMiddle={isDateRangeMiddle}
+              isDayInHoveredDateRange={isDayInHoveredDateRange}
               handleDayClick={handleDayClick}
               setHoveredDay={setHoveredDay}
               key={day.format("DD")}
