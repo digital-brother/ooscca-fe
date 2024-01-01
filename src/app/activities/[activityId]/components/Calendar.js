@@ -11,7 +11,7 @@ dayjs.extend(isBetween);
 
 function CalendarCssGrid({ children, sx, ...props }) {
   return (
-    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 1, ...sx }} {...props}>
+    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", rowGap: 0.5, ...sx }} {...props}>
       {children}
     </Box>
   );
@@ -30,6 +30,29 @@ function DayNames({ ...props }) {
     </CalendarCssGrid>
   );
 }
+
+function Day({ isNewDateRangeStartDate, monthDayNumber, isSelected, handleDateClick }) {
+  return (
+    <Typography
+      sx={{
+        border: isNewDateRangeStartDate ? "1px solid black" : "1px solid transparent",
+        cursor: "pointer",
+        backgroundColor: isSelected ? "lightblue" : "transparent",
+        // TODO: Rationalize this
+        boxSizing: "border-box",
+        "&:hover": {
+          border: "1px solid black",
+          outline: "1px solid black",
+        },
+      }}
+      key={monthDayNumber}
+      onClick={() => handleDateClick(monthDayNumber)}
+    >
+      {monthDayNumber}
+    </Typography>
+  );
+}
+
 function Days({ month, ...props }) {
   const startMonthDayOfWeek = month.startOf("month").day();
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek }, (_, index) => index);
@@ -116,23 +139,13 @@ function Days({ month, ...props }) {
             lastIncompleteDateRange?.start && date.isSame(lastIncompleteDateRange.start, "day");
 
           return (
-            <Typography
-              sx={{
-                border: isNewDateRangeStartDate ? "1px solid black" : "1px solid #ccc",
-                cursor: "pointer",
-                backgroundColor: isDateSelected(date) ? "lightblue" : "transparent",
-                // TODO: Rationalize this
-                boxSizing: "border-box",
-                "&:hover": {
-                  border: "1px solid black",
-                  outline: "1px solid black",
-                },
-              }}
+            <Day
+              monthDayNumber={monthDayNumber}
+              isNewDateRangeStartDate={isNewDateRangeStartDate}
+              isSelected={isDateSelected(date)}
+              handleDateClick={handleDateClick}
               key={monthDayNumber}
-              onClick={() => handleDateClick(monthDayNumber)}
-            >
-              {monthDayNumber}
-            </Typography>
+            />
           );
         })}
       </CalendarCssGrid>
