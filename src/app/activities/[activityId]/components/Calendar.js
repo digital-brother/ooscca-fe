@@ -11,7 +11,16 @@ dayjs.extend(isBetween);
 
 function CalendarCssGrid({ children, sx, ...props }) {
   return (
-    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", rowGap: 0.5, ...sx }} {...props}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(7, 1fr)",
+        rowGap: 0.5,
+        gridAutoRows: 40,
+        ...sx,
+      }}
+      {...props}
+    >
       {children}
     </Box>
   );
@@ -23,7 +32,11 @@ function WeekDays({ ...props }) {
   return (
     <CalendarCssGrid {...props}>
       {daysOfWeek.map((day, index) => (
-        <Typography sx={{ color: "#333" }} key={`day-${index}`}>
+        <Typography
+          // TODO: Refactor sx
+          sx={{ color: "#333", display: "flex", alignItems: "center", justifyContent: "center" }}
+          key={`day-${index}`}
+        >
           {day}
         </Typography>
       ))}
@@ -58,6 +71,10 @@ function Day({
         },
 
         color: "#666",
+        // TODO: Ratinalize with CssGrid
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
       key={monthDayNumber}
       onClick={() => handleDateClick(monthDayNumber)}
@@ -168,13 +185,15 @@ function Days({ month, ...props }) {
         })}
       </CalendarCssGrid>
       {/* TODO: remove this and wrapper */}
-      <Typography mt={3}>Selected Dates:</Typography>
-      {dateRanges.map((dateRange, index) => (
-        <Typography key={index}>
-          {dateRange.start && dateRange.start.format("YYYY-MM-DD")} -{" "}
-          {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
-        </Typography>
-      ))}
+      <Box sx={{ textAlign: "center" }}>
+        <Typography mt={3}>Selected Dates:</Typography>
+        {dateRanges.map((dateRange, index) => (
+          <Typography key={index}>
+            {dateRange.start && dateRange.start.format("YYYY-MM-DD")} -{" "}
+            {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
+          </Typography>
+        ))}
+      </Box>
     </Box>
   );
 }
@@ -190,13 +209,13 @@ function MonthSwitcher({ month, setMonth }) {
     setMonth((prevMonth) => prevMonth.subtract(1, "month"));
   };
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Box sx={{ display: "flex", justifyContent: "right", alignItems: "center", gap: 1 }}>
+      <Typography sx={{ color: "#333", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
       <IconButton size="small" sx={{ p: 0 }} onClick={handlePrevMonth}>
         <KeyboardArrowLeftRoundedIcon {...iconProps} />
       </IconButton>
       <IconButton size="small" sx={{ p: 0 }} onClick={handleNextMonth}>
         <KeyboardArrowRightRoundedIcon {...iconProps} />
-      <Typography sx={{ color: "#333", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
       </IconButton>
     </Box>
   );
@@ -206,14 +225,10 @@ export default function Calendar() {
   const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={{ maxWidth: 300, mx: "auto" }}>
+    <Box sx={{ maxWidth: 450, mx: "auto" }}>
       <MonthSwitcher month={month} setMonth={setMonth} />
-
-      {/* TODO: rationalize */}
-      <Box textAlign="center">
-        <WeekDays sx={{ mt: 3 }} />
-        <Days month={month} sx={{ mt: 1 }} />
-      </Box>
+      <WeekDays sx={{ mt: 1 }} />
+      <Days month={month} />
     </Box>
   );
 }
