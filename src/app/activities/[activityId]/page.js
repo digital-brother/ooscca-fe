@@ -20,7 +20,6 @@ import { useMutation, useQuery } from "react-query";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import MultiDateRangeCalendar from "@/app/activities/[activityId]/components/MultiDateRangeCalendar";
 import {
   getActivity,
   getActivityTypes,
@@ -32,7 +31,12 @@ import {
 import { FormikSelect } from "@/app/components/FormikSelect";
 import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
 import "dayjs/locale/en-gb";
-import { FormikCalendarField, FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
+import {
+  FormikCalendarField,
+  FormikCheckboxField,
+  FormikNumericField,
+  FormikTimeField,
+} from "./components/formikFields";
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import Container from "@mui/material/Container";
@@ -282,23 +286,29 @@ function ActivityFirstFormSlide() {
   const mutation = useMutation((data) => patchActivity(activityId, data));
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
-  function handleSubmit(data, { setErrors }) {
+  async function handleSubmit(data, { setErrors }) {
     console.log(data);
-    mutation.mutate(data, {
-      onError: (error) => setErrors(error.response.data),
-      onSuccess: () => scrollNext(),
-    });
+    try {
+      await mutation.mutateAsync(data);
+      scrollNext();
+    } catch (error) {
+      setErrors(error.response.data);
+    }
   }
 
   return (
     <ActivitiesSlideContainer>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h6">Keep editing</Typography>
-        <IconButton>
-          <HighlightOffRoundedIcon sx={{ color: "#000000" }} />
+        <IconButton size="small">
+          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
         </IconButton>
       </Box>
-      <Formik initialValues={{ type: activity?.type || "", dates: [] }} enableReinitialize onSubmit={handleSubmit}>
+      <Formik
+        initialValues={{ type: activity?.type || "", dateRanges: activity?.dateRanges || [] }}
+        enableReinitialize
+        onSubmit={handleSubmit}
+      >
         <Form>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
             <Typography sx={{ fontWeight: 700 }}>Activity</Typography>
@@ -310,13 +320,25 @@ function ActivityFirstFormSlide() {
               sx={{ width: "62%" }}
             />
           </Box>
-          <FormikCalendarField sx={{ mt: 5 }} name="dates" />
+          <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <NonFieldErrors />
-          <Box sx={{ mt: 3 }}>
-            <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
+          <Box sx={{ mt: 4, display: "flex", height: 56 }}>
+            <Button
+              variant="outlined"
+              size="large"
+              fullWidth
+              onClick={scrollPrev}
+              sx={{ mr: 2, height: "100%", fontWeight: 700, fontSize: 16 }}
+            >
               Go back
             </Button>
-            <Button variant="contained" type="submit" color="success">
+            <Button
+              variant="contained"
+              fullWidth
+              type="submit"
+              color="success"
+              sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+            >
               Confirm
             </Button>
           </Box>
