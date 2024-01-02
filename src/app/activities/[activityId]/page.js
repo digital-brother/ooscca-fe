@@ -45,10 +45,13 @@ import {
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import Container from "@mui/material/Container";
+import * as Yup from "yup";
+import { useTheme } from "@mui/material/styles";
 
 function ActivityThirdFormSlide() {
   const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+  const theme = useTheme();
 
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
@@ -86,7 +89,13 @@ function ActivityThirdFormSlide() {
 
   return (
     <ActivitiesSlideContainer>
-      <Typography>Discounts</Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h6">Keep editing</Typography>
+        <IconButton size="small">
+          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+        </IconButton>
+      </Box>
+      <Typography sx={{ mt: 4, fontWeight: 700 }}>Discounts</Typography>
 
       <Formik
         initialValues={{
@@ -101,7 +110,7 @@ function ActivityThirdFormSlide() {
         onSubmit={handleSubmit}
         innerRef={earlyDiscountFormRef}
       >
-        <Form>
+        <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
           <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
@@ -122,7 +131,7 @@ function ActivityThirdFormSlide() {
         onSubmit={handleSubmit}
         innerRef={endingDiscountFormRef}
       >
-        <Form>
+        <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
           <FormControlLabel control={<Checkbox />} label="Ending" sx={{ display: "block", mt: 2 }} />
           <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
           <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
@@ -130,14 +139,31 @@ function ActivityThirdFormSlide() {
         </Form>
       </Formik>
 
-      <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
-        <Button variant="outlined" sx={{ mr: 2 }} onClick={scrollPrev}>
+      <Box sx={{ mt: 3, mb: 1, display: "flex", height: 56, columnGap: 2 }}>
+        <Button
+          variant="outlined"
+          size="large"
+          fullWidth
+          onClick={scrollPrev}
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+        >
           Go back
         </Button>
-        <Button onClick={handleMultipleSubmit} variant="contained" color="success">
+        <Button
+          onClick={handleMultipleSubmit}
+          variant="contained"
+          fullWidth
+          type="submit"
+          color="success"
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+        >
           Confirm
         </Button>
       </Box>
+
+      <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+        Activity will be saved in your accounts page
+      </Typography>
     </ActivitiesSlideContainer>
   );
 }
@@ -154,6 +180,7 @@ function ActivitySecondFormSlide() {
   };
 
   function handleSubmit(values, { setErrors }) {
+    console.log(values);
     mutation.mutate(values, {
       onError: (error) => setErrors(error.response.data),
       onSuccess: () => scrollNext(),
@@ -185,6 +212,10 @@ function ActivitySecondFormSlide() {
             level: activity.level,
             capacity: activity.capacity,
           }}
+          validationSchema={Yup.object({
+            level: Yup.string().max(64).required(),
+            capacity: Yup.number().required().min(0).max(999),
+          })}
           onSubmit={handleSubmit}
         >
           <Form>
@@ -237,7 +268,7 @@ function ActivitySecondFormSlide() {
               </Box>
 
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
-              <FormikNumericField name="capacity" label="# of available place" fullWidth margin="normal" />
+              <FormikNumericField name="capacity" label="Capacity" fullWidth margin="normal" />
 
               <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56 }}>
                 <Button
