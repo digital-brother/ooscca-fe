@@ -118,7 +118,7 @@ function Day({
   );
 }
 
-function Days({ month, dateRanges, setDateRanges, debug, ...props }) {
+function Days({ month, dateRanges, setDateRanges, debug }) {
   const startMonthDayOfWeek = month.startOf("month").day();
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek - 1 }, (_, index) => index);
 
@@ -205,7 +205,7 @@ function Days({ month, dateRanges, setDateRanges, debug, ...props }) {
   };
 
   return (
-    <Box {...props}>
+    <Box>
       <CalendarCssGrid>
         {emptyDaysNumbersArray.map((emptyDayNumber) => (
           <Box key={`empty-${emptyDayNumber}`}></Box>
@@ -308,14 +308,14 @@ function MonthSwitcher({ month, setMonth }) {
   );
 }
 
-export default function Calendar({ sx, ...props }) {
+export default function Calendar({ name, sx, degug, dateRanges, setDateRanges }) {
   const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={sx}>
+    <Box sx={sx} name={name}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
-      <Days month={month} {...props} />
+      <Days month={month} {...{degug, dateRanges, setDateRanges }} />
     </Box>
   );
 }

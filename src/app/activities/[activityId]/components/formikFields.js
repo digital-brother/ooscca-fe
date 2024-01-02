@@ -89,8 +89,8 @@ export function FormikTimeField(props) {
   return <TimeField value={displayValue} onChange={handleChange} onBlur={handleBlur} {...props} />;
 }
 
-export function FormikCalendarField(props) {
-  const [field, meta, helpers] = useField(props);
+export function FormikCalendarField({name, sx, debug}) {
+  const [field, meta, helpers] = useField(name);
 
   const value = field.value.map((range) => ({
     start: dayjs(range.start, "YYYY-MM-DD"),
@@ -106,5 +106,6 @@ export function FormikCalendarField(props) {
     helpers.setValue(formikDateRanges);
   }
 
-  return <Calendar dateRanges={value} setDateRanges={handleChange} {...props} />;
+  // console.log(field.value);
+  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{name, sx, debug}} />;
 }
