@@ -4,6 +4,7 @@ import React from "react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
+import Calendar from "./Calendar";
 
 // TODO: Rationalize on how to handle errors
 // Passes null / undefined from formik value to inputs as "".
@@ -72,7 +73,7 @@ export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
 
   function handleChange(value) {
-    const formikValue = value?.format("HH:mm")
+    const formikValue = value?.format("HH:mm");
     helpers.setValue(formikValue);
   }
 
@@ -84,6 +85,27 @@ export function FormikTimeField(props) {
   }
 
   const parsedDayjs = dayjs(field.value, "HH:mm");
-  const displayValue = parsedDayjs.isValid() ? parsedDayjs : null
+  const displayValue = parsedDayjs.isValid() ? parsedDayjs : null;
   return <TimeField value={displayValue} onChange={handleChange} onBlur={handleBlur} {...props} />;
+}
+
+export function FormikCalendarField(props) {
+  const [field, meta, helpers] = useField(props);
+
+  const value = field.value.map((range) => ({
+    start: dayjs(range.start, "YYYY-MM-DD"),
+    end: range.end && dayjs(range.end, "YYYY-MM-DD"),
+  }));
+
+  function handleChange(changeFunction) {
+    const dateRanges = changeFunction(value);
+    const formikDateRanges = dateRanges.map((range) => ({
+      start: range.start.format("YYYY-MM-DD"),
+      end: range.end?.format("YYYY-MM-DD"),
+    }));
+    helpers.setValue(formikDateRanges);
+  }
+
+  console.log(field.value);
+  return <Calendar dateRanges={value} setDateRanges={handleChange} {...props} />;
 }

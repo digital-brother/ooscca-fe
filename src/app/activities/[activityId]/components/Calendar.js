@@ -42,7 +42,7 @@ function Day({
 }) {
   const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
 
-  let borderRadiusSx = { borderRadius: 999 };
+  let borderRadiusSx = { borderRadius: 5 };
   if (isDateRangeStart && isDateRangeEnd);
   else if (isDateRangeStart) {
     borderRadiusSx = {
@@ -59,16 +59,16 @@ function Day({
   } else if (isDateRangeMiddle) {
     borderRadiusSx = { borderRadius: 0 };
   }
-  const isLastDayOfMonth = day.isSame(day.endOf('month'), 'day');
-  const isFirstDayOfMonth = day.isSame(day.startOf('month'), 'day');
-  if (isDateRangeMiddle && (isNextDayDisabled || isLastDayOfMonth)) {
+  const isLastDayOfMonth = day.isSame(day.endOf("month"), "day");
+  const isFirstDayOfMonth = day.isSame(day.startOf("month"), "day");
+  if (((isDateRangeStart && !isDateRangeEnd) || isDateRangeMiddle) && (isNextDayDisabled || isLastDayOfMonth)) {
     borderRadiusSx = {
       ...borderRadiusSx,
       borderTopRightRadius: 6,
       borderBottomRightRadius: 6,
     };
   }
-  if (isDateRangeMiddle && (isPreviousDayDisabled || isFirstDayOfMonth)) {
+  if ((isDateRangeMiddle || (isDateRangeEnd && !isDateRangeStart)) && (isPreviousDayDisabled || isFirstDayOfMonth)) {
     borderRadiusSx = {
       ...borderRadiusSx,
       borderTopLeftRadius: 6,
@@ -82,7 +82,7 @@ function Day({
     borderColorSx = { border: "2px solid #997706" };
   } else if ((isHovered && !isDayInHoveredDateRange) || isNewDateRangeStartDate) {
     borderColorSx = { border: "2px solid #FFC50A" };
-  } 
+  }
 
   let backgroundColor = "transparent";
   if (disabled);
@@ -119,7 +119,7 @@ function Day({
   );
 }
 
-function Days({ month, ...props }) {
+function Days({ month, dateRanges, setDateRanges, ...props }) {
   const startMonthDayOfWeek = month.startOf("month").day();
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek - 1 }, (_, index) => index);
 
@@ -128,7 +128,6 @@ function Days({ month, ...props }) {
     return month.date(index + 1);
   });
 
-  const [dateRanges, setDateRanges] = useState([]);
   const [hoveredDay, setHoveredDay] = useState(null);
 
   function dateInDateRange(date, dateRange) {
@@ -308,14 +307,14 @@ function MonthSwitcher({ month, setMonth }) {
   );
 }
 
-export default function Calendar() {
+export default function Calendar(props) {
   const [month, setMonth] = useState(dayjs());
 
   return (
     <Box sx={{ maxWidth: 450, mx: "auto" }}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
-      <Days month={month} />
+      <Days month={month} {...props} />
     </Box>
   );
 }
