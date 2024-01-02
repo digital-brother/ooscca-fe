@@ -6,6 +6,13 @@ import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
 
+
+export function FormikTextField(props) {
+  const [field] = useField(props);
+  return <TextField {...field} {...props} />;
+}
+
+
 // TODO: Rationalize on how to handle errors
 // Passes null / undefined from formik value to inputs as "".
 // - null - returned by DRF for empty DecimalField

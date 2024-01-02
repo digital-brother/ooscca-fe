@@ -1,5 +1,10 @@
 "use client";
 
+// TODO: Add error handling
+// TODO: Error handling
+// TODO: Close button
+// TODO: Carousel height and dots
+// TODO: Style buttons
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useContext, useRef } from "react"; // added useEffect
@@ -13,11 +18,10 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "react-query";
-import { Field, Form, Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
@@ -35,6 +39,7 @@ import {
   FormikCalendarField,
   FormikCheckboxField,
   FormikNumericField,
+  FormikTextField,
   FormikTimeField,
 } from "./components/formikFields";
 import { useParams } from "next/navigation";
@@ -158,6 +163,12 @@ function ActivitySecondFormSlide() {
   return (
     activity && (
       <ActivitiesSlideContainer>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h6">Keep editing</Typography>
+          <IconButton size="small">
+            <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+          </IconButton>
+        </Box>
         <Formik
           initialValues={{
             startTime: activity.startTime,
@@ -178,25 +189,22 @@ function ActivitySecondFormSlide() {
         >
           <Form>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-              <Box>
-                <FormikTimeField name="startTime" label="Start time" sx={{ width: 180, mr: 2 }} />
-                <FormikTimeField name="endTime" label="End time" sx={{ width: 180 }} />
-              </Box>
+              <FormikTimeField name="startTime" label="Start time" fullWidth margin="normal" />
+              <FormikTimeField name="endTime" label="End time" fullWidth margin="normal" />
               <FormikNumericField
                 name="price"
-                sx={{ mt: 3 }}
                 label="Price"
                 InputProps={{
                   startAdornment: <InputAdornment position="start">£</InputAdornment>,
                 }}
+                fullWidth
+                margin="normal"
               />
-
-              <Box sx={{ mt: 3 }}>
-                <FormControlLabel control={<FormikCheckboxField name="earlyDropOff" />} label="Early drop off" />
-                <FormikTimeField name="earlyDropOffTime" label="Early drop off time" sx={{ width: 130, mr: 2 }} />
+              <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+                <FormikCheckboxField name="earlyDropOff" label="Early drop off" />
+                <FormikTimeField name="earlyDropOffTime" label="Early drop off time" />
                 <FormikNumericField
                   name="earlyDropOffPrice"
-                  sx={{ width: 134 }}
                   label="Early drop off price"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">£</InputAdornment>,
@@ -204,12 +212,11 @@ function ActivitySecondFormSlide() {
                 />
               </Box>
 
-              <Box sx={{ mt: 3 }}>
-                <FormControlLabel control={<FormikCheckboxField name="latePickUp" />} label="Late pick up" />
-                <FormikTimeField name="latePickUpTime" label="Late pick up time" sx={{ width: 130, mr: 2 }} />
+              <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+                <FormikCheckboxField name="latePickUp" label="Late pick up" />
+                <FormikTimeField name="latePickUpTime" label="Late pick up time" />
                 <FormikNumericField
                   name="latePickUpPrice"
-                  sx={{ width: 134 }}
                   label="Late pick up price"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">£</InputAdornment>,
@@ -217,25 +224,38 @@ function ActivitySecondFormSlide() {
                 />
               </Box>
 
-              <Box sx={{ mt: 3 }}>
-                <FormControl sx={{ mr: 2 }}>
+              <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+                <FormControl>
                   <InputLabel id="demo-simple-select-label">Age</InputLabel>
                   <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
                     <MenuItem value="single">Single</MenuItem>
                     <MenuItem value="range">Range</MenuItem>
                   </Select>
                 </FormControl>
-                <FormikNumericField name="ageFrom" sx={{ width: 67, mr: 2 }} label="2" />
-                {age === "range" && <FormikNumericField name="ageTo" sx={{ width: 67, mr: 2 }} label="4" />}
+                <FormikNumericField name="ageFrom" label="From" />
+                {age === "range" && <FormikNumericField name="ageTo" label="To" />}
               </Box>
 
-              <Field as={TextField} name="level" sx={{ mt: 3, display: "block" }} label="Level" />
-              <FormikNumericField name="capacity" sx={{ mt: 3 }} label="# of available place" />
-              <Box sx={{ mt: 3 }}>
-                <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
+              <FormikTextField name="level" label="Level" fullWidth margin="normal" />
+              <FormikNumericField name="capacity" label="# of available place" fullWidth margin="normal" />
+
+              <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56 }}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  fullWidth
+                  onClick={scrollPrev}
+                  sx={{ mr: 2, height: "100%", fontWeight: 700, fontSize: 16 }}
+                >
                   Go back
                 </Button>
-                <Button variant="contained" type="submit" color="success">
+                <Button
+                  variant="contained"
+                  fullWidth
+                  type="submit"
+                  color="success"
+                  sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+                >
                   Confirm
                 </Button>
               </Box>
