@@ -312,7 +312,7 @@ export default function Calendar({ name, sx, degug, dateRanges, setDateRanges })
   const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={sx} name={name}>
+    <Box sx={{ minWidth: 270, ...sx }} name={name}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
       <Days month={month} {...{degug, dateRanges, setDateRanges }} />
