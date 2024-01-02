@@ -59,7 +59,6 @@ function Day({
   } else if (isDateRangeMiddle) {
     borderRadiusSx = { borderRadius: 0 };
   }
-
   const isLastDayOfMonth = day.isSame(day.endOf('month'), 'day');
   const isFirstDayOfMonth = day.isSame(day.startOf('month'), 'day');
   if (isDateRangeMiddle && (isNextDayDisabled || isLastDayOfMonth)) {
@@ -77,11 +76,10 @@ function Day({
     };
   }
 
+  // Old hovered #997706
   let borderColorSx = { border: "2px solid transparent" };
   if (disabled);
-  else if (isHovered && !isDayInHoveredDateRange) {
-    borderColorSx = { border: "2px solid #997706" };
-  } else if (isNewDateRangeStartDate) {
+  else if ((isHovered && !isDayInHoveredDateRange) || isNewDateRangeStartDate) {
     borderColorSx = { border: "2px solid #FFC50A" };
   }
 
