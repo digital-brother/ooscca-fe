@@ -10,7 +10,7 @@ export default function Carousel({ children, viewportSx }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     watchDrag: false,
-    startIndex: 1,
+    startIndex: 2,
   });
 
   const scrollPrev = useCallback(() => {

@@ -80,7 +80,7 @@ export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
 
   function handleChange(value) {
-    const formikValue = value?.format("HH:mm");
+    const formikValue = value?.format("HH:mm") ?? null;
     helpers.setValue(formikValue);
   }
 
