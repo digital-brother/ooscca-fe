@@ -106,6 +106,5 @@ export function FormikCalendarField(props) {
     helpers.setValue(formikDateRanges);
   }
 
-  console.log(field.value);
   return <Calendar dateRanges={value} setDateRanges={handleChange} {...props} />;
 }

@@ -9,7 +9,7 @@ import isBetween from "dayjs/plugin/isBetween";
 
 dayjs.extend(isBetween);
 
-function CalendarCssGrid({ children, sx, ...props }) {
+function CalendarCssGrid({ children, sx }) {
   return (
     <Box
       sx={{
@@ -19,7 +19,6 @@ function CalendarCssGrid({ children, sx, ...props }) {
         gridAutoRows: 40,
         ...sx,
       }}
-      {...props}
     >
       {children}
     </Box>
@@ -119,7 +118,7 @@ function Day({
   );
 }
 
-function Days({ month, dateRanges, setDateRanges, ...props }) {
+function Days({ month, dateRanges, setDateRanges, debug, ...props }) {
   const startMonthDayOfWeek = month.startOf("month").day();
   const emptyDaysNumbersArray = Array.from({ length: startMonthDayOfWeek - 1 }, (_, index) => index);
 
@@ -206,8 +205,8 @@ function Days({ month, dateRanges, setDateRanges, ...props }) {
   };
 
   return (
-    <Box>
-      <CalendarCssGrid {...props}>
+    <Box {...props}>
+      <CalendarCssGrid>
         {emptyDaysNumbersArray.map((emptyDayNumber) => (
           <Box key={`empty-${emptyDayNumber}`}></Box>
         ))}
@@ -252,25 +251,27 @@ function Days({ month, dateRanges, setDateRanges, ...props }) {
         })}
       </CalendarCssGrid>
       {/* TODO: remove this and wrapper */}
-      <Box sx={{ textAlign: "center" }}>
-        <Typography mt={3}>Selected dates:</Typography>
-        {dateRanges.map((dateRange, index) => (
-          <Typography key={index}>
-            {dateRange.start && dateRange.start.format("YYYY-MM-DD")} -{" "}
-            {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
-          </Typography>
-        ))}
-        <Typography mt={3}>Hovered dates: {hoveredDay?.format("DD")}</Typography>
-      </Box>
+      {debug && (
+        <Box sx={{ textAlign: "center" }}>
+          <Typography mt={3}>Selected dates:</Typography>
+          {dateRanges.map((dateRange, index) => (
+            <Typography key={index}>
+              {dateRange.start && dateRange.start.format("YYYY-MM-DD")} -{" "}
+              {dateRange.end && dateRange.end.format("YYYY-MM-DD")}
+            </Typography>
+          ))}
+          <Typography mt={3}>Hovered dates: {hoveredDay?.format("DD")}</Typography>
+        </Box>
+      )}
     </Box>
   );
 }
 
-function WeekDays({ ...props }) {
+function WeekDays({ sx }) {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
-    <CalendarCssGrid {...props}>
+    <CalendarCssGrid sx={sx}>
       {daysOfWeek.map((day, index) => (
         <Typography
           // TODO: Refactor sx
@@ -307,11 +308,11 @@ function MonthSwitcher({ month, setMonth }) {
   );
 }
 
-export default function Calendar(props) {
+export default function Calendar({ sx, ...props }) {
   const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={{ maxWidth: 450, mx: "auto" }}>
+    <Box sx={sx}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
       <Days month={month} {...props} />

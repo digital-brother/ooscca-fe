@@ -32,7 +32,7 @@ import {
 import { FormikSelect } from "@/app/components/FormikSelect";
 import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
 import "dayjs/locale/en-gb";
-import { FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
+import { FormikCalendarField, FormikCheckboxField, FormikNumericField, FormikTimeField } from "./components/formikFields";
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import Container from "@mui/material/Container";
@@ -309,7 +309,7 @@ function ActivityFirstFormSlide() {
               sx={{ width: "62%" }}
             />
           </Box>
-          <MultiDateRangeCalendar containerSx={{ mt: 5 }} name="dates" />
+          <FormikCalendarField sx={{ mt: 5 }} name="dates" />
           <NonFieldErrors />
           <Box sx={{ mt: 3 }}>
             <Button variant="outlined" onClick={scrollPrev} sx={{ mr: 2 }}>
