@@ -262,6 +262,9 @@ function ActivitySecondFormSlide() {
             </LocalizationProvider>
           </Form>
         </Formik>
+        <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+          Activity will be saved in your accounts page
+        </Typography>
       </ActivitiesSlideContainer>
     )
   );
@@ -362,11 +365,11 @@ function ActivityFirstFormSlide() {
               Confirm
             </Button>
           </Box>
-          <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
-            Activity will be saved in your accounts page
-          </Typography>
         </Form>
       </Formik>
+      <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+        Activity will be saved in your accounts page
+      </Typography>
     </ActivitiesSlideContainer>
   );
 }
