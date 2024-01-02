@@ -283,6 +283,7 @@ function ActivityFirstFormSlide() {
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
   function handleSubmit(data, { setErrors }) {
+    console.log(data);
     mutation.mutate(data, {
       onError: (error) => setErrors(error.response.data),
       onSuccess: () => scrollNext(),

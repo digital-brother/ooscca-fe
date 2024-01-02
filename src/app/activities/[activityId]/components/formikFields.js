@@ -106,6 +106,5 @@ export function FormikCalendarField({name, sx, debug}) {
     helpers.setValue(formikDateRanges);
   }
 
-  // console.log(field.value);
   return <Calendar dateRanges={value} setDateRanges={handleChange} {...{name, sx, debug}} />;
 }
