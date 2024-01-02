@@ -8,3 +8,4 @@ src/app/snippet/
 .env.local
 alex.js
 .vscode/
+__pycache__/
