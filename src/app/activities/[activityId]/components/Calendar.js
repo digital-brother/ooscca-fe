@@ -76,12 +76,13 @@ function Day({
     };
   }
 
-  // Old hovered #997706
   let borderColorSx = { border: "2px solid transparent" };
   if (disabled);
-  else if ((isHovered && !isDayInHoveredDateRange) || isNewDateRangeStartDate) {
+  else if (isHovered && isNewDateRangeStartDate) {
+    borderColorSx = { border: "2px solid #997706" };
+  } else if ((isHovered && !isDayInHoveredDateRange) || isNewDateRangeStartDate) {
     borderColorSx = { border: "2px solid #FFC50A" };
-  }
+  } 
 
   let backgroundColor = "transparent";
   if (disabled);
