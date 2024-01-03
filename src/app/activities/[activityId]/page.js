@@ -179,12 +179,15 @@ function ActivitySecondFormSlide() {
     setAge(event.target.value);
   };
 
-  function handleSubmit(values, { setErrors }) {
-    console.log(values);
-    mutation.mutate(values, {
-      onError: (error) => setErrors(error.response.data),
-      onSuccess: () => scrollNext(),
-    });
+  async function handleSubmit(data, { setErrors }) {
+    console.log(data);
+    try {
+      await mutation.mutateAsync(data);
+      scrollNext();
+    } catch (error) {
+      console.log(error.response.data);
+      setErrors(error.response.data);
+    }
   }
 
   return (
