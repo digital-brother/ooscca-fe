@@ -49,7 +49,7 @@ export function FormikNumericField(props) {
 
 // Handles initial value is undefined case
 export function FormikCheckboxField({ label, ...props }) {
-  const [field, meta] = useField({ ...props, type: "checkbox" });
+  const [field] = useField({ ...props, type: "checkbox" });
   const fieldValue = field.value ?? false;
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
 }
@@ -97,7 +97,7 @@ export function FormikTimeField(props) {
 }
 
 export function FormikCalendarField({ name, sx, debug }) {
-  const [field, meta, helpers] = useField(name);
+  const [field, , helpers] = useField(name);
 
   const value = field.value.map((range) => ({
     start: dayjs(range.start, "YYYY-MM-DD"),
