@@ -10,9 +10,7 @@ import Typography from "@mui/material/Typography";
 import React, { useContext, useRef } from "react"; // added useEffect
 import {
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -142,10 +140,12 @@ function ActivityThirdFormSlide() {
         innerRef={earlyDiscountFormRef}
       >
         <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
-          <FormControlLabel control={<Checkbox />} label="Early birds" sx={{ display: "block", mt: 2 }} />
-          <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
-          <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
-          <FormikSelect name="unit" items={unitSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+          <FormikCheckboxField name="earlyBirds" label="Early Birds" />
+          <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+            <FormikNumericField name="percent" label="Percent" />
+            <FormikNumericField name="quantity" label="Quantity" />
+            <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
+          </Box>
         </Form>
       </Formik>
 
@@ -163,10 +163,12 @@ function ActivityThirdFormSlide() {
         innerRef={endingDiscountFormRef}
       >
         <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
-          <FormControlLabel control={<Checkbox />} label="Ending" sx={{ display: "block", mt: 2 }} />
-          <FormikNumericField name="percent" label="0-100%" sx={{ maxWidth: 120, ml: 2 }} />
-          <FormikNumericField name="quantity" label="0-40" sx={{ maxWidth: 80, ml: 2 }} />
-          <FormikSelect name="unit" items={unitSelectItems} sx={{ maxWidth: 150, ml: 2 }} />
+          <FormikCheckboxField name="ending" label="Ending" />
+          <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+            <FormikNumericField name="percent" label="Percent" />
+            <FormikNumericField name="quantity" label="Quantity" />
+            <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
+          </Box>
         </Form>
       </Formik>
 
@@ -373,8 +375,7 @@ function ActivityFirstFormSlide() {
               label="Pick activity from list"
               items={activityTypes || []}
               name="type"
-              size="small"
-              sx={{ width: "62%" }}
+              containerSx={{width: "62%"}}
             />
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
