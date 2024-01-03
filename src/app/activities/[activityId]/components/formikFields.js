@@ -6,12 +6,11 @@ import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
 
-
 export function FormikTextField(props) {
-  const [field] = useField(props);
-  return <TextField {...field} {...props} />;
+  const [field, meta] = useField(props);
+  const isError = meta.touched && Boolean(meta.error);
+  return <TextField {...field} error={isError} helperText={isError && meta.error} {...props} />;
 }
-
 
 // TODO: Rationalize on how to handle errors
 // Passes null / undefined from formik value to inputs as "".
@@ -33,15 +32,7 @@ export function FormikNumericField(props) {
     helpers.setValue(value === "" ? null : value);
   }
 
-  // const isError = meta.touched && meta.error;
-  //
-  // const helperText = (
-  //   <>
-  //     {meta.error?.map((item, index) => (
-  //       <Box key={index}>{item}</Box>
-  //     ))}
-  //   </>
-  // );
+  const isError = meta.touched && Boolean(meta.error);
 
   return (
     <TextField
@@ -49,8 +40,8 @@ export function FormikNumericField(props) {
       {...field}
       value={fieldValue}
       onChange={handleChange}
-      // error={isError}
-      // helperText={isError && helperText}
+      error={isError}
+      helperText={isError && meta.error}
       {...props}
     />
   );
@@ -59,9 +50,7 @@ export function FormikNumericField(props) {
 // Handles initial value is undefined case
 export function FormikCheckboxField({ label, ...props }) {
   const [field, meta] = useField({ ...props, type: "checkbox" });
-
   const fieldValue = field.value ?? false;
-
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
 }
 
@@ -93,10 +82,21 @@ export function FormikTimeField(props) {
 
   const parsedDayjs = dayjs(field.value, "HH:mm");
   const displayValue = parsedDayjs.isValid() ? parsedDayjs : null;
-  return <TimeField value={displayValue} onChange={handleChange} onBlur={handleBlur} {...props} />;
+  const isError = meta.touched && Boolean(meta.error);
+
+  return (
+    <TimeField
+      value={displayValue}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      {...props}
+      error={isError}
+      helperText={isError && meta.error}
+    />
+  );
 }
 
-export function FormikCalendarField({name, sx, debug}) {
+export function FormikCalendarField({ name, sx, debug }) {
   const [field, meta, helpers] = useField(name);
 
   const value = field.value.map((range) => ({
@@ -113,5 +113,5 @@ export function FormikCalendarField({name, sx, debug}) {
     helpers.setValue(formikDateRanges);
   }
 
-  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{name, sx, debug}} />;
+  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{ name, sx, debug }} />;
 }
