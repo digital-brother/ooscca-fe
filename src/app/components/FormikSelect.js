@@ -3,13 +3,14 @@ import { FormControl, FormHelperText, MenuItem, Select as MUISelect } from "@mui
 import { ErrorMessage, useField } from "formik";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-export function FormikSelect({ label, items, sx, name }) {
+export function FormikSelect({ label, items, sx, name, containerSx }) {
   const [field, meta] = useField({ name });
 
   // TODO: Fix main page selects
+  const isError = meta.touched && Boolean(meta.error);
 
   return (
-    <FormControl sx={{ minWidth: 120, ...sx }} fullWidth>
+    <FormControl sx={containerSx}>
       <MUISelect
         {...field}
         displayEmpty
@@ -25,6 +26,7 @@ export function FormikSelect({ label, items, sx, name }) {
           "& .MuiSelect-icon": {
             color: field.value ? "#0C0E0F" : "#6C757D",
           },
+          ...sx,
         }}
       >
         {label && <MenuItem value="">{label}</MenuItem>}
@@ -34,9 +36,9 @@ export function FormikSelect({ label, items, sx, name }) {
           </MenuItem>
         ))}
       </MUISelect>
-      <FormHelperText>
+     { isError && <FormHelperText>
         <ErrorMessage name={name} />
-      </FormHelperText>
+      </FormHelperText>}
     </FormControl>
   );
 }
