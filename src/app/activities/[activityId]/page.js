@@ -48,6 +48,37 @@ import Container from "@mui/material/Container";
 import * as Yup from "yup";
 import { useTheme } from "@mui/material/styles";
 
+function ActivitiesSlideContainer({ children, sx }) {
+  return (
+    <Box
+      sx={{
+        // width: 541,
+        width: "100%",
+        // TODO: Back to height once element completed
+        minHeight: 597,
+        px: 4,
+        py: 2.5,
+        ...sx,
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function NonFieldErrors() {
+  const { errors } = useFormikContext();
+
+  if (!errors.nonFieldErrors) return null;
+  return (
+    <Box>
+      {errors.nonFieldErrors.map((error, index) => (
+        <Typography key={index}>{error}</Typography>
+      ))}
+    </Box>
+  );
+}
+
 function ActivityThirdFormSlide() {
   const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
@@ -301,37 +332,6 @@ function ActivitySecondFormSlide() {
         </Typography>
       </ActivitiesSlideContainer>
     )
-  );
-}
-
-function ActivitiesSlideContainer({ children, sx }) {
-  return (
-    <Box
-      sx={{
-        // width: 541,
-        width: "100%",
-        // TODO: Back to height once element completed
-        minHeight: 597,
-        px: 4,
-        py: 2.5,
-        ...sx,
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
-
-function NonFieldErrors() {
-  const { errors } = useFormikContext();
-
-  if (!errors.nonFieldErrors) return null;
-  return (
-    <Box>
-      {errors.nonFieldErrors.map((error, index) => (
-        <Typography key={index}>{error}</Typography>
-      ))}
-    </Box>
   );
 }
 
