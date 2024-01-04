@@ -8,15 +8,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useContext, useRef } from "react"; // added useEffect
-import {
-  Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "react-query";
 import { Form, Formik, useFormikContext } from "formik";
@@ -45,6 +37,11 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import Container from "@mui/material/Container";
 import * as Yup from "yup";
 import { useTheme } from "@mui/material/styles";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 function ActivitiesSlideContainer({ children, sx }) {
   return (
@@ -74,6 +71,89 @@ function NonFieldErrors() {
         <Typography key={index}>{error}</Typography>
       ))}
     </Box>
+  );
+}
+
+function ActivityReviewSlide() {
+  const { activityId } = useParams();
+  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+
+  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
+  const earlyDiscount = discounts?.find((discount) => discount.type === "early");
+  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+
+  const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
+
+  return (
+    <ActivitiesSlideContainer>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h6">Review activity details</Typography>
+        <IconButton size="small">
+          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+        </IconButton>
+      </Box>
+      <Typography>Provider: {activity?.provider}</Typography>
+      <Typography>Activity: {activity?.type}</Typography>
+      <Typography>Venue: {activity?.venue}</Typography>
+
+      <Typography>
+        When: &nbsp;
+        {activity?.dateRanges
+          .map((dateRange) => `${formatDateString(dateRange.start)} - ${formatDateString(dateRange.start)}`)
+          .join(", ")}
+      </Typography>
+      <Typography>
+        {activity?.startTime} - {activity?.endTime}
+      </Typography>
+
+      <Typography>Early drop off: {activity?.earlyDropOffTime}</Typography>
+      <Typography>{activity?.earlyDropOffPrice}£</Typography>
+      <Typography>Late pick up: {activity?.latePickUpTime}</Typography>
+      <Typography>{activity?.latePickUpPrice}£</Typography>
+      <Typography>Level: {activity?.level}</Typography>
+      <Typography>
+        Age: {activity?.ageFrom} - {activity?.ageTo}
+      </Typography>
+      <Typography>Capacity: {activity?.capacity}</Typography>
+      <Typography>Discounts applied: </Typography>
+      <Typography>
+        Early birds ({earlyDiscount?.percent}%){" "}
+        {earlyDiscount?.unit === "seats"
+          ? `${earlyDiscount?.quantity} seats`
+          : `${formatDateString(earlyDiscount?.startDate)} - ${formatDateString(earlyDiscount?.endDate)}`}
+      </Typography>
+
+      <Typography>
+        Ending ({endingDiscount?.percent}%){" "}
+        {endingDiscount?.unit === "seats"
+          ? `${endingDiscount?.quantity} seats`
+          : `${formatDateString(endingDiscount?.startDate)} - ${formatDateString(endingDiscount?.endDate)}`}
+      </Typography>
+      <Typography>Terms and conditions</Typography>
+      <Typography>Total £{activity?.price}</Typography>
+
+      <Box sx={{ mt: 3, mb: 1, display: "flex", height: 56, columnGap: 2 }}>
+        <Button
+          variant="outlined"
+          size="large"
+          fullWidth
+          onClick={scrollPrev}
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+        >
+          Go back
+        </Button>
+        <Button
+          onClick={scrollNext}
+          variant="contained"
+          fullWidth
+          color="success"
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+        >
+          Confirm
+        </Button>
+      </Box>
+    </ActivitiesSlideContainer>
   );
 }
 
@@ -249,6 +329,30 @@ function ActivitySecondFormSlide() {
             capacity: activity.capacity,
           }}
           validationSchema={Yup.object({
+            startTime: Yup.string()
+              .required("Start time is a required field")
+              .test("isAfter6Am", "Start time must be after 6am", (startTime) =>
+                isTimeStringSameOrAfter(startTime, "06:00")
+              )
+              .test("isBefore8Pm", "End time must be before 8pm", (startTime) =>
+                isTimeStringSameOrBefore(startTime, "20:00")
+              ),
+            endTime: Yup.string()
+              .required("End time is a required field")
+              .test("isAfter6Am", "Start time must be after 6am", (endTime) =>
+                isTimeStringSameOrAfter(endTime, "06:00")
+              )
+              .test("isBefore10Pm", "End time must be before 10pm", (endTime) =>
+                isTimeStringSameOrBefore(endTime, "22:00")
+              ),
+            price: Yup.number()
+              .required("Price is a required field")
+              .min(0, "Price must be greater or equal than 0")
+              .max(999.99, "Price must be less or equal than 999.99")
+              .test("twoDecimal", "Price must have 2 decimals or less", (value) => {
+                if (!value) return true;
+                return Number.isInteger(value) || value === Number(value.toFixed(2));
+              }),
             level: Yup.string().max(64).required(),
             capacity: Yup.number().required().min(0).max(999),
           })}
@@ -337,6 +441,18 @@ function ActivitySecondFormSlide() {
   );
 }
 
+function isTimeStringSameOrAfter(value, minTimeString) {
+  const time = dayjs(value, "HH:mm");
+  const minTime = dayjs(minTimeString, "HH:mm");
+  return time.isSameOrAfter(minTime);
+}
+
+function isTimeStringSameOrBefore(value, maxTimeString) {
+  const time = dayjs(value, "HH:mm");
+  const maxTime = dayjs(maxTimeString, "HH:mm");
+  return time.isSameOrBefore(maxTime);
+}
+
 function ActivityFirstFormSlide() {
   const { activityId } = useParams();
   // TODO: Add error handling
@@ -375,7 +491,7 @@ function ActivityFirstFormSlide() {
               label="Pick activity from list"
               items={activityTypes || []}
               name="type"
-              containerSx={{width: "62%"}}
+              containerSx={{ width: "62%" }}
             />
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
@@ -434,19 +550,23 @@ function ActivityStartCreationSlide() {
 export default function Activities() {
   return (
     <Container sx={{ my: 10 }}>
-      <Grid container>
+      {/* <Grid container>
         <Grid item xs={6}>
           Description
         </Grid>
-        <Grid item xs={6}>
-          <Carousel viewportSx={{ border: "1px solid #6C757D", borderRadius: 4 }}>
-            <ActivityStartCreationSlide />
-            <ActivityFirstFormSlide />
-            <ActivitySecondFormSlide />
-            <ActivityThirdFormSlide />
-          </Carousel>
-        </Grid>
-      </Grid>
+        <Grid item xs={6}> */}
+      <Box sx={{ maxWidth: 540, ml: 10 }}>
+        <Carousel viewportSx={{ border: "1px solid #6C757D", borderRadius: 4 }}>
+          <ActivityStartCreationSlide />
+          <ActivityFirstFormSlide />
+          <ActivitySecondFormSlide />
+          <ActivityThirdFormSlide />
+          <ActivityReviewSlide />
+        </Carousel>
+      </Box>
+
+      {/* </Grid>
+      </Grid> */}
     </Container>
   );
 }
