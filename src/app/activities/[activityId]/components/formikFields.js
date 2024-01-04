@@ -23,7 +23,7 @@ export function FormikTextField(props) {
 // DRF IntegerField raises "Valid integer is required" in such case.
 // * DRF DecimalField treats "" as null.
 export function FormikNumericField(props) {
-  const [field, meta, helpers] = useField(props);
+  const [field, meta, helpers] = useField({...props, type: "number"});
 
   const fieldValue = field.value ?? "";
 
@@ -36,7 +36,6 @@ export function FormikNumericField(props) {
 
   return (
     <TextField
-      type="number"
       {...field}
       value={fieldValue}
       onChange={handleChange}
