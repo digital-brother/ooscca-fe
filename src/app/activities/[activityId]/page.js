@@ -28,7 +28,7 @@ import "dayjs/locale/en-gb";
 import {
   FormikCalendarField,
   FormikCheckboxField,
-  FormikNumericField,
+  FormikPriceField,
   FormikTextField,
   FormikTimeField,
 } from "./components/formikFields";
@@ -222,8 +222,8 @@ function ActivityThirdFormSlide() {
         <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
           <FormikCheckboxField name="earlyBirds" label="Early Birds" />
           <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikNumericField name="percent" label="Percent" />
-            <FormikNumericField name="quantity" label="Quantity" />
+            <FormikPriceField name="percent" label="Percent" />
+            <FormikPriceField name="quantity" label="Quantity" />
             <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
           </Box>
         </Form>
@@ -245,8 +245,8 @@ function ActivityThirdFormSlide() {
         <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
           <FormikCheckboxField name="ending" label="Ending" />
           <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikNumericField name="percent" label="Percent" />
-            <FormikNumericField name="quantity" label="Quantity" />
+            <FormikPriceField name="percent" label="Percent" />
+            <FormikPriceField name="quantity" label="Quantity" />
             <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
           </Box>
         </Form>
@@ -330,7 +330,8 @@ function ActivitySecondFormSlide() {
           }}
           validationSchema={Yup.object({
             startTime: Yup.string()
-              .required("Start time is a required field")
+              .label("Start time")
+              .required()
               .test("isAfter6Am", "Start time must be after 6am", (startTime) =>
                 isTimeStringSameOrAfter(startTime, "06:00")
               )
@@ -338,21 +339,33 @@ function ActivitySecondFormSlide() {
                 isTimeStringSameOrBefore(startTime, "20:00")
               ),
             endTime: Yup.string()
-              .required("End time is a required field")
+              .label("End time")
+              .required()
               .test("isAfter6Am", "Start time must be after 6am", (endTime) =>
                 isTimeStringSameOrAfter(endTime, "06:00")
               )
               .test("isBefore10Pm", "End time must be before 10pm", (endTime) =>
                 isTimeStringSameOrBefore(endTime, "22:00")
               ),
-            price: Yup.number()
-              .required("Price is a required field")
-              .min(0, "Price must be greater or equal than 0")
-              .max(999.99, "Price must be less or equal than 999.99")
-              .test("twoDecimal", "Price must have 2 decimals or less", (value) => {
-                if (!value) return true;
-                return Number.isInteger(value) || value === Number(value.toFixed(2));
+            price: Yup.number().label("Price").required().max(999.99),
+            earlyDropOffTime: Yup.string()
+              .label("Early drop off time")
+              .when("earlyDropOff", {
+                is: true,
+                then: (schema) =>
+                  schema
+                    .required("Early drop off time is a required field")
+                    .test("isAfter6Am", "Early drop off time must be after 6am", (earlyDropOffTime) =>
+                      isTimeStringSameOrAfter(earlyDropOffTime, "06:00")
+                    )
+                    .test(
+                      "isBeforeStartTime",
+                      "Early drop off time must be earlier than start time",
+                      (earlyDropOffTime, context) => isTimeStringBefore(earlyDropOffTime, context.parent.startTime)
+                  ),
+                otherwise: (schema) => schema,
               }),
+            earlyDropOffPrice: Yup.number().label("Early drop off price").required().max(999.99),
             level: Yup.string().max(64).required(),
             capacity: Yup.number().required().min(0).max(999),
           })}
@@ -362,7 +375,7 @@ function ActivitySecondFormSlide() {
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
               <FormikTimeField name="startTime" label="Start time" fullWidth margin="normal" />
               <FormikTimeField name="endTime" label="End time" fullWidth margin="normal" />
-              <FormikNumericField
+              <FormikPriceField
                 name="price"
                 label="Price"
                 InputProps={{
@@ -374,7 +387,7 @@ function ActivitySecondFormSlide() {
               <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
                 <FormikCheckboxField name="earlyDropOff" label="Early drop off" />
                 <FormikTimeField name="earlyDropOffTime" label="Early drop off time" />
-                <FormikNumericField
+                <FormikPriceField
                   name="earlyDropOffPrice"
                   label="Early drop off price"
                   InputProps={{
@@ -386,7 +399,7 @@ function ActivitySecondFormSlide() {
               <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
                 <FormikCheckboxField name="latePickUp" label="Late pick up" />
                 <FormikTimeField name="latePickUpTime" label="Late pick up time" />
-                <FormikNumericField
+                <FormikPriceField
                   name="latePickUpPrice"
                   label="Late pick up price"
                   InputProps={{
@@ -403,12 +416,12 @@ function ActivitySecondFormSlide() {
                     <MenuItem value="range">Range</MenuItem>
                   </Select>
                 </FormControl>
-                <FormikNumericField name="ageFrom" label="From" />
-                {age === "range" && <FormikNumericField name="ageTo" label="To" />}
+                <FormikPriceField name="ageFrom" label="From" />
+                {age === "range" && <FormikPriceField name="ageTo" label="To" />}
               </Box>
 
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
-              <FormikNumericField name="capacity" label="Capacity" fullWidth margin="normal" />
+              <FormikPriceField name="capacity" label="Capacity" fullWidth margin="normal" />
 
               <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56 }}>
                 <Button
@@ -451,6 +464,12 @@ function isTimeStringSameOrBefore(value, maxTimeString) {
   const time = dayjs(value, "HH:mm");
   const maxTime = dayjs(maxTimeString, "HH:mm");
   return time.isSameOrBefore(maxTime);
+}
+
+function isTimeStringBefore(value, maxTimeString) {
+  const time = dayjs(value, "HH:mm");
+  const maxTime = dayjs(maxTimeString, "HH:mm");
+  return time.isBefore(maxTime);
 }
 
 function ActivityFirstFormSlide() {
