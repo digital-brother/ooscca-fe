@@ -29,7 +29,7 @@ export function FormikPriceField(props) {
 
   function handleChange(event) {
     const value = event.target.value;
-    const validPriceRegex = /^(0|[1-9]\d*)(\.\d{0,2})?$|^([1-9]\d*\.)$/;
+    const validPriceRegex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
     if (value === "") {
       helpers.setValue(null);
     } else if (validPriceRegex.test(value)) {
