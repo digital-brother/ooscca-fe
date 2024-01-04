@@ -29,7 +29,11 @@ export function FormikNumericField(props) {
 
   function handleChange(event) {
     const value = event.target.value;
-    helpers.setValue(value === "" ? null : value);
+    if (value === "") {
+      helpers.setValue(null);
+    } else if (!isNaN(value) || value.slice(-1) === "." || value === "-") {
+      helpers.setValue(value);
+    }
   }
 
   const isError = meta.touched && Boolean(meta.error);
