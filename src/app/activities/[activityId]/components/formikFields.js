@@ -22,17 +22,16 @@ export function FormikTextField(props) {
 // "" - when value is edited and erased
 // DRF IntegerField raises "Valid integer is required" in such case.
 // * DRF DecimalField treats "" as null.
-export function FormikPriceField(props) {
-  const [field, meta, helpers] = useField({...props, type: "number"});
+function FormikRegexField({ regex, props}) {
+  const [field, meta, helpers] = useField({ ...props, type: "number" });
 
   const fieldValue = field.value ?? "";
 
   function handleChange(event) {
     const value = event.target.value;
-    const validPriceRegex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
     if (value === "") {
       helpers.setValue(null);
-    } else if (validPriceRegex.test(value)) {
+    } else if (regex.test(value)) {
       helpers.setValue(value);
     }
   }
@@ -49,6 +48,16 @@ export function FormikPriceField(props) {
       {...props}
     />
   );
+}
+
+export function FormikDecimalField(props) {
+  const validPriceRegex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
+  return <FormikRegexField {...{ props, regex: validPriceRegex }} />;
+}
+
+export function FormikNumberField(props) { 
+  const validIntegerRegex = /^(0|[1-9]\d*)$/;
+  return <FormikRegexField {...{ props, regex: validIntegerRegex }} />;
 }
 
 // Handles initial value is undefined case
