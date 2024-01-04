@@ -28,7 +28,8 @@ import "dayjs/locale/en-gb";
 import {
   FormikCalendarField,
   FormikCheckboxField,
-  FormikPriceField,
+  FormikNumberField,
+  FormikDecimalField,
   FormikTextField,
   FormikTimeField,
 } from "./components/formikFields";
@@ -222,8 +223,8 @@ function ActivityThirdFormSlide() {
         <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
           <FormikCheckboxField name="earlyBirds" label="Early Birds" />
           <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikPriceField name="percent" label="Percent" />
-            <FormikPriceField name="quantity" label="Quantity" />
+            <FormikDecimalField name="percent" label="Percent" />
+            <FormikDecimalField name="quantity" label="Quantity" />
             <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
           </Box>
         </Form>
@@ -245,8 +246,8 @@ function ActivityThirdFormSlide() {
         <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
           <FormikCheckboxField name="ending" label="Ending" />
           <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikPriceField name="percent" label="Percent" />
-            <FormikPriceField name="quantity" label="Quantity" />
+            <FormikDecimalField name="percent" label="Percent" />
+            <FormikDecimalField name="quantity" label="Quantity" />
             <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
           </Box>
         </Form>
@@ -366,8 +367,8 @@ function ActivitySecondFormSlide() {
                 otherwise: (schema) => schema,
               }),
             earlyDropOffPrice: Yup.number().label("Early drop off price").required().max(999.99),
-            level: Yup.string().max(64).required(),
-            capacity: Yup.number().required().min(0).max(999),
+            level: Yup.string().max(64),
+            capacity: Yup.number().label("Capacity").required().max(999),
           })}
           onSubmit={handleSubmit}
         >
@@ -375,7 +376,7 @@ function ActivitySecondFormSlide() {
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
               <FormikTimeField name="startTime" label="Start time" fullWidth margin="normal" />
               <FormikTimeField name="endTime" label="End time" fullWidth margin="normal" />
-              <FormikPriceField
+              <FormikDecimalField
                 name="price"
                 label="Price"
                 InputProps={{
@@ -387,7 +388,7 @@ function ActivitySecondFormSlide() {
               <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
                 <FormikCheckboxField name="earlyDropOff" label="Early drop off" />
                 <FormikTimeField name="earlyDropOffTime" label="Early drop off time" />
-                <FormikPriceField
+                <FormikDecimalField
                   name="earlyDropOffPrice"
                   label="Early drop off price"
                   InputProps={{
@@ -399,7 +400,7 @@ function ActivitySecondFormSlide() {
               <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
                 <FormikCheckboxField name="latePickUp" label="Late pick up" />
                 <FormikTimeField name="latePickUpTime" label="Late pick up time" />
-                <FormikPriceField
+                <FormikDecimalField
                   name="latePickUpPrice"
                   label="Late pick up price"
                   InputProps={{
@@ -416,12 +417,12 @@ function ActivitySecondFormSlide() {
                     <MenuItem value="range">Range</MenuItem>
                   </Select>
                 </FormControl>
-                <FormikPriceField name="ageFrom" label="From" />
-                {age === "range" && <FormikPriceField name="ageTo" label="To" />}
+                <FormikDecimalField name="ageFrom" label="From" />
+                {age === "range" && <FormikDecimalField name="ageTo" label="To" />}
               </Box>
 
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
-              <FormikPriceField name="capacity" label="Capacity" fullWidth margin="normal" />
+              <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
               <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56 }}>
                 <Button
