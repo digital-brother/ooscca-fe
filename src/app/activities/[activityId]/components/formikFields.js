@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import TextField from "@mui/material/TextField";
 import React from "react";
-import { Checkbox, FormControlLabel, Typography } from "@mui/material";
+import { Checkbox, FormControlLabel } from "@mui/material";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
@@ -67,14 +67,6 @@ export function FormikCheckboxField({ label, ...props }) {
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
 }
 
-function str(value) {
-  if (value === null) return "null";
-  if (value === undefined) return "undefined";
-  if (typeof value === "string") return value;
-  if (dayjs.isDayjs(value)) return value.format("HH:mm");
-  else return "fuck"
-}
-
 // Passes data from formik value to input:
 // - null / invalid dayjs object - as null
 // - vailid date string - as datejs object
@@ -109,7 +101,6 @@ export function FormikTimeField(props) {
         helperText={meta.touched && meta.error}
         {...props}
       />
-      <Typography>{str(field.value)}</Typography>
     </LocalizationProvider>
   );
 }
