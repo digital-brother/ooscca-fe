@@ -68,16 +68,12 @@ export function FormikCheckboxField({ label, ...props }) {
 }
 
 // Passes data from formik value to input:
-// - null / invalid dayjs object - as null
+// - null / invalid dayjs object - as is
 // - vailid date string - as datejs object
 //
 // Passes data from input to formik value:
-// - null - as null
-// - invalid dayjs object - as "Invalid date"
+// - null / invalid dayjs object - as is
 // - valid dayjs object - as data string
-//
-// When TextField is erased, value is set to hh:mm, so presented as "Invalid date" in formik.
-// TextField value is set to null when loses focus, handleBlur addresses this case.
 export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
 
@@ -89,7 +85,7 @@ export function FormikTimeField(props) {
 
   const isValidDayjs = typeof field.value === "string";
   const displayValue = isValidDayjs ? dayjs(field.value, "HH:mm") : field.value;
-  const isInvalidDayjsError = dayjs.isDayjs(field.value) && !field.value.isValid() && "Invalid time format"
+  const isInvalidDayjsError = dayjs.isDayjs(field.value) && !field.value.isValid() && "Invalid time format";
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
@@ -97,8 +93,8 @@ export function FormikTimeField(props) {
         {...field}
         value={displayValue}
         onChange={onChange}
-        error={meta.touched && Boolean(isInvalidDayjsError) || Boolean(meta.error)}
-        helperText={meta.touched && isInvalidDayjsError ||  meta.error}
+        error={(meta.touched && Boolean(isInvalidDayjsError)) || Boolean(meta.error)}
+        helperText={(meta.touched && isInvalidDayjsError) || meta.error}
         {...props}
       />
     </LocalizationProvider>
