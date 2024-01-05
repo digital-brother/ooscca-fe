@@ -83,19 +83,31 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   }
 
   let messageColor = ""
-  let messageText = ""
+  let messageTexts = []
 
-  if (file?.error) {
+  file.frontendErrors = []
+  if (file?.size > 5*1024*1024) {
+    file.frontendErrors.push("image: Max file size is 5.0 MB")
+  }
+
+  if (file?.error || file.frontendErrors.length > 0) {
     messageColor = "#E72A2A"
-    if (file?.error?.response?.data?.detail) {  // 2 types errors: from backend & if network failed
-      messageText = file?.error?.response?.data?.detail
+    if (file?.error?.response?.data) {  // 2 types errors: from backend & if network failed
+      for (const [key, value] of Object.entries(file?.error?.response?.data)) {
+        messageTexts.push(key + ": " + value)
+      }
+    } else if (file?.error?.message) {
+      messageTexts.push(file?.error?.message)
+    } else if (file.frontendErrors.length > 0) {
+      file.frontendErrors.map(frontendError => messageTexts.push(frontendError))
     } else {
-      messageText = file?.error?.message
+      messageTexts.push("Unknown error")
     }
+
   } else {
     messageColor = "#196B40"
     if (file.hasOwnProperty("error")) {
-      messageText = "Image approved"
+      messageTexts.push("Image approved")
     }
   }
 
@@ -127,7 +139,8 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
             mt: "5px",
           }}
         >
-          {messageText}
+          {messageTexts.map(text => (<Box>{text}</Box>))}
+
         </Box>
       </TableCell>
       <TableCell component="th" scope="row" align="center">
