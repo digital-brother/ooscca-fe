@@ -1,11 +1,14 @@
 import { useField } from "formik";
 import TextField from "@mui/material/TextField";
 import React from "react";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
 import { NumericFormat } from "react-number-format";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/en-gb";
 
 export function FormikTextField(props) {
   const [field, meta] = useField(props);
@@ -64,6 +67,14 @@ export function FormikCheckboxField({ label, ...props }) {
   return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />;
 }
 
+function str(value) {
+  if (value === null) return "null";
+  if (value === undefined) return "undefined";
+  if (typeof value === "string") return value;
+  if (dayjs.isDayjs(value)) return value.format("HH:mm");
+  else return "fuck"
+}
+
 // Passes data from formik value to input:
 // - null / invalid dayjs object - as null
 // - vailid date string - as datejs object
@@ -78,31 +89,28 @@ export function FormikCheckboxField({ label, ...props }) {
 export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
 
-  function handleChange(value) {
-    const formikValue = value?.format("HH:mm") ?? null;
+  function onChange(newValue) {
+    if (!newValue || !newValue.isValid()) return helpers.setValue(newValue);
+    const formikValue = newValue.format("HH:mm");
     helpers.setValue(formikValue);
   }
 
-  function handleBlur(event) {
-    helpers.setTouched(true);
-    if (event.target.value === null) {
-      helpers.setValue(null);
-    }
-  }
-
-  const parsedDayjs = dayjs(field.value, "HH:mm");
-  const displayValue = parsedDayjs.isValid() ? parsedDayjs : null;
-  const isError = meta.touched && Boolean(meta.error);
+  let displayValue;
+  if (!field.value || dayjs.isDayjs(field.value)) displayValue = field.value;
+  else displayValue = dayjs(field.value, "HH:mm");
 
   return (
-    <TimeField
-      value={displayValue}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      {...props}
-      error={isError}
-      helperText={isError && meta.error}
-    />
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+      <TimeField
+        {...field}
+        value={displayValue}
+        onChange={onChange}
+        error={meta.touched && Boolean(meta.error)}
+        helperText={meta.touched && meta.error}
+        {...props}
+      />
+      <Typography>{str(field.value)}</Typography>
+    </LocalizationProvider>
   );
 }
 
