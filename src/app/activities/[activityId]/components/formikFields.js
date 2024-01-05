@@ -82,14 +82,13 @@ export function FormikTimeField(props) {
   const [field, meta, helpers] = useField(props);
 
   function onChange(newValue) {
-    if (!newValue || !newValue.isValid()) return helpers.setValue(newValue);
-    const formikValue = newValue.format("HH:mm");
-    helpers.setValue(formikValue);
+    const isValidDayjs = dayjs.isDayjs(newValue) && newValue.isValid();
+    if (isValidDayjs) helpers.setValue(newValue.format("HH:mm"));
+    else helpers.setValue(newValue);
   }
 
-  let displayValue;
-  if (!field.value || dayjs.isDayjs(field.value)) displayValue = field.value;
-  else displayValue = dayjs(field.value, "HH:mm");
+  const isValidDayjs = typeof field.value === "string" 
+  const displayValue = isValidDayjs ? dayjs(field.value, "HH:mm") : field.value;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
