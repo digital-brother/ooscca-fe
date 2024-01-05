@@ -120,7 +120,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
         <Box component="img"
           src={file.preview || file.image}
           sx={{
-            height: "33px",
+            height: 33,
             borderRadius: "6px",
           }}
           alt={file.name}
@@ -130,13 +130,13 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
         {file.name}
         <Box sx={{
             color: messageColor,
+            fontSize: 16,
             fontFamily: "Manrope",
-            fontSize: "16px",
             fontStyle: "normal",
             fontWeight: "400",
-            lineHeight: "14px", /* 155.556% */
-            letterSpacing: "0.09px",
-            mt: "5px",
+            lineHeight: 1,
+            letterSpacing: 0.09,
+            mt: 0.8,
           }}
         >
           {messageTexts.map(text => (<Box>{text}</Box>))}
@@ -150,7 +150,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
         {formatBytes(file.size, 1)}
       </TableCell>
       <TableCell component="th" scope="row" align="center">
-        <Button onClick={deleteImageButtonHandler} key={_key}>
+        <Button onClick={HandleDeleteImage} key={_key}>
           <TrashCanIcon />
         </Button>
       </TableCell>
@@ -178,7 +178,7 @@ function FilesTable({files, setFiles}) {
           </TableHead>
           <TableBody>
             {Array.isArray(files) && (files.map((file, key) => (
-              <ImageDataRow files={files} setFiles={setFiles} file={file} key={key+1} _key={key+1} />
+              <ImageDataRow files={files} setFiles={setFiles} file={file} key={key+1} _key={key+1}/>
             )))}
           </TableBody>
         </Table>
@@ -244,7 +244,7 @@ export default function UploadImages() {
 
   useEffect(() => {
     if (!isLoading && !isError && images) {
-      setFiles(images);
+      setFiles(files => images);
     }
   }, [images, isLoading, isError]);
 
@@ -260,12 +260,26 @@ export default function UploadImages() {
           delete file.error
         });
 
+        setFiles(files => files
+          .filter(file => file.id || (!file.id  && !(file?.deleted)))
+        );
+
+        const deletePromises = files
+          .filter(file => file.id && file?.deleted === true)
+          .map(file => deleteMutation.mutateAsync(file));
+        const deleteResults = await Promise.all(deletePromises);
+
+        setFiles(files => files.filter(file => file !== null))
+
         const patchPromises = files
           .filter(file => file.id)
+          .filter(file => file?.deleted !== true)
           .map(file => patchMutation.mutateAsync(file));
 
         const postPromises = files
           .filter(file => !file.id)
+          .filter(file => !(file?.frontendErrors.length > 0))
+          .filter(file => file?.deleted !== true)
           .map(file => postMutation.mutateAsync(file));
 
         // Wait for all patch mutations to complete
@@ -276,6 +290,8 @@ export default function UploadImages() {
 
         // Update state after all mutations are complete
         const updatedFiles = files.map((file, index) => ({
+          key: file.key,
+          _key: file._key,
           error: file.error,
           id: file.id,
           image: file.preview || file.image,
@@ -284,7 +300,7 @@ export default function UploadImages() {
           size: file.size,
           activity: TEST_ACTIVITY_ID,
         }));
-        setFiles(updatedFiles);
+        setFiles(updatedFiles => updatedFiles.filter(f => f !== null));
       } catch (error) {
         // Handle errors if needed
         console.error("Error saving images:", error);
@@ -295,7 +311,6 @@ export default function UploadImages() {
   return (
     <Container sx={{
       py: {xs: 6, md: 3},
-      px: "33px",
       backgroundColor: "#ffffff",
       borderRadius: "16px",
       display: "flex",
@@ -304,20 +319,20 @@ export default function UploadImages() {
       <Box>
         <Typography sx={{
           fontFamily: "Montserrat",
-          fontSize: "20px",
+          fontSize: 20,
           fontStyle: "normal",
           fontWeight: "600",
-          lineHeight: "28px", /* 140% */
-          letterSpacing: "0.2px",
-          height: "50px",
+          lineHeight: 1.4, /* 140% */
+          letterSpacing: 0.2,
+          height: 50,
           display: "flex",
-          pb: "10px",
+          pb: 5,
         }}>Upload
         </Typography>
       </Box>
       <ImageInput files={files} setFiles={setFiles} sx={{
         backgroundColor: "#DEE2E6",
-        height: "110px",
+        height: 110,
         borderRadius: "16px",
       }}>
       </ImageInput>
@@ -327,14 +342,14 @@ export default function UploadImages() {
       {files.length !== 0 && (
         <Button onClick={SaveButtonHandler} sx={{
           width: "20%",
-          height: "37px",
-          py: "11px",
+          height: 37,
+          py: 11,
           justifyContent: "center",
           alignItems: "center",
           borderRadius: "7px",
           background: "#00A551",
           alignSelf: "end",
-          py: "25px",
+          py: 3,
         }}>
           <Typography sx={{
             color: "#FFF",
