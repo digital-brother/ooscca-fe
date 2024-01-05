@@ -59,27 +59,19 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
 
         const newFiles = [...files];
         newFiles.splice(hoverIndex, 0, newFiles.splice(draggedIndex, 1)[0]);
-        setFiles(newFiles);
+        setFiles(files => newFiles);
       }
     },
   });
 
   file.position = _key
-  const deleteMutation = useMutation((data) => deleteImage(data?.id), {
-    onSuccess: (data, variables, context) => {
-      setFiles(files.filter(item => item !== file));
-    },
-    onError: (error, variables, context) => {
-      variables.error = error
-    },
-  });
 
-  function deleteImageButtonHandler(event) {
-    if (file?.id) {
-      deleteMutation.mutate(file);
-    } else {
-      setFiles(files.filter(item => item !== file));
-    }
+  function HandleDeleteImage(event) {
+    file.deleted = true
+    delete file?.error
+    file = {...file}
+
+    setFiles(files => files.filter(f => f !== null));
   }
 
   let messageColor = ""
@@ -110,9 +102,17 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
       messageTexts.push("Image approved")
     }
   }
+  let opacity = 1
+  if (file?.deleted) {
+    opacity = 0.3
+  }
 
   return <TableRow
-      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+      sx={{
+        '&:last-child td, &:last-child th': { border: 0 },
+        opacity: opacity,
+        ...props?.sx
+      }}
       key={ _key }
       ref={(node) => drag(drop(node))}
     >
@@ -190,6 +190,15 @@ function FilesTable({files, setFiles}) {
 export default function UploadImages() {
   const [files, setFiles] = useState([]);
   const [filesLoaded, setFilesLoaded] = useState(false);
+
+  const deleteMutation = useMutation((data) => deleteImage(data?.id), {
+    onSuccess: (data, variables, context) => {
+      setFiles(files => files.filter(item => item.id !== variables?.id));
+    },
+    onError: (error, variables, context) => {
+      variables.error = error
+    },
+  });
 
   const patchMutation = useMutation((file) => patchImage({
       "id": file.id,
