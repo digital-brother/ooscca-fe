@@ -9,8 +9,14 @@ import { NumericFormat } from "react-number-format";
 
 export function FormikTextField(props) {
   const [field, meta] = useField(props);
-  const isError = meta.touched && Boolean(meta.error);
-  return <TextField {...field} error={isError} helperText={isError && meta.error} {...props} />;
+  return (
+    <TextField
+      {...field}
+      error={meta.touched && Boolean(meta.error)}
+      helperText={meta.touched && meta.error}
+      {...props}
+    />
+  );
 }
 
 // TODO: Rationalize on how to handle errors
@@ -23,25 +29,32 @@ export function FormikTextField(props) {
 // "" - when value is edited and erased
 // DRF IntegerField raises "Valid integer is required" in such case.
 // * DRF DecimalField treats "" as null.
-export function FormikNumberField(props) {
-  const [field, meta] = useField(props);
+
+export function FormikNumericFormat(props) {
+  const [field, meta, helpers] = useField(props);
+
+  function setValueOrNull(event) {
+    return helpers.setValue(event.target.value || null);
+  }
 
   return (
     <NumericFormat
+      customInput={TextField}
       {...field}
+      onChange={setValueOrNull}
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
       {...props}
-      allowNegative={false}
-      decimalScale={0}
-      customInput={TextField}
     />
   );
 }
 
+export function FormikNumberField(props) {
+  return <FormikNumericFormat allowNegative={false} decimalScale={0} {...props} />;
+}
+
 export function FormikDecimalField(props) {
-  const [field] = useField(props);
-  return <NumericFormat {...field} {...props} allowNegative={false} decimalScale={2} customInput={TextField} />;
+  return <FormikNumericFormat allowNegative={false} decimalScale={2} {...props} />;
 }
 
 // Handles initial value is undefined case
