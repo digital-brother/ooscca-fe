@@ -2859,6 +2859,7 @@ __metadata:
     react-dom: "npm:latest"
     react-dropzone: "npm:^14.2.3"
     react-multi-date-picker: "npm:^4.4.1"
+    react-number-format: "npm:^5.3.1"
     react-query: "npm:^3.39.3"
     yup: "npm:^1.3.3"
   languageName: unknown
@@ -3248,7 +3249,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -3360,6 +3361,18 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: fd3a0e1a9daea95f17c3723bea2297634030a3757dc94e2c6afe1f04c932f91f64d92e96961018379ca0018946334b8b98565c3c1c96512c9207f476525daafc
+  languageName: node
+  linkType: hard
+
+"react-number-format@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "react-number-format@npm:5.3.1"
+  dependencies:
+    prop-types: "npm:^15.7.2"
+  peerDependencies:
+    react: ^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 9e37698ab3d8224fd6cf5a69845c0308720d04de8459757031de0304379cfd2c0c897834cc9f62869933c4702a97888ba51abeb6490b7282e237a4c19a5fab04
   languageName: node
   linkType: hard
 

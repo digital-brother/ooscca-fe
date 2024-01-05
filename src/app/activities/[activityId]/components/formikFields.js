@@ -5,6 +5,7 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
+import { NumericFormat } from "react-number-format";
 
 export function FormikTextField(props) {
   const [field, meta] = useField(props);
@@ -22,42 +23,25 @@ export function FormikTextField(props) {
 // "" - when value is edited and erased
 // DRF IntegerField raises "Valid integer is required" in such case.
 // * DRF DecimalField treats "" as null.
-function FormikRegexField({ regex, props}) {
-  const [field, meta, helpers] = useField({ ...props, type: "number" });
-
-  const fieldValue = field.value ?? "";
-
-  function handleChange(event) {
-    const value = event.target.value;
-    if (value === "") {
-      helpers.setValue(null);
-    } else if (regex.test(value)) {
-      helpers.setValue(value);
-    }
-  }
-
-  const isError = meta.touched && Boolean(meta.error);
+export function FormikNumberField(props) {
+  const [field, meta] = useField(props);
 
   return (
-    <TextField
+    <NumericFormat
       {...field}
-      value={fieldValue}
-      onChange={handleChange}
-      error={isError}
-      helperText={isError && meta.error}
+      error={meta.touched && Boolean(meta.error)}
+      helperText={meta.touched && meta.error}
       {...props}
+      allowNegative={false}
+      decimalScale={0}
+      customInput={TextField}
     />
   );
 }
 
 export function FormikDecimalField(props) {
-  const validPriceRegex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
-  return <FormikRegexField {...{ props, regex: validPriceRegex }} />;
-}
-
-export function FormikNumberField(props) { 
-  const validIntegerRegex = /^(0|[1-9]\d*)$/;
-  return <FormikRegexField {...{ props, regex: validIntegerRegex }} />;
+  const [field] = useField(props);
+  return <NumericFormat {...field} {...props} allowNegative={false} decimalScale={2} customInput={TextField} />;
 }
 
 // Handles initial value is undefined case
