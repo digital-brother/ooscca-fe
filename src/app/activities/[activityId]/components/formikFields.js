@@ -89,7 +89,7 @@ export function FormikTimeField(props) {
 
   const isValidDayjs = typeof field.value === "string";
   const displayValue = isValidDayjs ? dayjs(field.value, "HH:mm") : field.value;
-  const isInvalidDayjs = dayjs.isDayjs(field.value) && !field.value.isValid();
+  const isInvalidDayjsError = dayjs.isDayjs(field.value) && !field.value.isValid() && "Invalid time format"
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
@@ -97,8 +97,8 @@ export function FormikTimeField(props) {
         {...field}
         value={displayValue}
         onChange={onChange}
-        error={isInvalidDayjs || (meta.touched && Boolean(meta.error))}
-        helperText={(isInvalidDayjs && "Invalid time format") || (meta.touched && meta.error)}
+        error={meta.touched && Boolean(isInvalidDayjsError) || Boolean(meta.error)}
+        helperText={meta.touched && isInvalidDayjsError ||  meta.error}
         {...props}
       />
     </LocalizationProvider>
