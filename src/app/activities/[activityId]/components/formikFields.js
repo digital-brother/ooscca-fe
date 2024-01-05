@@ -22,17 +22,9 @@ export function FormikTextField(props) {
   );
 }
 
-// TODO: Rationalize on how to handle errors
-// Passes null / undefined from formik value to inputs as "".
-// - null - returned by DRF for empty DecimalField
-// - undefined - returned by react-query while response is loading
-// It not handled, causes react controlled / uncontrolled component error.
-//
 // Passes "" from input to formik value as null.
-// "" - when value is edited and erased
 // DRF IntegerField raises "Valid integer is required" in such case.
 // * DRF DecimalField treats "" as null.
-
 export function FormikNumericFormat(props) {
   const [field, meta, helpers] = useField(props);
 
