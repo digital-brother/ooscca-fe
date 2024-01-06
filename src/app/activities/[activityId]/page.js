@@ -40,6 +40,7 @@ import { useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import { timeschema , numericSchema , isTimeStringBefore , isTimeStringAfter } from "./utils";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -491,26 +492,6 @@ function ActivitySecondFormSlide() {
       </ActivitiesSlideContainer>
     )
   );
-}
-
-const timeschema = Yup.mixed()
-  .nullable()
-  .test("invalidTimeFormat", "Invalid time format", (value) => !dayjs.isDayjs(value));
-
-const numericSchema = Yup.number().nullable();
-
-function isTimeStringBefore(value, maxTimeString, including = true) {
-  const time = dayjs(value, "HH:mm");
-  const maxTime = dayjs(maxTimeString, "HH:mm");
-  if (including) return time.isSameOrBefore(maxTime);
-  else return time.isBefore(maxTime);
-}
-
-function isTimeStringAfter(value, maxTimeString, including = true) {
-  const time = dayjs(value, "HH:mm");
-  const maxTime = dayjs(maxTimeString, "HH:mm");
-  if (including) return time.isSameOrAfter(maxTime);
-  else return time.isAfter(maxTime);
 }
 
 function ActivityFirstFormSlide() {

@@ -7,5 +7,6 @@ src/app/snippet/
 .yarn/
 .env.local
 alex.js
+alex.mjs
 .vscode/
 __pycache__/
