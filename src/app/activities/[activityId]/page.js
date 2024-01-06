@@ -351,11 +351,12 @@ function ActivitySecondFormSlide() {
             price: Yup.number().label("Price").required().max(999.99),
             earlyDropOffTime: Yup.string()
               .label("Early drop off time")
+              .nullable()
               .when("earlyDropOff", {
                 is: true,
                 then: (schema) =>
                   schema
-                    .required("Early drop off time is a required field")
+                    .required()
                     .test("isAfter6Am", "Early drop off time must be after 6am", (earlyDropOffTime) =>
                       isTimeStringSameOrAfter(earlyDropOffTime, "06:00")
                     )
@@ -363,10 +364,39 @@ function ActivitySecondFormSlide() {
                       "isBeforeStartTime",
                       "Early drop off time must be earlier than start time",
                       (earlyDropOffTime, context) => isTimeStringBefore(earlyDropOffTime, context.parent.startTime)
-                  ),
+                    ),
                 otherwise: (schema) => schema,
               }),
-            earlyDropOffPrice: Yup.number().label("Early drop off price").required().max(999.99),
+            earlyDropOffPrice: Yup.number()
+              .label("Early drop off price")
+              .nullable()
+              .max(999.99)
+              .when("earlyDropOff", {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema,
+              }),
+            latePickUpTime: Yup.string()
+              .label("Late pick up time")
+              .nullable()
+              .when("latePickUp", {
+                is: true,
+                then: (schema) =>
+                  schema
+                    .required()
+                    .test("isBefore10Pm", "Late pick up time must be before 10pm", (latePickUpTime) =>
+                      isTimeStringSameOrBefore(latePickUpTime, "22:00")
+                    )
+                    .test("isAfterEndTime", "Late pick up time must be after end time", (latePickUpTime, context) =>
+                      isTimeStringSameOrAfter(latePickUpTime, context.parent.endTime)
+                    ),
+                otherwise: (schema) => schema,
+              }),
+            latePickUpPrice: Yup.number().label("Late pick up price").nullable().max(999.99).when("latePickUp", {
+              is: true,
+              then: (schema) => schema.required(),
+              otherwise: (schema) => schema,
+            }),
             level: Yup.string().max(64),
             capacity: Yup.number().label("Capacity").required().max(999),
           })}
@@ -385,7 +415,17 @@ function ActivitySecondFormSlide() {
                 fullWidth
                 margin="normal"
               />
-              <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+
+              <Box
+                sx={{
+                  mt: 2,
+                  mb: 1,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  columnGap: 2,
+                  alignItems: "start",
+                }}
+              >
                 <FormikCheckboxField name="earlyDropOff" label="Early drop off" />
                 <FormikTimeField name="earlyDropOffTime" label="Early drop off time" />
                 <FormikDecimalField
@@ -397,7 +437,16 @@ function ActivitySecondFormSlide() {
                 />
               </Box>
 
-              <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+              <Box
+                sx={{
+                  mt: 2,
+                  mb: 1,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  columnGap: 2,
+                  alignItems: "start",
+                }}
+              >
                 <FormikCheckboxField name="latePickUp" label="Late pick up" />
                 <FormikTimeField name="latePickUpTime" label="Late pick up time" />
                 <FormikDecimalField
