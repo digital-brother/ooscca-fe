@@ -345,8 +345,8 @@ function ActivitySecondFormSlide() {
                 isTimeStringSameOrBefore(endTime, "22:00")
               ),
             price: numericSchema.label("Price").required().max(999.99),
-            earlyDropOffTime: timeschema.label("Early drop off time").when("earlyDropOff", {
-              is: true,
+            earlyDropOffTime: timeschema.label("Early drop off time").when(["earlyDropOff", "startTime"], {
+              is: (earlyDropOff, startTime) => earlyDropOff && typeof startTime === "string",
               then: (schema) =>
                 schema
                   .required()
@@ -371,10 +371,10 @@ function ActivitySecondFormSlide() {
               then: (schema) =>
                 schema
                   .required()
-                  .test("isBefore10Pm", "Late pick up time must be before 10pm", (latePickUpTime) =>
+                  .test("isBefore10Pm", "Must be before 10pm", (latePickUpTime) =>
                     isTimeStringSameOrBefore(latePickUpTime, "22:00")
                   )
-                  .test("isAfterEndTime", "Late pick up time must be after end time", (latePickUpTime, context) =>
+                  .test("isAfterEndTime", "Must be after end time", (latePickUpTime, context) =>
                     isTimeStringSameOrAfter(latePickUpTime, context.parent.endTime)
                   ),
               otherwise: (schema) => schema,
