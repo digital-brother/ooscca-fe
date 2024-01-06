@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useContext, useRef } from "react"; // added useEffect
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import { useMutation, useQuery } from "react-query";
 import { Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -333,16 +332,16 @@ function ActivitySecondFormSlide() {
             startTime: timeschema
               .label("Start time")
               .required()
-              .test("isAfter6Am", "Must be after 6am", (startTime) => isTimeStringSameOrAfter(startTime, "06:00"))
+              .test("isAfter6Am", "Must be after 6am", (startTime) => isTimeStringAfter(startTime, "06:00"))
               .test("isBefore8Pm", "End time must be before 8pm", (startTime) =>
-                isTimeStringSameOrBefore(startTime, "20:00")
+                isTimeStringBefore(startTime, "20:00")
               ),
             endTime: timeschema
               .label("End time")
               .required()
-              .test("isAfter6Am", "Must be after 6am", (endTime) => isTimeStringSameOrAfter(endTime, "06:00"))
+              .test("isAfter6Am", "Must be after 6am", (endTime) => isTimeStringAfter(endTime, "06:00"))
               .test("isBefore10Pm", "End time must be before 10pm", (endTime) =>
-                isTimeStringSameOrBefore(endTime, "22:00")
+                isTimeStringBefore(endTime, "22:00")
               ),
             price: numericSchema.label("Price").required().max(999.99),
             earlyDropOffTime: timeschema.label("Early drop off time").when(["earlyDropOff", "startTime"], {
@@ -351,10 +350,10 @@ function ActivitySecondFormSlide() {
                 schema
                   .required()
                   .test("isAfter6Am", "Must be after 6am", (earlyDropOffTime) =>
-                    isTimeStringSameOrAfter(earlyDropOffTime, "06:00")
+                    isTimeStringAfter(earlyDropOffTime, "06:00", false)
                   )
                   .test("isBeforeStartTime", "Must be earlier than start time", (earlyDropOffTime, context) =>
-                    isTimeStringBefore(earlyDropOffTime, context.parent.startTime)
+                    isTimeStringBefore(earlyDropOffTime, context.parent.startTime, false)
                   ),
               otherwise: (schema) => schema,
             }),
@@ -366,16 +365,16 @@ function ActivitySecondFormSlide() {
                 then: (schema) => schema.required(),
                 otherwise: (schema) => schema,
               }),
-            latePickUpTime: timeschema.label("Late pick up time").when("latePickUp", {
-              is: true,
+            latePickUpTime: timeschema.label("Late pick up time").when(["latePickUp", "endTime"], {
+              is: (latePickUp, endTime) => latePickUp && typeof endTime === "string",
               then: (schema) =>
                 schema
                   .required()
                   .test("isBefore10Pm", "Must be before 10pm", (latePickUpTime) =>
-                    isTimeStringSameOrBefore(latePickUpTime, "22:00")
+                    isTimeStringBefore(latePickUpTime, "22:00", false)
                   )
                   .test("isAfterEndTime", "Must be after end time", (latePickUpTime, context) =>
-                    isTimeStringSameOrAfter(latePickUpTime, context.parent.endTime)
+                    isTimeStringAfter(latePickUpTime, context.parent.endTime, false)
                   ),
               otherwise: (schema) => schema,
             }),
@@ -498,24 +497,20 @@ const timeschema = Yup.mixed()
   .nullable()
   .test("invalidTimeFormat", "Invalid time format", (value) => !dayjs.isDayjs(value));
 
-const numericSchema = Yup.number().nullable()
+const numericSchema = Yup.number().nullable();
 
-export function isTimeStringSameOrAfter(value, minTimeString) {
-  const time = dayjs(value, "HH:mm");
-  const minTime = dayjs(minTimeString, "HH:mm");
-  return time.isSameOrAfter(minTime);
-}
-
-function isTimeStringSameOrBefore(value, maxTimeString) {
+function isTimeStringBefore(value, maxTimeString, including = true) {
   const time = dayjs(value, "HH:mm");
   const maxTime = dayjs(maxTimeString, "HH:mm");
-  return time.isSameOrBefore(maxTime);
+  if (including) return time.isSameOrBefore(maxTime);
+  else return time.isBefore(maxTime);
 }
 
-function isTimeStringBefore(value, maxTimeString) {
+function isTimeStringAfter(value, maxTimeString, including = true) {
   const time = dayjs(value, "HH:mm");
   const maxTime = dayjs(maxTimeString, "HH:mm");
-  return time.isBefore(maxTime);
+  if (including) return time.isSameOrAfter(maxTime);
+  else return time.isAfter(maxTime);
 }
 
 function ActivityFirstFormSlide() {
