@@ -40,7 +40,7 @@ import { useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { timeschema , numericSchema , isTimeStringBefore , isTimeStringAfter } from "./utils";
+import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -285,12 +285,13 @@ function ActivityThirdFormSlide() {
 function ActivitySecondFormSlide() {
   const { activityId } = useParams();
   const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
-  const [age, setAge] = React.useState("range");
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const initialAgeType = activity?.ageFrom && activity?.ageTo ? "range" : "single";
+  const [ageType, setAgeType] = React.useState(initialAgeType);
+  const handleAgeTypeChange = (event) => {
+    setAgeType(event.target.value);
   };
 
   async function handleSubmit(data, { setErrors }) {
@@ -341,9 +342,7 @@ function ActivitySecondFormSlide() {
               .label("End time")
               .required()
               .test("isAfter6Am", "Must be after 6am", (endTime) => isTimeStringAfter(endTime, "06:00"))
-              .test("isBefore10Pm", "End time must be before 10pm", (endTime) =>
-                isTimeStringBefore(endTime, "22:00")
-              ),
+              .test("isBefore10Pm", "End time must be before 10pm", (endTime) => isTimeStringBefore(endTime, "22:00")),
             price: numericSchema.label("Price").required().max(999.99),
             earlyDropOffTime: timeschema.label("Early drop off time").when(["earlyDropOff", "startTime"], {
               is: (earlyDropOff, startTime) => earlyDropOff && typeof startTime === "string",
@@ -387,6 +386,11 @@ function ActivitySecondFormSlide() {
                 then: (schema) => schema.required(),
                 otherwise: (schema) => schema,
               }),
+            ageFrom: numericSchema.label("Age").required().max(18),
+            ageTo: numericSchema
+              .label("Age")
+              .max(18)
+              .test("required", "${path} to is a required field", (ageTo) => !(!ageTo && ageType === "range")),
             level: Yup.string().max(64),
             capacity: numericSchema.label("Capacity").required().max(999),
           })}
@@ -451,13 +455,13 @@ function ActivitySecondFormSlide() {
               <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
                 <FormControl>
                   <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                  <Select value={age} onChange={handleChange} labelId="demo-simple-select-label" label="Age">
+                  <Select value={ageType} onChange={handleAgeTypeChange} labelId="demo-simple-select-label" label="Age">
                     <MenuItem value="single">Single</MenuItem>
                     <MenuItem value="range">Range</MenuItem>
                   </Select>
                 </FormControl>
                 <FormikDecimalField name="ageFrom" label="From" />
-                {age === "range" && <FormikDecimalField name="ageTo" label="To" />}
+                {ageType === "range" && <FormikDecimalField name="ageTo" label="To" />}
               </Box>
 
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
