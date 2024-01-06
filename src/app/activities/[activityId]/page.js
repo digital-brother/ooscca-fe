@@ -118,15 +118,15 @@ function ActivityReviewSlide() {
       <Typography>Discounts applied: </Typography>
       <Typography>
         Early birds ({earlyDiscount?.percent}%){" "}
-        {earlyDiscount?.unit === "seats"
-          ? `${earlyDiscount?.quantity} seats`
+        {earlyDiscount?.unit === "spaces"
+          ? `${earlyDiscount?.amount} spaces`
           : `${formatDateString(earlyDiscount?.startDate)} - ${formatDateString(earlyDiscount?.endDate)}`}
       </Typography>
 
       <Typography>
         Ending ({endingDiscount?.percent}%){" "}
-        {endingDiscount?.unit === "seats"
-          ? `${endingDiscount?.quantity} seats`
+        {endingDiscount?.unit === "spaces"
+          ? `${endingDiscount?.amount} spaces`
           : `${formatDateString(endingDiscount?.startDate)} - ${formatDateString(endingDiscount?.endDate)}`}
       </Typography>
       <Typography>Terms and conditions</Typography>
@@ -172,7 +172,7 @@ function ActivityThirdFormSlide() {
 
   const unitSelectItems = [
     { id: "days", name: "Days" },
-    { id: "seats", name: "Seats" },
+    { id: "spaces", name: "spaces" },
   ];
 
   async function handleSubmit(values, { setSubmitting, setErrors }) {
@@ -211,7 +211,7 @@ function ActivityThirdFormSlide() {
           activity: earlyDiscount?.activity || activityId,
           type: earlyDiscount?.type || "early",
           percent: earlyDiscount?.percent,
-          quantity: earlyDiscount?.quantity,
+          amount: earlyDiscount?.amount,
           unit: earlyDiscount?.unit || "days",
         }}
         enableReinitialize
@@ -222,7 +222,7 @@ function ActivityThirdFormSlide() {
           <FormikCheckboxField name="earlyBirds" label="Early Birds" />
           <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
             <FormikDecimalField name="percent" label="Percent" />
-            <FormikDecimalField name="quantity" label="Quantity" />
+            <FormikDecimalField name="amount" label="Amount" />
             <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
           </Box>
         </Form>
@@ -234,7 +234,7 @@ function ActivityThirdFormSlide() {
           activity: endingDiscount?.activity || activityId,
           type: endingDiscount?.type || "ending",
           percent: endingDiscount?.percent,
-          quantity: endingDiscount?.quantity,
+          amount: endingDiscount?.amount,
           unit: endingDiscount?.unit || "days",
         }}
         enableReinitialize
@@ -245,7 +245,7 @@ function ActivityThirdFormSlide() {
           <FormikCheckboxField name="ending" label="Ending" />
           <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
             <FormikDecimalField name="percent" label="Percent" />
-            <FormikDecimalField name="quantity" label="Quantity" />
+            <FormikDecimalField name="amount" label="Amount" />
             <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
           </Box>
         </Form>
