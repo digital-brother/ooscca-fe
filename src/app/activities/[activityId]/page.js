@@ -292,8 +292,10 @@ function ActivitySecondFormSlide() {
     setAgeType(event.target.value);
   };
 
-  async function handleSubmit(data, { setErrors }) {
+  async function handleSubmit(values, { setErrors }) {
     try {
+      // On backend if rangeFrom is set, we treat it a single age, if both - as range
+      const data = {...values, ageTo: ageType === "range" ? values.ageTo : null}
       console.log(data);
       await mutation.mutateAsync(data);
       scrollNext();
