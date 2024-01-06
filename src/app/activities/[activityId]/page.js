@@ -1,7 +1,5 @@
 "use client";
 
-// TODO: Add error handling
-// TODO: Error handling
 // TODO: Close button
 // TODO: Carousel height and dots
 // TODO: Style buttons
