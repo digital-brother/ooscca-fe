@@ -294,8 +294,8 @@ function ActivitySecondFormSlide() {
   };
 
   async function handleSubmit(data, { setErrors }) {
-    console.log(data);
     try {
+      console.log(data);
       await mutation.mutateAsync(data);
       scrollNext();
     } catch (error) {
@@ -330,43 +330,34 @@ function ActivitySecondFormSlide() {
             capacity: activity.capacity,
           }}
           validationSchema={Yup.object({
-            startTime: Yup.string()
+            startTime: timeschema
               .label("Start time")
               .required()
-              .test("isAfter6Am", "Start time must be after 6am", (startTime) =>
-                isTimeStringSameOrAfter(startTime, "06:00")
-              )
+              .test("isAfter6Am", "Must be after 6am", (startTime) => isTimeStringSameOrAfter(startTime, "06:00"))
               .test("isBefore8Pm", "End time must be before 8pm", (startTime) =>
                 isTimeStringSameOrBefore(startTime, "20:00")
               ),
-            endTime: Yup.string()
+            endTime: timeschema
               .label("End time")
               .required()
-              .test("isAfter6Am", "Start time must be after 6am", (endTime) =>
-                isTimeStringSameOrAfter(endTime, "06:00")
-              )
+              .test("isAfter6Am", "Must be after 6am", (endTime) => isTimeStringSameOrAfter(endTime, "06:00"))
               .test("isBefore10Pm", "End time must be before 10pm", (endTime) =>
                 isTimeStringSameOrBefore(endTime, "22:00")
               ),
             price: Yup.number().label("Price").required().max(999.99),
-            earlyDropOffTime: Yup.string()
-              .label("Early drop off time")
-              .nullable()
-              .when("earlyDropOff", {
-                is: true,
-                then: (schema) =>
-                  schema
-                    .required()
-                    .test("isAfter6Am", "Early drop off time must be after 6am", (earlyDropOffTime) =>
-                      isTimeStringSameOrAfter(earlyDropOffTime, "06:00")
-                    )
-                    .test(
-                      "isBeforeStartTime",
-                      "Early drop off time must be earlier than start time",
-                      (earlyDropOffTime, context) => isTimeStringBefore(earlyDropOffTime, context.parent.startTime)
-                    ),
-                otherwise: (schema) => schema,
-              }),
+            earlyDropOffTime: timeschema.label("Early drop off time").when("earlyDropOff", {
+              is: true,
+              then: (schema) =>
+                schema
+                  .required()
+                  .test("isAfter6Am", "Must be after 6am", (earlyDropOffTime) =>
+                    isTimeStringSameOrAfter(earlyDropOffTime, "06:00")
+                  )
+                  .test("isBeforeStartTime", "Must be earlier than start time", (earlyDropOffTime, context) =>
+                    isTimeStringBefore(earlyDropOffTime, context.parent.startTime)
+                  ),
+              otherwise: (schema) => schema,
+            }),
             earlyDropOffPrice: Yup.number()
               .label("Early drop off price")
               .nullable()
@@ -376,9 +367,8 @@ function ActivitySecondFormSlide() {
                 then: (schema) => schema.required(),
                 otherwise: (schema) => schema,
               }),
-            latePickUpTime: Yup.string()
+            latePickUpTime: timeschema
               .label("Late pick up time")
-              .nullable()
               .when("latePickUp", {
                 is: true,
                 then: (schema) =>
@@ -392,11 +382,15 @@ function ActivitySecondFormSlide() {
                     ),
                 otherwise: (schema) => schema,
               }),
-            latePickUpPrice: Yup.number().label("Late pick up price").nullable().max(999.99).when("latePickUp", {
-              is: true,
-              then: (schema) => schema.required(),
-              otherwise: (schema) => schema,
-            }),
+            latePickUpPrice: Yup.number()
+              .label("Late pick up price")
+              .nullable()
+              .max(999.99)
+              .when("latePickUp", {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema,
+              }),
             level: Yup.string().max(64),
             capacity: Yup.number().label("Capacity").required().max(999),
           })}
@@ -504,7 +498,11 @@ function ActivitySecondFormSlide() {
   );
 }
 
-function isTimeStringSameOrAfter(value, minTimeString) {
+const timeschema = Yup.mixed()
+  .nullable()
+  .test("invalidTimeFormat", "Invalid time format", (value) => !dayjs.isDayjs(value));
+
+export function isTimeStringSameOrAfter(value, minTimeString) {
   const time = dayjs(value, "HH:mm");
   const minTime = dayjs(minTimeString, "HH:mm");
   return time.isSameOrAfter(minTime);
