@@ -6,7 +6,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useContext, useRef } from "react"; // added useEffect
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, Chip, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -91,46 +91,87 @@ function ActivityReviewSlide() {
           <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
         </IconButton>
       </Box>
-      <Typography>Provider: {activity?.provider}</Typography>
-      <Typography>Activity: {activity?.type}</Typography>
-      <Typography>Venue: {activity?.venue}</Typography>
 
-      <Typography>
-        When: &nbsp;
-        {activity?.dateRanges
-          .map((dateRange) => `${formatDateString(dateRange.start)} - ${formatDateString(dateRange.start)}`)
-          .join(", ")}
-      </Typography>
-      <Typography>
-        {activity?.startTime} - {activity?.endTime}
-      </Typography>
-
-      <Typography>Early drop off: {activity?.earlyDropOffTime}</Typography>
-      <Typography>{activity?.earlyDropOffPrice}£</Typography>
-      <Typography>Late pick up: {activity?.latePickUpTime}</Typography>
-      <Typography>{activity?.latePickUpPrice}£</Typography>
-      <Typography>Level: {activity?.level}</Typography>
-      <Typography>
-        Age: {activity?.ageFrom} - {activity?.ageTo}
-      </Typography>
-      <Typography>Capacity: {activity?.capacity}</Typography>
-      <Typography>Discounts applied: </Typography>
-      <Typography>
-        Early birds ({earlyDiscount?.percent}%){" "}
-        {earlyDiscount?.unit === "spaces"
-          ? `${earlyDiscount?.amount} spaces`
-          : `${formatDateString(earlyDiscount?.startDate)} - ${formatDateString(earlyDiscount?.endDate)}`}
-      </Typography>
-
-      <Typography>
-        Ending ({endingDiscount?.percent}%){" "}
-        {endingDiscount?.unit === "spaces"
-          ? `${endingDiscount?.amount} spaces`
-          : `${formatDateString(endingDiscount?.startDate)} - ${formatDateString(endingDiscount?.endDate)}`}
-      </Typography>
-      <Typography>Terms and conditions</Typography>
-      <Typography>Total £{activity?.price}</Typography>
-
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
+        <Typography>
+          <b>Provider:</b> {activity?.providerName}
+        </Typography>
+        <Typography>
+          <b>Activity:</b> {activity?.typeName}
+        </Typography>
+        <Typography>
+          <b>Venue:</b> {activity?.venue}
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography>
+            <b>When:</b> &nbsp;
+            {activity?.dateRanges
+              .map((dateRange) => `${formatDateString(dateRange.start)} - ${formatDateString(dateRange.start)}`)
+              .join(", ")}
+          </Typography>
+          <Typography>
+            {activity?.startTime} - {activity?.endTime}
+          </Typography>
+        </Box>
+        {activity?.earlyDropOff && (
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography>
+              <b>Early drop off:</b> {activity?.earlyDropOffTime}
+            </Typography>
+            {parseFloat(activity?.earlyDropOffPrice) ? (
+              <Typography>{activity?.earlyDropOffPrice}£</Typography>
+            ) : (
+              <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            )}
+          </Box>
+        )}
+        {activity?.latePickUp && (
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography>
+              <b>Late pick up:</b> {activity?.latePickUpTime}
+            </Typography>
+            {parseFloat(activity?.latePickUpPrice) ? (
+              <Typography>{activity?.latePickUpPrice}£</Typography>
+            ) : (
+              <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            )}
+          </Box>
+        )}
+        {activity?.level && (
+          <Typography>
+            <b>Level:</b> {activity?.level}
+          </Typography>
+        )}
+        <Typography>
+          <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
+        </Typography>
+        <Typography>
+          <b>Available spaces:</b> {activity?.capacity}
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography>
+            <b>Discounts applied:</b>{" "}
+          </Typography>
+          <Box>
+            <Typography>
+              Early birds ({earlyDiscount?.percent}%){" "}
+              {earlyDiscount?.unit === "spaces"
+                ? `${earlyDiscount?.amount} spaces`
+                : `applied to first ${earlyDiscount?.amount} days`}
+            </Typography>
+            <Typography sx={{ mt: 1 }}>
+              Ending soon ({endingDiscount?.percent}%){" "}
+              {endingDiscount?.unit === "spaces"
+                ? `${endingDiscount?.amount} spaces`
+                : `applied to last ${endingDiscount?.amount} days`}
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography>Terms and conditions</Typography>
+          <Typography variant="h5">Total £{activity?.price}</Typography>
+        </Box>
+      </Box>
       <Box sx={{ mt: 3, mb: 1, display: "flex", height: 56, columnGap: 2 }}>
         <Button
           variant="outlined"
@@ -204,7 +245,7 @@ function DiscountForm({ type, discount, formRef }) {
     >
       <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
         <Field type="hidden" name="type" value={type} />
-        <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending"} />
+        <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending soon"} />
         <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
           <FormikDecimalField name="percent" label="Percent" />
           <FormikDecimalField name="amount" label="Amount" />
