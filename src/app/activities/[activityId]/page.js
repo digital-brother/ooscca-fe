@@ -155,90 +155,91 @@ function ActivityReviewSlide() {
   );
 }
 
-function ActivityThirdFormSlide() {
-  const { activityId } = useParams();
-  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
-
-  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
-  const earlyDiscount = discounts?.find((discount) => discount.type === "early");
-  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
   const unitSelectItems = [
     { id: "days", name: "Days" },
     { id: "spaces", name: "Spaces" },
   ];
 
+  const patchMutation = useMutation((discount) => patchDiscount(discount.activity, discount.id, discount));
+  const createMutation = useMutation((discount) => createDiscount(discount.activity, discount));
+
+  async function handleSubmit(values, { setSubmitting, setErrors }) {
+    const mutation = values.id ? patchMutation : createMutation;
+    try {
+      const response = await mutation.mutateAsync(values);
+      console.log(response);
+    } catch (error) {
+      console.log(error.response.data);
+      setErrors(error.response.data);
+      throw error;
+    }
+  }
+
+  return (
+    <Formik
+      initialValues={{
+        id: discount?.id,
+        activity: discount?.activity,
+        type: discount?.type ?? type,
+        enabled: discount?.enabled ?? false,
+        percent: discount?.percent,
+        amount: discount?.amount,
+        unit: discount?.unit || "days",
+      }}
+      validationSchema={Yup.object({
+        percent: numericSchema
+          .label("Percent")
+          .max(100)
+          .when("enabled", {
+            is: true,
+            then: (schema) => schema.required(),
+            otherwise: (schema) => schema,
+          }),
+        amount: numericSchema
+          .label("Amount")
+          .max(999)
+          .when("enabled", {
+            is: true,
+            then: (schema) => schema.required(),
+            otherwise: (schema) => schema,
+          }),
+      })}
+      enableReinitialize
+      onSubmit={handleSubmit}
+      innerRef={formRef}
+    >
+      <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
+        <Field type="hidden" name="type" value={type} />
+        <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending"} />
+        <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+          <FormikDecimalField name="percent" label="Percent" />
+          <FormikDecimalField name="amount" label="Amount" />
+          <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
+        </Box>
+      </Form>
+    </Formik>
+  );
+}
+
+function ActivityThirdFormSlide() {
+  const { activityId } = useParams();
+  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
+
+  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
+  const earlyDiscount = discounts?.find((discount) => discount.type === "early");
+  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
-  
+
   async function handleMultipleSubmit() {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
       scrollNext();
     } catch (error) {}
-  }
-  
-  function DiscountForm({ type, discount, formRef }) {
-    const patchMutation = useMutation((discount) => patchDiscount(discount.activity, discount.id, discount));
-    const createMutation = useMutation((discount) => createDiscount(discount.activity, discount));
-    
-    async function handleSubmit(values, { setSubmitting, setErrors }) {
-      const mutation = values.id ? patchMutation : createMutation;
-      try {
-        const response = await mutation.mutateAsync(values);
-        console.log(response);
-      } catch (error) {
-        console.log(error.response.data);
-        setErrors(error.response.data);
-        throw error;
-      }
-    }
-
-    return (
-      <Formik
-        initialValues={{
-          id: discount?.id,
-          activity: discount?.activity,
-          type: discount?.type ?? type,
-          enabled: discount?.enabled ?? false,
-          percent: discount?.percent,
-          amount: discount?.amount,
-          unit: discount?.unit || "days",
-        }}
-        validationSchema={Yup.object({
-          percent: numericSchema
-            .label("Percent")
-            .max(100)
-            .when("enabled", {
-              is: true,
-              then: (schema) => schema.required(),
-              otherwise: (schema) => schema,
-            }),
-          amount: numericSchema
-            .label("Amount")
-            .max(999)
-            .when("enabled", {
-              is: true,
-              then: (schema) => schema.required(),
-              otherwise: (schema) => schema,
-            }),
-        })}
-        enableReinitialize
-        onSubmit={handleSubmit}
-        innerRef={formRef}
-      >
-        <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
-          <Field type="hidden" name="type" value={type} />
-          <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending"} />
-          <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikDecimalField name="percent" label="Percent" />
-            <FormikDecimalField name="amount" label="Amount" />
-            <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
-          </Box>
-        </Form>
-      </Formik>
-    );
   }
 
   return (
