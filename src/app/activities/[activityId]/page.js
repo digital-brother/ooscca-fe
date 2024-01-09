@@ -192,19 +192,11 @@ function DiscountForm({ type, discount, formRef }) {
         percent: numericSchema
           .label("Percent")
           .max(100)
-          .when("enabled", {
-            is: true,
-            then: (schema) => schema.required(),
-            otherwise: (schema) => schema,
-          }),
+          .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
         amount: numericSchema
           .label("Amount")
-          .max(999)
-          .when("enabled", {
-            is: true,
-            then: (schema) => schema.required(),
-            otherwise: (schema) => schema,
-          }),
+          .max(40)
+          .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
       })}
       enableReinitialize
       onSubmit={handleSubmit}
