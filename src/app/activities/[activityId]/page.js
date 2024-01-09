@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import React, { useContext, useRef } from "react"; // added useEffect
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
-import { Form, Formik, useFormikContext } from "formik";
+import { Field, Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
@@ -81,7 +81,6 @@ function ActivityReviewSlide() {
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
-
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
 
   return (
@@ -164,35 +163,82 @@ function ActivityThirdFormSlide() {
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+  const unitSelectItems = [
+    { id: "days", name: "Days" },
+    { id: "spaces", name: "Spaces" },
+  ];
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
-  const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
-  const createMutation = useMutation((discount) => createDiscount(activityId, discount));
-
-  const unitSelectItems = [
-    { id: "days", name: "Days" },
-    { id: "spaces", name: "spaces" },
-  ];
-
-  async function handleSubmit(values, { setSubmitting, setErrors }) {
-    const mutation = values.id ? patchMutation : createMutation;
-    try {
-      const response = await mutation.mutateAsync(values);
-      console.log(response);
-    } catch (error) {
-      console.log(error.response.data);
-      setErrors(error.response.data);
-      throw error;
-    }
-  }
-
+  
   async function handleMultipleSubmit() {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
       scrollNext();
     } catch (error) {}
+  }
+  
+  function DiscountForm({ type, discount, formRef }) {
+    const patchMutation = useMutation((discount) => patchDiscount(discount.activity, discount.id, discount));
+    const createMutation = useMutation((discount) => createDiscount(discount.activity, discount));
+    
+    async function handleSubmit(values, { setSubmitting, setErrors }) {
+      const mutation = values.id ? patchMutation : createMutation;
+      try {
+        const response = await mutation.mutateAsync(values);
+        console.log(response);
+      } catch (error) {
+        console.log(error.response.data);
+        setErrors(error.response.data);
+        throw error;
+      }
+    }
+
+    return (
+      <Formik
+        initialValues={{
+          id: discount?.id,
+          activity: discount?.activity,
+          type: discount?.type ?? type,
+          enabled: discount?.enabled ?? false,
+          percent: discount?.percent,
+          amount: discount?.amount,
+          unit: discount?.unit || "days",
+        }}
+        validationSchema={Yup.object({
+          percent: numericSchema
+            .label("Percent")
+            .max(100)
+            .when("enabled", {
+              is: true,
+              then: (schema) => schema.required(),
+              otherwise: (schema) => schema,
+            }),
+          amount: numericSchema
+            .label("Amount")
+            .max(999)
+            .when("enabled", {
+              is: true,
+              then: (schema) => schema.required(),
+              otherwise: (schema) => schema,
+            }),
+        })}
+        enableReinitialize
+        onSubmit={handleSubmit}
+        innerRef={formRef}
+      >
+        <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
+          <Field type="hidden" name="type" value={type} />
+          <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending"} />
+          <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+            <FormikDecimalField name="percent" label="Percent" />
+            <FormikDecimalField name="amount" label="Amount" />
+            <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
+          </Box>
+        </Form>
+      </Formik>
+    );
   }
 
   return (
@@ -203,53 +249,10 @@ function ActivityThirdFormSlide() {
           <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
         </IconButton>
       </Box>
+
       <Typography sx={{ mt: 4, fontWeight: 700 }}>Discounts</Typography>
-
-      <Formik
-        initialValues={{
-          id: earlyDiscount?.id,
-          activity: earlyDiscount?.activity || activityId,
-          type: earlyDiscount?.type || "early",
-          percent: earlyDiscount?.percent,
-          amount: earlyDiscount?.amount,
-          unit: earlyDiscount?.unit || "days",
-        }}
-        enableReinitialize
-        onSubmit={handleSubmit}
-        innerRef={earlyDiscountFormRef}
-      >
-        <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
-          <FormikCheckboxField name="earlyBirds" label="Early Birds" />
-          <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikDecimalField name="percent" label="Percent" />
-            <FormikDecimalField name="amount" label="Amount" />
-            <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
-          </Box>
-        </Form>
-      </Formik>
-
-      <Formik
-        initialValues={{
-          id: endingDiscount?.id,
-          activity: endingDiscount?.activity || activityId,
-          type: endingDiscount?.type || "ending",
-          percent: endingDiscount?.percent,
-          amount: endingDiscount?.amount,
-          unit: endingDiscount?.unit || "days",
-        }}
-        enableReinitialize
-        onSubmit={handleSubmit}
-        innerRef={endingDiscountFormRef}
-      >
-        <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
-          <FormikCheckboxField name="ending" label="Ending" />
-          <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-            <FormikDecimalField name="percent" label="Percent" />
-            <FormikDecimalField name="amount" label="Amount" />
-            <FormikSelect name="unit" items={unitSelectItems} sx={{ height: "100%" }} />
-          </Box>
-        </Form>
-      </Formik>
+      <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
+      <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
 
       <Box sx={{ mt: 3, mb: 1, display: "flex", height: 56, columnGap: 2 }}>
         <Button
@@ -272,7 +275,6 @@ function ActivityThirdFormSlide() {
           Confirm
         </Button>
       </Box>
-
       <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
@@ -295,7 +297,7 @@ function ActivitySecondFormSlide() {
   async function handleSubmit(values, { setErrors }) {
     try {
       // On backend if rangeFrom is set, we treat it a single age, if both - as range
-      const data = {...values, ageTo: ageType === "range" ? values.ageTo : null}
+      const data = { ...values, ageTo: ageType === "range" ? values.ageTo : null };
       console.log(data);
       await mutation.mutateAsync(data);
       scrollNext();
@@ -390,7 +392,7 @@ function ActivitySecondFormSlide() {
             ageTo: numericSchema
               .label("Age")
               .max(18)
-              .test("required", "${path} to is a required field", (ageTo) => !(!ageTo && ageType === "range")),
+              .test("required", "${path} to is a required field", (ageTo) => ageType === "single" || ageTo),
             level: Yup.string().max(64),
             capacity: numericSchema.label("Capacity").required().max(999),
           })}
