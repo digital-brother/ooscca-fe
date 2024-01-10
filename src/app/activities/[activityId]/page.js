@@ -65,6 +65,66 @@ function NonFieldErrors() {
   );
 }
 
+function DiscountForm({ type, discount, formRef }) {
+  const theme = useTheme();
+  const unitSelectItems = [
+    { id: "days", name: "Days" },
+    { id: "spaces", name: "Spaces" },
+  ];
+
+  const patchMutation = useMutation((discount) => patchDiscount(discount.activity, discount.id, discount));
+  const createMutation = useMutation((discount) => createDiscount(discount.activity, discount));
+
+  async function handleSubmit(values, { setSubmitting, setErrors }) {
+    const mutation = values.id ? patchMutation : createMutation;
+    try {
+      const response = await mutation.mutateAsync(values);
+      console.log(response);
+    } catch (error) {
+      console.log(error.response.data);
+      setErrors(error.response.data);
+      throw error;
+    }
+  }
+
+  return (
+    <Formik
+      initialValues={{
+        id: discount?.id,
+        activity: discount?.activity,
+        type: discount?.type ?? type,
+        enabled: discount?.enabled ?? false,
+        percent: discount?.percent,
+        amount: discount?.amount,
+        unit: discount?.unit || "days",
+      }}
+      validationSchema={Yup.object({
+        percent: numericSchema
+          .label("Percent")
+          .max(100)
+          .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
+        amount: numericSchema
+          .label("Amount")
+          .max(40)
+          .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
+      })}
+      enableReinitialize
+      onSubmit={handleSubmit}
+      innerRef={formRef}
+    >
+      <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
+        <Field type="hidden" name="type" value={type} />
+        <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending soon"} />
+        <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+          <FormikDecimalField name="percent" label="Percent" />
+          <FormikDecimalField name="amount" label="Amount" />
+          <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
+        </Box>
+      </Form>
+    </Formik>
+  );
+}
+
 function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
@@ -216,66 +276,6 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
         Activity will be saved in your accounts page
       </Typography>
     </>
-  );
-}
-
-function DiscountForm({ type, discount, formRef }) {
-  const theme = useTheme();
-  const unitSelectItems = [
-    { id: "days", name: "Days" },
-    { id: "spaces", name: "Spaces" },
-  ];
-
-  const patchMutation = useMutation((discount) => patchDiscount(discount.activity, discount.id, discount));
-  const createMutation = useMutation((discount) => createDiscount(discount.activity, discount));
-
-  async function handleSubmit(values, { setSubmitting, setErrors }) {
-    const mutation = values.id ? patchMutation : createMutation;
-    try {
-      const response = await mutation.mutateAsync(values);
-      console.log(response);
-    } catch (error) {
-      console.log(error.response.data);
-      setErrors(error.response.data);
-      throw error;
-    }
-  }
-
-  return (
-    <Formik
-      initialValues={{
-        id: discount?.id,
-        activity: discount?.activity,
-        type: discount?.type ?? type,
-        enabled: discount?.enabled ?? false,
-        percent: discount?.percent,
-        amount: discount?.amount,
-        unit: discount?.unit || "days",
-      }}
-      validationSchema={Yup.object({
-        percent: numericSchema
-          .label("Percent")
-          .max(100)
-          .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
-        amount: numericSchema
-          .label("Amount")
-          .max(40)
-          .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
-      })}
-      enableReinitialize
-      onSubmit={handleSubmit}
-      innerRef={formRef}
-    >
-      <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
-        <Field type="hidden" name="type" value={type} />
-        <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending soon"} />
-        <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-          <FormikDecimalField name="percent" label="Percent" />
-          <FormikDecimalField name="amount" label="Amount" />
-          <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
-        </Box>
-      </Form>
-    </Formik>
   );
 }
 
