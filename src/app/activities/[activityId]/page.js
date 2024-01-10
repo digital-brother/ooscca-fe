@@ -136,25 +136,31 @@ function ReviewSlide({ scrollNext, scrollPrev }) {
         <Typography>
           <b>Available spaces:</b> {activity?.capacity}
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <b>Discounts applied:</b>{" "}
-          </Typography>
-          <Box>
+        {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography>
-              Early birds ({earlyDiscount?.percent}%){" "}
-              {earlyDiscount?.unit === "spaces"
-                ? `${earlyDiscount?.amount} spaces`
-                : `applied to first ${earlyDiscount?.amount} days`}
+              <b>Discounts applied:</b>{" "}
             </Typography>
-            <Typography sx={{ mt: 1 }}>
-              Ending soon ({endingDiscount?.percent}%){" "}
-              {endingDiscount?.unit === "spaces"
-                ? `${endingDiscount?.amount} spaces`
-                : `applied to last ${endingDiscount?.amount} days`}
-            </Typography>
+            <Box>
+              {earlyDiscount?.enabled && (
+                <Typography>
+                  Early birds ({earlyDiscount?.percent}%){" "}
+                  {earlyDiscount?.unit === "spaces"
+                    ? `${earlyDiscount?.amount} spaces`
+                    : `applied to first ${earlyDiscount?.amount} days`}
+                </Typography>
+              )}
+              {endingDiscount?.enabled && (
+                <Typography sx={{ mt: 1 }}>
+                  Ending soon ({endingDiscount?.percent}%){" "}
+                  {endingDiscount?.unit === "spaces"
+                    ? `${endingDiscount?.amount} spaces`
+                    : `applied to last ${endingDiscount?.amount} days`}
+                </Typography>
+              )}
+            </Box>
           </Box>
-        </Box>
+        )}
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography>Terms and conditions</Typography>
           <Typography variant="h5">Total £{activity?.price}</Typography>
