@@ -180,10 +180,11 @@ function TermsAndConditions() {
   const editorRef = useRef(null);
 
   return (
-    <Box sx={{ minWidth: 500, minHeight: 500, p: 10 }}>
-      <Typography variant="h2">Add your Terms & Contitions here</Typography>
-
-      <Box sx={{mt: 5}}>
+    <Box sx={{ minWidth: 500, minHeight: 500, p: 7 }}>
+      <Typography variant="h3" textAlign="center">
+        Add your Terms & Contitions here
+      </Typography>
+      <Box sx={{ mt: 5 }}>
         <Editor
           apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
           onInit={(evt, editor) => (editorRef.current = editor)}
@@ -219,10 +220,22 @@ function TermsAndConditions() {
           }}
         />
       </Box>
-
-      <Box sx={{ mt: 5 }}>
-        <Button variant="contained" sx={{ display: "block" }}>
-          Log content
+      <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
+        <Button
+          variant="outlined"
+          size="large"
+          // onClick={scrollPrev}
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16, minWidth: 230 }}
+        >
+          Cancel
+        </Button>
+        <Button
+          // onClick={handleSave}
+          variant="contained"
+          color="success"
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16, minWidth: 230 }}
+        >
+          Save
         </Button>
       </Box>
     </Box>
