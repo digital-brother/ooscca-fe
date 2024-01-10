@@ -65,7 +65,7 @@ function NonFieldErrors() {
   );
 }
 
-function ReviewSlide({ scrollNext, scrollPrev }) {
+function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
@@ -74,11 +74,23 @@ function ReviewSlide({ scrollNext, scrollPrev }) {
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
 
+  const mutation = useMutation((data) => patchActivity(activityId, data));
+
+  async function handleSave() {
+    try {
+      const response = await mutation.mutateAsync({ filled: true });
+      console.log(response);
+      scrollNext();
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
+
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h6">Review activity details</Typography>
-        <IconButton size="small">
+        <IconButton size="small" onClick={close}>
           <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
         </IconButton>
       </Box>
@@ -191,7 +203,7 @@ function ReviewSlide({ scrollNext, scrollPrev }) {
           Go back
         </Button>
         <Button
-          onClick={scrollNext}
+          onClick={handleSave}
           variant="contained"
           fullWidth
           color="success"
@@ -267,7 +279,7 @@ function DiscountForm({ type, discount, formRef }) {
   );
 }
 
-function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
+function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
   const { activityId } = useParams();
 
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
@@ -277,13 +289,10 @@ function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
 
-  const mutation = useMutation((data) => patchActivity(activityId, data));
-
   async function handleMultipleSubmit() {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
-      await mutation.mutateAsync({ filled: true });
       scrollNext();
     } catch (error) {}
   }
@@ -293,7 +302,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
       <Box>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Typography variant="h6">Keep editing</Typography>
-          <IconButton size="small">
+          <IconButton size="small" onClick={close}>
             <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
           </IconButton>
         </Box>
@@ -330,7 +339,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
   );
 }
 
-function InfoSlide({ scrollNext, scrollPrev }) {
+function InfoSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
@@ -359,7 +368,7 @@ function InfoSlide({ scrollNext, scrollPrev }) {
       <>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Typography variant="h6">Keep editing</Typography>
-          <IconButton size="small">
+          <IconButton size="small" onClick={close}>
             <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
           </IconButton>
         </Box>
@@ -548,7 +557,7 @@ function InfoSlide({ scrollNext, scrollPrev }) {
   );
 }
 
-function DatesSlide({ scrollNext, scrollPrev }) {
+function DatesSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
   // TODO: Add error handling
   const { data: activityTypes } = useQuery("activityTypes", getActivityTypes);
@@ -569,7 +578,7 @@ function DatesSlide({ scrollNext, scrollPrev }) {
     <>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6">Keep editing</Typography>
-        <IconButton size="small">
+        <IconButton size="small" onClick={close}>
           <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
         </IconButton>
       </Box>
@@ -647,6 +656,10 @@ export default function Activities() {
     setSlide((prev) => prev - 1);
   }
 
+  function close() {
+    setSlide(0);
+  }
+
   return (
     <Container sx={{ my: 10 }}>
       {/* <Grid container>
@@ -671,7 +684,7 @@ export default function Activities() {
       >
         {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
         <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <CurrentSlide {...{ scrollNext, scrollPrev }} />
+          <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
         </Box>
       </Box>
       {/* </Grid>
