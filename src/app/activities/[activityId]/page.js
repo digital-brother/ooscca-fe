@@ -5,7 +5,7 @@
 // TODO: Style buttons
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useContext, useRef } from "react"; // added useEffect
+import React, { useContext, useRef, useState } from "react"; // added useEffect
 import { Button, Chip, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { Field, Form, Formik, useFormikContext } from "formik";
@@ -39,26 +39,9 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
+import { styled } from "@mui/system";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
-
-function ActivitiesSlideContainer({ children, sx }) {
-  return (
-    <Box
-      sx={{
-        // width: 541,
-        width: "100%",
-        // TODO: Back to height once element completed
-        minHeight: 597,
-        px: 4,
-        py: 2.5,
-        ...sx,
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
 
 function NonFieldErrors() {
   const { errors } = useFormikContext();
@@ -73,9 +56,8 @@ function NonFieldErrors() {
   );
 }
 
-function ActivityReviewSlide() {
+function ReviewSlide({ scrollNext, scrollPrev }) {
   const { activityId } = useParams();
-  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
@@ -84,7 +66,7 @@ function ActivityReviewSlide() {
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
 
   return (
-    <ActivitiesSlideContainer>
+    <>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h6">Review activity details</Typography>
         <IconButton size="small">
@@ -103,12 +85,18 @@ function ActivityReviewSlide() {
           <b>Venue:</b> {activity?.venue}
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <b>When:</b> &nbsp;
-            {activity?.dateRanges
-              .map((dateRange) => `${formatDateString(dateRange.start)} - ${formatDateString(dateRange.start)}`)
-              .join(", ")}
-          </Typography>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Typography>
+              <b>When:</b>
+            </Typography>
+            <Box>
+              {activity?.dateRanges.map((dateRange, index) => (
+                <Typography key={index}>
+                  {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
+                </Typography>
+              ))}
+            </Box>
+          </Box>
           <Typography>
             {activity?.startTime} - {activity?.endTime}
           </Typography>
@@ -172,7 +160,7 @@ function ActivityReviewSlide() {
           <Typography variant="h5">Total £{activity?.price}</Typography>
         </Box>
       </Box>
-      <Box sx={{ mt: 3, mb: 1, display: "flex", height: 56, columnGap: 2 }}>
+      <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
         <Button
           variant="outlined"
           size="large"
@@ -189,10 +177,13 @@ function ActivityReviewSlide() {
           color="success"
           sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
         >
-          Confirm
+          Save
         </Button>
       </Box>
-    </ActivitiesSlideContainer>
+      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+        Activity will be saved in your accounts page
+      </Typography>
+    </>
   );
 }
 
@@ -256,9 +247,8 @@ function DiscountForm({ type, discount, formRef }) {
   );
 }
 
-function ActivityThirdFormSlide() {
+function ThirdFormSlide({ scrollNext, scrollPrev, sx }) {
   const { activityId } = useParams();
-  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
@@ -276,19 +266,20 @@ function ActivityThirdFormSlide() {
   }
 
   return (
-    <ActivitiesSlideContainer>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h6">Keep editing</Typography>
-        <IconButton size="small">
-          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
-        </IconButton>
+    <>
+      <Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h6">Keep editing</Typography>
+          <IconButton size="small">
+            <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+          </IconButton>
+        </Box>
+        <Typography sx={{ mt: 4, fontWeight: 700 }}>Discounts</Typography>
+        <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
+        <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
       </Box>
 
-      <Typography sx={{ mt: 4, fontWeight: 700 }}>Discounts</Typography>
-      <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
-      <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
-
-      <Box sx={{ mt: 3, mb: 1, display: "flex", height: 56, columnGap: 2 }}>
+      <Box sx={{ mt: "auto", display: "flex", height: 56, columnGap: 2 }}>
         <Button
           variant="outlined"
           size="large"
@@ -306,19 +297,18 @@ function ActivityThirdFormSlide() {
           color="success"
           sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
         >
-          Confirm
+          Next
         </Button>
       </Box>
-      <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
-    </ActivitiesSlideContainer>
+    </>
   );
 }
 
-function ActivitySecondFormSlide() {
+function SecondFormSlide({ scrollNext, scrollPrev }) {
   const { activityId } = useParams();
-  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
@@ -343,7 +333,7 @@ function ActivitySecondFormSlide() {
 
   return (
     activity && (
-      <ActivitiesSlideContainer>
+      <>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Typography variant="h6">Keep editing</Typography>
           <IconButton size="small">
@@ -426,6 +416,7 @@ function ActivitySecondFormSlide() {
             ageTo: numericSchema
               .label("Age")
               .max(18)
+              // eslint-disable-next-line no-template-curly-in-string
               .test("required", "${path} to is a required field", (ageTo) => ageType === "single" || ageTo),
             level: Yup.string().max(64),
             capacity: numericSchema.label("Capacity").required().max(999),
@@ -520,27 +511,26 @@ function ActivitySecondFormSlide() {
                   color="success"
                   sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
                 >
-                  Confirm
+                  Next
                 </Button>
               </Box>
             </LocalizationProvider>
           </Form>
         </Formik>
-        <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+        <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
           Activity will be saved in your accounts page
         </Typography>
-      </ActivitiesSlideContainer>
+      </>
     )
   );
 }
 
-function ActivityFirstFormSlide() {
+function FirstFormSlide({ scrollNext, scrollPrev }) {
   const { activityId } = useParams();
   // TODO: Add error handling
   const { data: activityTypes } = useQuery("activityTypes", getActivityTypes);
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
-  const { scrollNext, scrollPrev } = useContext(EmblaApiContext);
 
   async function handleSubmit(data, { setErrors }) {
     console.log(data);
@@ -553,8 +543,8 @@ function ActivityFirstFormSlide() {
   }
 
   return (
-    <ActivitiesSlideContainer>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6">Keep editing</Typography>
         <IconButton size="small">
           <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
@@ -565,7 +555,7 @@ function ActivityFirstFormSlide() {
         enableReinitialize
         onSubmit={handleSubmit}
       >
-        <Form>
+        <Form style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
             <Typography sx={{ fontWeight: 700 }}>Activity</Typography>
             <FormikSelect
@@ -577,7 +567,7 @@ function ActivityFirstFormSlide() {
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <NonFieldErrors />
-          <Box sx={{ mt: 4, display: "flex", height: 56 }}>
+          <Box sx={{ mt: "auto", display: "flex", height: 56 }}>
             <Button
               variant="outlined"
               size="large"
@@ -594,41 +584,46 @@ function ActivityFirstFormSlide() {
               color="success"
               sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
             >
-              Confirm
+              Next
             </Button>
           </Box>
         </Form>
       </Formik>
-      <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
-    </ActivitiesSlideContainer>
+    </>
   );
 }
 
-function ActivityStartCreationSlide() {
-  const { scrollNext } = useContext(EmblaApiContext);
-
+function StartCreationSlide({ scrollNext, sx }) {
   return (
-    <ActivitiesSlideContainer
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-      }}
-    >
-      <Box sx={{ maxWidth: 341 }}>
+    <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      <Box sx={{ maxWidth: 341, textAlign: "center", ...sx }}>
         <Typography variant="h5">Create your first activity and let’s get going</Typography>
         <Button variant="contained" color="warning" size="large" onClick={scrollNext} sx={{ mt: 3 }}>
           Start here
         </Button>
       </Box>
-    </ActivitiesSlideContainer>
+    </Box>
   );
 }
 
 export default function Activities() {
+  const [slide, setSlide] = useState(0);
+
+  const slides = [StartCreationSlide, FirstFormSlide, SecondFormSlide, ThirdFormSlide, ReviewSlide];
+  const CurrentSlide = slides[slide];
+
+  function scrollNext() {
+    if (slide === slides.length - 1) setSlide(0);
+    else setSlide((prev) => prev + 1);
+  }
+
+  function scrollPrev() {
+    setSlide((prev) => prev - 1);
+  }
+
   return (
     <Container sx={{ my: 10 }}>
       {/* <Grid container>
@@ -636,16 +631,26 @@ export default function Activities() {
           Description
         </Grid>
         <Grid item xs={6}> */}
-      <Box sx={{ maxWidth: 540, ml: 10 }}>
-        <Carousel viewportSx={{ border: "1px solid #6C757D", borderRadius: 4 }}>
-          <ActivityStartCreationSlide />
-          <ActivityFirstFormSlide />
-          <ActivitySecondFormSlide />
-          <ActivityThirdFormSlide />
-          <ActivityReviewSlide />
-        </Carousel>
-      </Box>
+      <Box
+        sx={{
+          mx: "auto",
 
+          maxWidth: 540,
+          minHeight: 600,
+          border: "1px solid #6C757D",
+          borderRadius: 4,
+          px: 4,
+          pt: 2.4,
+          pb: 2,
+
+          display: "flex",
+        }}
+      >
+        {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <CurrentSlide {...{ scrollNext, scrollPrev }} />
+        </Box>
+      </Box>
       {/* </Grid>
       </Grid> */}
     </Container>
