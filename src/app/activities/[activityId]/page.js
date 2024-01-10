@@ -49,7 +49,6 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
-import { styled } from "@mui/system";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -86,8 +85,8 @@ function ReviewSlide({ scrollNext, scrollPrev }) {
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, position: "relative" }}>
         <Stack spacing={1} sx={{ width: "max-content", position: "absolute", right: 0 }}>
-          <Chip label="Early birds" />
-          <Chip label="Ending soon" />{" "}
+          <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
+          <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
         </Stack>
 
         <Typography>
@@ -634,7 +633,7 @@ function StartSlide({ scrollNext, sx }) {
 }
 
 export default function Activities() {
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide] = useState(4);
 
   const slides = [StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];

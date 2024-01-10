@@ -69,6 +69,16 @@ const theme = createTheme({
         }),
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 4,
+          fontSize: 13,
+          fontWeight: 700,
+          fontFamily: manrope.style.fontFamily,
+        },
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
