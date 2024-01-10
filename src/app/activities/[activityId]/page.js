@@ -253,7 +253,7 @@ function DiscountForm({ type, discount, formRef }) {
   );
 }
 
-function ThirdFormSlide({ scrollNext, scrollPrev, sx }) {
+function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
   const { activityId } = useParams();
 
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
@@ -313,7 +313,7 @@ function ThirdFormSlide({ scrollNext, scrollPrev, sx }) {
   );
 }
 
-function SecondFormSlide({ scrollNext, scrollPrev }) {
+function InfoSlide({ scrollNext, scrollPrev }) {
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
@@ -531,7 +531,7 @@ function SecondFormSlide({ scrollNext, scrollPrev }) {
   );
 }
 
-function FirstFormSlide({ scrollNext, scrollPrev }) {
+function DatesSlide({ scrollNext, scrollPrev }) {
   const { activityId } = useParams();
   // TODO: Add error handling
   const { data: activityTypes } = useQuery("activityTypes", getActivityTypes);
@@ -602,7 +602,7 @@ function FirstFormSlide({ scrollNext, scrollPrev }) {
   );
 }
 
-function StartCreationSlide({ scrollNext, sx }) {
+function StartSlide({ scrollNext, sx }) {
   return (
     <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       <Box sx={{ maxWidth: 341, textAlign: "center", ...sx }}>
@@ -618,7 +618,7 @@ function StartCreationSlide({ scrollNext, sx }) {
 export default function Activities() {
   const [slide, setSlide] = useState(0);
 
-  const slides = [StartCreationSlide, FirstFormSlide, SecondFormSlide, ThirdFormSlide, ReviewSlide];
+  const slides = [StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
 
   function scrollNext() {
