@@ -50,6 +50,7 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
+import { Editor } from "@tinymce/tinymce-react";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -176,7 +177,56 @@ function ActivityDetails() {
 }
 
 function TermsAndConditions() {
-  return <Box sx={{ minWidth: 500, minHeight: 300, p: 5 }}>Hello</Box>;
+  const editorRef = useRef(null);
+
+  return (
+    <Box sx={{ minWidth: 500, minHeight: 500, p: 10 }}>
+      <Typography variant="h2">Add your Terms & Contitions here</Typography>
+
+      <Box sx={{mt: 5}}>
+        <Editor
+          apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
+          onInit={(evt, editor) => (editorRef.current = editor)}
+          init={{
+            height: 500,
+            menubar: false,
+            statusbar: false,
+            plugins: [
+              "advlist",
+              "autolink",
+              "lists",
+              "link",
+              "image",
+              "charmap",
+              "anchor",
+              "searchreplace",
+              "visualblocks",
+              "code",
+              "fullscreen",
+              "insertdatetime",
+              "media",
+              "table",
+              "preview",
+              "help",
+              "wordcount",
+            ],
+            toolbar:
+              "undo redo | blocks | " +
+              "bold italic forecolor | alignleft aligncenter " +
+              "alignright alignjustify | bullist numlist outdent indent | " +
+              "removeformat | help",
+            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          }}
+        />
+      </Box>
+
+      <Box sx={{ mt: 5 }}>
+        <Button variant="contained" sx={{ display: "block" }}>
+          Log content
+        </Button>
+      </Box>
+    </Box>
+  );
 }
 
 function DiscountForm({ type, discount, formRef }) {
@@ -356,7 +406,11 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           Terms and Conditions
         </Button>
 
-        <Dialog onClose={() => setTermsCoditionsOpen(false)} open={termsCoditionsOpen}>
+        <Dialog
+          onClose={() => setTermsCoditionsOpen(false)}
+          open={termsCoditionsOpen}
+          PaperProps={{ sx: { maxWidth: "none" } }}
+        >
           <TermsAndConditions />
         </Dialog>
       </Box>
