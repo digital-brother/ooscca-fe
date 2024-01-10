@@ -617,7 +617,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
         </IconButton>
       </Box>
       <Formik
-        initialValues={{ type: activity?.type || "", dateRanges: activity?.dateRanges || [] }}
+        initialValues={{ type: activityTypes && activity?.type || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
         onSubmit={handleSubmit}
       >
@@ -679,7 +679,7 @@ export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-  const [slide, setSlide] = useState(4);
+  const [slide, setSlide] = useState(0);
 
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
