@@ -65,6 +65,115 @@ function NonFieldErrors() {
   );
 }
 
+function ActivityDetails() {
+  const { activityId } = useParams();
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
+  const earlyDiscount = discounts?.find((discount) => discount.type === "early");
+  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+
+  const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, position: "relative" }}>
+      <Stack spacing={1} sx={{ width: "max-content", position: "absolute", right: 0 }}>
+        <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
+        <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
+      </Stack>
+      <Typography>
+        <b>Provider:</b> {activity?.providerName}
+      </Typography>
+      <Typography>
+        <b>Activity:</b> {activity?.typeName}
+      </Typography>
+      <Typography>
+        <b>Venue:</b> {activity?.venue}
+      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Typography>
+            <b>When:</b>
+          </Typography>
+          <Box>
+            {activity?.dateRanges.map((dateRange, index) => (
+              <Typography key={index}>
+                {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
+        <Typography>
+          {activity?.startTime} - {activity?.endTime}
+        </Typography>
+      </Box>
+      {activity?.earlyDropOff && (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography>
+            <b>Early drop off:</b> {activity?.earlyDropOffTime}
+          </Typography>
+          {parseFloat(activity?.earlyDropOffPrice) ? (
+            <Typography>{activity?.earlyDropOffPrice}£</Typography>
+          ) : (
+            <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+          )}
+        </Box>
+      )}
+      {activity?.latePickUp && (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography>
+            <b>Late pick up:</b> {activity?.latePickUpTime}
+          </Typography>
+          {parseFloat(activity?.latePickUpPrice) ? (
+            <Typography>{activity?.latePickUpPrice}£</Typography>
+          ) : (
+            <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+          )}
+        </Box>
+      )}
+      {activity?.level && (
+        <Typography>
+          <b>Level:</b> {activity?.level}
+        </Typography>
+      )}
+      <Typography>
+        <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
+      </Typography>
+      <Typography>
+        <b>Available spaces:</b> {activity?.capacity}
+      </Typography>
+      {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography>
+            <b>Discounts applied:</b>{" "}
+          </Typography>
+          <Box>
+            {earlyDiscount?.enabled && (
+              <Typography>
+                Early birds ({earlyDiscount?.percent}%){" "}
+                {earlyDiscount?.unit === "spaces"
+                  ? `${earlyDiscount?.amount} spaces`
+                  : `applied to first ${earlyDiscount?.amount} days`}
+              </Typography>
+            )}
+            {endingDiscount?.enabled && (
+              <Typography sx={{ mt: 1 }}>
+                Ending soon ({endingDiscount?.percent}%){" "}
+                {endingDiscount?.unit === "spaces"
+                  ? `${endingDiscount?.amount} spaces`
+                  : `applied to last ${endingDiscount?.amount} days`}
+              </Typography>
+            )}
+          </Box>
+        </Box>
+      )}
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography>Terms and conditions</Typography>
+        <Typography variant="h5">Total £{activity?.price}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
 function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
   const unitSelectItems = [
@@ -125,15 +234,35 @@ function DiscountForm({ type, discount, formRef }) {
   );
 }
 
+function SavedSlide({ scrollNext, close }) {
+  return (
+    <>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h6">Saved activity details</Typography>
+      </Box>
+
+      <ActivityDetails />
+
+      <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
+        <Button
+          onClick={scrollNext}
+          variant="contained"
+          fullWidth
+          color="inherit"
+          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+        >
+          Edit
+        </Button>
+      </Box>
+      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+        Publish the activity from account page
+      </Typography>
+    </>
+  );
+}
+
 function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
-
-  const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
-  const earlyDiscount = discounts?.find((discount) => discount.type === "early");
-  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
-  const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
-
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
   async function handleSave() {
@@ -155,103 +284,8 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
         </IconButton>
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, position: "relative" }}>
-        <Stack spacing={1} sx={{ width: "max-content", position: "absolute", right: 0 }}>
-          <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
-          <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
-        </Stack>
+      <ActivityDetails />
 
-        <Typography>
-          <b>Provider:</b> {activity?.providerName}
-        </Typography>
-        <Typography>
-          <b>Activity:</b> {activity?.typeName}
-        </Typography>
-        <Typography>
-          <b>Venue:</b> {activity?.venue}
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Typography>
-              <b>When:</b>
-            </Typography>
-            <Box>
-              {activity?.dateRanges.map((dateRange, index) => (
-                <Typography key={index}>
-                  {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
-                </Typography>
-              ))}
-            </Box>
-          </Box>
-          <Typography>
-            {activity?.startTime} - {activity?.endTime}
-          </Typography>
-        </Box>
-        {activity?.earlyDropOff && (
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>
-              <b>Early drop off:</b> {activity?.earlyDropOffTime}
-            </Typography>
-            {parseFloat(activity?.earlyDropOffPrice) ? (
-              <Typography>{activity?.earlyDropOffPrice}£</Typography>
-            ) : (
-              <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
-            )}
-          </Box>
-        )}
-        {activity?.latePickUp && (
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>
-              <b>Late pick up:</b> {activity?.latePickUpTime}
-            </Typography>
-            {parseFloat(activity?.latePickUpPrice) ? (
-              <Typography>{activity?.latePickUpPrice}£</Typography>
-            ) : (
-              <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
-            )}
-          </Box>
-        )}
-        {activity?.level && (
-          <Typography>
-            <b>Level:</b> {activity?.level}
-          </Typography>
-        )}
-        <Typography>
-          <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
-        </Typography>
-        <Typography>
-          <b>Available spaces:</b> {activity?.capacity}
-        </Typography>
-        {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography>
-              <b>Discounts applied:</b>{" "}
-            </Typography>
-            <Box>
-              {earlyDiscount?.enabled && (
-                <Typography>
-                  Early birds ({earlyDiscount?.percent}%){" "}
-                  {earlyDiscount?.unit === "spaces"
-                    ? `${earlyDiscount?.amount} spaces`
-                    : `applied to first ${earlyDiscount?.amount} days`}
-                </Typography>
-              )}
-              {endingDiscount?.enabled && (
-                <Typography sx={{ mt: 1 }}>
-                  Ending soon ({endingDiscount?.percent}%){" "}
-                  {endingDiscount?.unit === "spaces"
-                    ? `${endingDiscount?.amount} spaces`
-                    : `applied to last ${endingDiscount?.amount} days`}
-                </Typography>
-              )}
-            </Box>
-          </Box>
-        )}
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>Terms and conditions</Typography>
-          <Typography variant="h5">Total £{activity?.price}</Typography>
-        </Box>
-      </Box>
       <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
         <Button
           variant="outlined"
@@ -642,9 +676,12 @@ function StartSlide({ scrollNext, sx }) {
 }
 
 export default function Activities() {
+  const activityId = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+
   const [slide, setSlide] = useState(4);
 
-  const slides = [StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
+  const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
 
   function scrollNext() {
