@@ -9,6 +9,7 @@ import React, { useContext, useRef, useState } from "react"; // added useEffect
 import {
   Button,
   Chip,
+  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -331,6 +332,8 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
     } catch (error) {}
   }
 
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
+
   return (
     <>
       <Box>
@@ -343,6 +346,16 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         <Typography sx={{ mt: 4, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
+
+        {/* TODO: Fix styling to link */}
+        <Button variant="contained" sx={{ mt: 3 }} onClick={() => setTermsCoditionsOpen(true)}>
+          Terms and Conditions
+        </Button>
+
+        {/* TODO: Extract to components */}
+        <Dialog onClose={() => setTermsCoditionsOpen(false)} open={termsCoditionsOpen}>
+          <Container sx={{ minWidth: 500, minHeight: 300, }}>Hi</Container>
+        </Dialog>
       </Box>
 
       <Box sx={{ mt: "auto", display: "flex", height: 56, columnGap: 2 }}>
@@ -617,7 +630,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
         </IconButton>
       </Box>
       <Formik
-        initialValues={{ type: activityTypes && activity?.type || "", dateRanges: activity?.dateRanges || [] }}
+        initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
         onSubmit={handleSubmit}
       >
@@ -679,7 +692,7 @@ export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide] = useState(3);
 
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
