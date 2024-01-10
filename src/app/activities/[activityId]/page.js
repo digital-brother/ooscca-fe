@@ -263,10 +263,13 @@ function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
 
+  const mutation = useMutation((data) => patchActivity(activityId, data));
+
   async function handleMultipleSubmit() {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
+      await mutation.mutateAsync({filled: true});
       scrollNext();
     } catch (error) {}
   }
