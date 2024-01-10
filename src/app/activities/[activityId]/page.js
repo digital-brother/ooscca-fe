@@ -6,7 +6,17 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useContext, useRef, useState } from "react"; // added useEffect
-import { Button, Chip, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  Chip,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+} from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -74,7 +84,12 @@ function ReviewSlide({ scrollNext, scrollPrev }) {
         </IconButton>
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, position: "relative" }}>
+        <Stack spacing={1} sx={{ width: "max-content", position: "absolute", right: 0 }}>
+          <Chip label="Early birds" />
+          <Chip label="Ending soon" />{" "}
+        </Stack>
+
         <Typography>
           <b>Provider:</b> {activity?.providerName}
         </Typography>
@@ -269,7 +284,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, sx }) {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
-      await mutation.mutateAsync({filled: true});
+      await mutation.mutateAsync({ filled: true });
       scrollNext();
     } catch (error) {}
   }
