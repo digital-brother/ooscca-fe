@@ -175,6 +175,10 @@ function ActivityDetails() {
   );
 }
 
+function TermsAndConditions() {
+  return <Box sx={{ minWidth: 500, minHeight: 300, p: 5 }}>Hello</Box>;
+}
+
 function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
   const unitSelectItems = [
@@ -352,9 +356,8 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           Terms and Conditions
         </Button>
 
-        {/* TODO: Extract to components */}
         <Dialog onClose={() => setTermsCoditionsOpen(false)} open={termsCoditionsOpen}>
-          <Container sx={{ minWidth: 500, minHeight: 300, }}>Hi</Container>
+          <TermsAndConditions />
         </Dialog>
       </Box>
 
