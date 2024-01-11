@@ -5,7 +5,7 @@
 // TODO: Style buttons
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useContext, useRef, useState } from "react"; // added useEffect
+import React, { useContext, useEffect, useRef, useState } from "react"; // added useEffect
 import {
   Button,
   Chip,
@@ -179,10 +179,14 @@ function ActivityDetails() {
 function TermsAndConditions() {
   const activityId = useParams().activityId;
   const editorRef = useRef(null);
+
+  const {data: activity} = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
+  
+  const [content, setContent] = useState(activity?.termsAndConditions);
+  useEffect(() => setContent(activity?.termsAndConditions ?? ""), [activity?.termsAndConditions]);
 
   function handleSave() {
-    const content = editorRef.current.getContent();
     mutation.mutate({ termsAndConditions: content })
   }
 
@@ -193,6 +197,9 @@ function TermsAndConditions() {
       </Typography>
       <Box sx={{ mt: 5 }}>
         <Editor
+          value={content}
+          onEditorChange={(newValue, editor) => setContent(newValue)}
+          // initialValue={activity?.termsAndConditions}
           apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
           onInit={(evt, editor) => (editorRef.current = editor)}
           init={{
@@ -245,7 +252,7 @@ function TermsAndConditions() {
           Save
         </Button>
       </Box>
-      <Box>{editorRef.current.getContent()}</Box>
+      <Box dangerouslySetInnerHTML={{ __html: content }} />
     </Box>
   );
 }
@@ -398,6 +405,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(true);
 
   async function handleMultipleSubmit() {
     try {
@@ -407,7 +415,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
     } catch (error) {}
   }
 
-  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   return (
     <>
