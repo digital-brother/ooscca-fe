@@ -54,7 +54,18 @@ import { Editor } from "@tinymce/tinymce-react";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function NonFieldErrors() {
+function ReactQueryEror({ error, fieldName }) {
+  return (
+    error && (
+      <Typography sx={{ mt: 1, textAlign: "center", color: "#E72A2A", fontWeight: 500 }}>
+        Error occured, please contact administrator. <br />
+        {error?.response?.data[fieldName] || error.message}
+      </Typography>
+    )
+  );
+}
+
+function FormikNonFieldErrors() {
   const { errors } = useFormikContext();
 
   if (!errors.nonFieldErrors) return null;
@@ -180,12 +191,12 @@ function TermsAndConditions() {
   const activityId = useParams().activityId;
   const editorRef = useRef(null);
 
-  const {data: activity} = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
   function handleSave() {
     const content = editorRef.current.getContent();
-    mutation.mutate({ termsAndConditions: content })
+    mutation.mutate({ termsAndConditions: content });
   }
 
   return (
@@ -232,6 +243,7 @@ function TermsAndConditions() {
           }}
         />
       </Box>
+      <ReactQueryEror error={mutation.error} fieldName="termsAndConditions" />
       <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
         <Button
           variant="outlined"
@@ -411,7 +423,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
       scrollNext();
     } catch (error) {}
   }
-
 
   return (
     <>
@@ -727,7 +738,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
             />
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
-          <NonFieldErrors />
+          <FormikNonFieldErrors />
           <Box sx={{ mt: "auto", display: "flex", height: 56 }}>
             <Button
               variant="outlined"
