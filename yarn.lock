@@ -716,6 +716,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tinymce/tinymce-react@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "@tinymce/tinymce-react@npm:4.3.2"
+  dependencies:
+    prop-types: "npm:^15.6.2"
+    tinymce: "npm:^6.0.0 || ^5.5.1"
+  peerDependencies:
+    react: ^18.0.0 || ^17.0.1 || ^16.7.0
+    react-dom: ^18.0.0 || ^17.0.1 || ^16.7.0
+  checksum: 2dca1dac988e15cb84496020f89c1ef0968ca76196aed94648484335a68090c1556d40b3c7b9702730bb6fcd1fbe1cace73f49d6d4b33a5ac00896a2e739881a
+  languageName: node
+  linkType: hard
+
 "@types/hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.5
   resolution: "@types/hoist-non-react-statics@npm:3.3.5"
@@ -1441,6 +1454,13 @@ __metadata:
     "@babel/runtime": "npm:^7.8.7"
     csstype: "npm:^3.0.2"
   checksum: f735074d66dd759b36b158fa26e9d00c9388ee0e8c9b16af941c38f014a37fc80782de83afefd621681b19ac0501034b4f1c4a3bff5caa1b8667f0212b5e124c
+  languageName: node
+  linkType: hard
+
+"dompurify@npm:^3.0.8":
+  version: 3.0.8
+  resolution: "dompurify@npm:3.0.8"
+  checksum: e89e03d3dbd99abd64cd90705ce2cdfbc60ee9726ee53f9860e8a2d91b828ef2c173e7031529f9a3aa169ad0fbb76115c6a6683b545bf1ac5d94cc6176fb2a50
   languageName: node
   linkType: hard
 
@@ -2842,8 +2862,10 @@ __metadata:
     "@mui/system": "npm:^5.15.1"
     "@mui/x-date-pickers": "npm:^6.18.5"
     "@next/font": "npm:^14.0.3"
+    "@tinymce/tinymce-react": "npm:^4.3.2"
     axios: "npm:^1.6.2"
     dayjs: "npm:^1.11.10"
+    dompurify: "npm:^3.0.8"
     embla-carousel-react: "npm:^8.0.0-rc15"
     eslint: "npm:^8.0.1"
     eslint-config-next: "npm:^14.0.4"
@@ -3826,6 +3848,13 @@ __metadata:
   version: 1.0.3
   resolution: "tiny-warning@npm:1.0.3"
   checksum: ef8531f581b30342f29670cb41ca248001c6fd7975ce22122bd59b8d62b4fc84ad4207ee7faa95cde982fa3357cd8f4be650142abc22805538c3b1392d7084fa
+  languageName: node
+  linkType: hard
+
+"tinymce@npm:^6.0.0 || ^5.5.1":
+  version: 6.8.2
+  resolution: "tinymce@npm:6.8.2"
+  checksum: 8bac7f30ba8fd7766017c4ef319cea74e443bd65cb96720127fe3bc6ad3ff7a2bb79cdf9914a98d4cf580c50af893cffc8daba1f96795a4bd3cbeb5b79c61990
   languageName: node
   linkType: hard
 

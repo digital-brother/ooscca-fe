@@ -51,16 +51,14 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 import { Editor } from "@tinymce/tinymce-react";
+import DOMPurify from "dompurify";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function ReactQueryEror({ error, fieldName }) {
+function Error({ children }) {
   return (
-    error && (
-      <Typography sx={{ mt: 1, textAlign: "center", color: "#E72A2A", fontWeight: 500 }}>
-        Error occured, please contact administrator. <br />
-        {error?.response?.data[fieldName] || error.message}
-      </Typography>
+    children && (
+      <Typography sx={{ mt: 1, textAlign: "center", color: "#E72A2A", fontWeight: 500 }}>{children}</Typography>
     )
   );
 }
@@ -187,16 +185,28 @@ function ActivityDetails() {
   );
 }
 
-function TermsAndConditions() {
+function TermsAndConditions({ setTermsCoditionsOpen }) {
   const activityId = useParams().activityId;
   const editorRef = useRef(null);
 
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
+  const [error, setError] = useState(null);
 
   function handleSave() {
     const content = editorRef.current.getContent();
-    mutation.mutate({ termsAndConditions: content });
+    const sanitizedContent = DOMPurify.sanitize(content);
+    if (content !== sanitizedContent) return setError("Your content contains potentially unsafe HTML.");
+    mutation.mutate(
+      { termsAndConditions: content },
+      {
+        onError: (error) => setError(error?.response?.data?.termsAndConditions || error.message),
+        onSuccess: () => {
+          setError(null);
+          setTermsCoditionsOpen(false);
+        },
+      }
+    );
   }
 
   return (
@@ -243,12 +253,12 @@ function TermsAndConditions() {
           }}
         />
       </Box>
-      <ReactQueryEror error={mutation.error} fieldName="termsAndConditions" />
+      <Error>{error}</Error>
       <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
         <Button
           variant="outlined"
           size="large"
-          // onClick={scrollPrev}
+          onClick={() => setTermsCoditionsOpen(false)}
           sx={{ height: "100%", fontWeight: 700, fontSize: 16, minWidth: 230 }}
         >
           Cancel
@@ -447,7 +457,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           open={termsCoditionsOpen}
           PaperProps={{ sx: { maxWidth: "none" } }}
         >
-          <TermsAndConditions />
+          <TermsAndConditions {...{ setTermsCoditionsOpen }} />
         </Dialog>
       </Box>
 
