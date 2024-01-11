@@ -177,7 +177,14 @@ function ActivityDetails() {
 }
 
 function TermsAndConditions() {
+  const activityId = useParams().activityId;
   const editorRef = useRef(null);
+  const mutation = useMutation((data) => patchActivity(activityId, data));
+
+  function handleSave() {
+    const content = editorRef.current.getContent();
+    mutation.mutate({ termsAndConditions: content })
+  }
 
   return (
     <Box sx={{ minWidth: 500, minHeight: 500, p: 7 }}>
@@ -230,7 +237,7 @@ function TermsAndConditions() {
           Cancel
         </Button>
         <Button
-          // onClick={handleSave}
+          onClick={handleSave}
           variant="contained"
           color="success"
           sx={{ height: "100%", fontWeight: 700, fontSize: 16, minWidth: 230 }}
@@ -238,6 +245,7 @@ function TermsAndConditions() {
           Save
         </Button>
       </Box>
+      <Box>{editorRef.current.getContent()}</Box>
     </Box>
   );
 }
