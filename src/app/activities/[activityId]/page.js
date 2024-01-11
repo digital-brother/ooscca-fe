@@ -182,11 +182,9 @@ function TermsAndConditions() {
 
   const {data: activity} = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
-  
-  const [content, setContent] = useState(activity?.termsAndConditions);
-  useEffect(() => setContent(activity?.termsAndConditions ?? ""), [activity?.termsAndConditions]);
 
   function handleSave() {
+    const content = editorRef.current.getContent();
     mutation.mutate({ termsAndConditions: content })
   }
 
@@ -196,10 +194,10 @@ function TermsAndConditions() {
         Add your Terms & Contitions here
       </Typography>
       <Box sx={{ mt: 5 }}>
+        {/* Component is not controlled here for performance reasons
+        (https://www.tiny.cloud/docs/tinymce/latest/react-ref/#using-the-tinymce-react-component-as-a-controlled-component) */}
         <Editor
-          value={content}
-          onEditorChange={(newValue, editor) => setContent(newValue)}
-          // initialValue={activity?.termsAndConditions}
+          initialValue={activity?.termsAndConditions}
           apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
           onInit={(evt, editor) => (editorRef.current = editor)}
           init={{
@@ -252,7 +250,6 @@ function TermsAndConditions() {
           Save
         </Button>
       </Box>
-      <Box dangerouslySetInnerHTML={{ __html: content }} />
     </Box>
   );
 }
