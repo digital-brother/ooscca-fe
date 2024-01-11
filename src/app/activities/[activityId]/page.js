@@ -29,6 +29,7 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
+  patchProvider,
 } from "@/app/activities/[activityId]/api.mjs";
 import { FormikSelect } from "@/app/components/FormikSelect";
 import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
@@ -51,7 +52,6 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 import { Editor } from "@tinymce/tinymce-react";
-import DOMPurify from "dompurify";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -190,13 +190,11 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
   const editorRef = useRef(null);
 
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
-  const mutation = useMutation((data) => patchActivity(activityId, data));
+  const mutation = useMutation((data) => patchProvider(activity.provider, data));
   const [error, setError] = useState(null);
 
   function handleSave() {
     const content = editorRef.current.getContent();
-    const sanitizedContent = DOMPurify.sanitize(content);
-    if (content !== sanitizedContent) return setError("Your content contains potentially unsafe HTML.");
     mutation.mutate(
       { termsAndConditions: content },
       {
@@ -424,7 +422,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
-  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(true);
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   async function handleMultipleSubmit() {
     try {

@@ -1457,13 +1457,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:^3.0.8":
-  version: 3.0.8
-  resolution: "dompurify@npm:3.0.8"
-  checksum: e89e03d3dbd99abd64cd90705ce2cdfbc60ee9726ee53f9860e8a2d91b828ef2c173e7031529f9a3aa169ad0fbb76115c6a6683b545bf1ac5d94cc6176fb2a50
-  languageName: node
-  linkType: hard
-
 "embla-carousel-react@npm:^8.0.0-rc15":
   version: 8.0.0-rc17
   resolution: "embla-carousel-react@npm:8.0.0-rc17"
@@ -2865,7 +2858,6 @@ __metadata:
     "@tinymce/tinymce-react": "npm:^4.3.2"
     axios: "npm:^1.6.2"
     dayjs: "npm:^1.11.10"
-    dompurify: "npm:^3.0.8"
     embla-carousel-react: "npm:^8.0.0-rc15"
     eslint: "npm:^8.0.1"
     eslint-config-next: "npm:^14.0.4"
