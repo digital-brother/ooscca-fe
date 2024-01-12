@@ -91,7 +91,7 @@ const SmFlex = styled(Box)(({ theme }) => ({
   },
 }));
 
-function SlideHeader({ label }) {
+function SlideHeader({ label, close }) {
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -292,7 +292,6 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
           variant="outlined"
           size="large"
           onClick={() => setTermsCoditionsOpen(false)}
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16, minWidth: 230 }}
         >
           Cancel
         </Button>
@@ -300,7 +299,6 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
           onClick={handleSave}
           variant="contained"
           color="success"
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16, minWidth: 230 }}
         >
           Save
         </Button>
@@ -389,7 +387,7 @@ function SavedSlide({ scrollNext, close }) {
         variant="contained"
         fullWidth
         color="inherit"
-        sx={{  mt: 3, height: "100%", fontWeight: 700, fontSize: 16 }}
+        sx={{  mt: 3 }}
       >
         Edit
       </Button>
@@ -417,7 +415,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
 
   return (
     <>
-      <SlideHeader label="Review activity details" />
+      <SlideHeader label="Review activity details" close={close}/>
       <ActivityDetails />
 
       <SmFlex sx={{ mt: 3 }}>
@@ -427,7 +425,6 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
             size="large"
             fullWidth
             onClick={close}
-            sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
           >
             Cancel
           </Button>
@@ -437,7 +434,6 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
           size="large"
           fullWidth
           onClick={scrollPrev}
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
         >
           Go back
         </Button>
@@ -446,7 +442,6 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
           variant="contained"
           fullWidth
           color="success"
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
         >
           Save
         </Button>
@@ -481,7 +476,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
   return (
     <>
       <Box>
-        <SlideHeader label="Keep editing" />
+        <SlideHeader label="Keep editing" close={close}/>
         <Typography sx={{ mt: 2, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
@@ -507,7 +502,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
             size="large"
             fullWidth
             onClick={close}
-            sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
           >
             Cancel
           </Button>
@@ -517,7 +511,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           size="large"
           fullWidth
           onClick={scrollPrev}
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
         >
           Go back
         </Button>
@@ -527,7 +520,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           fullWidth
           type="submit"
           color="success"
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
         >
           Next
         </Button>
@@ -567,7 +559,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   return (
     activity && (
       <>
-        <SlideHeader label="Keep editing" />
+        <SlideHeader label="Keep editing" close={close}/>
         <Formik
           initialValues={{
             startTime: activity.startTime,
@@ -748,7 +740,6 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                     size="large"
                     fullWidth
                     onClick={close}
-                    sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
                   >
                     Cancel
                   </Button>
@@ -758,7 +749,6 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                   size="large"
                   fullWidth
                   onClick={scrollPrev}
-                  sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
                 >
                   Go back
                 </Button>
@@ -768,7 +758,6 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                   fullWidth
                   type="submit"
                   color="success"
-                  sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
                 >
                   Next
                 </Button>
@@ -803,7 +792,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
 
   return (
     <>
-      <SlideHeader label="Keep editing" />
+      <SlideHeader label="Keep editing" close={close}/>
       <Formik
         initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
@@ -827,7 +816,6 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
               size="large"
               fullWidth
               onClick={close}
-              sx={{ mr: 2, fontWeight: 700, fontSize: 16 }}
             >
               Cancel
             </Button>
@@ -837,7 +825,6 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
               fullWidth
               type="submit"
               color="success"
-              sx={{ fontWeight: 700, fontSize: 16 }}
             >
               Next
             </Button>

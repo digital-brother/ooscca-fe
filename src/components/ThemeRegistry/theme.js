@@ -88,13 +88,9 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none", // overrides the default uppercase transformation
-          [baseTheme.breakpoints.up("xs")]: {
-            fontSize: "0.875rem",
-          },
-          [baseTheme.breakpoints.up("sm")]: {
-            fontSize: "1.125rem", //
-          },
+          textTransform: "none",
+          fontSize: 16,
+          fontWeight: 700,
         },
       },
     },
