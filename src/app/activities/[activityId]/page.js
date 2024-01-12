@@ -77,7 +77,7 @@ function FormikNonFieldErrors() {
   );
 }
 
-const ActivityInfoItem = styled(Box)(({ theme }) => ({
+const SmFlex = styled(Box)(({ theme }) => ({
   display: "flex",
   columnGap: "0.5rem",
   [theme.breakpoints.up("xs")]: {
@@ -133,16 +133,16 @@ function ActivityDetails() {
         <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
       </Stack>
 
-      <ActivityInfoItem>
+      <SmFlex>
         <b>Provider:</b> {activity?.providerName}
-      </ActivityInfoItem>
-      <ActivityInfoItem>
+      </SmFlex>
+      <SmFlex>
         <b>Activity:</b> {activity?.typeName}
-      </ActivityInfoItem>
-      <ActivityInfoItem>
+      </SmFlex>
+      <SmFlex>
         <b>Venue:</b> {activity?.venue}
-      </ActivityInfoItem>
-      <ActivityInfoItem>
+      </SmFlex>
+      <SmFlex>
         <Typography>
           <b>When:</b>
         </Typography>
@@ -156,40 +156,40 @@ function ActivityDetails() {
         <Typography sx={{ ml: { sm: "auto" } }}>
           {activity?.startTime} - {activity?.endTime}
         </Typography>
-      </ActivityInfoItem>
+      </SmFlex>
       {activity?.earlyDropOff && (
-        <ActivityInfoItem>
+        <SmFlex>
           <b>Early drop off:</b> {activity?.earlyDropOffTime}
           {parseFloat(activity?.earlyDropOffPrice) ? (
             <Typography sx={{ ml: { sm: "auto" } }}>{activity?.earlyDropOffPrice}£</Typography>
           ) : (
             <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
           )}
-        </ActivityInfoItem>
+        </SmFlex>
       )}
       {activity?.latePickUp && (
-        <ActivityInfoItem>
+        <SmFlex>
           <b>Late pick up:</b> {activity?.latePickUpTime}
           {parseFloat(activity?.latePickUpPrice) ? (
             <Typography sx={{ ml: { sm: "auto" } }}>{activity?.latePickUpPrice}£</Typography>
           ) : (
             <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
           )}
-        </ActivityInfoItem>
+        </SmFlex>
       )}
       {activity?.level && (
-        <ActivityInfoItem>
+        <SmFlex>
           <b>Level:</b> {activity?.level}
-        </ActivityInfoItem>
+        </SmFlex>
       )}
-      <ActivityInfoItem>
+      <SmFlex>
         <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
-      </ActivityInfoItem>
-      <ActivityInfoItem>
+      </SmFlex>
+      <SmFlex>
         <b>Available spaces:</b> {activity?.capacity}
-      </ActivityInfoItem>
+      </SmFlex>
       {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
-        <ActivityInfoItem>
+        <SmFlex>
           <b>Discounts applied:</b>{" "}
           <Box sx={{ ml: { sm: "auto" } }}>
             {earlyDiscount?.enabled && (
@@ -209,7 +209,7 @@ function ActivityDetails() {
               </Typography>
             )}
           </Box>
-        </ActivityInfoItem>
+        </SmFlex>
       )}
       <Typography sx={{ textAlign: { sm: "right" } }} variant="h5">
         Total £{activity?.price}
