@@ -17,6 +17,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  useMediaQuery,
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { Field, Form, Formik, useFormikContext } from "formik";
@@ -72,6 +73,21 @@ function FormikNonFieldErrors() {
       {errors.nonFieldErrors.map((error, index) => (
         <Typography key={index}>{error}</Typography>
       ))}
+    </Box>
+  );
+}
+
+function SlideHeader({ label }) {
+  const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  return (
+    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Typography variant="h6">{label}</Typography>
+
+      {smUp && (
+        <IconButton size="small" onClick={close}>
+          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+        </IconButton>
+      )}
     </Box>
   );
 }
@@ -194,7 +210,9 @@ function ActivityDetails() {
           </Box>
         </ActivityInfoItem>
       )}
-      <Typography sx={{textAlign: {sm: "right"}}} variant="h5">Total £{activity?.price}</Typography>
+      <Typography sx={{ textAlign: { sm: "right" } }} variant="h5">
+        Total £{activity?.price}
+      </Typography>
     </Box>
   );
 }
@@ -361,10 +379,7 @@ function DiscountForm({ type, discount, formRef }) {
 function SavedSlide({ scrollNext, close }) {
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h6">Saved activity details</Typography>
-      </Box>
-
+      <Typography variant="h6">Saved activity details</Typography>
       <ActivityDetails />
 
       <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
@@ -401,13 +416,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h6">Review activity details</Typography>
-        <IconButton size="small" onClick={close}>
-          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
-        </IconButton>
-      </Box>
-
+      <SlideHeader label="Review activity details" />
       <ActivityDetails />
 
       <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
@@ -459,12 +468,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
   return (
     <>
       <Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography variant="h6">Keep editing</Typography>
-          <IconButton size="small" onClick={close}>
-            <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
-          </IconButton>
-        </Box>
+        <SlideHeader label="Keep editing" />
         <Typography sx={{ mt: 2, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
@@ -538,12 +542,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   return (
     activity && (
       <>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography variant="h6">Keep editing</Typography>
-          <IconButton size="small" onClick={close}>
-            <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
-          </IconButton>
-        </Box>
+        <SlideHeader label="Keep editing" />
         <Formik
           initialValues={{
             startTime: activity.startTime,
@@ -767,12 +766,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6">Keep editing</Typography>
-        <IconButton size="small" onClick={close}>
-          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
-        </IconButton>
-      </Box>
+      <SlideHeader label="Keep editing" />
       <Formik
         initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
