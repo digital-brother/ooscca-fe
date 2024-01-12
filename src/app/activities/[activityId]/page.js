@@ -384,18 +384,16 @@ function SavedSlide({ scrollNext, close }) {
       <Typography variant="h6">Saved activity details</Typography>
       <ActivityDetails />
 
-      <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
-        <Button
-          onClick={scrollNext}
-          variant="contained"
-          fullWidth
-          color="inherit"
-          sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
-        >
-          Edit
-        </Button>
-      </Box>
-      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+      <Button
+        onClick={scrollNext}
+        variant="contained"
+        fullWidth
+        color="inherit"
+        sx={{  mt: 3, height: "100%", fontWeight: 700, fontSize: 16 }}
+      >
+        Edit
+      </Button>
+      <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Publish the activity from account page
       </Typography>
     </>
@@ -453,7 +451,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
           Save
         </Button>
       </SmFlex>
-      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+      <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
     </>
@@ -534,7 +532,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           Next
         </Button>
       </SmFlex>
-      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+      <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
     </>
@@ -743,7 +741,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
               <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
-              <SmFlex sx={{ mt: 2, mb: 1 }}>
+              <SmFlex sx={{ mt: 2 }}>
                 {smDown && (
                   <Button
                     variant="outlined"
@@ -766,6 +764,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                 </Button>
                 <Button
                   variant="contained"
+                  size="large"
                   fullWidth
                   type="submit"
                   color="success"
@@ -777,7 +776,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
             </LocalizationProvider>
           </Form>
         </Formik>
-        <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+        <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
           Activity will be saved in your accounts page
         </Typography>
       </>
@@ -845,7 +844,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
           </SmFlex>
         </Form>
       </Formik>
-      <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
+      <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
     </>
