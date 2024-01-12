@@ -80,6 +80,7 @@ function FormikNonFieldErrors() {
 const SmFlex = styled(Box)(({ theme }) => ({
   display: "flex",
   columnGap: "0.5rem",
+  rowGap: "0.75rem",
   [theme.breakpoints.up("xs")]: {
     flexDirection: "column",
     textAlign: "center",
@@ -421,7 +422,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
       <SlideHeader label="Review activity details" />
       <ActivityDetails />
 
-      <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
+      <SmFlex sx={{ mt: 3 }}>
         {smDown && (
           <Button
             variant="outlined"
@@ -451,7 +452,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
         >
           Save
         </Button>
-      </Box>
+      </SmFlex>
       <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
@@ -501,7 +502,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         </Dialog> */}
       </Box>
 
-      <Box sx={{ mt: { xs: 3, sm: "auto" }, display: "flex", height: 56, columnGap: 2 }}>
+      <SmFlex sx={{ mt: { xs: 3, sm: "auto" } }}>
         {smDown && (
           <Button
             variant="outlined"
@@ -532,7 +533,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         >
           Next
         </Button>
-      </Box>
+      </SmFlex>
       <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
         Activity will be saved in your accounts page
       </Typography>
@@ -742,7 +743,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
               <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
-              <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56, gap: 2 }}>
+              <SmFlex sx={{ mt: 2, mb: 1 }}>
                 {smDown && (
                   <Button
                     variant="outlined"
@@ -772,7 +773,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                 >
                   Next
                 </Button>
-              </Box>
+              </SmFlex>
             </LocalizationProvider>
           </Form>
         </Formik>
@@ -821,26 +822,27 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <FormikNonFieldErrors />
-          <Box sx={{ mt: "auto", display: "flex", height: 56 }}>
+          <SmFlex sx={{ mt: { xs: 2, sm: "auto" } }}>
             <Button
               variant="outlined"
               size="large"
               fullWidth
               onClick={close}
-              sx={{ mr: 2, height: "100%", fontWeight: 700, fontSize: 16 }}
+              sx={{ mr: 2, fontWeight: 700, fontSize: 16 }}
             >
               Cancel
             </Button>
             <Button
               variant="contained"
+              size="large"
               fullWidth
               type="submit"
               color="success"
-              sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+              sx={{ fontWeight: 700, fontSize: 16 }}
             >
               Next
             </Button>
-          </Box>
+          </SmFlex>
         </Form>
       </Formik>
       <Typography variant="body2" sx={{ mt: 1, textAlign: "center" }}>
