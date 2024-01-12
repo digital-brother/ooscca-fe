@@ -77,6 +77,19 @@ function FormikNonFieldErrors() {
   );
 }
 
+const ActivityInfoItem = styled(Box)(({ theme }) => ({
+  display: "flex",
+  columnGap: "0.5rem",
+  [theme.breakpoints.up("xs")]: {
+    flexDirection: "column",
+    textAlign: "center",
+  },
+  [theme.breakpoints.up("sm")]: {
+    flexDirection: "row",
+    textAlign: "left",
+  },
+}));
+
 function SlideHeader({ label }) {
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
   return (
@@ -100,18 +113,6 @@ function ActivityDetails() {
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
 
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
-  const ActivityInfoItem = styled(Box)(({ theme }) => ({
-    display: "flex",
-    columnGap: "0.5rem",
-    [theme.breakpoints.up("xs")]: {
-      flexDirection: "column",
-      textAlign: "center",
-    },
-    [theme.breakpoints.up("sm")]: {
-      flexDirection: "row",
-      textAlign: "left",
-    },
-  }));
 
   return (
     <Box
@@ -402,6 +403,7 @@ function SavedSlide({ scrollNext, close }) {
 
 function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
   async function handleSave() {
@@ -420,6 +422,17 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
       <ActivityDetails />
 
       <Box sx={{ mt: 3, display: "flex", height: 56, columnGap: 2 }}>
+        {smDown && (
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            onClick={close}
+            sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+          >
+            Cancel
+          </Button>
+        )}
         <Button
           variant="outlined"
           size="large"
@@ -448,6 +461,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
 
 function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
   const { activityId } = useParams();
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
@@ -488,6 +502,17 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
       </Box>
 
       <Box sx={{ mt: { xs: 3, sm: "auto" }, display: "flex", height: 56, columnGap: 2 }}>
+        {smDown && (
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            onClick={close}
+            sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+          >
+            Cancel
+          </Button>
+        )}
         <Button
           variant="outlined"
           size="large"
@@ -516,6 +541,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 }
 
 function InfoSlide({ scrollNext, scrollPrev, close }) {
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
@@ -716,13 +742,24 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
               <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
-              <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56 }}>
+              <Box sx={{ mt: 2, mb: 1, display: "flex", height: 56, gap: 2 }}>
+                {smDown && (
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    fullWidth
+                    onClick={close}
+                    sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
+                  >
+                    Cancel
+                  </Button>
+                )}
                 <Button
                   variant="outlined"
                   size="large"
                   fullWidth
                   onClick={scrollPrev}
-                  sx={{ mr: 2, height: "100%", fontWeight: 700, fontSize: 16 }}
+                  sx={{ height: "100%", fontWeight: 700, fontSize: 16 }}
                 >
                   Go back
                 </Button>
@@ -789,10 +826,10 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
               variant="outlined"
               size="large"
               fullWidth
-              onClick={scrollPrev}
+              onClick={close}
               sx={{ mr: 2, height: "100%", fontWeight: 700, fontSize: 16 }}
             >
-              Go back
+              Cancel
             </Button>
             <Button
               variant="contained"
