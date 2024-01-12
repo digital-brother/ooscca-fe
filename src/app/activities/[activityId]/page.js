@@ -325,7 +325,7 @@ function DiscountForm({ type, discount, formRef }) {
       <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
         <Field type="hidden" name="type" value={type} />
         <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending soon"} />
-        <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
+        <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" }, columnGap: 2, rowGap: 2 }}>
           <FormikDecimalField name="percent" label="Percent" />
           <FormikDecimalField name="amount" label="Amount" />
           <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
@@ -423,7 +423,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
-  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
+  // const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   async function handleMultipleSubmit() {
     try {
@@ -442,12 +442,12 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
             <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
           </IconButton>
         </Box>
-        <Typography sx={{ mt: 4, fontWeight: 700 }}>Discounts</Typography>
+        <Typography sx={{ mt: 2, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
 
         {/* TODO: Fix styling to link */}
-        <Button variant="contained" sx={{ mt: 3 }} onClick={() => setTermsCoditionsOpen(true)}>
+        {/* <Button variant="contained" sx={{ mt: 3 }} onClick={() => setTermsCoditionsOpen(true)}>
           Terms and Conditions
         </Button>
 
@@ -457,10 +457,10 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
           PaperProps={{ sx: { maxWidth: "none" } }}
         >
           <TermsAndConditions {...{ setTermsCoditionsOpen }} />
-        </Dialog>
+        </Dialog> */}
       </Box>
 
-      <Box sx={{ mt: "auto", display: "flex", height: 56, columnGap: 2 }}>
+      <Box sx={{ mt: { xs: 3, sm: "auto" }, display: "flex", height: 56, columnGap: 2 }}>
         <Button
           variant="outlined"
           size="large"
@@ -620,15 +620,20 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
 
               <Box
                 sx={{
-                  mt: 2,
+                  mt: { xs: 0, sm: 2 },
                   mb: 1,
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)" },
                   columnGap: 2,
+                  rowGap: 1,
                   alignItems: "start",
                 }}
               >
-                <FormikCheckboxField name="earlyDropOff" label="Early drop off" />
+                <FormikCheckboxField
+                  name="earlyDropOff"
+                  label="Early drop off"
+                  sx={{ gridColumn: { xs: "span 2", sm: "span 1" } }}
+                />
                 <FormikTimeField name="earlyDropOffTime" label="Early drop off time" />
                 <FormikDecimalField
                   name="earlyDropOffPrice"
@@ -641,15 +646,20 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
 
               <Box
                 sx={{
-                  mt: 2,
+                  mt: { xs: 1, sm: 3 },
                   mb: 1,
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)" },
                   columnGap: 2,
+                  rowGap: 1,
                   alignItems: "start",
                 }}
               >
-                <FormikCheckboxField name="latePickUp" label="Late pick up" />
+                <FormikCheckboxField
+                  name="latePickUp"
+                  label="Late pick up"
+                  sx={{ gridColumn: { xs: "span 2", sm: "span 1" } }}
+                />
                 <FormikTimeField name="latePickUpTime" label="Late pick up time" />
                 <FormikDecimalField
                   name="latePickUpPrice"
@@ -660,15 +670,24 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                 />
               </Box>
 
-              <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", columnGap: 2 }}>
-                <FormControl>
+              <Box
+                sx={{
+                  mt: 3,
+                  mb: 1,
+                  display: "grid",
+                  gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)" },
+                  columnGap: 2,
+                  rowGap: 2,
+                }}
+              >
+                <FormControl sx={{gridColumn: {xs: "span 2", sm: "span 1"}}}>
                   <InputLabel id="demo-simple-select-label">Age</InputLabel>
                   <Select value={ageType} onChange={handleAgeTypeChange} labelId="demo-simple-select-label" label="Age">
                     <MenuItem value="single">Single</MenuItem>
                     <MenuItem value="range">Range</MenuItem>
                   </Select>
                 </FormControl>
-                <FormikDecimalField name="ageFrom" label="From" />
+                <FormikDecimalField name="ageFrom" label={ageType === "single" ? "Years" : "From"} />
                 {ageType === "range" && <FormikDecimalField name="ageTo" label="To" />}
               </Box>
 
@@ -794,7 +813,7 @@ export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide] = useState(2);
 
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
