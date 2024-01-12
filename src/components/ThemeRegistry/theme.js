@@ -43,9 +43,15 @@ const theme = createTheme({
       fontFamily: montserrat.style.fontFamily,
     },
     h5: {
-      fontSize: "1.5rem", // 24
-      fontWeight: 700,
-      fontFamily: montserrat.style.fontFamily,
+      [baseTheme.breakpoints.up("xs")]: {
+        fontFamily: montserrat.style.fontFamily,
+        fontSize: "1.25rem", // 20
+        fontWeight: 600,
+      },
+      [baseTheme.breakpoints.up("sm")]: {
+        fontSize: "1.5rem", // 24
+        fontWeight: 700,
+      },
     },
     h6: {
       fontSize: "1.25rem", // 20px
@@ -77,12 +83,18 @@ const theme = createTheme({
           fontWeight: 700,
           fontFamily: manrope.style.fontFamily,
         },
-      }
+      },
     },
     MuiButton: {
       styleOverrides: {
         root: {
           textTransform: "none", // overrides the default uppercase transformation
+          [baseTheme.breakpoints.up("xs")]: {
+            fontSize: "0.875rem",
+          },
+          [baseTheme.breakpoints.up("sm")]: {
+            fontSize: "1.125rem", //
+          },
         },
       },
     },

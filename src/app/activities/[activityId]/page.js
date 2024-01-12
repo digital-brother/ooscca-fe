@@ -794,7 +794,7 @@ export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-  const [slide, setSlide] = useState(3);
+  const [slide, setSlide] = useState(0);
 
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
