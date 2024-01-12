@@ -46,7 +46,7 @@ import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import Container from "@mui/material/Container";
 import * as Yup from "yup";
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -84,80 +84,97 @@ function ActivityDetails() {
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
 
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
+  const ActivityInfoItem = styled(Box)(({ theme }) => ({
+    display: "flex",
+    columnGap: "0.5rem",
+    [theme.breakpoints.up("xs")]: {
+      flexDirection: "column",
+      textAlign: "center",
+    },
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+      textAlign: "left",
+    },
+  }));
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 3, position: "relative" }}>
-      <Stack spacing={1} sx={{ width: "max-content", position: "absolute", right: 0 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        mt: 3,
+        position: "relative",
+        alignItems: { xs: "center", sm: "stretch" },
+      }}
+    >
+      <Stack
+        spacing={2}
+        sx={{ position: { xs: "static", sm: "absolute" }, right: 0, width: { xs: "50%", sm: "max-content" } }}
+      >
         <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
         <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
       </Stack>
-      <Typography>
+
+      <ActivityInfoItem>
         <b>Provider:</b> {activity?.providerName}
-      </Typography>
-      <Typography>
+      </ActivityInfoItem>
+      <ActivityInfoItem>
         <b>Activity:</b> {activity?.typeName}
-      </Typography>
-      <Typography>
+      </ActivityInfoItem>
+      <ActivityInfoItem>
         <b>Venue:</b> {activity?.venue}
-      </Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <Typography>
-            <b>When:</b>
-          </Typography>
-          <Box>
-            {activity?.dateRanges.map((dateRange, index) => (
-              <Typography key={index}>
-                {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
-              </Typography>
-            ))}
-          </Box>
-        </Box>
+      </ActivityInfoItem>
+      <ActivityInfoItem>
         <Typography>
+          <b>When:</b>
+        </Typography>
+        <Box>
+          {activity?.dateRanges.map((dateRange, index) => (
+            <Typography key={index}>
+              {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
+            </Typography>
+          ))}
+        </Box>
+        <Typography sx={{ ml: { sm: "auto" } }}>
           {activity?.startTime} - {activity?.endTime}
         </Typography>
-      </Box>
+      </ActivityInfoItem>
       {activity?.earlyDropOff && (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <b>Early drop off:</b> {activity?.earlyDropOffTime}
-          </Typography>
+        <ActivityInfoItem>
+          <b>Early drop off:</b> {activity?.earlyDropOffTime}
           {parseFloat(activity?.earlyDropOffPrice) ? (
-            <Typography>{activity?.earlyDropOffPrice}£</Typography>
+            <Typography sx={{ ml: { sm: "auto" } }}>{activity?.earlyDropOffPrice}£</Typography>
           ) : (
-            <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
           )}
-        </Box>
+        </ActivityInfoItem>
       )}
       {activity?.latePickUp && (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <b>Late pick up:</b> {activity?.latePickUpTime}
-          </Typography>
+        <ActivityInfoItem>
+          <b>Late pick up:</b> {activity?.latePickUpTime}
           {parseFloat(activity?.latePickUpPrice) ? (
-            <Typography>{activity?.latePickUpPrice}£</Typography>
+            <Typography sx={{ ml: { sm: "auto" } }}>{activity?.latePickUpPrice}£</Typography>
           ) : (
-            <Typography sx={{ color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
           )}
-        </Box>
+        </ActivityInfoItem>
       )}
       {activity?.level && (
-        <Typography>
+        <ActivityInfoItem>
           <b>Level:</b> {activity?.level}
-        </Typography>
+        </ActivityInfoItem>
       )}
-      <Typography>
+      <ActivityInfoItem>
         <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
-      </Typography>
-      <Typography>
+      </ActivityInfoItem>
+      <ActivityInfoItem>
         <b>Available spaces:</b> {activity?.capacity}
-      </Typography>
+      </ActivityInfoItem>
       {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <b>Discounts applied:</b>{" "}
-          </Typography>
-          <Box>
+        <ActivityInfoItem>
+          <b>Discounts applied:</b>{" "}
+          <Box sx={{ ml: { sm: "auto" } }}>
             {earlyDiscount?.enabled && (
               <Typography>
                 Early birds ({earlyDiscount?.percent}%){" "}
@@ -167,7 +184,7 @@ function ActivityDetails() {
               </Typography>
             )}
             {endingDiscount?.enabled && (
-              <Typography sx={{ mt: 1 }}>
+              <Typography>
                 Ending soon ({endingDiscount?.percent}%){" "}
                 {endingDiscount?.unit === "spaces"
                   ? `${endingDiscount?.amount} spaces`
@@ -175,12 +192,9 @@ function ActivityDetails() {
               </Typography>
             )}
           </Box>
-        </Box>
+        </ActivityInfoItem>
       )}
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography>Terms and conditions</Typography>
-        <Typography variant="h5">Total £{activity?.price}</Typography>
-      </Box>
+      <Typography sx={{textAlign: {sm: "right"}}} variant="h5">Total £{activity?.price}</Typography>
     </Box>
   );
 }
@@ -325,7 +339,16 @@ function DiscountForm({ type, discount, formRef }) {
       <Form style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(1) }}>
         <Field type="hidden" name="type" value={type} />
         <FormikCheckboxField name="enabled" label={type === "early" ? "Early Birds" : "Ending soon"} />
-        <Box sx={{ mt: 2, mb: 1, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" }, columnGap: 2, rowGap: 2 }}>
+        <Box
+          sx={{
+            mt: 2,
+            mb: 1,
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+            columnGap: 2,
+            rowGap: 2,
+          }}
+        >
           <FormikDecimalField name="percent" label="Percent" />
           <FormikDecimalField name="amount" label="Amount" />
           <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
@@ -680,7 +703,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
                   rowGap: 2,
                 }}
               >
-                <FormControl sx={{gridColumn: {xs: "span 2", sm: "span 1"}}}>
+                <FormControl sx={{ gridColumn: { xs: "span 2", sm: "span 1" } }}>
                   <InputLabel id="demo-simple-select-label">Age</InputLabel>
                   <Select value={ageType} onChange={handleAgeTypeChange} labelId="demo-simple-select-label" label="Age">
                     <MenuItem value="single">Single</MenuItem>
@@ -813,7 +836,7 @@ export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-  const [slide, setSlide] = useState(2);
+  const [slide, setSlide] = useState(4);
 
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
