@@ -190,7 +190,8 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
   const editorRef = useRef(null);
 
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
-  const mutation = useMutation((data) => patchProvider(activity.provider, data));
+  const { data: provider } = useQuery(["provider", activity?.provider], () => patchProvider(activity?.provider));
+  const mutation = useMutation((data) => patchProvider(activity?.provider, data));
   const [error, setError] = useState(null);
 
   function handleSave() {
@@ -216,7 +217,7 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
         {/* Component is not controlled here for performance reasons
         (https://www.tiny.cloud/docs/tinymce/latest/react-ref/#using-the-tinymce-react-component-as-a-controlled-component) */}
         <Editor
-          initialValue={activity?.termsAndConditions}
+          initialValue={provider?.termsAndConditions}
           apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
           onInit={(evt, editor) => (editorRef.current = editor)}
           init={{
