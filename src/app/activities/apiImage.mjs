@@ -22,6 +22,16 @@ export async function getImages() {
   return response.data;
 }
 
+export async function getImagesWithListBlock() {
+  const response = await client.get(`${IMAGES_PATH}?type=with_list`);
+  return response.data;
+}
+
+export async function getImagesWithMapBlock() {
+  const response = await client.get(`${IMAGES_PATH}?type=with_map`);
+  return response.data;
+}
+
 export async function getImage(ImageId) {
   const response = await client.get(`${IMAGES_PATH}${ImageId}/`);
   return response.data;
