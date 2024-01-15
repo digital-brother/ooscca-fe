@@ -1,11 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import { Libre_Franklin, Manrope, Montserrat } from "next/font/google";
-
-const libreFranklin = Libre_Franklin({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["latin"],
-  display: "swap",
-});
+import { Manrope, Montserrat } from "next/font/google";
+import { colors } from "./colors";
+import { lime, purple } from "@mui/material/colors";
 
 export const manrope = Manrope({
   weight: ["400", "600", "700"],
@@ -24,6 +20,9 @@ const baseTheme = createTheme();
 const theme = createTheme({
   palette: {
     mode: "light",
+    primary: colors.orange,
+    secondary: lime,
+    ...colors,
   },
   typography: {
     fontFamily: manrope.style.fontFamily,
@@ -86,6 +85,10 @@ const theme = createTheme({
       },
     },
     MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+        disableRipple: true,
+      },
       styleOverrides: {
         root: {
           fontFamily: montserrat.style.fontFamily,
@@ -98,4 +101,6 @@ const theme = createTheme({
   },
 });
 
+// console.log(theme);
+console.log(theme.palette);
 export default theme;
