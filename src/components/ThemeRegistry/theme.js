@@ -1,7 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { Manrope, Montserrat } from "next/font/google";
 import { colors } from "./colors";
-import { lime, purple } from "@mui/material/colors";
 
 export const manrope = Manrope({
   weight: ["400", "600", "700"],
@@ -20,8 +19,6 @@ const baseTheme = createTheme();
 const theme = createTheme({
   palette: {
     mode: "light",
-    primary: colors.orange,
-    secondary: lime,
     ...colors,
   },
   typography: {
@@ -57,12 +54,12 @@ const theme = createTheme({
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },
-    subheading: {
+    subheading: ({ theme }) => ({
       fontFamily: montserrat.style.fontFamily,
       fontSize: "1rem", // 16px
       fontWeight: 700,
-      color: baseTheme.palette.warning.main,
-    },
+      color: theme.palette.orange.main,
+    }),
   },
   components: {
     MuiAlert: {
@@ -95,6 +92,27 @@ const theme = createTheme({
           fontSize: "1rem", // 16px
           fontWeight: 700,
           textTransform: "none",
+        },
+        contained: ({ ownerState, theme }) => {
+          return {
+            "&:hover": {
+              backgroundColor: theme.palette[ownerState.color][400],
+            },
+            "&:active": {
+              backgroundColor: theme.palette[ownerState.color][700],
+            },
+          };
+        },
+        outlined: ({ ownerState, palette }) => {
+          return {
+            "&:hover": {
+              backgroundColor: theme.palette[ownerState.color][100],
+            },
+            "&:active": {
+              color: theme.palette[ownerState.color][700],
+              backgroundColor: theme.palette[ownerState.color][200],
+            },
+          };
         },
       },
     },
