@@ -23,7 +23,7 @@ function IntroText(props) {
       <Button
         sx={{ mt: 5, textTransform: "none", fontSize: 24, fontWieght: 700 }}
         variant="contained"
-        color="warning"
+        color="orange"
         size="large"
       >
         Sign in and start relaxing

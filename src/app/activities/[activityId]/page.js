@@ -843,7 +843,7 @@ function StartSlide({ scrollNext, sx }) {
     <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       <Box sx={{ maxWidth: 341, textAlign: "center", ...sx }}>
         <Typography variant="h5">Create your first activity and let’s get going</Typography>
-        <Button variant="contained" color="warning" size="large" onClick={scrollNext} sx={{ mt: 3 }}>
+        <Button variant="contained" color="orange" size="large" onClick={scrollNext} sx={{ mt: 3 }}>
           Start here
         </Button>
       </Box>
@@ -855,7 +855,7 @@ export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-  const [slide, setSlide] = useState(4);
+  const [slide, setSlide] = useState(0);
 
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];

@@ -43,7 +43,7 @@ function NavLink({link}) {
     //   {linkElement}
     // </Box>
     <NextLink href="/" passHref>
-      <Button variant="outlined" color="warning" sx={{
+      <Button variant="outlined" color="orange" sx={{
         textTransform: 'none',
         fontSize: theme.typography.htmlFontSize,
       }}>
