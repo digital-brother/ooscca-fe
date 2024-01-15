@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { alpha, createTheme, darken } from "@mui/material/styles";
 import { Manrope, Montserrat } from "next/font/google";
 import { colors } from "./colors";
 
@@ -96,21 +96,21 @@ const theme = createTheme({
         contained: ({ ownerState, theme }) => {
           return {
             "&:hover": {
-              backgroundColor: theme.palette[ownerState.color][400],
+              backgroundColor: theme.palette[ownerState.color].light,
             },
             "&:active": {
-              backgroundColor: theme.palette[ownerState.color][700],
+              backgroundColor: theme.palette[ownerState.color].dark,
             },
           };
         },
         outlined: ({ ownerState, palette }) => {
           return {
+            borderColor: theme.palette[ownerState.color].main,
             "&:hover": {
-              backgroundColor: theme.palette[ownerState.color][100],
+              backgroundColor: alpha(theme.palette[ownerState.color].main, 0.09),
             },
             "&:active": {
-              color: theme.palette[ownerState.color][700],
-              backgroundColor: theme.palette[ownerState.color][200],
+              backgroundColor: alpha(theme.palette[ownerState.color].main, 0.18),
             },
           };
         },

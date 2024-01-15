@@ -290,6 +290,7 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
       <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
         <Button
           variant="outlined"
+          color="grey"
           size="large"
           onClick={() => setTermsCoditionsOpen(false)}
         >
@@ -298,7 +299,7 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
         <Button
           onClick={handleSave}
           variant="contained"
-          color="success"
+          color="green"
         >
           Save
         </Button>
@@ -386,7 +387,7 @@ function SavedSlide({ scrollNext, close }) {
         onClick={scrollNext}
         variant="contained"
         fullWidth
-        color="inherit"
+        color="grey"
         sx={{  mt: 3 }}
       >
         Edit
@@ -415,34 +416,19 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
 
   return (
     <>
-      <SlideHeader label="Review activity details" close={close}/>
+      <SlideHeader label="Review activity details" close={close} />
       <ActivityDetails />
 
       <SmFlex sx={{ mt: 3 }}>
         {smDown && (
-          <Button
-            variant="outlined"
-            size="large"
-            fullWidth
-            onClick={close}
-          >
+          <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
             Cancel
           </Button>
         )}
-        <Button
-          variant="outlined"
-          size="large"
-          fullWidth
-          onClick={scrollPrev}
-        >
+        <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
           Go back
         </Button>
-        <Button
-          onClick={handleSave}
-          variant="contained"
-          fullWidth
-          color="success"
-        >
+        <Button onClick={handleSave} variant="contained" fullWidth color="green">
           Save
         </Button>
       </SmFlex>
@@ -476,7 +462,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
   return (
     <>
       <Box>
-        <SlideHeader label="Keep editing" close={close}/>
+        <SlideHeader label="Keep editing" close={close} />
         <Typography sx={{ mt: 2, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
@@ -497,30 +483,14 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 
       <SmFlex sx={{ mt: { xs: 3, sm: "auto" } }}>
         {smDown && (
-          <Button
-            variant="outlined"
-            size="large"
-            fullWidth
-            onClick={close}
-          >
+          <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
             Cancel
           </Button>
         )}
-        <Button
-          variant="outlined"
-          size="large"
-          fullWidth
-          onClick={scrollPrev}
-        >
+        <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
           Go back
         </Button>
-        <Button
-          onClick={handleMultipleSubmit}
-          variant="contained"
-          fullWidth
-          type="submit"
-          color="success"
-        >
+        <Button onClick={handleMultipleSubmit} variant="contained" fullWidth type="submit" color="green">
           Next
         </Button>
       </SmFlex>
@@ -559,7 +529,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   return (
     activity && (
       <>
-        <SlideHeader label="Keep editing" close={close}/>
+        <SlideHeader label="Keep editing" close={close} />
         <Formik
           initialValues={{
             startTime: activity.startTime,
@@ -735,30 +705,14 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
 
               <SmFlex sx={{ mt: 2 }}>
                 {smDown && (
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    fullWidth
-                    onClick={close}
-                  >
+                  <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
                     Cancel
                   </Button>
                 )}
-                <Button
-                  variant="outlined"
-                  size="large"
-                  fullWidth
-                  onClick={scrollPrev}
-                >
+                <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
                   Go back
                 </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  type="submit"
-                  color="success"
-                >
+                <Button variant="contained" size="large" fullWidth type="submit" color="green">
                   Next
                 </Button>
               </SmFlex>
@@ -792,7 +746,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
 
   return (
     <>
-      <SlideHeader label="Keep editing" close={close}/>
+      <SlideHeader label="Keep editing" close={close} />
       <Formik
         initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
@@ -811,21 +765,10 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <FormikNonFieldErrors />
           <SmFlex sx={{ mt: { xs: 2, sm: "auto" } }}>
-            <Button
-              variant="outlined"
-              size="large"
-              fullWidth
-              onClick={close}
-            >
+            <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              type="submit"
-              color="success"
-            >
+            <Button variant="contained" size="large" fullWidth type="submit" color="green">
               Next
             </Button>
           </SmFlex>

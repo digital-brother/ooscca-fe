@@ -90,7 +90,7 @@ export const colors = Object.fromEntries(
     colorName,
     {
       ...color,
-      light: color[300],
+      light: color[400],
       main: color[500],
       dark: color[700],
       contrastText: "#FFFFFF",
