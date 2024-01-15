@@ -9,6 +9,7 @@ export const purple = {
   800: "#460C4A",
   900: "#230625",
 };
+
 export const orange = {
   100: "#FFE7D1",
   200: "#FFD0A3",
@@ -20,6 +21,7 @@ export const orange = {
   800: "#6E3F0B",
   900: "#3B1F06",
 };
+
 export const yellow = {
   100: "#FFF0D1",
   200: "#FFE1A3",
@@ -31,6 +33,7 @@ export const yellow = {
   800: "#543A05",
   900: "#3D2B06",
 };
+
 export const pink = {
   100: "#FFD5E8",
   200: "#FFABD1",
@@ -42,6 +45,7 @@ export const pink = {
   800: "#661238",
   900: "#33091C",
 };
+
 export const green = {
   100: "#CCEDDC",
   200: "#99DBB9",
@@ -53,6 +57,7 @@ export const green = {
   800: "#00361A",
   900: "#001A0D",
 };
+
 export const blue = {
   100: "#D3EDF4",
   200: "#A7DBE9",
@@ -64,6 +69,7 @@ export const blue = {
   800: "#0E4250",
   900: "#072128",
 };
+
 export const grey = {
   50: "#F8F9FA",
   100: "#E9ECEF",
@@ -76,4 +82,18 @@ export const grey = {
   800: "#212529",
   900: "#8C8C8C",
 };
-export const colors = { purple, orange, yellow, pink, green, blue, grey };
+
+export const colorsMap = { purple, orange, yellow, pink, green, blue, grey };
+
+export const colors = Object.fromEntries(
+  Object.entries(colorsMap).map(([colorName, color]) => [
+    colorName,
+    {
+      ...color,
+      light: color[300],
+      main: color[500],
+      dark: color[700],
+      contrastText: "#FFFFFF",
+    },
+  ])
+);
