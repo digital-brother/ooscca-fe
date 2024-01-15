@@ -26,7 +26,7 @@ const theme = createTheme({
     mode: "light",
   },
   typography: {
-    fontFamily: libreFranklin.style.fontFamily,
+    fontFamily: manrope.style.fontFamily,
     h1: {
       fontSize: "3rem", // 48px
       fontWeight: 700,
@@ -59,9 +59,9 @@ const theme = createTheme({
       fontFamily: montserrat.style.fontFamily,
     },
     subheading: {
+      fontFamily: montserrat.style.fontFamily,
       fontSize: "1rem", // 16px
       fontWeight: 700,
-      fontFamily: montserrat.style.fontFamily,
       color: baseTheme.palette.warning.main,
     },
   },
@@ -88,9 +88,10 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none",
-          fontSize: 16,
+          fontFamily: montserrat.style.fontFamily,
+          fontSize: "1rem", // 16px
           fontWeight: 700,
+          textTransform: "none",
         },
       },
     },
