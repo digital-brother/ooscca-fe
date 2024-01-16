@@ -107,7 +107,7 @@ function SlideHeader({ label, close }) {
   );
 }
 
-function ActivityDetails() {
+function ActivityDetails({ sx }) {
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
@@ -125,10 +125,11 @@ function ActivityDetails() {
         mt: 3,
         position: "relative",
         alignItems: { xs: "center", sm: "stretch" },
+        ...sx,
       }}
     >
       <Stack
-        spacing={2}
+        spacing={1}
         sx={{ position: { xs: "static", sm: "absolute" }, right: 0, width: { xs: "50%", sm: "max-content" } }}
       >
         <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
@@ -141,9 +142,11 @@ function ActivityDetails() {
       <SmFlex>
         <b>Activity:</b> {activity?.typeName}
       </SmFlex>
-      <SmFlex>
-        <b>Venue:</b> {activity?.venue}
-      </SmFlex>
+      {activity?.venue && (
+        <SmFlex>
+          <b>Venue:</b> {activity?.venue}
+        </SmFlex>
+      )}
       <SmFlex>
         <Typography>
           <b>When:</b>
@@ -163,7 +166,7 @@ function ActivityDetails() {
         <SmFlex>
           <b>Early drop off:</b> {activity?.earlyDropOffTime}
           {parseFloat(activity?.earlyDropOffPrice) ? (
-            <Typography sx={{ ml: { sm: "auto" } }}>{activity?.earlyDropOffPrice}£</Typography>
+            <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
           ) : (
             <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
           )}
@@ -173,7 +176,7 @@ function ActivityDetails() {
         <SmFlex>
           <b>Late pick up:</b> {activity?.latePickUpTime}
           {parseFloat(activity?.latePickUpPrice) ? (
-            <Typography sx={{ ml: { sm: "auto" } }}>{activity?.latePickUpPrice}£</Typography>
+            <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
           ) : (
             <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
           )}
@@ -193,7 +196,7 @@ function ActivityDetails() {
       {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
         <SmFlex>
           <b>Discounts applied:</b>{" "}
-          <Box sx={{ ml: { sm: "auto" } }}>
+          <Box sx={{ ml: { sm: "auto" }, textAlign: "right" }}>
             {earlyDiscount?.enabled && (
               <Typography>
                 Early birds ({earlyDiscount?.percent}%){" "}
@@ -302,13 +305,14 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
 
 function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
+  const { activityId } = useParams();
   const unitSelectItems = [
     { id: "days", name: "Days" },
     { id: "spaces", name: "Spaces" },
   ];
 
-  const patchMutation = useMutation((discount) => patchDiscount(discount.activity, discount.id, discount));
-  const createMutation = useMutation((discount) => createDiscount(discount.activity, discount));
+  const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
+  const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
   async function handleSubmit(values, { setSubmitting, setErrors }) {
     const mutation = values.id ? patchMutation : createMutation;
@@ -326,7 +330,7 @@ function DiscountForm({ type, discount, formRef }) {
     <Formik
       initialValues={{
         id: discount?.id,
-        activity: discount?.activity,
+        activity: activityId,
         type: discount?.type ?? type,
         enabled: discount?.enabled ?? false,
         percent: discount?.percent,
@@ -340,7 +344,7 @@ function DiscountForm({ type, discount, formRef }) {
           .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
         amount: numericSchema
           .label("Amount")
-          .max(40)
+          .max(60)
           .when("enabled", ([enabled], schema) => (enabled ? schema.required() : schema)),
       })}
       enableReinitialize
@@ -360,8 +364,8 @@ function DiscountForm({ type, discount, formRef }) {
             rowGap: 2,
           }}
         >
-          <FormikDecimalField name="percent" label="Percent" />
-          <FormikDecimalField name="amount" label="Amount" />
+          <FormikNumberField name="percent" label="Percent" />
+          <FormikNumberField name="amount" label="Amount" />
           <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
         </Box>
       </Form>
@@ -373,7 +377,7 @@ function SavedSlide({ scrollNext, close }) {
   return (
     <>
       <Typography variant="h6">Saved activity details</Typography>
-      <ActivityDetails />
+      <ActivityDetails sx={{ flex: 1 }} />
 
       <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
@@ -403,7 +407,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   return (
     <>
       <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails />
+      <ActivityDetails sx={{ flex: 1 }} />
 
       <SmFlex sx={{ mt: 3 }}>
         {smDown && (
@@ -441,7 +445,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
-      scrollNext();
+      if ( earlyDiscountFormRef.current?.isValid && endingDiscountFormRef.current?.isValid) scrollNext();
     } catch (error) {}
   }
 
@@ -768,12 +772,15 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
 }
 
 function StartSlide({ scrollNext, sx }) {
+  const activityId = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+
   return (
     <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       <Box sx={{ maxWidth: 341, textAlign: "center", ...sx }}>
         <Typography variant="h5">Create your first activity and let’s get going</Typography>
         <Button variant="contained" color="orange" size="large" onClick={scrollNext} sx={{ mt: 3 }}>
-          Start here
+          {activity?.type ? "Continue editing" : "Start here"}
         </Button>
       </Box>
     </Box>
@@ -790,17 +797,25 @@ export default function Activities() {
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
 
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const slideRef = useRef(null);
+  const scrollToActivities = () =>
+    smDown && slideRef.current && window.scrollTo({ top: slideRef.current.offsetTop - 10, behavior: "smooth" });
+
   function scrollNext() {
     if (slide === slides.length - 1) setSlide(0);
     else setSlide((prev) => prev + 1);
+    scrollToActivities();
   }
 
   function scrollPrev() {
     setSlide((prev) => prev - 1);
+    scrollToActivities();
   }
 
   function close() {
     setSlide(0);
+    scrollToActivities();
   }
 
   function handleSubmit(values, { setErrors }) {
@@ -809,7 +824,15 @@ export default function Activities() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" }, gap: 3, maxWidth: {xs: 540, lg: "none"}, mx: "auto" }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+          gap: 3,
+          maxWidth: { xs: 540, lg: "none" },
+          mx: "auto",
+        }}
+      >
         <Formik
           initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
           onSubmit={handleSubmit}
@@ -822,7 +845,7 @@ export default function Activities() {
                 name="preRequisites"
                 variant="filled"
                 fullWidth
-                label="Pre-requisites"
+                label="Highlight important details here"
                 multiline
                 rows={9}
               />
@@ -833,6 +856,7 @@ export default function Activities() {
           </Form>
         </Formik>
         <Box
+          ref={slideRef}
           sx={{
             mx: "auto",
             width: "100%",
