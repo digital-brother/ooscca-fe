@@ -104,6 +104,37 @@ export default function ImagesBlock() {
       ]);
     }
 
+    let messageColor = ""
+    let messageTexts = []
+
+    if (_files[0]) {
+      _files[0].frontendErrors = []
+      if (_files[0]?.size > 5*1024*1024) {
+        _files[0]?.frontendErrors.push("image: Max file size is 5.0 MB")
+      }
+    }
+
+    if (_files[0]?.error || _files[0]?.frontendErrors.length > 0) {
+      messageColor = "#E72A2A"
+      if (_files[0]?.error?.response?.data) {  // 2 types errors: from backend & if network failed
+        for (const [key, value] of Object.entries(_files[0]?.error?.response?.data)) {
+          messageTexts.push(key + ": " + value)
+        }
+      } else if (_files[0]?.error?.message) {
+        messageTexts.push(_files[0]?.error?.message)
+      } else if (_files[0]?.frontendErrors?.length > 0) {
+        _files[0]?.frontendErrors?.map(frontendError => messageTexts.push(frontendError))
+      } else {
+        messageTexts.push("Unknown error")
+      }
+
+    } else {
+      messageColor = "#196B40"
+      if (_files[0]?.hasOwnProperty("error")) {
+        messageTexts.push("Image approved")
+      }
+    }
+
     imageInputs.push(
       <Grid key={i} item xs={4} sx={{ borderRadius: "8px" }}>
         <DropZoneImageUpload
