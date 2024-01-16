@@ -116,6 +116,18 @@ const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      defaultProps: {
+        InputProps: {
+          disableUnderline: true,
+        },
+        sx: {
+          "& .MuiFilledInput-root": {
+            borderRadius: 1,
+          },
+        },
+      },
+    },
   },
 });
 

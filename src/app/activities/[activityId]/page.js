@@ -17,6 +17,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  TextField,
   useMediaQuery,
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
@@ -288,19 +289,10 @@ function TermsAndConditions({ setTermsCoditionsOpen }) {
       </Box>
       <Error>{error}</Error>
       <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
-        <Button
-          variant="outlined"
-          color="grey"
-          size="large"
-          onClick={() => setTermsCoditionsOpen(false)}
-        >
+        <Button variant="outlined" color="grey" size="large" onClick={() => setTermsCoditionsOpen(false)}>
           Cancel
         </Button>
-        <Button
-          onClick={handleSave}
-          variant="contained"
-          color="green"
-        >
+        <Button onClick={handleSave} variant="contained" color="green">
           Save
         </Button>
       </Box>
@@ -383,13 +375,7 @@ function SavedSlide({ scrollNext, close }) {
       <Typography variant="h6">Saved activity details</Typography>
       <ActivityDetails />
 
-      <Button
-        onClick={scrollNext}
-        variant="contained"
-        fullWidth
-        color="grey"
-        sx={{  mt: 3 }}
-      >
+      <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
       </Button>
       <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
@@ -818,33 +804,32 @@ export default function Activities() {
 
   return (
     <Container sx={{ my: 10 }}>
-      {/* <Grid container>
-        <Grid item xs={6}>
-          Description
-        </Grid>
-        <Grid item xs={6}> */}
-      <Box
-        sx={{
-          mx: "auto",
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 3 }}>
+        <Stack spacing={3}>
+          <TextField variant="filled" fullWidth label="Description" multiline rows={11} />
+          <TextField variant="filled" fullWidth label="Pre-requisites" multiline rows={11} />
+        </Stack>
+        <Box
+          sx={{
+            mx: "auto",
+            width: "100%",
+            maxWidth: 540,
+            minHeight: 600,
+            border: "1px solid #6C757D",
+            borderRadius: 4,
+            px: 4,
+            pt: 2.4,
+            pb: 2,
 
-          maxWidth: 540,
-          minHeight: 600,
-          border: "1px solid #6C757D",
-          borderRadius: 4,
-          px: 4,
-          pt: 2.4,
-          pb: 2,
-
-          display: "flex",
-        }}
-      >
-        {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
+            display: "flex",
+          }}
+        >
+          {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
+          </Box>
         </Box>
       </Box>
-      {/* </Grid>
-      </Grid> */}
     </Container>
   );
 }
