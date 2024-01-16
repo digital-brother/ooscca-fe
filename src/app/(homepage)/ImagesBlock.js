@@ -84,7 +84,11 @@ export default function ImagesBlock() {
 
     async function handleDelete() {
       files.filter(f => f?.position == i).map((file) => {
-        deleteMutation.mutateAsync(file)
+        if (file?.id) {
+          deleteMutation.mutateAsync(file)
+        } else {
+          setFiles(files => files.filter(item => item !== _files[0]));
+        }
       })
     }
 
