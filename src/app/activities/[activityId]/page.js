@@ -783,6 +783,7 @@ function StartSlide({ scrollNext, sx }) {
 export default function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const mutation = useMutation((data) => patchActivity(activityId, data));
 
   const [slide, setSlide] = useState(0);
 
@@ -802,13 +803,35 @@ export default function Activities() {
     setSlide(0);
   }
 
+  function handleSubmit(values, { setErrors }) {
+    mutation.mutate(values, { onError: (error) => setErrors(error?.response?.data) });
+  }
+
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 3 }}>
-        <Stack spacing={3}>
-          <TextField variant="filled" fullWidth label="Description" multiline rows={11} />
-          <TextField variant="filled" fullWidth label="Pre-requisites" multiline rows={11} />
-        </Stack>
+        <Formik
+          initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          <Form>
+            <Stack spacing={3}>
+              <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
+              <FormikTextField
+                name="preRequisites"
+                variant="filled"
+                fullWidth
+                label="Pre-requisites"
+                multiline
+                rows={9}
+              />
+              <Button variant="contained" color="green" size="large" type="submit">
+                Save
+              </Button>
+            </Stack>
+          </Form>
+        </Formik>
         <Box
           sx={{
             mx: "auto",

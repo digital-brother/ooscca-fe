@@ -127,6 +127,13 @@ const theme = createTheme({
           },
         },
       },
+      styleOverrides: {
+        root: {
+          "& .Mui-error.MuiFilledInput-root": {
+            border: `1px solid ${baseTheme.palette.error.main}`,
+          },
+        },
+      },
     },
   },
 });
