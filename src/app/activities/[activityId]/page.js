@@ -809,7 +809,7 @@ export default function Activities() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 3 }}>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" }, gap: 3, maxWidth: {xs: 540, lg: "none"}, mx: "auto" }}>
         <Formik
           initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
           onSubmit={handleSubmit}
