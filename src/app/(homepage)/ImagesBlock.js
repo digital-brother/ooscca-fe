@@ -136,7 +136,7 @@ export default function ImagesBlock() {
     }
 
     imageInputs.push(
-      <Grid key={i} item xs={4} sx={{ borderRadius: "8px" }}>
+      <Grid key={i} item md={4} sx={{ borderRadius: "8px", width: "100%" }}>
         <DropZoneImageUpload
           files={_files}
           position={i}
@@ -147,9 +147,24 @@ export default function ImagesBlock() {
             backgroundColor: "#D9D9D9",
             backgroundColor: "#DEE2E6",
             height: "396px",
-            borderRadius: "16px",
+            width: "100%",
+            borderRadius: {sx: 0, md: 4},
+            border: { md: "1px #ADB5BD solid" }
           }}
         />
+        <Box sx={{
+            color: messageColor,
+            fontSize: 16,
+            fontFamily: "Manrope",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: 1,
+            letterSpacing: 0.09,
+            mt: 0.8,
+          }}
+        >
+          {messageTexts.map(text => (<Box>{text}</Box>))}
+        </Box>
       </Grid>
     );
   }
@@ -158,16 +173,17 @@ export default function ImagesBlock() {
     <Container sx={{
       py: {xs: 6, md: 3},
       backgroundColor: "#ffffff",
-      borderRadius: "16px",
       display: "flex",
       flexDirection: "column",
+      px: {xs: 0, md: 3}
     }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{borderRadius: "8px"}}>
           <Box sx={{
             backgroundColor: "#D9D9D9",
             backgroundColor: "#DEE2E6",
-            borderRadius: "16px",
+            borderRadius: {sx: 0, md: 4},
+            px: 5,
           }}>
             <Typography sx={{
               color: "#000",
