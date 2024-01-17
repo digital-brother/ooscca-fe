@@ -43,7 +43,7 @@ import {
   FormikDecimalField,
   FormikTextField,
   FormikTimeField,
-  createSubmitHandler,
+  createHandleSubmit,
 } from "./components/formikFields";
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
@@ -796,7 +796,7 @@ function DescriptionForm() {
   return (
     <Formik
       initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-      onSubmit={createSubmitHandler(mutation)}
+      onSubmit={createHandleSubmit(mutation)}
       enableReinitialize
     >
       <Form>

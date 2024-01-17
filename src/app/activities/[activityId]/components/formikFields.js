@@ -10,11 +10,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
 
-export function createSubmitHandler(mutation) {
+export function createHandleSubmit(mutation, onSuccess = () => {}, onError = () => {}) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
     setStatus(null);
     try {
       await mutation.mutateAsync(values);
+      onSuccess()
     } catch (error) {
       // If status is 400, it means that DRF returned validation errors
       if (error?.response?.status === 400) {
@@ -25,6 +26,7 @@ export function createSubmitHandler(mutation) {
       } else {
         setStatus({ submissionError: error.message });
       }
+      onError(error)
     }
   };
 }
