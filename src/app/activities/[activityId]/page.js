@@ -43,6 +43,7 @@ import {
   FormikDecimalField,
   FormikTextField,
   FormikTimeField,
+  createSubmitHandler,
 } from "./components/formikFields";
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
@@ -791,25 +792,6 @@ function DescriptionForm() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
-
-  function createSubmitHandler(mutation) {
-    return async function handleSubmit(values, { setErrors, setStatus }) {
-      setStatus(null)
-      try {
-        await mutation.mutateAsync(values);
-      } catch (error) {
-        // If status is 400, it means that DRF returned validation errors
-        if (error?.response?.status === 400) {
-          const drfErrors = error.response?.data;
-          const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-          drfErrors && setErrors(drfErrors);
-          drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
-        } else {
-          setStatus({ submissionError: error.message });
-        }
-      }
-    }
-  }
 
   return (
     <Formik

@@ -10,6 +10,25 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
 
+export function createSubmitHandler(mutation) {
+  return async function handleSubmit(values, { setErrors, setStatus }) {
+    setStatus(null);
+    try {
+      await mutation.mutateAsync(values);
+    } catch (error) {
+      // If status is 400, it means that DRF returned validation errors
+      if (error?.response?.status === 400) {
+        const drfErrors = error.response?.data;
+        const drfNonFieldErrors = drfErrors?.nonFieldErrors;
+        drfErrors && setErrors(drfErrors);
+        drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
+      } else {
+        setStatus({ submissionError: error.message });
+      }
+    }
+  };
+}
+
 export function FormikTextField(props) {
   const [field, meta] = useField(props);
   return (
