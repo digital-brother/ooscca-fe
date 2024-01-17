@@ -83,7 +83,11 @@ export const grey = {
   900: "#8C8C8C",
 };
 
-const colorsMap = { purple, orange, yellow, pink, green, blue };
+export const red = {
+  500: "#E72A2A",
+}
+
+const colorsMap = { purple, orange, yellow, pink, green, blue, red };
 
 const colorsPartial = Object.fromEntries(
   Object.entries(colorsMap).map(([colorName, color]) => [

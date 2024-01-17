@@ -6,10 +6,9 @@ import Typography from "@mui/material/Typography";
 import { useMutation, useQuery } from "react-query";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-import {LogoPreview, LogoDeleteConfirm, } from "@/app/activities/components/LogoUploadDropzone";
-import {ImageInput, ImagePreview, ImageDeleteConfirm, } from "@/app/activities/components/ImageUploadDropzone";
-import DropZoneLogoUpload from "@/app/activities/components/LogoUploadDropzone";
-import DropZoneImageUpload from "@/app/activities/components/ImageUploadDropzone";
+import {ImageInput, ImagePreview, ImageDeleteConfirm, } from "@/app/activities/[activityId]/components/ImageUploadDropzone";
+import DropZoneLogoUpload from "@/app/activities/[activityId]/components/LogoUploadDropzone";
+import DropZoneImageUpload from "@/app/activities/[activityId]/components/ImageUploadDropzone";
 
 import * as React from "react";
 import Grid from "@mui/material/Grid";
@@ -115,7 +114,7 @@ export default function ImagesBlock() {
     }
 
     if (_files[0]?.error || _files[0]?.frontendErrors.length > 0) {
-      messageColor = "#E72A2A"
+      messageColor = "red.500"
       if (_files[0]?.error?.response?.data) {  // 2 types errors: from backend & if network failed
         for (const [key, value] of Object.entries(_files[0]?.error?.response?.data)) {
           messageTexts.push(key + ": " + value)
@@ -129,7 +128,7 @@ export default function ImagesBlock() {
       }
 
     } else {
-      messageColor = "#196B40"
+      messageColor = "green.500"
       if (_files[0]?.hasOwnProperty("error")) {
         messageTexts.push("Image approved")
       }
@@ -144,12 +143,11 @@ export default function ImagesBlock() {
           handleAppend={handleAppend}
           key={i}
           sx={{
-            backgroundColor: "#D9D9D9",
-            backgroundColor: "#DEE2E6",
+            backgroundColor: "grey.200",
             height: 396,
             width: "100%",
             borderRadius: 4,
-            border: "1px #ADB5BD solid",
+            border: "1px #ADB5BD solid",  // #grey 400
           }}
         />
         <Box sx={{
@@ -172,20 +170,20 @@ export default function ImagesBlock() {
   return (
     <Container sx={{
       py: {xs: 6, md: 3},
-      backgroundColor: "#ffffff",
+      backgroundColor: "white",
       display: "flex",
       flexDirection: "column",
     }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{borderRadius: 8}}>
+        <Grid item xs={12} sx={{ borderRadius: 8 }}>
           <Box sx={{
-            backgroundColor: "#D9D9D9",
-            backgroundColor: "#DEE2E6",
+            backgroundColor: "grey.200",
             borderRadius: {sx: 0, md: 4},
+            border: "1px #ADB5BD solid",
             px: 5,
           }}>
             <Typography sx={{
-              color: "#000",
+              color: "black",
               py: 24,
               textAlign: "center",
               // fontFamily: "Montserrat",

@@ -28,7 +28,7 @@ export function ImageInput({ multiple, handleAppend, ...props }) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor: props?.sx.backgroundColor || props?.sx.bgColor || "#DEE2E6",
+          bgcolor: props?.sx.backgroundColor || props?.sx.bgColor || "grey.200",
           gap: 1,
           ...props.sx,
         },
@@ -38,7 +38,7 @@ export function ImageInput({ multiple, handleAppend, ...props }) {
 
       <Typography sx={{ fontWeight: 700 }}>
         Drop your image file here or &nbsp;
-        <span style={{ cursor: "pointer", color: "#B01FB8" }}>browse</span>
+        <span style={{ cursor: "pointer", color: "purple.500" }}>browse</span>
       </Typography>
 
       <Typography variant="caption">
@@ -131,10 +131,10 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
           }}
         >
           <Typography sx={{
-            color: "#0C0E0F",
+            color: "grey.800",
             textAlign: "center",
             // fontFamily: "Manrope",
-            fontSize: "15px",
+            fontSize: 15,
             fontStyle: "normal",
             fontWeight: 700,
             lineHeight: 1.3,
@@ -147,16 +147,16 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
           onClick={imageDeleteConfirm}
           sx={{
             flexGrow: 1,
-            backgroundColor: "#495057",
+            backgroundColor: "grey.600",
             width: "100%",
             py: 1.7,
           }}
         >
           <Typography sx={{
-            color: "#ffffff",
+            color: "white",
             textAlign: "center",
             // fontFamily: "Manrope",
-            fontSize: "15px",
+            fontSize: 15,
             fontStyle: "normal",
             fontWeight: 700,
             lineHeight: 1.3,
@@ -182,7 +182,7 @@ export default function DropZoneImageUpload({files, handleAppend, handleDelete, 
         borderRadius: 1.5,
         border: "1px #ADB5BD solid",
         overflow: "hidden",
-        bgcolor: "#DEE2E6",
+        bgcolor: "grey.200",
         ...props?.sx,
       }}
     >
