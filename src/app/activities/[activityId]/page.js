@@ -792,18 +792,21 @@ function DescriptionForm() {
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  async function handleSubmit(values, { setErrors, setStatus }) {
-    try {
-      await mutation.mutateAsync(values);
-    } catch (error) {
-      // If status is 400, it means that DRF returned validation errors
-      if (error?.response?.status === 400) {
-        const drfErrors = error.response?.data;
-        const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-        drfErrors && setErrors(drfErrors);
-        drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
-      } else {
-        setStatus({ submissionError: error.message });
+  function createSubmitHandler(mutation) {
+    return async function handleSubmit(values, { setErrors, setStatus }) {
+      setStatus(null)
+      try {
+        await mutation.mutateAsync(values);
+      } catch (error) {
+        // If status is 400, it means that DRF returned validation errors
+        if (error?.response?.status === 400) {
+          const drfErrors = error.response?.data;
+          const drfNonFieldErrors = drfErrors?.nonFieldErrors;
+          drfErrors && setErrors(drfErrors);
+          drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
+        } else {
+          setStatus({ submissionError: error.message });
+        }
       }
     }
   }
@@ -811,7 +814,7 @@ function DescriptionForm() {
   return (
     <Formik
       initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-      onSubmit={handleSubmit}
+      onSubmit={createSubmitHandler(mutation)}
       enableReinitialize
     >
       <Form>
