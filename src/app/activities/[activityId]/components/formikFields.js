@@ -10,7 +10,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
 
-export function createHandleSubmit(mutation, onSuccess = () => {}, onError = () => {}) {
+export function createHandleSubmit({mutation, onSuccess = () => { }, throwError=false }) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
     setStatus(null);
     try {
@@ -26,7 +26,7 @@ export function createHandleSubmit(mutation, onSuccess = () => {}, onError = () 
       } else {
         setStatus({ submissionError: error.message });
       }
-      onError(error)
+      if(throwError) throw error;
     }
   };
 }

@@ -316,16 +316,10 @@ function DiscountForm({ type, discount, formRef }) {
   const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
   const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
-  async function handleSubmit(values, { setSubmitting, setErrors }) {
+  async function handleSubmit(values, formikHelpers) {
     const mutation = values.id ? patchMutation : createMutation;
-    try {
-      const response = await mutation.mutateAsync(values);
-      console.log(response);
-    } catch (error) {
-      console.log(error.response.data);
-      setErrors(error.response.data);
-      throw error;
-    }
+    const handle = createHandleSubmit({ mutation, throwError: true });
+    handle(values, formikHelpers);
   }
 
   return (
@@ -501,17 +495,12 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
     setAgeType(event.target.value);
   };
 
-  async function handleSubmit(values, { setErrors }) {
-    try {
-      // On backend if rangeFrom is set, we treat it a single age, if both - as range
-      const data = { ...values, ageTo: ageType === "range" ? values.ageTo : null };
-      console.log(data);
-      await mutation.mutateAsync(data);
-      scrollNext();
-    } catch (error) {
-      console.log(error.response.data);
-      setErrors(error.response.data);
-    }
+  async function handleSubmit(values, formikHelpers) {
+    // On backend if rangeFrom is set, we treat it a single age, if both - as range
+    const data = { ...values, ageTo: ageType === "range" ? values.ageTo : null };
+    // TODO: Rewrite if values conversions will be frequent
+    const handle = createHandleSubmit({ mutation, onSuccess: scrollNext });
+    handle(data, formikHelpers);
   }
 
   return (
@@ -723,23 +712,13 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  async function handleSubmit(data, { setErrors }) {
-    console.log(data);
-    try {
-      await mutation.mutateAsync(data);
-      scrollNext();
-    } catch (error) {
-      setErrors(error.response.data);
-    }
-  }
-
   return (
     <>
       <SlideHeader label="Keep editing" close={close} />
       <Formik
         initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
-        onSubmit={handleSubmit}
+        onSubmit={createHandleSubmit({ mutation, onSuccess: scrollNext })}
       >
         <Form style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
