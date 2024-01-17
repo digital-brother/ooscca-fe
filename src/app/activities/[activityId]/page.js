@@ -445,7 +445,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
-      if ( earlyDiscountFormRef.current?.isValid && endingDiscountFormRef.current?.isValid) scrollNext();
+      if (earlyDiscountFormRef.current?.isValid && endingDiscountFormRef.current?.isValid) scrollNext();
     } catch (error) {}
   }
 
@@ -787,13 +787,46 @@ function StartSlide({ scrollNext, sx }) {
   );
 }
 
-export default function Activities() {
+function Description() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  const [slide, setSlide] = useState(0);
+  function handleSubmit(values, { setErrors }) {
+    mutation.mutate(values, { onError: (error) => setErrors(error?.response?.data) });
+  }
 
+  return (
+    <Formik
+      initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
+      onSubmit={handleSubmit}
+      enableReinitialize
+    >
+      <Form>
+        <Stack spacing={3}>
+          <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
+          <FormikTextField
+            name="preRequisites"
+            variant="filled"
+            fullWidth
+            label="Highlight important details here"
+            multiline
+            rows={9}
+          />
+          <Button variant="contained" color="green" size="large" type="submit">
+            Save
+          </Button>
+        </Stack>
+      </Form>
+    </Formik>
+  );
+}
+
+export default function Activities() {
+  const activityId = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+
+  const [slide, setSlide] = useState(0);
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
 
@@ -818,10 +851,6 @@ export default function Activities() {
     scrollToActivities();
   }
 
-  function handleSubmit(values, { setErrors }) {
-    mutation.mutate(values, { onError: (error) => setErrors(error?.response?.data) });
-  }
-
   return (
     <Container sx={{ my: 10 }}>
       <Box
@@ -833,28 +862,7 @@ export default function Activities() {
           mx: "auto",
         }}
       >
-        <Formik
-          initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-          onSubmit={handleSubmit}
-          enableReinitialize
-        >
-          <Form>
-            <Stack spacing={3}>
-              <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
-              <FormikTextField
-                name="preRequisites"
-                variant="filled"
-                fullWidth
-                label="Highlight important details here"
-                multiline
-                rows={9}
-              />
-              <Button variant="contained" color="green" size="large" type="submit">
-                Save
-              </Button>
-            </Stack>
-          </Form>
-        </Formik>
+        <Description />
         <Box
           ref={slideRef}
           sx={{
