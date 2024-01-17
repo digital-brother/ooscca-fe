@@ -136,7 +136,7 @@ export default function ImagesBlock() {
     }
 
     imageInputs.push(
-      <Grid key={i} item md={4} sx={{ borderRadius: "8px", width: "100%" }}>
+      <Grid key={i} item md={4} sx={{ borderRadius: 8, width: "100%" }}>
         <DropZoneImageUpload
           files={_files}
           position={i}
@@ -146,10 +146,10 @@ export default function ImagesBlock() {
           sx={{
             backgroundColor: "#D9D9D9",
             backgroundColor: "#DEE2E6",
-            height: "396px",
+            height: 396,
             width: "100%",
-            borderRadius: {sx: 0, md: 4},
-            border: { md: "1px #ADB5BD solid" }
+            borderRadius: 4,
+            border: "1px #ADB5BD solid",
           }}
         />
         <Box sx={{
@@ -175,10 +175,9 @@ export default function ImagesBlock() {
       backgroundColor: "#ffffff",
       display: "flex",
       flexDirection: "column",
-      px: {xs: 0, md: 3}
     }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{borderRadius: "8px"}}>
+        <Grid item xs={12} sx={{borderRadius: 8}}>
           <Box sx={{
             backgroundColor: "#D9D9D9",
             backgroundColor: "#DEE2E6",
@@ -187,7 +186,6 @@ export default function ImagesBlock() {
           }}>
             <Typography sx={{
               color: "#000",
-              py: "188px",
               py: 24,
               textAlign: "center",
               // fontFamily: "Montserrat",
