@@ -114,7 +114,9 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
         sx={{
           display: "flex",
           justifyContent: "center",
-          width: "75%",
+          flexDirection: "column",
+          width: "80%",
+          gap: 2,
         }}
       >
         <Button
@@ -124,20 +126,43 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
             flexGrow: 1,
             color: "black",
             borderColor: "black",
-            marginRight: 1,
+            width: "100%",
+            py: 1.5,
           }}
         >
-          Cancel
+          <Typography sx={{
+            color: "#0C0E0F",
+            textAlign: "center",
+            // fontFamily: "Manrope",
+            fontSize: "15px",
+            fontStyle: "normal",
+            fontWeight: 700,
+            lineHeight: 1.3,
+          }}>
+            Cancel
+          </Typography>
         </Button>
         <Button
           variant="contained"
-          color="success"
           onClick={imageDeleteConfirm}
           sx={{
             flexGrow: 1,
+            backgroundColor: "#495057",
+            width: "100%",
+            py: 1.7,
           }}
         >
-          Confirm
+          <Typography sx={{
+            color: "#ffffff",
+            textAlign: "center",
+            // fontFamily: "Manrope",
+            fontSize: "15px",
+            fontStyle: "normal",
+            fontWeight: 700,
+            lineHeight: 1.3,
+          }}>
+            Confirm
+          </Typography>
         </Button>
       </Box>
     </Box>
