@@ -23,7 +23,7 @@ import { TrashCanIcon } from "@/assets/TrashCanIcon";
 import { useDropzone } from "react-dropzone";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
-  getImages,
+  getImagesWithListBlock,
   patchImage,
   deleteImage,
   postImage,
@@ -219,6 +219,7 @@ export default function UploadImages() {
       "size": file.size,
       "activity": TEST_ACTIVITY_ID,
       "image": file,
+      "type": "with_list",
     }), {
     onSuccess: (data, variables, context) => {
       variables.error = null
@@ -235,7 +236,7 @@ export default function UploadImages() {
     isError,
   } = useQuery({
     queryKey: "images",
-    queryFn: () => getImages(),
+    queryFn: () => getImagesWithListBlock(),
     enabled: !filesLoaded,  // disable repeated requests
     onSuccess: (data) => {
       setFilesLoaded(true);
@@ -299,6 +300,7 @@ export default function UploadImages() {
           position: file.positon,
           size: file.size,
           activity: TEST_ACTIVITY_ID,
+          type: "with_list",
         }));
         setFiles(updatedFiles => updatedFiles.filter(f => f !== null));
       } catch (error) {
