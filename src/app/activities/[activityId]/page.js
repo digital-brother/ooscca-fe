@@ -70,13 +70,14 @@ function FormikErrors() {
   const { status } = useFormikContext();
   if (status?.submissionError) return <Error>{status.submissionError}</Error>;
 
-  if (status?.nonFieldErrors) return (
-    <Box>
-      {status.nonFieldErrors.map((error, index) => (
-        <Error key={index}>{error}</Error>
-      ))}
-    </Box>
-  );
+  if (status?.nonFieldErrors)
+    return (
+      <Box>
+        {status.nonFieldErrors.map((error, index) => (
+          <Error key={index}>{error}</Error>
+        ))}
+      </Box>
+    );
 }
 
 const SmFlex = styled(Box)(({ theme }) => ({
@@ -369,6 +370,7 @@ function DiscountForm({ type, discount, formRef }) {
           <FormikNumberField name="amount" label="Amount" />
           <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
         </Box>
+        <FormikErrors />
       </Form>
     </Formik>
   );
@@ -395,14 +397,8 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  async function handleSave() {
-    try {
-      const response = await mutation.mutateAsync({ filled: true });
-      console.log(response);
-      scrollNext();
-    } catch (error) {
-      console.log(error.response.data);
-    }
+  function handleSave() {
+    mutation.mutate({ filled: true }, { onSuccess: scrollNext });
   }
 
   return (
@@ -410,6 +406,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
       <SlideHeader label="Review activity details" close={close} />
       <ActivityDetails sx={{ flex: 1 }} />
 
+      <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3 }}>
         {smDown && (
           <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
@@ -694,6 +691,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
               <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
+              <FormikErrors />
               <SmFlex sx={{ mt: 2 }}>
                 {smDown && (
                   <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
