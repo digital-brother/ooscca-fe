@@ -65,14 +65,14 @@ function Error({ children }) {
   );
 }
 
-function FormikNonFieldErrors() {
-  const { errors } = useFormikContext();
+function FormikErrors() {
+  const { status } = useFormikContext();
+  if (status?.submissionError) return <Error>{status.submissionError}</Error>;
 
-  if (!errors.nonFieldErrors) return null;
-  return (
+  if (status?.nonFieldErrors) return (
     <Box>
-      {errors.nonFieldErrors.map((error, index) => (
-        <Typography key={index}>{error}</Typography>
+      {status.nonFieldErrors.map((error, index) => (
+        <Error key={index}>{error}</Error>
       ))}
     </Box>
   );
@@ -753,7 +753,7 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
             />
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
-          <FormikNonFieldErrors />
+          <FormikErrors />
           <SmFlex sx={{ mt: { xs: 2, sm: "auto" } }}>
             <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
               Cancel
@@ -787,7 +787,7 @@ function StartSlide({ scrollNext, sx }) {
   );
 }
 
-function Description() {
+function DescriptionForm() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
@@ -828,6 +828,7 @@ function Description() {
           <Button variant="contained" color="green" size="large" type="submit">
             Save
           </Button>
+          <FormikErrors />
         </Stack>
       </Form>
     </Formik>
@@ -874,7 +875,7 @@ export default function Activities() {
           mx: "auto",
         }}
       >
-        <Description />
+        <DescriptionForm />
         <Box
           ref={slideRef}
           sx={{
