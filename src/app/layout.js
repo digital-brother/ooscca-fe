@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
 import * as React from "react";
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import Header from "@/app/Header";
 import Footer from "@/app/Footer";
-import {QueryClient, QueryClientProvider} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export default function RootLayout({ children }) {
   return (
