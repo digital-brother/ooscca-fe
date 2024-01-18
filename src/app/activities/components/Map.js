@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
-import { GoogleMap, Marker, LoadScript, StandaloneSearchBox } from "@react-google-maps/api";
+import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
 import { Button, TextField } from "@mui/material";
 
@@ -13,7 +13,16 @@ const defaultMapLocation = {
 export default function Map() {
   const [map, setMap] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [lastClickedMarker, setLastClickedMarker] = useState(null);
   const searchBoxRef = useRef(null);
+  const geocoderRef = useRef(null);
+
+  const handleMapLoad = useCallback((map) => {
+    setMap(map);
+    geocoderRef.current = new window.google.maps.Geocoder(); // Create the geocoder here
+  }, []);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
@@ -29,15 +38,52 @@ export default function Map() {
         lat: location.lat(),
         lng: location.lng(),
       });
+
+      setSelectedPlace({ formatted_address: place.formatted_address, geometry: { location: location } });
+      setInfoOpen(true);
+
+      if (map) {
+        map.setZoom(15);
+        map.panTo(location);
+      }
+    }
+
+    if (map) {
+      // Set a closer zoom level, for example, 15
+      map.setZoom(15);
       map.panTo(location);
     }
   };
 
+  const handleMarkerClick = (markerLatLng) => {
+    if (lastClickedMarker && lastClickedMarker.lat === markerLatLng.lat && lastClickedMarker.lng === markerLatLng.lng) {
+      // Remove marker if the same one is clicked again
+      setMarkerPosition(null);
+      setInfoOpen(false);
+      setSelectedPlace(null);
+      setLastClickedMarker(null);
+    } else {
+      setLastClickedMarker(markerLatLng);
+    }
+  };
+
   const handleMapClick = (event) => {
+    const latLng = event.latLng;
     setMarkerPosition({
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
+      lat: latLng.lat(),
+      lng: latLng.lng(),
     });
+    setLastClickedMarker({ lat: latLng.lat(), lng: latLng.lng() });
+
+    if (geocoderRef.current) {
+      geocoderRef.current.geocode({ location: latLng }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          setSelectedPlace({ formatted_address: results[0].formatted_address });
+          setInfoOpen(true);
+          console.log(results[0].formatted_address);
+        }
+      });
+    }
   };
 
   return (
@@ -69,10 +115,23 @@ export default function Map() {
             mapContainerStyle={{ width: "100%", height: "100%" }}
             center={defaultMapLocation}
             zoom={10}
-            onLoad={setMap}
+            onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {markerPosition && <Marker position={markerPosition} />}
+            {markerPosition && (
+              <Marker position={markerPosition} onClick={() => handleMarkerClick(markerPosition)}>
+                {infoOpen && selectedPlace && (
+                  <InfoWindow position={markerPosition} onCloseClick={() => setInfoOpen(false)}>
+                    <div>
+                      <strong>{selectedPlace.formatted_address}</strong>
+                      <p>
+                        Coords: {markerPosition.lat.toFixed(3)}, {markerPosition.lng.toFixed(3)}
+                      </p>
+                    </div>
+                  </InfoWindow>
+                )}
+              </Marker>
+            )}
           </GoogleMap>
         </Box>
       </LoadScript>
