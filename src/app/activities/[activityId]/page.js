@@ -786,6 +786,11 @@ function DescriptionForm() {
             label="Highlight important details here"
             multiline
             rows={9}
+            inputProps={{
+              style: {
+                fontWeight: 700,
+              },
+            }}
           />
           <Button variant="contained" color="green" size="large" type="submit">
             Save

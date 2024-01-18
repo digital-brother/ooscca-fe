@@ -19,6 +19,7 @@ const baseTheme = createTheme();
 const theme = createTheme({
   palette: {
     mode: "light",
+    primary: colors.orange,
     ...colors,
   },
   typography: {
