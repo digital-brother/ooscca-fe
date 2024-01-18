@@ -3,8 +3,6 @@ import axios from "axios";
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 // TODO: Remove once auth is set
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
-export const TEST_PROVIDER_ID = process.env.NEXT_PUBLIC_TEST_PROVIDER_ID;
-export const TEST_DISCOUNT_ID = process.env.NEXT_PUBLIC_TEST_DISCOUNT_ID;
 
 // TODO: Update, so that urls explicitly include slashes
 const PROVIDERS_PATH = "providers/";
