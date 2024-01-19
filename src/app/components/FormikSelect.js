@@ -67,20 +67,24 @@ export function FormikSelectNew({ items=[], valueField="id", titleField="name" }
     setAge(event.target.value);
   };
 
-  const labelId = uuid();
   return (
-    <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id={labelId}>Age</InputLabel>
-      <MUISelect labelId={labelId} id="demo-simple-select-filled" value={age} onChange={handleChange}>
+    <FormControl sx={{ m: 1, minWidth: 120 }}>
+      <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+      <MUISelect
+        labelId="demo-simple-select-helper-label"
+        id="demo-simple-select-helper"
+        value={age}
+        label="Age"
+        onChange={handleChange}
+      >
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
-        {items.map((item) => (
-          <MenuItem key={item[valueField]} value={item[valueField]}>
-            {item[titleField]}
-          </MenuItem>
-        ))}
+        <MenuItem value={10}>Ten</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
       </MUISelect>
+      <FormHelperText>With label + helper text</FormHelperText>
     </FormControl>
   );
 }
