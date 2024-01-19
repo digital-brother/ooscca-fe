@@ -99,11 +99,8 @@ function Day({
 
         cursor: disabled ? "default" : "pointer",
         backgroundColor,
-        // TODO: Rationalize this
-        // boxSizing: "border-box",
 
         color: disabled ? "#AAA" : "#666",
-        // TODO: Ratinalize with CssGrid
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -274,7 +271,6 @@ function WeekDays({ sx }) {
     <CalendarCssGrid sx={sx}>
       {daysOfWeek.map((day, index) => (
         <Typography
-          // TODO: Refactor sx
           sx={{ color: "#333", display: "flex", alignItems: "center", justifyContent: "center" }}
           key={`day-${index}`}
         >
@@ -308,14 +304,14 @@ function MonthSwitcher({ month, setMonth }) {
   );
 }
 
-export default function Calendar({ name, sx, degug, dateRanges, setDateRanges }) {
+export default function Calendar({ name, sx, dateRanges, setDateRanges }) {
   const [month, setMonth] = useState(dayjs());
 
   return (
     <Box sx={{ minWidth: 270, ...sx }} name={name}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
-      <Days month={month} {...{degug, dateRanges, setDateRanges }} />
+      <Days month={month} {...{dateRanges, setDateRanges }} />
     </Box>
   );
 }

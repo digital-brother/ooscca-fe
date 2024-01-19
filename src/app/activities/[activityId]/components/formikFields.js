@@ -113,7 +113,7 @@ export function FormikTimeField(props) {
   );
 }
 
-export function FormikCalendarField({ name, sx, debug }) {
+export function FormikCalendarField({ name, sx }) {
   const [field, , helpers] = useField(name);
 
   const value = field.value.map((range) => ({
@@ -130,5 +130,5 @@ export function FormikCalendarField({ name, sx, debug }) {
     helpers.setValue(formikDateRanges);
   }
 
-  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{ name, sx, debug }} />;
+  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{ name, sx }} />;
 }
