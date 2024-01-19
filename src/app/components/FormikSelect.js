@@ -19,11 +19,11 @@ export function FormikSelect({ label, items, sx, name, containerSx }) {
         IconComponent={KeyboardArrowDownIcon}
         sx={{
           borderRadius: 1,
-          color: field.value ? "#0C0E0F" : "#6C757D",
+          color: field.value ? "grey.800" : "grey.600",
           fontWeight: 700,
           textAlign: "center",
           "& .MuiSelect-icon": {
-            color: field.value ? "#0C0E0F" : "#6C757D",
+            color: field.value ? "grey.800" : "grey.600",
           },
           ...sx,
         }}
@@ -35,9 +35,11 @@ export function FormikSelect({ label, items, sx, name, containerSx }) {
           </MenuItem>
         ))}
       </MUISelect>
-     { isError && <FormHelperText>
-        <ErrorMessage name={name} />
-      </FormHelperText>}
+      {isError && (
+        <FormHelperText>
+          <ErrorMessage name={name} />
+        </FormHelperText>
+      )}
     </FormControl>
   );
 }
