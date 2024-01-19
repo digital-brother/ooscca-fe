@@ -9,6 +9,7 @@ import { Button, IconButton } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 
 export function ImageInput({ multiple, handleAppend, ...props }) {
+  const fileInput = React.useRef();
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
@@ -20,32 +21,82 @@ export function ImageInput({ multiple, handleAppend, ...props }) {
   });
 
   return (
-    <Box
-      {...getRootProps({
-        sx: {
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: props?.sx.backgroundColor || props?.sx.bgColor || "grey.200",
-          gap: 1,
-          ...props.sx,
-        },
-      })}
-    >
-      <input {...getInputProps()} />
+    <Box sx={{ height: "100%", p: 2 }}>
+      <Box
+        {...getRootProps({
+          sx: {
+            height: "100%",
+            display: { xs: "none", md: "flex" },
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: props?.sx.backgroundColor || props?.sx.bgColor || "grey.200",
+            gap: 1,
+            ...props.sx,
+          },
+        })}
+      >
+        <input {...getInputProps()} />
 
-      <Typography sx={{ fontWeight: 700 }}>
-        Drop your image file here or &nbsp;
-        <span style={{ cursor: "pointer", color: "purple.500" }}>browse</span>
-      </Typography>
+        <Typography sx={{ fontWeight: 700 }}>
+          Drop your image file here or &nbsp;
+          <span style={{ cursor: "pointer", color: "purple" }}>browse</span>
+        </Typography>
 
-      <Typography variant="caption">
-        Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px
-      </Typography>
+        <Typography variant="caption">
+          Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px
+        </Typography>
+      </Box>
+
+      <Box sx={{
+        height: "100%",
+        display: { xs: "flex", md: "none" },
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: props?.sx.backgroundColor || props?.sx.bgColor || "grey.200",
+        gap: 1,
+        alignItems: "center",
+        width: "100%",
+        ...props.sx,
+      }}>
+        <Button
+          variant="contained"
+          onClick={()=>fileInput.current.click()}
+          sx={{
+            backgroundColor: "white",
+            height: 55,
+            py: 1.7,
+            selfAlign: "center",
+            width: "65%",
+            borderRadius: 2,
+          }}
+          color="grey"
+        >
+          <Typography sx={{
+            color: "black",
+            textAlign: "center",
+            fontFamily: "Manrope",
+            fontSize: 16,
+            fontStyle: "normal",
+            fontWeight: 700,
+          }}>
+            Upload images
+          </Typography>
+        </Button>
+
+        <input
+          ref={fileInput}
+          type="file"
+          style={{ display: 'none' }}
+          accept="image/*" // Only allow image files
+          onChange={(e) => handleAppend(Array.from(e.target.files))}
+          multiple={multiple}
+        />
+      </Box>
     </Box>
   );
+
 }
 
 function ImagePreview({ files, setConfirmDelete }) {
@@ -107,8 +158,19 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
         justifyContent: "center",
       }}
     >
-      <Typography sx={{ fontWeight: 700, marginBottom: 2 }}>
+      <Typography sx={{ fontWeight: 700, mb: 2, display: { xs: "none", md: "block" }, px: "10%", textAlign: "center" }}>
         Are you sure you want to delete the file?
+      </Typography>
+      <Typography sx={{
+        fontWeight: 700,
+        mb: 2,
+        display: { xs: "block", md: "none" },
+        textAlign: "center",
+        fontSize: 24,
+        fontStyle: "normal",
+        fontWeight: 700,
+      }}>
+        Edit Image
       </Typography>
       <Box
         sx={{
@@ -133,7 +195,7 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
           <Typography sx={{
             color: "grey.800",
             textAlign: "center",
-            // fontFamily: "Manrope",
+            fontFamily: "Manrope",
             fontSize: 15,
             fontStyle: "normal",
             fontWeight: 700,
@@ -155,7 +217,7 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
           <Typography sx={{
             color: "white",
             textAlign: "center",
-            // fontFamily: "Manrope",
+            fontFamily: "Manrope",
             fontSize: 15,
             fontStyle: "normal",
             fontWeight: 700,
@@ -170,7 +232,6 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
 }
 
 export default function DropZoneImageUpload({files, handleAppend, handleDelete, ...props}) {
-  // const [files, setFiles] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState();
 
 

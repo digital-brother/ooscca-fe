@@ -144,24 +144,29 @@ export default function ImagesBlock() {
           key={i}
           sx={{
             backgroundColor: "grey.200",
-            height: 396,
+            height: { xs: 232, md: 396 },
             width: "100%",
             borderRadius: 4,
-            border: "1px #ADB5BD solid",  // #grey 400
+            border: "1px #ADB5BD solid",
           }}
         />
-        <Box sx={{
-            color: messageColor,
-            fontSize: 16,
-            fontFamily: "Manrope",
-            fontStyle: "normal",
-            fontWeight: "400",
-            lineHeight: 1,
-            letterSpacing: 0.09,
-            mt: 0.8,
-          }}
-        >
-          {messageTexts.map(text => (<Box>{text}</Box>))}
+        <Box>
+          {messageTexts.map(text => (
+            <Box>
+              <Typography sx={{
+                color: messageColor,
+                fontSize: 16,
+                fontFamily: "Manrope",
+                fontStyle: "normal",
+                fontWeight: "400",
+                lineHeight: 1,
+                letterSpacing: 0.09,
+                mt: 0.8,
+              }}>
+                {text}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Grid>
     );
@@ -174,19 +179,20 @@ export default function ImagesBlock() {
       display: "flex",
       flexDirection: "column",
     }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={3.5}>
         <Grid item xs={12} sx={{ borderRadius: 8 }}>
           <Box sx={{
             backgroundColor: "grey.200",
-            borderRadius: {sx: 0, md: 4},
+            borderRadius: 4,
             border: "1px #ADB5BD solid",
             px: 5,
+            height: { xs: 416, md: 416 },
           }}>
             <Typography sx={{
               color: "black",
               py: 24,
               textAlign: "center",
-              // fontFamily: "Montserrat",
+              fontFamily: "Montserrat",
               fontSize: 20,
               fontStyle: "normal",
               fontWeight: 600,
