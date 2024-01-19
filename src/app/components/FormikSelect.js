@@ -60,18 +60,16 @@ export function FormikSelect({
   );
 }
 
-export function FormikSelectNew({ items, label, valueField="id", titleField="name", sx }) {
-  const [age, setAge] = React.useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
+export function FormikSelectNew({ name, items, label, sx, valueField = "id", titleField = "name" }) {
+  const [field] = useField(name);
   const labelId = uuid();
+
   return (
     <FormControl sx={{ minWidth: 120, ...sx }}>
       <InputLabel id={labelId}>{label}</InputLabel>
-      <MUISelect labelId={labelId} id="demo-simple-select-helper" value={age} label={label} onChange={handleChange}>
+
+      <MUISelect {...field} labelId={labelId} id="demo-simple-select-helper" label={label}>
+
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
@@ -80,7 +78,9 @@ export function FormikSelectNew({ items, label, valueField="id", titleField="nam
             {item[titleField]}
           </MenuItem>
         ))}
+
       </MUISelect>
+
       <FormHelperText>With label + helper text</FormHelperText>
     </FormControl>
   );
