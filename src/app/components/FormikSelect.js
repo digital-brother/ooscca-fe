@@ -2,7 +2,6 @@ import React from "react";
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select as MUISelect } from "@mui/material";
 import { ErrorMessage, useField } from "formik";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { v4 as uuid } from "uuid";
 
 export function FormikSelect({
   label,
@@ -17,10 +16,10 @@ export function FormikSelect({
   const [field, meta] = useField({ name, type: "select" });
 
   const isError = meta.touched && Boolean(meta.error);
-  const labelId = uuid();
+  const labelId = `${name}-select-label`;
 
   return (
-    <FormControl sx={containerSx} fullwidth>
+    <FormControl sx={containerSx} >
       <InputLabel id={labelId}>{label}</InputLabel>
       <MUISelect
         {...field}
@@ -62,7 +61,7 @@ export function FormikSelect({
 
 export function FormikSelectNew({ name, items, label, sx, valueField = "id", titleField = "name" }) {
   const [field, meta] = useField(name);
-  const labelId = uuid();
+  const labelId = `${name}-select-label`;
 
   return (
     <FormControl sx={{ minWidth: 120, ...sx }} error={meta.touched && meta.error}>
