@@ -117,6 +117,7 @@ function ImagePreview({ files, setConfirmDelete }) {
         />
       ))}
       <IconButton
+        color="grey"
         onClick={showImageDeleteConfirmation}
         sx={{
           position: "absolute",
@@ -184,6 +185,7 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
         <Button
           variant="outlined"
           onClick={imageDeleteCancel}
+          color="grey"
           sx={{
             flexGrow: 1,
             color: "black",
@@ -207,6 +209,7 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
         <Button
           variant="contained"
           onClick={imageDeleteConfirm}
+          color="grey"
           sx={{
             flexGrow: 1,
             backgroundColor: "grey.600",

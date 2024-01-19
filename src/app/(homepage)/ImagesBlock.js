@@ -59,7 +59,7 @@ export default function ImagesBlock() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: "images",
+    queryKey: "imagesWithMap",
     queryFn: () => getImagesWithMapBlock(),
     enabled: !filesLoaded,  // disable repeated requests
     onSuccess: (data) => {

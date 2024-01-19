@@ -5,7 +5,7 @@ import {Box, Button, Container, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useDrag, useDrop } from 'react-dnd';
 
-import {ImageInput} from "@/app/activities/components/LogoUploadDropzone";
+import {ImageInput} from "@/app/activities/[activityId]/components/ImageUploadDropzone";
 import { useMutation, useQuery } from "react-query";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -218,8 +218,8 @@ export default function UploadImages() {
       "position": file.position,
       "size": file.size,
       "activity": TEST_ACTIVITY_ID,
-      "image": file,
       "type": "with_list",
+      "image": file,
     }), {
     onSuccess: (data, variables, context) => {
       variables.error = null
@@ -235,7 +235,7 @@ export default function UploadImages() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: "images",
+    queryKey: "imagesWithList",
     queryFn: () => getImagesWithListBlock(),
     enabled: !filesLoaded,  // disable repeated requests
     onSuccess: (data) => {
@@ -300,7 +300,6 @@ export default function UploadImages() {
           position: file.positon,
           size: file.size,
           activity: TEST_ACTIVITY_ID,
-          type: "with_list",
         }));
         setFiles(updatedFiles => updatedFiles.filter(f => f !== null));
       } catch (error) {
@@ -308,6 +307,25 @@ export default function UploadImages() {
         console.error("Error saving images:", error);
       }
     }
+  }
+
+  async function handleDelete() {
+    files.filter(f => f?.position == i).map((file) => {
+      if (file?.id) {
+        deleteMutation.mutateAsync(file)
+      } else {
+        setFiles(files => files.filter(item => item !== _files[0]));
+      }
+    })
+  }
+
+  async function handleAppend(acceptedFiles) {
+    setFiles(files => [...files, ...acceptedFiles.map((file, index) => {
+        return Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      }),
+    ]);
   }
 
   return (
@@ -332,7 +350,7 @@ export default function UploadImages() {
         }}>Upload
         </Typography>
       </Box>
-      <ImageInput files={files} setFiles={setFiles} sx={{
+      <ImageInput files={files} handleAppend={handleAppend} multiple={true} sx={{
         backgroundColor: "#DEE2E6",
         height: 110,
         borderRadius: "16px",
@@ -342,7 +360,7 @@ export default function UploadImages() {
         <FilesTable files={files} setFiles={setFiles} />
       )}
       {files.length !== 0 && (
-        <Button onClick={SaveButtonHandler} sx={{
+        <Button onClick={SaveButtonHandler} color="green" sx={{
           width: "20%",
           height: 37,
           py: 11,
