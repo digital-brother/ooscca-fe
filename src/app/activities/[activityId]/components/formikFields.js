@@ -10,12 +10,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
 
-export function createHandleSubmit({mutation, onSuccess = () => { }, throwError=false }) {
+export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
     setStatus(null);
     try {
       await mutation.mutateAsync(values);
-      onSuccess()
+      onSuccess();
     } catch (error) {
       // If status is 400, it means that DRF returned validation errors
       if (error?.response?.status === 400) {
@@ -26,7 +26,7 @@ export function createHandleSubmit({mutation, onSuccess = () => { }, throwError=
       } else {
         setStatus({ submissionError: error.message });
       }
-      if(throwError) throw error;
+      if (throwError) throw error;
     }
   };
 }
@@ -130,5 +130,5 @@ export function FormikCalendarField({ name, sx }) {
     helpers.setValue(formikDateRanges);
   }
 
-  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{ name, sx }} />;
+  return <Calendar dateRanges={value} setDateRanges={handleChange} sx={sx} />;
 }

@@ -304,14 +304,14 @@ function MonthSwitcher({ month, setMonth }) {
   );
 }
 
-export default function Calendar({ name, sx, dateRanges, setDateRanges }) {
+export default function Calendar({ sx, dateRanges, setDateRanges }) {
   const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={{ minWidth: 270, ...sx }} name={name}>
+    <Box sx={{ minWidth: 270, ...sx }}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
-      <Days month={month} {...{dateRanges, setDateRanges }} />
+      <Days month={month} {...{ dateRanges, setDateRanges }} />
     </Box>
   );
 }
