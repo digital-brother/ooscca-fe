@@ -89,9 +89,9 @@ function Day({
   let backgroundColor = "transparent";
   if (disabled);
   else if (isDayInHoveredDateRange) {
-    backgroundColor = palette.yellow[300];
+    backgroundColor = "yellow.300";
   } else if (isInDateRange) {
-    backgroundColor = palette.yellow[400];
+    backgroundColor = "yellow.400";
   }
 
   return (
@@ -103,7 +103,7 @@ function Day({
         cursor: disabled ? "default" : "pointer",
         backgroundColor,
 
-        color: disabled ? palette.grey[400] : palette.grey[500],
+        color: disabled ? "grey.400" : "grey.500",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -268,14 +268,13 @@ function Days({ month, dateRanges, setDateRanges, debug }) {
 }
 
 function WeekDays({ sx }) {
-  const palette = useTheme().palette;
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <CalendarCssGrid sx={sx}>
       {daysOfWeek.map((day, index) => (
         <Typography
-          sx={{ color: palette.grey[700], display: "flex", alignItems: "center", justifyContent: "center" }}
+          sx={{ color: "grey.700", display: "flex", alignItems: "center", justifyContent: "center" }}
           key={`day-${index}`}
         >
           {day}
@@ -286,8 +285,7 @@ function WeekDays({ sx }) {
 }
 
 function MonthSwitcher({ month, setMonth }) {
-  const palette = useTheme().palette;
-  const iconProps = { sx: { color: palette.grey[700], fontSize: 28 } };
+  const iconProps = { sx: { color: "grey.700", fontSize: 28 } };
 
   const handleNextMonth = () => {
     setMonth((prevMonth) => prevMonth.add(1, "month"));
@@ -298,7 +296,7 @@ function MonthSwitcher({ month, setMonth }) {
   };
   return (
     <Box sx={{ display: "flex", justifyContent: "right", alignItems: "center", gap: 1 }}>
-      <Typography sx={{ color: palette.grey[700], fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
+      <Typography sx={{ color: "grey.700", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
       <IconButton size="small" sx={{ p: 0 }} onClick={handlePrevMonth}>
         <KeyboardArrowLeftRoundedIcon {...iconProps} />
       </IconButton>
