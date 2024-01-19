@@ -400,8 +400,11 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  const initialAgeType = activity?.ageFrom && activity?.ageTo ? "range" : "single";
-  const [ageType, setAgeType] = React.useState(initialAgeType);
+  const [ageType, setAgeType] = React.useState("single");
+  useEffect(() => {
+    const newAgeType = activity?.ageFrom && activity?.ageTo ? "range" : "single";
+    setAgeType(newAgeType);
+  }, [activity])
   const handleAgeTypeChange = (event) => {
     setAgeType(event.target.value);
   };
