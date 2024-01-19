@@ -222,86 +222,6 @@ function ActivityDetails({ sx }) {
   );
 }
 
-function TermsAndConditions({ setTermsCoditionsOpen }) {
-  const activityId = useParams().activityId;
-  const editorRef = useRef(null);
-
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
-  const { data: provider } = useQuery(["provider", activity?.provider], () => patchProvider(activity?.provider));
-  const mutation = useMutation((data) => patchProvider(activity?.provider, data));
-  const [error, setError] = useState(null);
-
-  function handleSave() {
-    const content = editorRef.current.getContent();
-    mutation.mutate(
-      { termsAndConditions: content },
-      {
-        onError: (error) => setError(error?.response?.data?.termsAndConditions || error.message),
-        onSuccess: () => {
-          setError(null);
-          setTermsCoditionsOpen(false);
-        },
-      }
-    );
-  }
-
-  return (
-    <Box sx={{ minWidth: 500, minHeight: 500, p: 7 }}>
-      <Typography variant="h3" textAlign="center">
-        Add your Terms & Contitions here
-      </Typography>
-      <Box sx={{ mt: 5 }}>
-        {/* Component is not controlled here for performance reasons
-        (https://www.tiny.cloud/docs/tinymce/latest/react-ref/#using-the-tinymce-react-component-as-a-controlled-component) */}
-        <Editor
-          initialValue={provider?.termsAndConditions}
-          apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
-          onInit={(evt, editor) => (editorRef.current = editor)}
-          init={{
-            height: 500,
-            menubar: false,
-            statusbar: false,
-            plugins: [
-              "advlist",
-              "autolink",
-              "lists",
-              "link",
-              "image",
-              "charmap",
-              "anchor",
-              "searchreplace",
-              "visualblocks",
-              "code",
-              "fullscreen",
-              "insertdatetime",
-              "media",
-              "table",
-              "preview",
-              "help",
-              "wordcount",
-            ],
-            toolbar:
-              "undo redo | blocks | " +
-              "bold italic forecolor | alignleft aligncenter " +
-              "alignright alignjustify | bullist numlist outdent indent | " +
-              "removeformat | help",
-            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-          }}
-        />
-      </Box>
-      <Error>{error}</Error>
-      <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
-        <Button variant="outlined" color="grey" size="large" onClick={() => setTermsCoditionsOpen(false)}>
-          Cancel
-        </Button>
-        <Button onClick={handleSave} variant="contained" color="green">
-          Save
-        </Button>
-      </Box>
-    </Box>
-  );
-}
-
 function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
   const { activityId } = useParams();
@@ -444,7 +364,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
-  // const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   async function handleMultipleSubmit() {
     try {
@@ -461,19 +380,6 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         <Typography sx={{ mt: 2, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
-
-        {/* TODO: Fix styling to link */}
-        {/* <Button variant="contained" sx={{ mt: 3 }} onClick={() => setTermsCoditionsOpen(true)}>
-          Terms and Conditions
-        </Button>
-
-        <Dialog
-          onClose={() => setTermsCoditionsOpen(false)}
-          open={termsCoditionsOpen}
-          PaperProps={{ sx: { maxWidth: "none" } }}
-        >
-          <TermsAndConditions {...{ setTermsCoditionsOpen }} />
-        </Dialog> */}
       </Box>
 
       <SmFlex sx={{ mt: { xs: 3, sm: "auto" }, rowGap: 1 }}>
