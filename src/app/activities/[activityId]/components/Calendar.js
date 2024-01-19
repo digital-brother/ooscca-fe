@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import { Box, IconButton, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+
 import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import isBetween from "dayjs/plugin/isBetween";
@@ -40,6 +42,7 @@ function Day({
   setHoveredDay,
 }) {
   const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
+  const palette = useTheme().palette;
 
   let borderRadiusSx = { borderRadius: 5 };
   if (isDateRangeStart && isDateRangeEnd);
@@ -78,17 +81,17 @@ function Day({
   let borderColorSx = { border: "2px solid transparent" };
   if (disabled);
   else if (isHovered && isNewDateRangeStartDate) {
-    borderColorSx = { border: "2px solid #997706" };
+    borderColorSx = { border: `2px solid ${palette.yellow[700]}` };
   } else if ((isHovered && !isDayInHoveredDateRange) || isNewDateRangeStartDate) {
-    borderColorSx = { border: "2px solid #FFC50A" };
+    borderColorSx = { border: `2px solid ${palette.yellow[400]}` };
   }
 
   let backgroundColor = "transparent";
   if (disabled);
   else if (isDayInHoveredDateRange) {
-    backgroundColor = "#ffe285";
+    backgroundColor = palette.yellow[300];
   } else if (isInDateRange) {
-    backgroundColor = "#FFC50A";
+    backgroundColor = palette.yellow[400];
   }
 
   return (
@@ -100,7 +103,7 @@ function Day({
         cursor: disabled ? "default" : "pointer",
         backgroundColor,
 
-        color: disabled ? "#AAA" : "#666",
+        color: disabled ? palette.grey[400] : palette.grey[500],
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -265,13 +268,14 @@ function Days({ month, dateRanges, setDateRanges, debug }) {
 }
 
 function WeekDays({ sx }) {
+  const palette = useTheme().palette;
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <CalendarCssGrid sx={sx}>
       {daysOfWeek.map((day, index) => (
         <Typography
-          sx={{ color: "#333", display: "flex", alignItems: "center", justifyContent: "center" }}
+          sx={{ color: palette.grey[700], display: "flex", alignItems: "center", justifyContent: "center" }}
           key={`day-${index}`}
         >
           {day}
@@ -282,7 +286,8 @@ function WeekDays({ sx }) {
 }
 
 function MonthSwitcher({ month, setMonth }) {
-  const iconProps = { sx: { color: "#333", fontSize: 28 } };
+  const palette = useTheme().palette;
+  const iconProps = { sx: { color: palette.grey[700], fontSize: 28 } };
 
   const handleNextMonth = () => {
     setMonth((prevMonth) => prevMonth.add(1, "month"));
@@ -293,7 +298,7 @@ function MonthSwitcher({ month, setMonth }) {
   };
   return (
     <Box sx={{ display: "flex", justifyContent: "right", alignItems: "center", gap: 1 }}>
-      <Typography sx={{ color: "#333", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
+      <Typography sx={{ color: palette.grey[700], fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
       <IconButton size="small" sx={{ p: 0 }} onClick={handlePrevMonth}>
         <KeyboardArrowLeftRoundedIcon {...iconProps} />
       </IconButton>
