@@ -81,7 +81,6 @@ function FormikErrors() {
 const SmFlex = styled(Box)(({ theme }) => ({
   display: "flex",
   columnGap: "0.5rem",
-  rowGap: "0.75rem",
   [theme.breakpoints.up("xs")]: {
     flexDirection: "column",
     textAlign: "center",
@@ -196,7 +195,7 @@ function ActivityDetails({ sx }) {
       {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
         <SmFlex>
           <b>Discounts applied:</b>{" "}
-          <Box sx={{ ml: { sm: "auto" }, textAlign: "right" }}>
+          <Box sx={{ ml: { sm: "auto" }, textAlign: { xs: "center", sm: "right" } }}>
             {earlyDiscount?.enabled && (
               <Typography>
                 Early birds ({earlyDiscount?.percent}%){" "}
@@ -399,7 +398,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
       <ActivityDetails sx={{ flex: 1 }} />
 
       <Error>{mutation.isError && mutation.error.message}</Error>
-      <SmFlex sx={{ mt: 3 }}>
+      <SmFlex sx={{ mt: 3, rowGap: 1 }}>
         {smDown && (
           <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
             Cancel
@@ -461,7 +460,7 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         </Dialog> */}
       </Box>
 
-      <SmFlex sx={{ mt: { xs: 3, sm: "auto" } }}>
+      <SmFlex sx={{ mt: { xs: 3, sm: "auto" }, rowGap: 1 }}>
         {smDown && (
           <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
             Cancel
@@ -679,7 +678,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
               <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
               <FormikErrors />
-              <SmFlex sx={{ mt: 2 }}>
+              <SmFlex sx={{ mt: 2, rowGap: 1 }}>
                 {smDown && (
                   <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
                     Cancel
@@ -729,7 +728,7 @@ function DatesSlide({ scrollNext, close }) {
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <FormikErrors />
-          <SmFlex sx={{ mt: { xs: 2, sm: "auto" } }}>
+          <SmFlex sx={{ mt: { xs: 2, sm: "auto" }, rowGap: 1 }}>
             <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
               Cancel
             </Button>
