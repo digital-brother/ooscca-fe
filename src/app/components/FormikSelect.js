@@ -61,15 +61,14 @@ export function FormikSelect({
 }
 
 export function FormikSelectNew({ name, items, label, sx, valueField = "id", titleField = "name" }) {
-  const [field] = useField(name);
+  const [field, meta] = useField(name);
   const labelId = uuid();
 
   return (
-    <FormControl sx={{ minWidth: 120, ...sx }}>
+    <FormControl sx={{ minWidth: 120, ...sx }} error={meta.touched && meta.error}>
       <InputLabel id={labelId}>{label}</InputLabel>
 
       <MUISelect {...field} labelId={labelId} id="demo-simple-select-helper" label={label}>
-
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
@@ -78,10 +77,8 @@ export function FormikSelectNew({ name, items, label, sx, valueField = "id", tit
             {item[titleField]}
           </MenuItem>
         ))}
-
       </MUISelect>
-
-      <FormHelperText>With label + helper text</FormHelperText>
+      {meta.touched && meta.error && <FormHelperText> {meta.error} </FormHelperText>}
     </FormControl>
   );
 }
