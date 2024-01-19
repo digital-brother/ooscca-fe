@@ -383,6 +383,30 @@ function SavedSlide({ scrollNext, close }) {
   );
 }
 
+function CancelButton({ onClick }) {
+  return (
+    <Button variant="outlined" color="grey" size="large" fullWidth onClick={onClick}>
+      Cancel
+    </Button>
+  );
+}
+
+function GoBackButton({ onClick }) {
+  return (
+    <Button variant="contained" color="grey" size="large" fullWidth onClick={onClick}>
+      Go back
+    </Button>
+  );
+}
+
+function NextButton({ onClick, label = "Next" }) {
+  return (
+    <Button onClick={onClick} variant="contained" fullWidth color="green" type="submit">
+      {label}
+    </Button>
+  );
+}
+
 function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const { activityId } = useParams();
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -399,17 +423,9 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
 
       <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3, rowGap: 1 }}>
-        {smDown && (
-          <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-            Cancel
-          </Button>
-        )}
-        <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
-          Go back
-        </Button>
-        <Button onClick={handleSave} variant="contained" fullWidth color="green">
-          Save
-        </Button>
+        {smDown && <CancelButton onClick={close} />}
+        <GoBackButton onClick={scrollPrev} />
+        <NextButton onClick={handleSave} label="Save" />
       </SmFlex>
       <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
@@ -461,17 +477,9 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
       </Box>
 
       <SmFlex sx={{ mt: { xs: 3, sm: "auto" }, rowGap: 1 }}>
-        {smDown && (
-          <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-            Cancel
-          </Button>
-        )}
-        <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
-          Go back
-        </Button>
-        <Button onClick={handleMultipleSubmit} variant="contained" fullWidth type="submit" color="green">
-          Next
-        </Button>
+        {smDown && <CancelButton onClick={close} />}
+        <GoBackButton onClick={scrollPrev} />
+        <NextButton onClick={handleMultipleSubmit} />
       </SmFlex>
       <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
@@ -505,6 +513,8 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
       <>
         <SlideHeader label="Keep editing" close={close} />
         <Formik
+          onSubmit={handleSubmit}
+          enableReinitialize
           initialValues={{
             startTime: activity.startTime,
             endTime: activity.endTime,
@@ -585,7 +595,6 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
             level: Yup.string().max(64),
             capacity: numericSchema.label("Capacity").required().max(999),
           })}
-          onSubmit={handleSubmit}
         >
           <Form>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
@@ -679,17 +688,9 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
 
               <FormikErrors />
               <SmFlex sx={{ mt: 2, rowGap: 1 }}>
-                {smDown && (
-                  <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-                    Cancel
-                  </Button>
-                )}
-                <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
-                  Go back
-                </Button>
-                <Button variant="contained" size="large" fullWidth type="submit" color="green">
-                  Next
-                </Button>
+                {smDown && <CancelButton onClick={close} />}
+                <GoBackButton onClick={scrollPrev} />
+                <NextButton />
               </SmFlex>
             </LocalizationProvider>
           </Form>
@@ -729,12 +730,8 @@ function DatesSlide({ scrollNext, close }) {
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <FormikErrors />
           <SmFlex sx={{ mt: { xs: 2, sm: "auto" }, rowGap: 1 }}>
-            <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-              Cancel
-            </Button>
-            <Button variant="contained" size="large" fullWidth type="submit" color="green">
-              Next
-            </Button>
+            <CancelButton onClick={close} />
+            <NextButton />
           </SmFlex>
         </Form>
       </Formik>

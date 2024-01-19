@@ -54,13 +54,13 @@ export async function getProvider(providerId) {
   return response.data;
 }
 export async function patchProvider(providerId, data, file) {
-  let formData = new FormData();
+  const formData = new FormData();
 
   // TODO: Refactor to a generic solution
   if (file) formData.append("logo", file, file.name);
 
   for (const key in data) {
-    if (data.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
       formData.append(key, data[key]);
     }
   }
