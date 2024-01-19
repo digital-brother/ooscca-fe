@@ -60,11 +60,11 @@ export function FormikSelect({
   );
 }
 
-export function FormikSelectNew({ name, items, label, sx, valueField = "id", titleField = "name" }) {
+export function FormikSelectNew({ name, items, label, sx, variant, valueField = "id", titleField = "name" }) {
   const [field, meta] = useField(name);
 
   return (
-    <FormControl sx={{ minWidth: 120, ...sx }} error={meta.touched && Boolean(meta.error)}>
+    <FormControl error={meta.touched && Boolean(meta.error)} sx={{ minWidth: 120, ...sx }} variant={variant}>
       <InputLabel>{label}</InputLabel>
 
       <MUISelect {...field} label={label}>
