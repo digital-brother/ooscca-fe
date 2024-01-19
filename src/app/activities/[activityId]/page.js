@@ -59,7 +59,7 @@ dayjs.extend(isSameOrBefore);
 function Error({ children }) {
   return (
     children && (
-      <Typography sx={{ mt: 1, textAlign: "center", color: "#E72A2A", fontWeight: 500 }}>{children}</Typography>
+      <Typography sx={{ mt: 1, textAlign: "center", color:"error.main", fontWeight: 600 }}>{children}</Typography>
     )
   );
 }
@@ -99,7 +99,7 @@ function SlideHeader({ label, close }) {
 
       {smUp && (
         <IconButton size="small" onClick={close}>
-          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+          <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
         </IconButton>
       )}
     </Box>
@@ -131,8 +131,8 @@ function ActivityDetails({ sx }) {
         spacing={1}
         sx={{ position: { xs: "static", sm: "absolute" }, right: 0, width: { xs: "50%", sm: "max-content" } }}
       >
-        <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
-        <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
+        <Chip label="Early birds" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
+        <Chip label="Ending soon" sx={{ bgcolor: "blue.main", color: "common.white" }} />
       </Stack>
 
       <SmFlex>
@@ -167,7 +167,7 @@ function ActivityDetails({ sx }) {
           {parseFloat(activity?.earlyDropOffPrice) ? (
             <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
           ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
           )}
         </SmFlex>
       )}
@@ -177,7 +177,7 @@ function ActivityDetails({ sx }) {
           {parseFloat(activity?.latePickUpPrice) ? (
             <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
           ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
           )}
         </SmFlex>
       )}
@@ -843,7 +843,8 @@ export default function Activities() {
             width: "100%",
             maxWidth: 540,
             minHeight: 600,
-            border: "1px solid #6C757D",
+            border: "1px solid",
+            borderColor: "grey.main",
             borderRadius: 4,
             px: 4,
             pt: 2.4,

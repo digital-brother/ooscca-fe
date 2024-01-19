@@ -34,7 +34,7 @@ export const yellow = {
   900: "#3D2B06",
 };
 
-export const pink = {
+export const magenta = {
   100: "#FFD5E8",
   200: "#FFABD1",
   300: "#FF81BA",
@@ -83,7 +83,7 @@ export const grey = {
   900: "#8C8C8C",
 };
 
-const colorsPure = { purple, orange, yellow, pink, green, blue };
+const colorsPure = { purple, orange, yellow, magenta, green, blue };
 
 const colorsDefault = Object.fromEntries(
   Object.entries(colorsPure).map(([colorName, color]) => [
