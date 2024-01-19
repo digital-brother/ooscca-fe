@@ -13,21 +13,24 @@ import {
   TEST_PROVIDER_ID,
 } from "@/app/activities/[activityId]/api.mjs";
 
-export function ImageInput({ files, setFiles, ...props }) {
+function LogoInput({ setFiles }) {
+  const mutation = useMutation((file) => patchProvider(TEST_PROVIDER_ID, null, file));
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
     },
     onDrop: (acceptedFiles) => {
-      setFiles(files => [...files, ...acceptedFiles.map((file) =>
+      setFiles(
+        acceptedFiles.map((file) =>
           Object.assign(file, {
-            preview: URL.createObjectURL(file),
+            url: URL.createObjectURL(file),
           }),
         ),
-      ]);
-      mutation.mutate(acceptedFiles[0]);
+      );
+      mutation.mutate(acceptedFiles[0])
     },
-    multiple: true,
+    multiple: false,
   });
 
   return (
@@ -41,7 +44,6 @@ export function ImageInput({ files, setFiles, ...props }) {
           alignItems: "center",
           justifyContent: "center",
           gap: 1,
-          ...props.sx,
         },
       })}
     >
@@ -191,7 +193,7 @@ export default function DropZoneLogoUpload(props) {
           setConfirmDelete={setConfirmDelete}
         />
       )}
-      {files.length === 0 && <ImageInput setFiles={setFiles} />}
+      {files.length === 0 && <LogoInput setFiles={setFiles} />}
       {files.length !== 0 && (
         <LogoPreview files={files} setConfirmDelete={setConfirmDelete} />
       )}
