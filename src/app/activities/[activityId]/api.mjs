@@ -4,7 +4,6 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 // TODO: Remove once auth is set
 const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 
-// TODO: Update, so that urls explicitly include slashes
 const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
 const ACTIVITIES_PATH = "/activities";
@@ -44,7 +43,7 @@ export async function patchActivity(activityId, data) {
   const response = await client.patch(url, data);
   return response.data;
 }
-// TODO: Unify logic with provider api functions
+
 export async function getActivityTypes() {
   const response = await client.get(`${ACTIVITY_TYPES_PATH}/`);
   return response.data;

@@ -44,8 +44,8 @@ export function FormikTextField(props) {
 }
 
 // Passes "" from input to formik value as null.
-// DRF IntegerField raises "Valid integer is required" in such case.
-// * DRF DecimalField treats "" as null.
+// DRF IntegerField raises "Valid integer is required" in has "" passed.
+// DRF DecimalField treats "" as null.
 export function FormikNumericFormat(props) {
   const [field, meta, helpers] = useField(props);
 

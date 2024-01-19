@@ -1,8 +1,6 @@
 "use client";
 
-// TODO: Close button
 // TODO: Carousel height and dots
-// TODO: Style buttons
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useContext, useEffect, useRef, useState } from "react"; // added useEffect
@@ -705,9 +703,8 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   );
 }
 
-function DatesSlide({ scrollNext, scrollPrev, close }) {
+function DatesSlide({ scrollNext, close }) {
   const { activityId } = useParams();
-  // TODO: Add error handling
   const { data: activityTypes } = useQuery("activityTypes", getActivityTypes);
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));

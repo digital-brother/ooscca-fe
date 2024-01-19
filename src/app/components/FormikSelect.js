@@ -6,7 +6,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 export function FormikSelect({ label, items, sx, name, containerSx }) {
   const [field, meta] = useField({ name });
 
-  // TODO: Fix main page selects
   const isError = meta.touched && Boolean(meta.error);
 
   return (
