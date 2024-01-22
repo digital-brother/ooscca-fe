@@ -50,6 +50,7 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
+import { CancelButton, GoBackButton, NextButton } from "./components/buttons";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -281,30 +282,6 @@ function SavedSlide({ scrollNext, close }) {
         Publish the activity from account page
       </Typography>
     </>
-  );
-}
-
-function CancelButton({ onClick }) {
-  return (
-    <Button variant="outlined" color="grey" size="large" fullWidth onClick={onClick}>
-      Cancel
-    </Button>
-  );
-}
-
-function GoBackButton({ onClick }) {
-  return (
-    <Button variant="contained" color="grey" size="large" fullWidth onClick={onClick}>
-      Go back
-    </Button>
-  );
-}
-
-function NextButton({ onClick, label = "Next" }) {
-  return (
-    <Button onClick={onClick} variant="contained" fullWidth color="green" type="submit">
-      {label}
-    </Button>
   );
 }
 
