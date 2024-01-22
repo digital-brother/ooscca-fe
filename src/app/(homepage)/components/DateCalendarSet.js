@@ -151,7 +151,7 @@ export function DateCalendarSet({ schoolHolidays, mt }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        mt: mt,
+        mt,
       }}
     >
       <IconButton
