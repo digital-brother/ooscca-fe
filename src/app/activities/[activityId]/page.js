@@ -1,6 +1,5 @@
 "use client";
 
-// TODO: Carousel height and dots
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useRef, useState } from "react";

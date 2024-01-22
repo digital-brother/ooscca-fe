@@ -123,7 +123,13 @@ export function FormikTimeField(props) {
 }
 
 export function FormikCalendarField({ name, sx }) {
-  const [field, , helpers] = useField(name);
+  const validateDateRanges = (dateRanges) => {
+    for (const dateRange of dateRanges) {
+      if (!dateRange.end) return "End date is required";
+    }
+  };
+
+  const [field, meta, helpers] = useField({ name, validate: validateDateRanges });
 
   const value = field.value.map((range) => ({
     start: dayjs(range.start, "YYYY-MM-DD"),
@@ -139,7 +145,12 @@ export function FormikCalendarField({ name, sx }) {
     helpers.setValue(formikDateRanges);
   }
 
-  return <Calendar dateRanges={value} setDateRanges={handleChange} sx={sx} />;
+  return (
+    <>
+      <Calendar dateRanges={value} setDateRanges={handleChange} sx={sx} />
+      {meta.touched && meta.error && <Error> {meta.error} </Error>}
+    </>
+  );
 }
 
 export function FormikSelect({ name, items, label, sx, variant, fullwidth, children }) {
@@ -183,4 +194,3 @@ export function Error({ children }) {
     )
   );
 }
-
