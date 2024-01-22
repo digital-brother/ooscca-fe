@@ -226,8 +226,8 @@ function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
   const { activityId } = useParams();
   const unitSelectItems = [
-    { id: "days", name: "Days" },
-    { id: "spaces", name: "Spaces" },
+    { value: "days", title: "Days" },
+    { value: "spaces", title: "Spaces" },
   ];
 
   const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
@@ -279,7 +279,13 @@ function DiscountForm({ type, discount, formRef }) {
         >
           <FormikNumberField name="percent" label="Percent" />
           <FormikNumberField name="amount" label="Amount" />
-          <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
+          <FormikSelect name="unit" sx={{ height: 56 }}>
+            {(unitSelectItems || []).map((unit) => (
+              <MenuItem key={unit.value} value={unit.value}>
+                {unit.title}
+              </MenuItem>
+            ))}
+          </FormikSelect>
         </Box>
         <FormikErrors />
       </Form>
@@ -625,16 +631,24 @@ function DatesSlide({ scrollNext, close }) {
         initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
         onSubmit={createHandleSubmit({ mutation, onSuccess: scrollNext })}
+        validationSchema={Yup.object({
+          type: numericSchema.label("Type").required(),
+        })}
       >
         <Form style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
-            <Typography sx={{ fontWeight: 700 }}>Activity</Typography>
             <FormikSelect
               label="Pick activity from list"
-              items={activityTypes || []}
               name="type"
               containerSx={{ width: "62%" }}
-            />
+              fullwidth
+            >
+              {(activityTypes || []).map((activityType) => (
+                <MenuItem key={activityType.id} value={activityType.id}>
+                  {activityType.name}
+                </MenuItem>
+              ))}
+            </FormikSelect>
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
           <FormikErrors />
