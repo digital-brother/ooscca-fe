@@ -17,7 +17,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
-import { Field, Form, Formik, useFormikContext } from "formik";
+import { Field, Form, Formik } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
@@ -30,6 +30,8 @@ import {
 } from "@/app/activities/[activityId]/api.mjs";
 import "dayjs/locale/en-gb";
 import {
+  FormikErrors,
+  Error,
   FormikSelect,
   FormikCalendarField,
   FormikCheckboxField,
@@ -50,28 +52,6 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
-
-function Error({ children }) {
-  return (
-    children && (
-      <Typography sx={{ mt: 1, textAlign: "center", color:"error.main", fontWeight: 600 }}>{children}</Typography>
-    )
-  );
-}
-
-function FormikErrors() {
-  const { status } = useFormikContext();
-  if (status?.submissionError) return <Error>{status.submissionError}</Error>;
-
-  if (status?.nonFieldErrors)
-    return (
-      <Box>
-        {status.nonFieldErrors.map((error, index) => (
-          <Error key={index}>{error}</Error>
-        ))}
-      </Box>
-    );
-}
 
 const SmFlex = styled(Box)(({ theme }) => ({
   display: "flex",

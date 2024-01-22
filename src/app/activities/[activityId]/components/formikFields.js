@@ -1,4 +1,4 @@
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
@@ -16,6 +16,8 @@ import {
   InputLabel,
   Select as MUISelect,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
@@ -159,3 +161,26 @@ export function FormikSelect({ name, items, label, sx, variant, fullwidth, child
     </FormControl>
   );
 }
+
+export function FormikErrors() {
+  const { status } = useFormikContext();
+  if (status?.submissionError) return <Error>{status.submissionError}</Error>;
+
+  if (status?.nonFieldErrors)
+    return (
+      <Box>
+        {status.nonFieldErrors.map((error, index) => (
+          <Error key={index}>{error}</Error>
+        ))}
+      </Box>
+    );
+}
+
+export function Error({ children }) {
+  return (
+    children && (
+      <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>{children}</Typography>
+    )
+  );
+}
+
