@@ -1,7 +1,6 @@
 import { useField } from "formik";
 import TextField from "@mui/material/TextField";
 import React from "react";
-import { Checkbox, FormControlLabel } from "@mui/material";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
@@ -9,6 +8,14 @@ import { NumericFormat } from "react-number-format";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Select as MUISelect,
+} from "@mui/material";
 
 export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
@@ -131,4 +138,24 @@ export function FormikCalendarField({ name, sx }) {
   }
 
   return <Calendar dateRanges={value} setDateRanges={handleChange} sx={sx} />;
+}
+
+export function FormikSelect({ name, items, label, sx, variant, fullwidth, children }) {
+  const [field, meta] = useField(name);
+
+  return (
+    <FormControl
+      error={meta.touched && Boolean(meta.error)}
+      sx={{ minWidth: 120, ...sx }}
+      variant={variant}
+      fullWidth={fullwidth}
+    >
+      <InputLabel>{label}</InputLabel>
+
+      <MUISelect {...field} label={label}>
+        {children}
+      </MUISelect>
+      {meta.touched && meta.error && <FormHelperText> {meta.error} </FormHelperText>}
+    </FormControl>
+  );
 }

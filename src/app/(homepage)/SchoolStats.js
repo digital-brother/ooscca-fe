@@ -8,10 +8,8 @@ import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { FormikSelect } from "@/app/components/FormikSelect";
 import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendarSet";
 import dayjs from "dayjs";
-import { Formik, Form } from "formik";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const SCHOOLS = [

@@ -3,11 +3,10 @@
 // TODO: Carousel height and dots
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useContext, useEffect, useRef, useState } from "react"; // added useEffect
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
-  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -15,7 +14,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
   useMediaQuery,
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
@@ -29,12 +27,10 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
-  patchProvider,
 } from "@/app/activities/[activityId]/api.mjs";
-import { FormikSelect } from "@/app/components/FormikSelect";
-import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
 import "dayjs/locale/en-gb";
 import {
+  FormikSelect,
   FormikCalendarField,
   FormikCheckboxField,
   FormikNumberField,
@@ -52,7 +48,6 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
-import { Editor } from "@tinymce/tinymce-react";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
