@@ -1,7 +1,12 @@
-/.idea/
-/node_modules/
-/.next/
+.idea/
+node_modules/
+.next/
 todo.txt
 src/app/sandbox/
 src/app/snippet/
 .yarn/
+.env.local
+alex.js
+alex.mjs
+.vscode/
+__pycache__/

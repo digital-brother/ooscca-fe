@@ -18,7 +18,7 @@ function SignUpForm() {
       <Typography variant="h2">Easy to get started. And it’s free.</Typography>
       <Box sx={{mt: 3, mb: 1}}>
         <TextField label="Email address" variant="outlined" size="small" sx={{mr: 2, mb: 1}}/>
-        <Button variant="contained" color="warning" size="large">Sign up</Button>
+        <Button variant="contained" color="orange" size="large">Sign up</Button>
       </Box>
 
       <Box sx={{display: "flex", alignItems: "center", justifyContent: {xs: "center", md: "left"}}}>
@@ -31,7 +31,7 @@ function SignUpForm() {
       <Divider sx={{mt: 2}}/>
       <Typography variant="h6" fontWeight="bold" mt={2}>
         Already using OOSCCA? &nbsp;
-        <span style={{color: theme.palette.warning.main}}>Sign in</span>
+        <span style={{color: theme.palette.orange.main}}>Sign in</span>
       </Typography>
     </Box>
   )
