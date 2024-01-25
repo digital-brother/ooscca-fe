@@ -19,6 +19,7 @@ const baseTheme = createTheme();
 const theme = createTheme({
   palette: {
     mode: "light",
+    primary: colors.orange,
     ...colors,
   },
   typography: {
@@ -118,9 +119,6 @@ const theme = createTheme({
     },
     MuiTextField: {
       defaultProps: {
-        InputProps: {
-          disableUnderline: true,
-        },
         sx: {
           "& .MuiFilledInput-root": {
             borderRadius: 1,

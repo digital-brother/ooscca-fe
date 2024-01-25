@@ -34,7 +34,7 @@ export const yellow = {
   900: "#3D2B06",
 };
 
-export const pink = {
+export const magenta = {
   100: "#FFD5E8",
   200: "#FFABD1",
   300: "#FF81BA",
@@ -83,14 +83,10 @@ export const grey = {
   900: "#8C8C8C",
 };
 
-export const red = {
-  500: "#E72A2A",
-}
+const colorsPure = { purple, orange, yellow, magenta, green, blue };
 
-const colorsMap = { purple, orange, yellow, pink, green, blue, red };
-
-const colorsPartial = Object.fromEntries(
-  Object.entries(colorsMap).map(([colorName, color]) => [
+const colorsDefault = Object.fromEntries(
+  Object.entries(colorsPure).map(([colorName, color]) => [
     colorName,
     {
       ...color,
@@ -103,6 +99,6 @@ const colorsPartial = Object.fromEntries(
 );
 
 export const colors = {
-  ...colorsPartial,
+  ...colorsDefault,
   grey: { ...grey, light: grey[500], main: grey[600], dark: "#000000", contrastText: "#FFFFFF" },
 };
