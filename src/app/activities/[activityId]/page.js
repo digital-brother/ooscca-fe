@@ -1,15 +1,11 @@
 "use client";
 
-// TODO: Close button
-// TODO: Carousel height and dots
-// TODO: Style buttons
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useContext, useEffect, useRef, useState } from "react"; // added useEffect
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
-  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -17,11 +13,10 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
   useMediaQuery,
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
-import { Field, Form, Formik, useFormikContext } from "formik";
+import { Field, Form, Formik } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
@@ -31,18 +26,19 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
-  patchProvider,
 } from "@/app/activities/[activityId]/api.mjs";
-import { FormikSelect } from "@/app/components/FormikSelect";
-import Carousel, { EmblaApiContext } from "@/app/activities/[activityId]/components/Carousel";
 import "dayjs/locale/en-gb";
 import {
+  FormikErrors,
+  Error,
+  FormikSelect,
   FormikCalendarField,
   FormikCheckboxField,
   FormikNumberField,
   FormikDecimalField,
   FormikTextField,
   FormikTimeField,
+  createHandleSubmit,
 } from "./components/formikFields";
 import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
@@ -53,35 +49,13 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
-import { Editor } from "@tinymce/tinymce-react";
+import { CancelButton, GoBackButton, NextButton } from "./components/buttons";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
-
-function Error({ children }) {
-  return (
-    children && (
-      <Typography sx={{ mt: 1, textAlign: "center", color: "#E72A2A", fontWeight: 500 }}>{children}</Typography>
-    )
-  );
-}
-
-function FormikNonFieldErrors() {
-  const { errors } = useFormikContext();
-
-  if (!errors.nonFieldErrors) return null;
-  return (
-    <Box>
-      {errors.nonFieldErrors.map((error, index) => (
-        <Typography key={index}>{error}</Typography>
-      ))}
-    </Box>
-  );
-}
 
 const SmFlex = styled(Box)(({ theme }) => ({
   display: "flex",
   columnGap: "0.5rem",
-  rowGap: "0.75rem",
   [theme.breakpoints.up("xs")]: {
     flexDirection: "column",
     textAlign: "center",
@@ -100,7 +74,7 @@ function SlideHeader({ label, close }) {
 
       {smUp && (
         <IconButton size="small" onClick={close}>
-          <HighlightOffRoundedIcon sx={{ color: "#000000", fontSize: 28 }} />
+          <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
         </IconButton>
       )}
     </Box>
@@ -132,8 +106,8 @@ function ActivityDetails({ sx }) {
         spacing={1}
         sx={{ position: { xs: "static", sm: "absolute" }, right: 0, width: { xs: "50%", sm: "max-content" } }}
       >
-        <Chip label="Early birds" sx={{ bgcolor: "#FF2E8C", color: "#FFFFFF" }} />
-        <Chip label="Ending soon" sx={{ bgcolor: "#23A6C9", color: "#FFFFFF" }} />
+        <Chip label="Early birds" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
+        <Chip label="Ending soon" sx={{ bgcolor: "blue.main", color: "common.white" }} />
       </Stack>
 
       <SmFlex>
@@ -168,7 +142,7 @@ function ActivityDetails({ sx }) {
           {parseFloat(activity?.earlyDropOffPrice) ? (
             <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
           ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
           )}
         </SmFlex>
       )}
@@ -178,7 +152,7 @@ function ActivityDetails({ sx }) {
           {parseFloat(activity?.latePickUpPrice) ? (
             <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
           ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "#00A551", fontWeight: 700 }}>FREE</Typography>
+            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
           )}
         </SmFlex>
       )}
@@ -196,7 +170,7 @@ function ActivityDetails({ sx }) {
       {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
         <SmFlex>
           <b>Discounts applied:</b>{" "}
-          <Box sx={{ ml: { sm: "auto" }, textAlign: "right" }}>
+          <Box sx={{ ml: { sm: "auto" }, textAlign: { xs: "center", sm: "right" } }}>
             {earlyDiscount?.enabled && (
               <Typography>
                 Early birds ({earlyDiscount?.percent}%){" "}
@@ -223,107 +197,21 @@ function ActivityDetails({ sx }) {
   );
 }
 
-function TermsAndConditions({ setTermsCoditionsOpen }) {
-  const activityId = useParams().activityId;
-  const editorRef = useRef(null);
-
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
-  const { data: provider } = useQuery(["provider", activity?.provider], () => patchProvider(activity?.provider));
-  const mutation = useMutation((data) => patchProvider(activity?.provider, data));
-  const [error, setError] = useState(null);
-
-  function handleSave() {
-    const content = editorRef.current.getContent();
-    mutation.mutate(
-      { termsAndConditions: content },
-      {
-        onError: (error) => setError(error?.response?.data?.termsAndConditions || error.message),
-        onSuccess: () => {
-          setError(null);
-          setTermsCoditionsOpen(false);
-        },
-      }
-    );
-  }
-
-  return (
-    <Box sx={{ minWidth: 500, minHeight: 500, p: 7 }}>
-      <Typography variant="h3" textAlign="center">
-        Add your Terms & Contitions here
-      </Typography>
-      <Box sx={{ mt: 5 }}>
-        {/* Component is not controlled here for performance reasons
-        (https://www.tiny.cloud/docs/tinymce/latest/react-ref/#using-the-tinymce-react-component-as-a-controlled-component) */}
-        <Editor
-          initialValue={provider?.termsAndConditions}
-          apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
-          onInit={(evt, editor) => (editorRef.current = editor)}
-          init={{
-            height: 500,
-            menubar: false,
-            statusbar: false,
-            plugins: [
-              "advlist",
-              "autolink",
-              "lists",
-              "link",
-              "image",
-              "charmap",
-              "anchor",
-              "searchreplace",
-              "visualblocks",
-              "code",
-              "fullscreen",
-              "insertdatetime",
-              "media",
-              "table",
-              "preview",
-              "help",
-              "wordcount",
-            ],
-            toolbar:
-              "undo redo | blocks | " +
-              "bold italic forecolor | alignleft aligncenter " +
-              "alignright alignjustify | bullist numlist outdent indent | " +
-              "removeformat | help",
-            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-          }}
-        />
-      </Box>
-      <Error>{error}</Error>
-      <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
-        <Button variant="outlined" color="grey" size="large" onClick={() => setTermsCoditionsOpen(false)}>
-          Cancel
-        </Button>
-        <Button onClick={handleSave} variant="contained" color="green">
-          Save
-        </Button>
-      </Box>
-    </Box>
-  );
-}
-
 function DiscountForm({ type, discount, formRef }) {
   const theme = useTheme();
   const { activityId } = useParams();
   const unitSelectItems = [
-    { id: "days", name: "Days" },
-    { id: "spaces", name: "Spaces" },
+    { value: "days", title: "Days" },
+    { value: "spaces", title: "Spaces" },
   ];
 
   const patchMutation = useMutation((discount) => patchDiscount(activityId, discount.id, discount));
   const createMutation = useMutation((discount) => createDiscount(activityId, discount));
 
-  async function handleSubmit(values, { setSubmitting, setErrors }) {
+  async function handleSubmit(values, formikHelpers) {
     const mutation = values.id ? patchMutation : createMutation;
-    try {
-      const response = await mutation.mutateAsync(values);
-      console.log(response);
-    } catch (error) {
-      console.log(error.response.data);
-      setErrors(error.response.data);
-      throw error;
-    }
+    const handle = createHandleSubmit({ mutation, throwError: true });
+    handle(values, formikHelpers);
   }
 
   return (
@@ -366,8 +254,15 @@ function DiscountForm({ type, discount, formRef }) {
         >
           <FormikNumberField name="percent" label="Percent" />
           <FormikNumberField name="amount" label="Amount" />
-          <FormikSelect name="unit" items={unitSelectItems} sx={{ height: 56 }} />
+          <FormikSelect name="unit" sx={{ height: 56 }}>
+            {(unitSelectItems || []).map((unit) => (
+              <MenuItem key={unit.value} value={unit.value}>
+                {unit.title}
+              </MenuItem>
+            ))}
+          </FormikSelect>
         </Box>
+        <FormikErrors />
       </Form>
     </Formik>
   );
@@ -394,14 +289,8 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  async function handleSave() {
-    try {
-      const response = await mutation.mutateAsync({ filled: true });
-      console.log(response);
-      scrollNext();
-    } catch (error) {
-      console.log(error.response.data);
-    }
+  function handleSave() {
+    mutation.mutate({ filled: true }, { onSuccess: scrollNext });
   }
 
   return (
@@ -409,18 +298,11 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
       <SlideHeader label="Review activity details" close={close} />
       <ActivityDetails sx={{ flex: 1 }} />
 
-      <SmFlex sx={{ mt: 3 }}>
-        {smDown && (
-          <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-            Cancel
-          </Button>
-        )}
-        <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
-          Go back
-        </Button>
-        <Button onClick={handleSave} variant="contained" fullWidth color="green">
-          Save
-        </Button>
+      <Error>{mutation.isError && mutation.error.message}</Error>
+      <SmFlex sx={{ mt: 3, rowGap: 1 }}>
+        {smDown && <CancelButton onClick={close} />}
+        <GoBackButton onClick={scrollPrev} />
+        <NextButton onClick={handleSave} label="Save" />
       </SmFlex>
       <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
@@ -439,13 +321,12 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 
   const earlyDiscountFormRef = useRef();
   const endingDiscountFormRef = useRef();
-  // const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   async function handleMultipleSubmit() {
     try {
       await earlyDiscountFormRef.current.submitForm();
       await endingDiscountFormRef.current.submitForm();
-      if ( earlyDiscountFormRef.current?.isValid && endingDiscountFormRef.current?.isValid) scrollNext();
+      if (earlyDiscountFormRef.current?.isValid && endingDiscountFormRef.current?.isValid) scrollNext();
     } catch (error) {}
   }
 
@@ -456,33 +337,12 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         <Typography sx={{ mt: 2, fontWeight: 700 }}>Discounts</Typography>
         <DiscountForm type="early" discount={earlyDiscount} formRef={earlyDiscountFormRef} />
         <DiscountForm type="ending" discount={endingDiscount} formRef={endingDiscountFormRef} />
-
-        {/* TODO: Fix styling to link */}
-        {/* <Button variant="contained" sx={{ mt: 3 }} onClick={() => setTermsCoditionsOpen(true)}>
-          Terms and Conditions
-        </Button>
-
-        <Dialog
-          onClose={() => setTermsCoditionsOpen(false)}
-          open={termsCoditionsOpen}
-          PaperProps={{ sx: { maxWidth: "none" } }}
-        >
-          <TermsAndConditions {...{ setTermsCoditionsOpen }} />
-        </Dialog> */}
       </Box>
 
-      <SmFlex sx={{ mt: { xs: 3, sm: "auto" } }}>
-        {smDown && (
-          <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-            Cancel
-          </Button>
-        )}
-        <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
-          Go back
-        </Button>
-        <Button onClick={handleMultipleSubmit} variant="contained" fullWidth type="submit" color="green">
-          Next
-        </Button>
+      <SmFlex sx={{ mt: { xs: 3, sm: "auto" }, rowGap: 1 }}>
+        {smDown && <CancelButton onClick={close} />}
+        <GoBackButton onClick={scrollPrev} />
+        <NextButton onClick={handleMultipleSubmit} />
       </SmFlex>
       <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
         Activity will be saved in your accounts page
@@ -497,23 +357,21 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  const initialAgeType = activity?.ageFrom && activity?.ageTo ? "range" : "single";
-  const [ageType, setAgeType] = React.useState(initialAgeType);
+  const [ageType, setAgeType] = React.useState("single");
+  useEffect(() => {
+    const newAgeType = activity?.ageFrom && activity?.ageTo ? "range" : "single";
+    setAgeType(newAgeType);
+  }, [activity])
   const handleAgeTypeChange = (event) => {
     setAgeType(event.target.value);
   };
 
-  async function handleSubmit(values, { setErrors }) {
-    try {
-      // On backend if rangeFrom is set, we treat it a single age, if both - as range
-      const data = { ...values, ageTo: ageType === "range" ? values.ageTo : null };
-      console.log(data);
-      await mutation.mutateAsync(data);
-      scrollNext();
-    } catch (error) {
-      console.log(error.response.data);
-      setErrors(error.response.data);
-    }
+  async function handleSubmit(values, formikHelpers) {
+    // On backend if rangeFrom is set, we treat it a single age, if both - as range
+    const data = { ...values, ageTo: ageType === "range" ? values.ageTo : null };
+    // TODO: Rewrite if values conversions will be frequent
+    const handle = createHandleSubmit({ mutation, onSuccess: scrollNext });
+    handle(data, formikHelpers);
   }
 
   return (
@@ -521,6 +379,8 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
       <>
         <SlideHeader label="Keep editing" close={close} />
         <Formik
+          onSubmit={handleSubmit}
+          enableReinitialize
           initialValues={{
             startTime: activity.startTime,
             endTime: activity.endTime,
@@ -601,7 +461,6 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
             level: Yup.string().max(64),
             capacity: numericSchema.label("Capacity").required().max(999),
           })}
-          onSubmit={handleSubmit}
         >
           <Form>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
@@ -693,18 +552,11 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
               <FormikTextField name="level" label="Level" fullWidth margin="normal" />
               <FormikNumberField name="capacity" label="Capacity" fullWidth margin="normal" />
 
-              <SmFlex sx={{ mt: 2 }}>
-                {smDown && (
-                  <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-                    Cancel
-                  </Button>
-                )}
-                <Button variant="contained" color="grey" size="large" fullWidth onClick={scrollPrev}>
-                  Go back
-                </Button>
-                <Button variant="contained" size="large" fullWidth type="submit" color="green">
-                  Next
-                </Button>
+              <FormikErrors />
+              <SmFlex sx={{ mt: 2, rowGap: 1 }}>
+                {smDown && <CancelButton onClick={close} />}
+                <GoBackButton onClick={scrollPrev} />
+                <NextButton />
               </SmFlex>
             </LocalizationProvider>
           </Form>
@@ -717,22 +569,11 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   );
 }
 
-function DatesSlide({ scrollNext, scrollPrev, close }) {
+function DatesSlide({ scrollNext, close }) {
   const { activityId } = useParams();
-  // TODO: Add error handling
   const { data: activityTypes } = useQuery("activityTypes", getActivityTypes);
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
-
-  async function handleSubmit(data, { setErrors }) {
-    console.log(data);
-    try {
-      await mutation.mutateAsync(data);
-      scrollNext();
-    } catch (error) {
-      setErrors(error.response.data);
-    }
-  }
 
   return (
     <>
@@ -740,27 +581,31 @@ function DatesSlide({ scrollNext, scrollPrev, close }) {
       <Formik
         initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
-        onSubmit={handleSubmit}
+        onSubmit={createHandleSubmit({ mutation, onSuccess: scrollNext })}
+        validationSchema={Yup.object({
+          type: numericSchema.label("Type").required(),
+        })}
       >
         <Form style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
-            <Typography sx={{ fontWeight: 700 }}>Activity</Typography>
             <FormikSelect
               label="Pick activity from list"
-              items={activityTypes || []}
               name="type"
               containerSx={{ width: "62%" }}
-            />
+              fullwidth
+            >
+              {(activityTypes || []).map((activityType) => (
+                <MenuItem key={activityType.id} value={activityType.id}>
+                  {activityType.name}
+                </MenuItem>
+              ))}
+            </FormikSelect>
           </Box>
           <FormikCalendarField sx={{ mt: 5 }} name="dateRanges" />
-          <FormikNonFieldErrors />
-          <SmFlex sx={{ mt: { xs: 2, sm: "auto" } }}>
-            <Button variant="outlined" color="grey" size="large" fullWidth onClick={close}>
-              Cancel
-            </Button>
-            <Button variant="contained" size="large" fullWidth type="submit" color="green">
-              Next
-            </Button>
+          <FormikErrors />
+          <SmFlex sx={{ mt: { xs: 2, sm: "auto" }, rowGap: 1 }}>
+            <CancelButton onClick={close} />
+            <NextButton />
           </SmFlex>
         </Form>
       </Formik>
@@ -787,13 +632,48 @@ function StartSlide({ scrollNext, sx }) {
   );
 }
 
-export default function Activities() {
+function DescriptionForm() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
-  const [slide, setSlide] = useState(0);
+  return (
+    <Formik
+      initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
+      onSubmit={createHandleSubmit(mutation)}
+      enableReinitialize
+    >
+      <Form>
+        <Stack spacing={3}>
+          <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
+          <FormikTextField
+            name="preRequisites"
+            variant="filled"
+            fullWidth
+            label="Highlight important details here"
+            multiline
+            rows={9}
+            inputProps={{
+              style: {
+                fontWeight: 700,
+              },
+            }}
+          />
+          <Button variant="contained" color="green" size="large" type="submit">
+            Save
+          </Button>
+          <FormikErrors />
+        </Stack>
+      </Form>
+    </Formik>
+  );
+}
 
+export default function Activities() {
+  const activityId = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+
+  const [slide, setSlide] = useState(0);
   const slides = [activity?.filled ? SavedSlide : StartSlide, DatesSlide, InfoSlide, DiscountsSlide, ReviewSlide];
   const CurrentSlide = slides[slide];
 
@@ -818,10 +698,6 @@ export default function Activities() {
     scrollToActivities();
   }
 
-  function handleSubmit(values, { setErrors }) {
-    mutation.mutate(values, { onError: (error) => setErrors(error?.response?.data) });
-  }
-
   return (
     <Container sx={{ my: 10 }}>
       <Box
@@ -833,28 +709,7 @@ export default function Activities() {
           mx: "auto",
         }}
       >
-        <Formik
-          initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-          onSubmit={handleSubmit}
-          enableReinitialize
-        >
-          <Form>
-            <Stack spacing={3}>
-              <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
-              <FormikTextField
-                name="preRequisites"
-                variant="filled"
-                fullWidth
-                label="Highlight important details here"
-                multiline
-                rows={9}
-              />
-              <Button variant="contained" color="green" size="large" type="submit">
-                Save
-              </Button>
-            </Stack>
-          </Form>
-        </Formik>
+        <DescriptionForm />
         <Box
           ref={slideRef}
           sx={{
@@ -862,7 +717,8 @@ export default function Activities() {
             width: "100%",
             maxWidth: 540,
             minHeight: 600,
-            border: "1px solid #6C757D",
+            border: "1px solid",
+            borderColor: "grey.main",
             borderRadius: 4,
             px: 4,
             pt: 2.4,

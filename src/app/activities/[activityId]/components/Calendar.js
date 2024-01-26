@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import { Box, IconButton, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+
 import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import isBetween from "dayjs/plugin/isBetween";
@@ -40,6 +42,7 @@ function Day({
   setHoveredDay,
 }) {
   const isInDateRange = isDateRangeStart || isDateRangeMiddle || isDateRangeEnd;
+  const palette = useTheme().palette;
 
   let borderRadiusSx = { borderRadius: 5 };
   if (isDateRangeStart && isDateRangeEnd);
@@ -78,17 +81,17 @@ function Day({
   let borderColorSx = { border: "2px solid transparent" };
   if (disabled);
   else if (isHovered && isNewDateRangeStartDate) {
-    borderColorSx = { border: "2px solid #997706" };
+    borderColorSx = { border: `2px solid ${palette.yellow[700]}` };
   } else if ((isHovered && !isDayInHoveredDateRange) || isNewDateRangeStartDate) {
-    borderColorSx = { border: "2px solid #FFC50A" };
+    borderColorSx = { border: `2px solid ${palette.yellow[400]}` };
   }
 
   let backgroundColor = "transparent";
   if (disabled);
   else if (isDayInHoveredDateRange) {
-    backgroundColor = "#ffe285";
+    backgroundColor = "yellow.300";
   } else if (isInDateRange) {
-    backgroundColor = "#FFC50A";
+    backgroundColor = "yellow.400";
   }
 
   return (
@@ -99,11 +102,8 @@ function Day({
 
         cursor: disabled ? "default" : "pointer",
         backgroundColor,
-        // TODO: Rationalize this
-        // boxSizing: "border-box",
 
-        color: disabled ? "#AAA" : "#666",
-        // TODO: Ratinalize with CssGrid
+        color: disabled ? "grey.400" : "grey.500",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -274,8 +274,7 @@ function WeekDays({ sx }) {
     <CalendarCssGrid sx={sx}>
       {daysOfWeek.map((day, index) => (
         <Typography
-          // TODO: Refactor sx
-          sx={{ color: "#333", display: "flex", alignItems: "center", justifyContent: "center" }}
+          sx={{ color: "grey.700", display: "flex", alignItems: "center", justifyContent: "center" }}
           key={`day-${index}`}
         >
           {day}
@@ -286,7 +285,7 @@ function WeekDays({ sx }) {
 }
 
 function MonthSwitcher({ month, setMonth }) {
-  const iconProps = { sx: { color: "#333", fontSize: 28 } };
+  const iconProps = { sx: { color: "grey.700", fontSize: 28 } };
 
   const handleNextMonth = () => {
     setMonth((prevMonth) => prevMonth.add(1, "month"));
@@ -297,7 +296,7 @@ function MonthSwitcher({ month, setMonth }) {
   };
   return (
     <Box sx={{ display: "flex", justifyContent: "right", alignItems: "center", gap: 1 }}>
-      <Typography sx={{ color: "#333", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
+      <Typography sx={{ color: "grey.700", fontWeight: 700 }}>{month.format("MMMM YYYY")}</Typography>
       <IconButton size="small" sx={{ p: 0 }} onClick={handlePrevMonth}>
         <KeyboardArrowLeftRoundedIcon {...iconProps} />
       </IconButton>
@@ -308,14 +307,14 @@ function MonthSwitcher({ month, setMonth }) {
   );
 }
 
-export default function Calendar({ name, sx, degug, dateRanges, setDateRanges }) {
+export default function Calendar({ sx, dateRanges, setDateRanges }) {
   const [month, setMonth] = useState(dayjs());
 
   return (
-    <Box sx={{ minWidth: 270, ...sx }} name={name}>
+    <Box sx={{ minWidth: 270, ...sx }}>
       <MonthSwitcher month={month} setMonth={setMonth} />
       <WeekDays sx={{ mt: 1 }} />
-      <Days month={month} {...{degug, dateRanges, setDateRanges }} />
+      <Days month={month} {...{ dateRanges, setDateRanges }} />
     </Box>
   );
 }

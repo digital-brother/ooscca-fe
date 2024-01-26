@@ -1,7 +1,6 @@
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 import TextField from "@mui/material/TextField";
 import React from "react";
-import { Checkbox, FormControlLabel } from "@mui/material";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
 import Calendar from "./Calendar";
@@ -9,6 +8,37 @@ import { NumericFormat } from "react-number-format";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Select as MUISelect,
+} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
+export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
+  return async function handleSubmit(values, { setErrors, setStatus }) {
+    setStatus(null);
+    try {
+      await mutation.mutateAsync(values);
+      onSuccess();
+    } catch (error) {
+      // If status is 400, it means that DRF returned validation errors
+      if (error?.response?.status === 400) {
+        const drfErrors = error.response?.data;
+        const drfNonFieldErrors = drfErrors?.nonFieldErrors;
+        drfErrors && setErrors(drfErrors);
+        drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
+      } else {
+        setStatus({ submissionError: error.message });
+      }
+      if (throwError) throw error;
+    }
+  };
+}
 
 export function FormikTextField(props) {
   const [field, meta] = useField(props);
@@ -23,8 +53,8 @@ export function FormikTextField(props) {
 }
 
 // Passes "" from input to formik value as null.
-// DRF IntegerField raises "Valid integer is required" in such case.
-// * DRF DecimalField treats "" as null.
+// DRF IntegerField raises "Valid integer is required" in has "" passed.
+// DRF DecimalField treats "" as null.
 export function FormikNumericFormat(props) {
   const [field, meta, helpers] = useField(props);
 
@@ -92,8 +122,14 @@ export function FormikTimeField(props) {
   );
 }
 
-export function FormikCalendarField({ name, sx, debug }) {
-  const [field, , helpers] = useField(name);
+export function FormikCalendarField({ name, sx }) {
+  const validateDateRanges = (dateRanges) => {
+    for (const dateRange of dateRanges) {
+      if (!dateRange.end) return "End date is required";
+    }
+  };
+
+  const [field, meta, helpers] = useField({ name, validate: validateDateRanges });
 
   const value = field.value.map((range) => ({
     start: dayjs(range.start, "YYYY-MM-DD"),
@@ -109,5 +145,52 @@ export function FormikCalendarField({ name, sx, debug }) {
     helpers.setValue(formikDateRanges);
   }
 
-  return <Calendar dateRanges={value} setDateRanges={handleChange} {...{ name, sx, debug }} />;
+  return (
+    <>
+      <Calendar dateRanges={value} setDateRanges={handleChange} sx={sx} />
+      {meta.touched && meta.error && <Error> {meta.error} </Error>}
+    </>
+  );
+}
+
+export function FormikSelect({ name, items, label, sx, variant, fullwidth, children }) {
+  const [field, meta] = useField(name);
+
+  return (
+    <FormControl
+      error={meta.touched && Boolean(meta.error)}
+      sx={{ minWidth: 120, ...sx }}
+      variant={variant}
+      fullWidth={fullwidth}
+    >
+      <InputLabel>{label}</InputLabel>
+
+      <MUISelect {...field} label={label}>
+        {children}
+      </MUISelect>
+      {meta.touched && meta.error && <FormHelperText> {meta.error} </FormHelperText>}
+    </FormControl>
+  );
+}
+
+export function FormikErrors() {
+  const { status } = useFormikContext();
+  if (status?.submissionError) return <Error>{status.submissionError}</Error>;
+
+  if (status?.nonFieldErrors)
+    return (
+      <Box>
+        {status.nonFieldErrors.map((error, index) => (
+          <Error key={index}>{error}</Error>
+        ))}
+      </Box>
+    );
+}
+
+export function Error({ children }) {
+  return (
+    children && (
+      <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>{children}</Typography>
+    )
+  );
 }
