@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton } from "@mui/material";
-import { useMutation, useQuery } from "react-query";
 
 export function ImageInput({ multiple, handleAppend, ...props }) {
   const fileInput = React.useRef();
@@ -17,7 +16,7 @@ export function ImageInput({ multiple, handleAppend, ...props }) {
     onDrop: (acceptedFiles) => {
       handleAppend(acceptedFiles)
     },
-    multiple: multiple,
+    multiple,
   });
 
   return (
@@ -111,7 +110,7 @@ function ImagePreview({ files, setConfirmDelete }) {
           component="img"
           src={file.preview || file.image}
           alt="Preview"
-          sx={{ objectFit: "contain", width: "100%", height: "100%", objectFit: "cover", }}
+          sx={{ width: "100%", height: "100%", objectFit: "cover", }}
           onLoad={() => URL.revokeObjectURL(file.url)}
           key={file.preview || file.id}
         />
@@ -169,7 +168,6 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
         textAlign: "center",
         fontSize: 24,
         fontStyle: "normal",
-        fontWeight: 700,
       }}>
         Edit Image
       </Typography>

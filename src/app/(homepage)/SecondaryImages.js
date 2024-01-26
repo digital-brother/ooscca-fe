@@ -1,56 +1,58 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {Box, Button, Container, IconButton} from "@mui/material";
+import {Box, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useMutation, useQuery } from "react-query";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useParams } from "next/navigation";
 
-import {ImageInput, ImagePreview, ImageDeleteConfirm, } from "@/app/activities/[activityId]/components/ImageUploadDropzone";
-import DropZoneLogoUpload from "@/app/activities/[activityId]/components/LogoUploadDropzone";
 import DropZoneImageUpload from "@/app/activities/[activityId]/components/ImageUploadDropzone";
 
 import * as React from "react";
 import Grid from "@mui/material/Grid";
 
 import {
-  getImagesWithMapBlock,
-  patchImage,
+  getSecondaryImages,
   deleteImage,
   postImage,
-  TEST_ACTIVITY_ID,
 } from "@/app/activities/apiImage.mjs";
 
-export default function ImagesBlock() {
+export default function SecondaryImages() {
 
   const [files, setFiles] = useState([]);
-  const [filesLoaded, setFilesLoaded] = useState(false);
+  const [isFilesLoaded, setIsFilesLoaded] = useState(false);
   const numberOfElements = 3;
   const imageInputs = [];
+  // const activityId = useParams().activityId;
+  const activityId = 1;
+
+  function removeFile(sentImage) {
+    setFiles(files => files.filter(item => item.id !== sentImage?.id));
+  }
 
   const deleteMutation = useMutation((data) => deleteImage(data?.id), {
-    onSuccess: (data, variables, context) => {
-      setFiles(files => files.filter(item => item.id !== variables?.id));
+    onSuccess: (data, sentImage, context) => {
+      removeFile(sentImage);
     },
-    onError: (error, variables, context) => {
-      variables.error = error
+    onError: (error, sentImage, context) => {
+      sentImage.error = error
     },
   });
 
   const postMutation = useMutation((file) => postImage({
       "name": file.name,
-      "position": file.position,
+      "order": file.order,
       "size": file.size,
-      "activity": TEST_ACTIVITY_ID,
+      "activity": activityId,
       "image": file,
-      "type": "with_map",
+      "type": "secondary",
     }), {
-    onSuccess: (data, variables, context) => {
-      variables.error = null
-      variables.id = data.id
+    onSuccess: (data, sentImage, context) => {
+      sentImage.error = null
+      sentImage.id = data.id
     },
-    onError: (error, variables, context) => {
-      variables.error = error
+    onError: (error, sentImage, context) => {
+      sentImage.error = error
     },
   });
 
@@ -59,11 +61,11 @@ export default function ImagesBlock() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: "imagesWithMap",
-    queryFn: () => getImagesWithMapBlock(),
-    enabled: !filesLoaded,  // disable repeated requests
-    onSuccess: (data) => {
-      setFilesLoaded(true);
+    queryKey: "secondaryImages",
+    queryFn: () => getSecondaryImages(),
+    enabled: !isFilesLoaded,  // disable repeated requests
+    onSuccess: () => {
+      setIsFilesLoaded(true);
     }
   });
 
@@ -76,13 +78,13 @@ export default function ImagesBlock() {
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => files.forEach((file) => URL.revokeObjectURL(file.url));
-  }, []);
+  }, [files]);
 
   for (let i = 1; i <= numberOfElements; i++) {
-    const _files = files.filter(f => f?.position == i)
+    const _files = files.filter(f => f?.order === i)
 
     async function handleDelete() {
-      files.filter(f => f?.position == i).map((file) => {
+        _files.forEach((file) => {
         if (file?.id) {
           deleteMutation.mutateAsync(file)
         } else {
@@ -93,18 +95,18 @@ export default function ImagesBlock() {
 
     async function handleAppend(acceptedFiles) {
       setFiles(files => [...files, ...acceptedFiles.map((file, index) => {
-          let new_object = Object.assign(file, {
+          const newObject = Object.assign(file, {
             preview: URL.createObjectURL(file),
-            position: i,
+            order: i,
           })
-          postMutation.mutate(new_object)
-          return new_object
+          postMutation.mutate(newObject)
+          return newObject
         }),
       ]);
     }
 
     let messageColor = ""
-    let messageTexts = []
+    const messageTexts = []
 
     if (_files[0]) {
       _files[0].frontendErrors = []
@@ -129,7 +131,7 @@ export default function ImagesBlock() {
 
     } else {
       messageColor = "green.500"
-      if (_files[0]?.hasOwnProperty("error")) {
+      if (Object.prototype.isPrototypeOf.call(_files[0], "error")) {
         messageTexts.push("Image approved")
       }
     }
@@ -138,7 +140,7 @@ export default function ImagesBlock() {
       <Grid key={i} item md={4} sx={{ borderRadius: 8, width: "100%" }}>
         <DropZoneImageUpload
           files={_files}
-          position={i}
+          order={i}
           handleDelete={handleDelete}
           handleAppend={handleAppend}
           key={i}
@@ -151,8 +153,8 @@ export default function ImagesBlock() {
           }}
         />
         <Box>
-          {messageTexts.map(text => (
-            <Box>
+          {messageTexts.map((text, index) => (
+            <Box key={index}>
               <Typography sx={{
                 color: messageColor,
                 fontSize: 16,
@@ -180,29 +182,6 @@ export default function ImagesBlock() {
       flexDirection: "column",
     }}>
       <Grid container spacing={3.5}>
-        <Grid item xs={12} sx={{ borderRadius: 8 }}>
-          <Box sx={{
-            backgroundColor: "grey.200",
-            borderRadius: 4,
-            border: "1px #ADB5BD solid",
-            px: 5,
-            height: { xs: 416, md: 416 },
-          }}>
-            <Typography sx={{
-              color: "black",
-              py: 24,
-              textAlign: "center",
-              fontFamily: "Montserrat",
-              fontSize: 20,
-              fontStyle: "normal",
-              fontWeight: 600,
-              lineHeight: 1.4,
-              letterSpacing: 0.2,
-            }}>
-              Map will auto generated here
-            </Typography>
-          </Box>
-        </Grid>
         {imageInputs}
       </Grid>
     </Container>

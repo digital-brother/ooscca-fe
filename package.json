@@ -26,7 +26,6 @@
     "formik": "^2.4.5",
     "next": "^14.0.4",
     "react": "latest",
-    "react-beautiful-dnd": "^13.1.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "latest",

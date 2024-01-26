@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {Box, Button, Container, IconButton} from "@mui/material";
+import {Box, Button, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag, useDrop, DndProvider } from 'react-dnd';
+import { useParams } from "next/navigation";
 
 import {ImageInput} from "@/app/activities/[activityId]/components/ImageUploadDropzone";
 import { useMutation, useQuery } from "react-query";
-import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import * as React from 'react';
@@ -20,27 +20,21 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TrashCanIcon } from "@/assets/TrashCanIcon";
 
-import { useDropzone } from "react-dropzone";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
-  getImagesWithListBlock,
+  getPrimaryImages,
   patchImage,
   deleteImage,
   postImage,
-  TEST_ACTIVITY_ID,
 } from "@/app/activities/apiImage.mjs";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
 function formatBytes(bytes, decimals) {
-   if(bytes == 0) return '0 Bytes';
-   var k = 1024,
-       dm = decimals || 2,
-       sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-       i = Math.floor(Math.log(bytes) / Math.log(k));
-   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  if(bytes === 0) return '0 Bytes';
+    const k = 1024
+    const dm = decimals || 2
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
 function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
@@ -54,8 +48,8 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
     hover: (draggedItem) => {
       if (draggedItem.id !== _key) {
         // Reorder the rows
-        const draggedIndex = files.findIndex((item) => item.position === draggedItem.position);
-        const hoverIndex = files.findIndex((item) => item.position === _key);
+        const draggedIndex = files.findIndex((item) => item.order === draggedItem.order);
+        const hoverIndex = files.findIndex((item) => item.order === _key);
 
         const newFiles = [...files];
         newFiles.splice(hoverIndex, 0, newFiles.splice(draggedIndex, 1)[0]);
@@ -64,7 +58,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
     },
   });
 
-  file.position = _key
+  file.order = _key
 
   function HandleDeleteImage(event) {
     file.deleted = true
@@ -75,7 +69,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   }
 
   let messageColor = ""
-  let messageTexts = []
+  const messageTexts = []
 
   file.frontendErrors = []
   if (file?.size > 5*1024*1024) {
@@ -98,7 +92,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
 
   } else {
     messageColor = "#196B40"
-    if (file.hasOwnProperty("error")) {
+    if (Object.prototype.hasOwnProperty.call(file, "error")) {
       messageTexts.push("Image approved")
     }
   }
@@ -110,7 +104,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   return <TableRow
       sx={{
         '&:last-child td, &:last-child th': { border: 0 },
-        opacity: opacity,
+        opacity,
         ...props?.sx
       }}
       key={ _key }
@@ -139,12 +133,12 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
             mt: 0.8,
           }}
         >
-          {messageTexts.map(text => (<Box>{text}</Box>))}
+          {messageTexts.map((text, index) => (<Box key={index}>{text}</Box>))}
 
         </Box>
       </TableCell>
       <TableCell component="th" scope="row" align="center">
-        { file.position }
+        { file.order }
       </TableCell>
       <TableCell component="th" scope="row" align="center">
         {formatBytes(file.size, 1)}
@@ -189,44 +183,46 @@ function FilesTable({files, setFiles}) {
 
 export default function UploadImages() {
   const [files, setFiles] = useState([]);
-  const [filesLoaded, setFilesLoaded] = useState(false);
+  const [isFilesLoaded, setIsFilesLoaded] = useState(false);
+  // const activityId = useParams().activityId
+  const activityId = 1
 
   const deleteMutation = useMutation((data) => deleteImage(data?.id), {
-    onSuccess: (data, variables, context) => {
-      setFiles(files => files.filter(item => item.id !== variables?.id));
+    onSuccess: (data, sentImage, context) => {
+      setFiles(files => files.filter(item => item.id !== sentImage?.id));
     },
-    onError: (error, variables, context) => {
-      variables.error = error
+    onError: (error, sentImage, context) => {
+      sentImage.error = error
     },
   });
 
   const patchMutation = useMutation((file) => patchImage({
       "id": file.id,
       "name": file.name,
-      "position": file.position,
+      "order": file.order,
     }), {
-    onSuccess: (data, variables, context) => {
-      variables.error = null
+    onSuccess: (data, sentImage, context) => {
+      sentImage.error = null
     },
-    onError: (error, variables, context) => {
-      variables.error = error
+    onError: (error, sentImage, context) => {
+      sentImage.error = error
     },
   });
 
   const postMutation = useMutation((file) => postImage({
       "name": file.name,
-      "position": file.position,
+      "order": file.order,
       "size": file.size,
-      "activity": TEST_ACTIVITY_ID,
-      "type": "with_list",
+      "activity": activityId,
+      "type": "primary",
       "image": file,
     }), {
-    onSuccess: (data, variables, context) => {
-      variables.error = null
-      variables.id = data.id
+    onSuccess: (data, sentImage, context) => {
+      sentImage.error = null
+      sentImage.id = data.id
     },
-    onError: (error, variables, context) => {
-      variables.error = error
+    onError: (error, sentImage, context) => {
+      sentImage.error = error
     },
   });
 
@@ -235,11 +231,11 @@ export default function UploadImages() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: "imagesWithList",
-    queryFn: () => getImagesWithListBlock(),
-    enabled: !filesLoaded,  // disable repeated requests
+    queryKey: "primaryImages",
+    queryFn: () => getPrimaryImages(),
+    enabled: !isFilesLoaded,  // disable repeated requests
     onSuccess: (data) => {
-      setFilesLoaded(true);
+      setIsFilesLoaded(true);
     }
   });
 
@@ -268,7 +264,7 @@ export default function UploadImages() {
         const deletePromises = files
           .filter(file => file.id && file?.deleted === true)
           .map(file => deleteMutation.mutateAsync(file));
-        const deleteResults = await Promise.all(deletePromises);
+        await Promise.all(deletePromises);
 
         setFiles(files => files.filter(file => file !== null))
 
@@ -284,22 +280,22 @@ export default function UploadImages() {
           .map(file => postMutation.mutateAsync(file));
 
         // Wait for all patch mutations to complete
-        const patchResults = await Promise.all(patchPromises);
+        await Promise.all(patchPromises);
 
         // Wait for all post mutations to complete
-        const postResults = await Promise.all(postPromises);
+        await Promise.all(postPromises);
 
         // Update state after all mutations are complete
-        const updatedFiles = files.map((file, index) => ({
+        files.map((file, index) => ({
           key: file.key,
           _key: file._key,
           error: file.error,
           id: file.id,
           image: file.preview || file.image,
           name: file.path || file.name,
-          position: file.positon,
+          order: file.positon,
           size: file.size,
-          activity: TEST_ACTIVITY_ID,
+          activity: activityId,
         }));
         setFiles(updatedFiles => updatedFiles.filter(f => f !== null));
       } catch (error) {
@@ -307,16 +303,6 @@ export default function UploadImages() {
         console.error("Error saving images:", error);
       }
     }
-  }
-
-  async function handleDelete() {
-    files.filter(f => f?.position == i).map((file) => {
-      if (file?.id) {
-        deleteMutation.mutateAsync(file)
-      } else {
-        setFiles(files => files.filter(item => item !== _files[0]));
-      }
-    })
   }
 
   async function handleAppend(acceptedFiles) {

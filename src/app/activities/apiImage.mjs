@@ -22,13 +22,13 @@ export async function getImages() {
   return response.data;
 }
 
-export async function getImagesWithListBlock() {
-  const response = await client.get(`${IMAGES_PATH}?type=with_list`);
+export async function getPrimaryImages() {
+  const response = await client.get(`${IMAGES_PATH}?type=primary`);
   return response.data;
 }
 
-export async function getImagesWithMapBlock() {
-  const response = await client.get(`${IMAGES_PATH}?type=with_map`);
+export async function getSecondaryImages() {
+  const response = await client.get(`${IMAGES_PATH}?type=secondary`);
   return response.data;
 }
 
