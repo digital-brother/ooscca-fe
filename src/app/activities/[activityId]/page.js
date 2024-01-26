@@ -804,7 +804,6 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
               "media",
               "table",
               "preview",
-              "help",
               "wordcount",
             ],
             toolbar:
