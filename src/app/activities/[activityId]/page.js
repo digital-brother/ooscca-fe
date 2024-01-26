@@ -770,7 +770,7 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
   }
 
   return (
-    <Box sx={{ minWidth: 500, minHeight: 500, p: 7 }}>
+    <Box sx={{ minWidth: 500, minHeight: 500, px: 7, py: 5 }}>
       <Typography variant="h3" textAlign="center">
         Add your Terms & Contitions here
       </Typography>
@@ -814,11 +814,17 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
         />
       </Box>
       <Error>{error}</Error>
-      <Box sx={{ mt: 5, display: "flex", height: 56, columnGap: 2, justifyContent: "right" }}>
-        <Button variant="outlined" color="grey" size="large" onClick={() => setTermsCoditionsOpen(false)}>
+      <Box sx={{ mt: 5, display: "flex", columnGap: 5, justifyContent: "right" }}>
+        <Button
+          variant="outlined"
+          color="grey"
+          size="large"
+          onClick={() => setTermsCoditionsOpen(false)}
+          sx={{ minWidth: 230 }}
+        >
           Cancel
         </Button>
-        <Button onClick={handleSave} variant="contained" color="green">
+        <Button onClick={handleSave} variant="contained" color="green" sx={{ minWidth: 230 }}>
           Save
         </Button>
       </Box>
