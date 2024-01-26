@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
+  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -26,6 +27,7 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
+  patchProvider,
 } from "@/app/activities/[activityId]/api.mjs";
 import "dayjs/locale/en-gb";
 import {
@@ -50,6 +52,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 import { CancelButton, GoBackButton, NextButton } from "./components/buttons";
+import { Editor } from "@tinymce/tinymce-react";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -61,6 +64,19 @@ const SmFlex = styled(Box)(({ theme }) => ({
     textAlign: "center",
   },
   [theme.breakpoints.up("sm")]: {
+    flexDirection: "row",
+    textAlign: "left",
+  },
+}));
+
+const LgFlex = styled(Box)(({ theme }) => ({
+  display: "flex",
+  columnGap: "0.5rem",
+  [theme.breakpoints.up("xs")]: {
+    flexDirection: "column",
+    textAlign: "center",
+  },
+  [theme.breakpoints.up("lg")]: {
     flexDirection: "row",
     textAlign: "left",
   },
@@ -361,7 +377,7 @@ function InfoSlide({ scrollNext, scrollPrev, close }) {
   useEffect(() => {
     const newAgeType = activity?.ageFrom && activity?.ageTo ? "range" : "single";
     setAgeType(newAgeType);
-  }, [activity])
+  }, [activity]);
   const handleAgeTypeChange = (event) => {
     setAgeType(event.target.value);
   };
@@ -588,12 +604,7 @@ function DatesSlide({ scrollNext, close }) {
       >
         <Form style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 3, mt: 2 }}>
-            <FormikSelect
-              label="Pick activity from list"
-              name="type"
-              containerSx={{ width: "62%" }}
-              fullwidth
-            >
+            <FormikSelect label="Pick activity from list" name="type" containerSx={{ width: "62%" }} fullwidth>
               {(activityTypes || []).map((activityType) => (
                 <MenuItem key={activityType.id} value={activityType.id}>
                   {activityType.name}
@@ -669,7 +680,7 @@ function DescriptionForm() {
   );
 }
 
-export default function Activities() {
+function Activities() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
@@ -699,40 +710,164 @@ export default function Activities() {
   }
 
   return (
-    <Container sx={{ my: 10 }}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+        gap: 3,
+        maxWidth: { xs: 540, lg: "none" },
+        mx: "auto",
+      }}
+    >
+      <DescriptionForm />
       <Box
+        ref={slideRef}
         sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
-          gap: 3,
-          maxWidth: { xs: 540, lg: "none" },
           mx: "auto",
+          width: "100%",
+          maxWidth: 540,
+          minHeight: 600,
+          border: "1px solid",
+          borderColor: "grey.main",
+          borderRadius: 4,
+          px: 4,
+          pt: 2.4,
+          pb: 2,
+
+          display: "flex",
         }}
       >
-        <DescriptionForm />
-        <Box
-          ref={slideRef}
-          sx={{
-            mx: "auto",
-            width: "100%",
-            maxWidth: 540,
-            minHeight: 600,
-            border: "1px solid",
-            borderColor: "grey.main",
-            borderRadius: 4,
-            px: 4,
-            pt: 2.4,
-            pb: 2,
-
-            display: "flex",
-          }}
-        >
-          {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
-          </Box>
+        {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
         </Box>
       </Box>
+    </Box>
+  );
+}
+
+function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
+  const activityId = useParams().activityId;
+  const editorRef = useRef(null);
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { data: provider } = useQuery(["provider", activity?.provider], () => patchProvider(activity?.provider));
+  const mutation = useMutation((data) => patchProvider(activity?.provider, data));
+  const [error, setError] = useState(null);
+
+  function handleSave() {
+    const content = editorRef.current.getContent();
+    mutation.mutate(
+      { termsAndConditions: content },
+      {
+        onError: (error) => setError(error?.response?.data?.termsAndConditions || error.message),
+        onSuccess: () => {
+          setError(null);
+          setTermsCoditionsOpen(false);
+        },
+      }
+    );
+  }
+
+  return (
+    <Box sx={{ minWidth: { xs: 300, md: 500 }, minHeight: { xs: 300, md: 200 }, px: { xs: 2.5, md: 7 }, py: { xs: 3, md: 5 } }}>
+      <Typography variant="h3" textAlign="center">
+        Add your Terms & Contitions here
+      </Typography>
+      <Box sx={{ mt: { xs: 2, md: 5 } }}>
+        {/* Component is not controlled here for performance reasons
+        (https://www.tiny.cloud/docs/tinymce/latest/react-ref/#using-the-tinymce-react-component-as-a-controlled-component) */}
+        <Editor
+          initialValue={provider?.termsAndConditions}
+          apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
+          onInit={(evt, editor) => (editorRef.current = editor)}
+          toolbarMode="floating"
+          // inline={true}
+          init={{
+            height: mdUp ? 500 : 350,
+            menubar: false,
+            statusbar: false,
+            plugins: [
+              "advlist",
+              "autolink",
+              "lists",
+              "link",
+              "image",
+              "charmap",
+              "anchor",
+              "searchreplace",
+              "visualblocks",
+              "code",
+              "fullscreen",
+              "insertdatetime",
+              "media",
+              "table",
+              "preview",
+              "help",
+              "wordcount",
+            ],
+            toolbar:
+              "undo redo | blocks | " +
+              "bold italic forecolor | alignleft aligncenter " +
+              "alignright alignjustify | bullist numlist outdent indent | " +
+              "removeformat | help",
+            toolbar_mode: "floating",
+            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          }}
+        />
+      </Box>
+      <Error>{error}</Error>
+      <SmFlex sx={{ mt: { xs: 2, md: 5 }, rowGap: 1, columnGap: 5, justifyContent: "right", alignItems: "center" }}>
+        <Button
+          variant="outlined"
+          color="grey"
+          size="large"
+          onClick={() => setTermsCoditionsOpen(false)}
+          fullWidth
+          sx={{ maxWidth: 230 }}
+        >
+          Cancel
+        </Button>
+        <Button onClick={handleSave} variant="contained" color="green" size="large" fullWidth sx={{ maxWidth: 230 }}>
+          Save
+        </Button>
+      </SmFlex>
+    </Box>
+  );
+}
+
+function TermsAndConditions() {
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(true);
+
+  return (
+    <LgFlex sx={{ mt: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, alignItems: "center" }}>
+      <Typography variant="h5">Terms and Conditions</Typography>
+      <Button
+        variant="contained"
+        color="yellow"
+        onClick={() => setTermsCoditionsOpen(true)}
+        sx={{ width: "100%", maxWidth: 340 }}
+      >
+        Click to add
+      </Button>
+
+      <Dialog
+        onClose={() => setTermsCoditionsOpen(false)}
+        open={termsCoditionsOpen}
+        PaperProps={{ sx: { maxWidth: "none" } }}
+      >
+        <TermsAndConditionsModal {...{ setTermsCoditionsOpen }} />
+      </Dialog>
+    </LgFlex>
+  );
+}
+
+export default function ActivityEditView() {
+  return (
+    <Container sx={{ my: 10 }}>
+      <Activities />
+      <TermsAndConditions />
     </Container>
   );
 }

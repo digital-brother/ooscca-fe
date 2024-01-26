@@ -80,10 +80,10 @@ export const grey = {
   600: "#495057",
   700: "#343A40",
   800: "#212529",
-  900: "#8C8C8C",
+  900: "#060708",
 };
 
-const colorsPure = { purple, orange, yellow, magenta, green, blue };
+const colorsPure = { purple, orange, magenta, green, blue };
 
 const colorsDefault = Object.fromEntries(
   Object.entries(colorsPure).map(([colorName, color]) => [
@@ -101,4 +101,5 @@ const colorsDefault = Object.fromEntries(
 export const colors = {
   ...colorsDefault,
   grey: { ...grey, light: grey[500], main: grey[600], dark: "#000000", contrastText: "#FFFFFF" },
+  yellow: {...yellow, light: yellow[400], main: yellow[500], dark: yellow[600], contrastText: grey[900]}
 };
