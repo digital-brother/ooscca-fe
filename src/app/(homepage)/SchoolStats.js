@@ -8,9 +8,9 @@ import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Select } from "@/app/components/Select";
 import { DateCalendarSet } from "@/app/(homepage)/components/DateCalendarSet";
 import dayjs from "dayjs";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const SCHOOLS = [
   { id: 1, name: "Lyceum" },
@@ -62,13 +62,29 @@ function SchoolPicker() {
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
+  const SchoolSelect = ({ name, label }) => (
+    <FormControl fullWidth>
+      <InputLabel id={name}>{label}l</InputLabel>
+      <Select labelId={name} label={label}>
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {SCHOOLS.map((school) => (
+          <MenuItem key={school.id} value={school.id}>
+            {school.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+
   return (
     <Grid container columnSpacing={4} rowSpacing={3}>
       <Grid item xs={12} sm={6} sx={{ order: { xs: 1, sm: 3 } }}>
-        <Select label="Select a school" items={SCHOOLS} />
+        <SchoolSelect name="schoolOne" label="Select a school" />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ order: { xs: 2, sm: 4 } }}>
-        <Select label="Select another school" items={SCHOOLS} />
+        <SchoolSelect name="schoolTwo" label="Select another school" />
       </Grid>
       <Grid
         item
@@ -111,17 +127,8 @@ function SchoolPicker() {
 
 export default function SchoolStats() {
   const schoolHolidays = {
-    firstSchoolHolidays: [
-      dayjs("2023-12-10"),
-      dayjs("2023-12-25"),
-      dayjs("2024-01-10"),
-      dayjs("2024-01-25"),
-    ],
-    secondSchoolHolidays: [
-      dayjs("2023-12-10"),
-      dayjs("2024-01-04"),
-      dayjs("2024-01-05"),
-    ],
+    firstSchoolHolidays: [dayjs("2023-12-10"), dayjs("2023-12-25"), dayjs("2024-01-10"), dayjs("2024-01-25")],
+    secondSchoolHolidays: [dayjs("2023-12-10"), dayjs("2024-01-04"), dayjs("2024-01-05")],
   };
 
   return (

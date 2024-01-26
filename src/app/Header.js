@@ -43,7 +43,7 @@ function NavLink({link}) {
     //   {linkElement}
     // </Box>
     <NextLink href="/" passHref>
-      <Button variant="outlined" color="warning" sx={{
+      <Button variant="outlined" color="orange" sx={{
         textTransform: 'none',
         fontSize: theme.typography.htmlFontSize,
       }}>
@@ -66,7 +66,7 @@ export function NavLinks() {
 export default function Header() {
   return (
     <>
-      {/*TODO: p={1} - how much px?*/}
+      {/* TODO: p={1} - how much px? */}
       <AppBar elevation={0} color="transparent" position="static">
         <Toolbar
           sx={{
