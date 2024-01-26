@@ -749,6 +749,7 @@ function Activities() {
 function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
   const activityId = useParams().activityId;
   const editorRef = useRef(null);
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const { data: provider } = useQuery(["provider", activity?.provider], () => patchProvider(activity?.provider));
@@ -770,19 +771,21 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
   }
 
   return (
-    <Box sx={{ minWidth: 500, minHeight: 500, px: 7, py: 5 }}>
+    <Box sx={{ minWidth: { xs: 300, md: 500 }, minHeight: { xs: 300, md: 200 }, px: { xs: 2.5, md: 7 }, py: { xs: 3, md: 5 } }}>
       <Typography variant="h3" textAlign="center">
         Add your Terms & Contitions here
       </Typography>
-      <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: { xs: 2, md: 5 } }}>
         {/* Component is not controlled here for performance reasons
         (https://www.tiny.cloud/docs/tinymce/latest/react-ref/#using-the-tinymce-react-component-as-a-controlled-component) */}
         <Editor
           initialValue={provider?.termsAndConditions}
           apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
           onInit={(evt, editor) => (editorRef.current = editor)}
+          toolbarMode="floating"
+          // inline={true}
           init={{
-            height: 500,
+            height: mdUp ? 500 : 350,
             menubar: false,
             statusbar: false,
             plugins: [
@@ -809,36 +812,43 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
               "bold italic forecolor | alignleft aligncenter " +
               "alignright alignjustify | bullist numlist outdent indent | " +
               "removeformat | help",
+            toolbar_mode: "floating",
             content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
           }}
         />
       </Box>
       <Error>{error}</Error>
-      <Box sx={{ mt: 5, display: "flex", columnGap: 5, justifyContent: "right" }}>
+      <SmFlex sx={{ mt: { xs: 2, md: 5 }, rowGap: 1, columnGap: 5, justifyContent: "right", alignItems: "center" }}>
         <Button
           variant="outlined"
           color="grey"
           size="large"
           onClick={() => setTermsCoditionsOpen(false)}
-          sx={{ minWidth: 230 }}
+          fullWidth
+          sx={{ maxWidth: 230 }}
         >
           Cancel
         </Button>
-        <Button onClick={handleSave} variant="contained" color="green" sx={{ minWidth: 230 }}>
+        <Button onClick={handleSave} variant="contained" color="green" size="large" fullWidth sx={{ maxWidth: 230 }}>
           Save
         </Button>
-      </Box>
+      </SmFlex>
     </Box>
   );
 }
 
 function TermsAndConditions() {
-  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(true);
 
   return (
     <LgFlex sx={{ mt: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, alignItems: "center" }}>
       <Typography variant="h5">Terms and Conditions</Typography>
-      <Button variant="contained" color="yellow" onClick={() => setTermsCoditionsOpen(true)} sx={{ minWidth: 340 }}>
+      <Button
+        variant="contained"
+        color="yellow"
+        onClick={() => setTermsCoditionsOpen(true)}
+        sx={{ width: "100%", maxWidth: 340 }}
+      >
         Click to add
       </Button>
 
