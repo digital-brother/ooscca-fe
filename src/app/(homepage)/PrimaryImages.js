@@ -3,21 +3,21 @@
 import { useEffect, useState } from "react";
 import {Box, Button, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
+import { useDrag, useDrop, DndProvider } from "react-dnd";
 import { useParams } from "next/navigation";
 
 import {ImageInput} from "@/app/activities/[activityId]/components/ImageUploadDropzone";
 import { useMutation, useQuery } from "react-query";
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import * as React from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import { TrashCanIcon } from "@/assets/TrashCanIcon";
 
 import {
@@ -29,22 +29,22 @@ import {
 
 
 function formatBytes(bytes, decimals) {
-  if(bytes === 0) return '0 Bytes';
+  if(bytes === 0) return "0 Bytes";
     const k = 1024
     const dm = decimals || 2
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
 
 function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   const [collectedProps, drag] = useDrag({
-    type: 'ROW',
+    type: "ROW",
     item: file,
   });
 
   const [, drop] = useDrop({
-    accept: 'ROW',
+    accept: "ROW",
     hover: (draggedItem) => {
       if (draggedItem.id !== _key) {
         // Reorder the rows
@@ -103,7 +103,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
 
   return <TableRow
       sx={{
-        '&:last-child td, &:last-child th': { border: 0 },
+        "&:last-child td, &:last-child th": { border: 0 },
         opacity,
         ...props?.sx
       }}
@@ -184,8 +184,7 @@ function FilesTable({files, setFiles}) {
 export default function UploadImages() {
   const [files, setFiles] = useState([]);
   const [isFilesLoaded, setIsFilesLoaded] = useState(false);
-  // const activityId = useParams().activityId
-  const activityId = 1
+  const activityId = useParams().activityId
 
   const deleteMutation = useMutation((data) => deleteImage(data?.id), {
     onSuccess: (data, sentImage, context) => {

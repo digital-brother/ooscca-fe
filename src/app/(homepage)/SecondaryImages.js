@@ -23,8 +23,7 @@ export default function SecondaryImages() {
   const [isFilesLoaded, setIsFilesLoaded] = useState(false);
   const numberOfElements = 3;
   const imageInputs = [];
-  // const activityId = useParams().activityId;
-  const activityId = 1;
+  const activityId = useParams().activityId;
 
   function removeFile(sentImage) {
     setFiles(files => files.filter(item => item.id !== sentImage?.id));
