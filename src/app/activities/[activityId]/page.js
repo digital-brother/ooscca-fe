@@ -838,7 +838,7 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
 }
 
 function TermsAndConditions() {
-  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(true);
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   return (
     <LgFlex sx={{ mt: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, alignItems: "center" }}>
