@@ -2,8 +2,11 @@ import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
 import { Button, TextField } from "@mui/material";
+import { Formik, Form, Field } from 'formik';
+import axios from "axios";
 
-const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
+// const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
+const MAP_API_KEY = "AIzaSyCvRilixYTq-080gFVs6uWf_WybV-t8y-g";
 
 const libraries = ["places"];
 const defaultMapLocation = {
@@ -11,7 +14,40 @@ const defaultMapLocation = {
   lng: -0.1278,
 };
 
-export default function Map() {
+
+export default function MapForm({ initialCoordinates }) {
+  const handleSubmitToBackend = async (values) => {
+  try {
+    const response = await axios.post('YOUR_BACKEND_ENDPOINT', values);
+    console.log(response.data); // Handle the response as needed
+    // Maybe navigate to another page or show success message
+  } catch (error) {
+    console.error(error.response.data); // Handle errors
+    // Maybe show error message to the user
+  }
+};
+
+  return (
+    <Formik
+      initialValues={{
+        lat: initialCoordinates.lat,
+        lng: initialCoordinates.lng
+      }}
+      onSubmit={handleSubmitToBackend}
+    >
+      {({ setFieldValue }) => (
+        <Form>
+          <Field type="hidden" name="lat" />
+          <Field type="hidden" name="lng" />
+          <Map setFieldValue={setFieldValue} />
+          <button type="submit">Submit</button>
+        </Form>
+      )}
+    </Formik>
+  );
+}
+
+export function Map( setFieldValue ) {
   const [map, setMap] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -77,6 +113,15 @@ export default function Map() {
       lat: latLng.lat(),
       lng: latLng.lng(),
     });
+
+    // Get latitude and longitude from the latLng object
+    // const lat = latLng.lat();
+    // const lng = latLng.lng();
+    // setMarkerPosition({ lat, lng });
+
+    // Update Formik state
+    setFieldValue("lat", latLng.lat());
+    setFieldValue("lng", latLng.lng());
 
     // Reset InfoWindow content and visibility
     setSelectedPlace(null);
