@@ -2,7 +2,6 @@ import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
 import { Button, TextField } from "@mui/material";
-import { useRouter } from 'next/router';
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 
