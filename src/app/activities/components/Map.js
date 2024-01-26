@@ -2,9 +2,11 @@ import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
 import { Button, TextField } from "@mui/material";
+import { useRouter } from 'next/router';
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 
+const libraries = ["places"];
 const defaultMapLocation = {
   lat: 51.5074,
   lng: -0.1278,
@@ -39,7 +41,10 @@ export default function Map() {
         lng: location.lng(),
       });
 
-      setSelectedPlace({ formatted_address: place.formatted_address, geometry: { location: location } });
+      setSelectedPlace(null);
+      setInfoOpen(false);
+
+      setSelectedPlace({ formatted_address: place.formatted_address});
       setInfoOpen(true);
 
       if (map) {
@@ -73,14 +78,16 @@ export default function Map() {
       lat: latLng.lat(),
       lng: latLng.lng(),
     });
-    setLastClickedMarker({ lat: latLng.lat(), lng: latLng.lng() });
+
+    // Reset InfoWindow content and visibility
+    setSelectedPlace(null);
+    setInfoOpen(false);
 
     if (geocoderRef.current) {
       geocoderRef.current.geocode({ location: latLng }, (results, status) => {
         if (status === "OK" && results[0]) {
           setSelectedPlace({ formatted_address: results[0].formatted_address });
-          setInfoOpen(true);
-          console.log(results[0].formatted_address);
+          setInfoOpen(true);  // Reopen InfoWindow with new content
         }
       });
     }
@@ -88,7 +95,7 @@ export default function Map() {
 
   return (
     <Box sx={{ width: "100%", height: 700, padding: 5, display: "flex", flexDirection: "column" }}>
-      <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={["places"]}>
+      <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ width: "65%", mr: 2 }}>
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
@@ -104,7 +111,7 @@ export default function Map() {
             <Button
               variant="text"
               sx={{ color: "black", textDecoration: "underline", "&:hover": { backgroundColor: "transparent" } }}
-              // TODO:Implement "Get Directions" functionality here
+              // TODO: Implement "Get Directions" functionality here
             >
               Get directions
             </Button>
