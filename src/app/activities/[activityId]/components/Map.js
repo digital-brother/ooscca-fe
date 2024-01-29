@@ -1,9 +1,12 @@
 import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
-import { Button, TextField } from "@mui/material";
+import {Button, TextField } from "@mui/material";
 import { Formik, Form, Field } from 'formik';
-import axios from "axios";
+import {createHandleSubmit} from "@/app/activities/[activityId]/components/formikFields";
+import {useParams} from "next/navigation";
+import {useMutation, useQuery} from "react-query";
+import {getActivity, patchActivity, patchProvider} from "@/app/activities/[activityId]/api.mjs";
 
 // const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 const MAP_API_KEY = "AIzaSyCvRilixYTq-080gFVs6uWf_WybV-t8y-g";
@@ -16,29 +19,29 @@ const defaultMapLocation = {
 
 
 export default function MapForm({ initialCoordinates }) {
-  const handleSubmitToBackend = async (values) => {
-  try {
-    const response = await axios.post('YOUR_BACKEND_ENDPOINT', values);
-    console.log(response.data); // Handle the response as needed
-    // Maybe navigate to another page or show success message
-  } catch (error) {
-    console.error(error.response.data); // Handle errors
-    // Maybe show error message to the user
+  const activityId = useParams().activityId;
+
+  const mutation = useMutation((data) => patchActivity(activityId, data));
+
+   async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, throwError: true });
+    handle(values, formikHelpers);
   }
-};
 
   return (
     <Formik
       initialValues={{
         lat: initialCoordinates.lat,
-        lng: initialCoordinates.lng
+        lng: initialCoordinates.lng,
+        address: '',
       }}
-      onSubmit={handleSubmitToBackend}
+      onSubmit={handleSubmit}
     >
       {({ setFieldValue }) => (
         <Form>
           <Field type="hidden" name="lat" />
           <Field type="hidden" name="lng" />
+          <Field type="hidden" name="address" />
           <Map setFieldValue={setFieldValue} />
           <button type="submit">Submit</button>
         </Form>
@@ -47,7 +50,7 @@ export default function MapForm({ initialCoordinates }) {
   );
 }
 
-export function Map( setFieldValue ) {
+export function Map({setFieldValue} ) {
   const [map, setMap] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -93,6 +96,8 @@ export function Map( setFieldValue ) {
       map.setZoom(15);
       map.panTo(location);
     }
+
+    setFieldValue("address", place.formatted_address);
   };
 
   const handleMarkerClick = (markerLatLng) => {
@@ -114,11 +119,6 @@ export function Map( setFieldValue ) {
       lng: latLng.lng(),
     });
 
-    // Get latitude and longitude from the latLng object
-    // const lat = latLng.lat();
-    // const lng = latLng.lng();
-    // setMarkerPosition({ lat, lng });
-
     // Update Formik state
     setFieldValue("lat", latLng.lat());
     setFieldValue("lng", latLng.lng());
@@ -132,6 +132,8 @@ export function Map( setFieldValue ) {
         if (status === "OK" && results[0]) {
           setSelectedPlace({ formatted_address: results[0].formatted_address });
           setInfoOpen(true);  // Reopen InfoWindow with new content
+
+          setFieldValue("address", results[0].formatted_address);
         }
       });
     }
@@ -145,7 +147,7 @@ export function Map( setFieldValue ) {
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
               <TextField
                 fullWidth
-                placeholder="Add venue address here"
+                placeholder="Venue address"
                 variant="outlined"
                 sx={{ ".MuiOutlinedInput-notchedOutline": { borderColor: "black" } }}
               />
