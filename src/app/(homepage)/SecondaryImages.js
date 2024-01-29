@@ -69,22 +69,24 @@ export function SecondaryImageMessages({ file }) {
   </Box>)
 }
 
-export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
+export function SecondaryImageWidget({initialFile, order, enabled, ...props}) {
   // const activityId = useParams().activityId;
   const activityId = 1;
 
-  const [widgetFiles, setWidgetFiles] = useState(initialFiles)  // array with 0 or 1 element
+  const [widgetFile, setWidgetFile] = useState([])  // array with 0 or 1 element
   useEffect(() => {
-    setWidgetFiles(widgetFiles => initialFiles)
-  }, [initialFiles])
+    setWidgetFile(widgetFile => initialFile)
+  }, [initialFile])
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => initialFiles.forEach((file) => URL.revokeObjectURL(file.url));
-  }, [initialFiles]);
+    if (initialFile) {
+      return URL.revokeObjectURL(initialFile.url)
+    }
+  }, [initialFile]);
 
   function removeFile() {
-    setWidgetFiles(widgetFiles => []);
+    setWidgetFile(widgetFile => null);
   }
 
   const deleteMutation = useMutation((data) => deleteImage(data?.id), {
@@ -114,31 +116,30 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
   });
 
   async function handleDelete() {
-      widgetFiles.forEach((file) => {
-      if (file?.id) {
-        deleteMutation.mutateAsync(file)
-      } else {
-        removeFile();
-      }
-    })
+    if (widgetFile?.id) {
+      deleteMutation.mutateAsync(widgetFile)
+    } else {
+      removeFile();
+    }
   }
 
   async function handleAppend(acceptedFiles) {
-    setWidgetFiles(widgetFiles => [...widgetFiles, ...acceptedFiles.map((file, index) => {
+    // setWidgetFiles(widgetFiles => [...widgetFiles, ...acceptedFiles.map((file, index) => {
+    setWidgetFiles(widgetFiles => acceptedFiles.map((file, index) => {
         const newObject = Object.assign(file, {
           preview: URL.createObjectURL(file),
           order,
         })
         postMutation.mutate(newObject)
         return newObject
-      }),
-    ]);
+      })[0],
+    );
   }
 
   return (
     <Grid item md={4} sx={{ borderRadius: 8, width: "100%" }}>
       <DropZoneImageUpload
-        files={widgetFiles}
+        file={widgetFile}
         order={order}
         handleDelete={handleDelete}
         handleAppend={handleAppend}
@@ -152,7 +153,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
           enabled: {enabled},
         }}
       />
-      <SecondaryImageMessages file={widgetFiles[0]} />
+      <SecondaryImageMessages file={widgetFile} />
     </Grid>
   )
 }
@@ -166,11 +167,7 @@ export default function SecondaryImages() {
   // const activityId = useParams().activityId;
   const activityId = 1;
 
-  const {
-    data: images,
-    isLoading,
-    isError,
-  } = useQuery({
+  useQuery({
     queryKey: "secondaryImages",
     queryFn: () => getSecondaryImages(),
     enabled: !isInitialFilesLoaded,  // disable repeated requests
@@ -183,7 +180,7 @@ export default function SecondaryImages() {
   for (let order = 1; order <= numberOfElements; order++) {
     imageInputs.push(
       <SecondaryImageWidget
-        initialFiles={initialFiles.filter((file) => file.order === order )}
+        initialFile={initialFiles.filter((file) => file.order === order )[0]}
         order={order}
         isInitialFilesLoaded={isInitialFilesLoaded}
       />
