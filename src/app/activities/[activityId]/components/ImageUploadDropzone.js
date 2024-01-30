@@ -48,7 +48,16 @@ function ImageInputMobile({ sx, handleAppend, multiple }) {
   const fileInput = React.useRef();
 
   return (
-    <Stack sx={{ alignItems: "center", bgcolor: "grey.200", p: 2, borderRadius: 1.5, ...sx }}>
+    <Stack
+      sx={{
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        bgcolor: "grey.200",
+        borderRadius: 1.5,
+        ...sx,
+      }}
+    >
       <Button
         variant="contained"
         onClick={() => fileInput.current.click()}
@@ -182,7 +191,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
   return (
     <Box
       sx={{
-        width: 380,
+        width: 330,
         height: 330,
         borderRadius: 1.5,
         border: "1px #ADB5BD solid",
