@@ -154,56 +154,11 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
           gap: 2,
         }}
       >
-        <Button
-          variant="outlined"
-          onClick={imageDeleteCancel}
-          color="grey"
-          sx={{
-            flexGrow: 1,
-            color: "black",
-            borderColor: "black",
-            width: "100%",
-            py: 1.5,
-          }}
-        >
-          <Typography
-            sx={{
-              color: "grey.800",
-              textAlign: "center",
-              fontFamily: "Manrope",
-              fontSize: 15,
-              fontStyle: "normal",
-              fontWeight: 700,
-              lineHeight: 1.3,
-            }}
-          >
-            Cancel
-          </Typography>
+        <Button variant="outlined" onClick={imageDeleteCancel} color="grey">
+          Cancel
         </Button>
-        <Button
-          variant="contained"
-          onClick={imageDeleteConfirm}
-          color="grey"
-          sx={{
-            flexGrow: 1,
-            backgroundColor: "grey.600",
-            width: "100%",
-            py: 1.7,
-          }}
-        >
-          <Typography
-            sx={{
-              color: "white",
-              textAlign: "center",
-              fontFamily: "Manrope",
-              fontSize: 15,
-              fontStyle: "normal",
-              fontWeight: 700,
-              lineHeight: 1.3,
-            }}
-          >
-            Confirm
-          </Typography>
+        <Button variant="contained" onClick={imageDeleteConfirm} color="grey">
+          Confirm
         </Button>
       </Box>
     </Box>
@@ -229,7 +184,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
     <Box
       sx={{
         width: 380,
-        height: 110,
+        height: 330,
         borderRadius: 1.5,
         border: "1px #ADB5BD solid",
         overflow: "hidden",
