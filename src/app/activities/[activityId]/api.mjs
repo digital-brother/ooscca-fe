@@ -8,7 +8,7 @@ const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
 const ACTIVITIES_PATH = "/activities";
 const DISCOUNTS_SUBPATH = "discounts";
-const IMAGES_SUBPATH = "images/";
+const IMAGES_SUBPATH = "images";
 
 const client = axios.create({
   baseURL: API_HOST,

@@ -69,18 +69,23 @@ export function SecondaryImageMessages({ file }) {
   );
 }
 
-export function SecondaryImage({ initialFiles, order, enabled, ...props }) {
+export function SecondaryImage({ initialFile, order, enabled }) {
   const activityId = useParams().activityId;
 
-  const [widgetFiles, setWidgetFiles] = useState(initialFiles); // array with 0 or 1 element
+  const [file, setFile] = useState(initialFile);
   useEffect(() => {
-    setWidgetFiles((widgetFiles) => initialFiles);
-  }, [initialFiles]);
+    setFile(initialFile);
+  }, [initialFile]);
+
+  const [widgetFiles, setWidgetFiles] = useState(initialFile); // array with 0 or 1 element
+  useEffect(() => {
+    setWidgetFiles((widgetFiles) => initialFile);
+  }, [initialFile]);
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => (file) => URL.revokeObjectURL(file.url);
-  }, [initialFiles]);
+  }, [initialFile]);
 
   function removeFile() {
     setWidgetFiles((widgetFiles) => []);
@@ -143,7 +148,8 @@ export function SecondaryImage({ initialFiles, order, enabled, ...props }) {
   return (
     <Grid item md={4} sx={{ borderRadius: 8, width: "100%" }}>
       <ImageUpload
-        files={widgetFiles}
+        file={file}
+        setFile={setFile}
         order={order}
         handleDelete={handleDelete}
         handleAppend={handleAppend}
@@ -166,7 +172,7 @@ export default function SecondaryImagesSection() {
   const activityId = useParams().activityId;
   const { data: images } = useQuery("secondaryImages", () => getSecondaryImages(activityId));
 
-  function getImageByOrder(order) {
+  function getFileByOrder(order) {
     const imageArr = images?.filter((file) => file.order === order);
     return imageArr ? imageArr[0] : null;
   }
@@ -174,7 +180,7 @@ export default function SecondaryImagesSection() {
   return (
     <Container sx={{ my: { xs: 6, md: 10 }, display: "flex", gap: 4 }}>
       {Array.from({ length: 3 }).map((_, index) => (
-        <SecondaryImage key={index} initialFile={getImageByOrder(index)} order={index} />
+        <SecondaryImage key={index + 1} initialFile={getFileByOrder(index + 1)} order={index + 1} />
       ))}
     </Container>
   );
