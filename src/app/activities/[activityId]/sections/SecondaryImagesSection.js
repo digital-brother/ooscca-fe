@@ -69,7 +69,7 @@ export function SecondaryImageMessages({ file }) {
   );
 }
 
-export function SecondaryImageWidget({ initialFiles, order, enabled, ...props }) {
+export function SecondaryImage({ initialFiles, order, enabled, ...props }) {
   const activityId = useParams().activityId;
 
   const [widgetFiles, setWidgetFiles] = useState(initialFiles); // array with 0 or 1 element
@@ -79,7 +79,7 @@ export function SecondaryImageWidget({ initialFiles, order, enabled, ...props })
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => initialFiles.forEach((file) => URL.revokeObjectURL(file.url));
+    return () => (file) => URL.revokeObjectURL(file.url);
   }, [initialFiles]);
 
   function removeFile() {
@@ -157,41 +157,25 @@ export function SecondaryImageWidget({ initialFiles, order, enabled, ...props })
           enabled: { enabled },
         }}
       />
-      <SecondaryImageMessages file={widgetFiles[0]} />
+      <SecondaryImageMessages file={widgetFiles} />
     </Grid>
   );
 }
 
 export default function SecondaryImagesSection() {
-  const [initialFiles, setinitialFiles] = useState([]);
-  const [isInitialFilesLoaded, setIsInitialFilesLoaded] = useState(false);
-  const numberOfElements = 3;
-  const imageInputs = [];
   const activityId = useParams().activityId;
+  const { data: images } = useQuery("secondaryImages", () => getSecondaryImages(activityId));
 
-  const {
-    data: images,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: "secondaryImages",
-    queryFn: () => getSecondaryImages(),
-    enabled: !isInitialFilesLoaded, // disable repeated requests
-    onSuccess: (data) => {
-      setinitialFiles((initialFiles) => data);
-      setIsInitialFilesLoaded(true);
-    },
-  });
-
-  for (let order = 1; order <= numberOfElements; order++) {
-    imageInputs.push(
-      <SecondaryImageWidget
-        initialFiles={initialFiles.filter((file) => file.order === order)}
-        order={order}
-        isInitialFilesLoaded={isInitialFilesLoaded}
-      />
-    );
+  function getImageByOrder(order) {
+    const imageArr = images?.filter((file) => file.order === order);
+    return imageArr ? imageArr[0] : null;
   }
 
-  return <Container sx={{ my: { xs: 6, md: 10 }, display: "flex", gap: 4 }}>{imageInputs}</Container>;
+  return (
+    <Container sx={{ my: { xs: 6, md: 10 }, display: "flex", gap: 4 }}>
+      {Array.from({ length: 3 }).map((_, index) => (
+        <SecondaryImage key={index} initialFile={getImageByOrder(index)} order={index} />
+      ))}
+    </Container>
+  );
 }
