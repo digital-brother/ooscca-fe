@@ -17,43 +17,12 @@ import {
   postImage,
 } from "@/app/activities/apiImage.mjs";
 
-export function SecondaryImageMessages({ file }) {
-  let messageColor = ""
-  const messageTexts = []
-
-  if (file) {
-    file.frontendErrors = []
-    if (file?.size > 5*1024*1024) {
-      file?.frontendErrors.push("image: Max file size is 5.0 MB")
-    }
-  }
-
-  if (file?.error || file?.frontendErrors.length > 0) {
-    messageColor = "red.500"
-    if (file?.error?.response?.data) {  // 2 types errors: from backend & if network failed
-      for (const [key, value] of Object.entries(file?.error?.response?.data)) {
-        messageTexts.push(key + ": " + value)
-      }
-    } else if (file?.error?.message) {
-      messageTexts.push(file?.error?.message)
-    } else if (file?.frontendErrors?.length > 0) {
-      file?.frontendErrors?.map(frontendError => messageTexts.push(frontendError))
-    } else {
-      messageTexts.push("Unknown error")
-    }
-
-  } else {
-    messageColor = "green.500"
-    if (Object.prototype.isPrototypeOf.call(file, "error")) {
-      messageTexts.push("Image approved")
-    }
-  }
-
+export function SecondaryImageMessages({ messages }) {
   return (<Box>
-    {messageTexts.map((text, index) => (
+    {messages.map((message, index) => (
       <Box key={index}>
         <Typography sx={{
-          color: messageColor,
+          color: message.isError ? "red" : "green",
           fontSize: 16,
           fontFamily: "Manrope",
           fontStyle: "normal",
@@ -62,15 +31,61 @@ export function SecondaryImageMessages({ file }) {
           letterSpacing: 0.09,
           mt: 0.8,
         }}>
-          {text}
+          {message.text}
         </Typography>
       </Box>
     ))}
   </Box>)
 }
 
+export function getMessages(mutation, frontendErrors) {
+  const messages = []
+  console.log("mutation")
+  console.log(mutation)
+
+  if (mutation?.error) {
+    if (mutation?.error?.response?.data) {  // 2 types errors: from backend & if network failed
+      for (const [key, value] of Object.entries(mutation?.error?.response?.data)) {
+        messages.push({
+          "isError": true,
+          "text": key + ": " + value,
+        })
+      }
+    } else if (mutation?.error?.message) {
+      messages.push({
+        "isError": true,
+        "text": mutation?.error?.message,
+      })
+    } else {
+      messages.push({
+        "isError": true,
+        "text": "Unknown error",
+      })
+    }
+  }
+
+  if (frontendErrors) {
+    frontendErrors.forEach(errorText => {
+      messages.push({
+        "isError": true,
+        "text": errorText,
+      })
+    })
+  }
+
+  if(messages.length === 0) {
+    messages.push({
+      "isError": false,
+      "text": "Image approved",
+    })
+  }
+
+  return messages
+}
+
 export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
-  const activityId = useParams().activityId;
+  const activityId = useParams().activityId
+  const [messages, setMessages] = useState([])
 
   const [widgetFiles, setWidgetFiles] = useState(initialFiles)  // array with 0 or 1 element
   useEffect(() => {
@@ -88,10 +103,11 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
 
   const deleteMutation = useMutation((data) => deleteImage(data?.id), {
     onSuccess: (data, sentImage, context) => {
-      removeFile();
+      removeFile()
+      setMessages([])
     },
     onError: (error, sentImage, context) => {
-      sentImage.error = error
+      setMessages(getMessages(deleteMutation))
     },
   });
 
@@ -108,7 +124,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
       sentImage.id = data.id
     },
     onError: (error, sentImage, context) => {
-      sentImage.error = error
+      setMessages(getMessages(postMutation))
     },
   });
 
@@ -116,6 +132,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
       widgetFiles.forEach((file) => {
       if (file?.id) {
         deleteMutation.mutateAsync(file)
+        // setMessages(getMessages(deleteMutation))
       } else {
         removeFile();
       }
@@ -129,6 +146,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
           order,
         })
         postMutation.mutate(newObject)
+        // setMessages(getMessages(postMutation))
         return newObject
       }),
     ]);
@@ -151,7 +169,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
           enabled: {enabled},
         }}
       />
-      <SecondaryImageMessages file={widgetFiles[0]} />
+      <SecondaryImageMessages messages={messages} />
     </Grid>
   )
 }
