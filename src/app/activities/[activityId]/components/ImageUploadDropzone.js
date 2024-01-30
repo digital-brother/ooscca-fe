@@ -11,8 +11,6 @@ const imageInputContainerSx = {
   height: "100%",
   justifyContent: "center",
   alignItems: "center",
-  bgcolor: "grey.200",
-  borderRadius: 1.5,
 };
 
 function ImageInputDesktop({ handleAppend, multiple, sx }) {
@@ -114,12 +112,9 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
   }
 
   return (
-    <Box
+    <Stack
       sx={{
-        width: "100%",
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -155,7 +150,7 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
           Confirm
         </Button>
       </Box>
-    </Box>
+    </Stack>
   );
 }
 
@@ -179,9 +174,9 @@ export default function ImageUpload({ file, setFile, ...props }) {
       sx={{
         width: 330,
         height: 330,
-        borderRadius: 1.5,
-        border: "1px #ADB5BD solid",
         overflow: "hidden",
+        border: "1px #ADB5BD solid",
+        borderRadius: 1.5,
         bgcolor: "grey.200",
         ...props?.sx,
       }}
