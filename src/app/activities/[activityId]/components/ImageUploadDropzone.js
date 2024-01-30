@@ -112,44 +112,16 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
   }
 
   return (
-    <Stack
-      sx={{
-        height: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Typography sx={{ fontWeight: 700, mb: 2, display: { xs: "none", md: "block" }, px: "10%", textAlign: "center" }}>
-        Are you sure you want to delete the file?
+    <Stack sx={{ ...imageInputContainerSx, width: "80%", gap: 2, mx: "auto", textAlign: "center" }}>
+      <Typography variant="h5">
+        Delete Image?
       </Typography>
-      <Typography
-        sx={{
-          fontWeight: 700,
-          mb: 2,
-          display: { xs: "block", md: "none" },
-          textAlign: "center",
-          fontSize: 24,
-          fontStyle: "normal",
-        }}
-      >
-        Edit Image
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "column",
-          width: "80%",
-          gap: 2,
-        }}
-      >
-        <Button variant="outlined" onClick={handleCancel} color="grey">
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleConfirm} color="grey">
-          Confirm
-        </Button>
-      </Box>
+      <Button variant="outlined" onClick={handleCancel} color="grey" fullWidth>
+        Cancel
+      </Button>
+      <Button variant="contained" onClick={handleConfirm} color="grey" fullWidth>
+        Confirm
+      </Button>
     </Stack>
   );
 }
