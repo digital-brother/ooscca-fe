@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
 
-function ImageInputDesktop(handleAppend, multiple, sx) {
+function ImageInputDesktop({ handleAppend, multiple, sx }) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
@@ -34,7 +34,7 @@ function ImageInputDesktop(handleAppend, multiple, sx) {
   );
 }
 
-function ImageInputMobile(sx, handleAppend, multiple) {
+function ImageInputMobile({ sx, handleAppend, multiple }) {
   const fileInput = React.useRef();
 
   return (
@@ -75,23 +75,21 @@ export function ImageInput({ multiple, handleAppend, sx }) {
   );
 }
 
-function ImagePreview({ files, setShowConfirmDelete }) {
+function ImagePreview({ file, setShowConfirmDelete }) {
   function showImageDeleteConfirmation() {
     setShowConfirmDelete(true);
   }
 
   return (
     <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-      {files.map((file) => (
-        <Box
-          component="img"
-          src={file.preview || file.image}
-          alt="Preview"
-          sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-          onLoad={() => URL.revokeObjectURL(file.url)}
-          key={file.preview || file.id}
-        />
-      ))}
+      <Box
+        component="img"
+        src={file.preview || file.image}
+        alt="Preview"
+        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+        onLoad={() => URL.revokeObjectURL(file.url)}
+        key={file.preview || file.id}
+      />
       <IconButton
         color="grey"
         onClick={showImageDeleteConfirmation}
@@ -212,9 +210,12 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
   );
 }
 
-export default function ImageUpload({ files, handleAppend, handleDelete, ...props }) {
-  const [showConfirmDelete, setShowConfirmDelete] = useState();
+export default function ImageUpload({ file, setFile, ...props }) {
+  const [showConfirmDelete, setShowConfirmDelete] = useState(null);
 
+  const handleDelete = () => setFile(null);
+  const handleAppend = (file) => setFile(file);
+  
   return (
     <Box
       sx={{
@@ -227,17 +228,15 @@ export default function ImageUpload({ files, handleAppend, handleDelete, ...prop
         ...props?.sx,
       }}
     >
-      {showConfirmDelete && (
-        <ImageDeleteConfirm files={files} handleDelete={handleDelete} setShowConfirmDelete={setShowConfirmDelete} />
-      )}
-      {files.length === 0 && (
+      {showConfirmDelete && ( <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} /> )}
+      {!file && (
         <ImageInput
           handleAppend={handleAppend}
           multiple={false}
           sx={{ backgroundColor: props?.sx?.backgroundColor || props?.sx?.bgColor }}
         />
       )}
-      {files.length !== 0 && <ImagePreview files={files} setShowConfirmDelete={setShowConfirmDelete} key={1} />}
+      {file && <ImagePreview {...{ file, setShowConfirmDelete }} />}
     </Box>
   );
 }
