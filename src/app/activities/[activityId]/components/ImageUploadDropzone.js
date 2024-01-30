@@ -106,16 +106,12 @@ function ImagePreview({ file, setShowConfirmDelete }) {
 }
 
 function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
-  async function imageDeleteConfirm() {
-    try {
-      if (handleDelete !== undefined) {
-        handleDelete();
-      }
-    } catch (e) {}
+  async function handleConfirm() {
+    handleDelete();
     setShowConfirmDelete(false);
   }
 
-  function imageDeleteCancel() {
+  function handleCancel() {
     setShowConfirmDelete(false);
   }
 
@@ -154,10 +150,10 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
           gap: 2,
         }}
       >
-        <Button variant="outlined" onClick={imageDeleteCancel} color="grey">
+        <Button variant="outlined" onClick={handleCancel} color="grey">
           Cancel
         </Button>
-        <Button variant="contained" onClick={imageDeleteConfirm} color="grey">
+        <Button variant="contained" onClick={handleConfirm} color="grey">
           Confirm
         </Button>
       </Box>
