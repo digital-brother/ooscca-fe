@@ -29,6 +29,8 @@ function ImageInputDesktop(handleAppend, multiple, sx) {
           justifyContent: "center",
           bgcolor: sx?.backgroundColor || sx?.bgColor || "grey.200",
           gap: 1,
+          p: 2,
+          borderRadius: 1.5,
           ...sx,
         },
       })}
@@ -58,6 +60,8 @@ function ImageInputMobile(sx, handleAppend, multiple) {
         justifyContent: "center",
         bgcolor: sx?.backgroundColor || sx?.bgColor || "grey.200",
         gap: 1,
+        p: 2,
+        borderRadius: 1.5,
         width: "100%",
         ...sx,
       }}
@@ -65,28 +69,10 @@ function ImageInputMobile(sx, handleAppend, multiple) {
       <Button
         variant="contained"
         onClick={() => fileInput.current.click()}
-        sx={{
-          backgroundColor: "white",
-          height: 55,
-          py: 1.7,
-          selfAlign: "center",
-          width: "65%",
-          borderRadius: 2,
-        }}
+        sx={{ height: 55, width: "65%" }}
         color="grey"
       >
-        <Typography
-          sx={{
-            color: "black",
-            textAlign: "center",
-            fontFamily: "Manrope",
-            fontSize: 16,
-            fontStyle: "normal",
-            fontWeight: 700,
-          }}
-        >
-          Upload images
-        </Typography>
+        Upload images
       </Button>
 
       <input
