@@ -20,13 +20,23 @@ function ImageInputDesktop({ handleAppend, multiple, sx }) {
 
   return (
     <Stack
-      {...getRootProps({ sx: { alignItems: "center", bgcolor: "grey.200", gap: 1, p: 2, borderRadius: 1.5, ...sx } })}
+      // TODO: extract common styles
+      {...getRootProps({
+        sx: {
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          bgcolor: "grey.200",
+          borderRadius: 1.5,
+          gap: 1,
+          ...sx,
+        },
+      })}
     >
       <input {...getInputProps()} />
 
       <Typography sx={{ fontWeight: 700 }}>
-        Drop your image file here or &nbsp;
-        <span style={{ cursor: "pointer", color: "purple" }}>browse</span>
+        Drop your image file here or <span style={{ cursor: "pointer", color: "purple" }}>browse</span>
       </Typography>
 
       <Typography variant="caption">Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px</Typography>
@@ -64,15 +74,8 @@ function ImageInputMobile({ sx, handleAppend, multiple }) {
 export function ImageInput({ multiple, handleAppend, sx }) {
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
-  return (
-    <Box sx={{ height: "100%", p: 2 }}>
-      {mdUp ? (
-        <ImageInputDesktop {...{ multiple, handleAppend, sx }} />
-      ) : (
-        <ImageInputMobile {...{ handleAppend, multiple, sx }} />
-      )}
-    </Box>
-  );
+  if (mdUp) return <ImageInputDesktop {...{ multiple, handleAppend, sx }} />;
+  else return <ImageInputMobile {...{ handleAppend, multiple, sx }} />;
 }
 
 function ImagePreview({ file, setShowConfirmDelete }) {
