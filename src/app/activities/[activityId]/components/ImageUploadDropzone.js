@@ -7,6 +7,14 @@ import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
 
+const imageInputContainerSx = {
+  height: "100%",
+  justifyContent: "center",
+  alignItems: "center",
+  bgcolor: "grey.200",
+  borderRadius: 1.5,
+};
+
 function ImageInputDesktop({ handleAppend, multiple, sx }) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -19,20 +27,7 @@ function ImageInputDesktop({ handleAppend, multiple, sx }) {
   });
 
   return (
-    <Stack
-      // TODO: extract common styles
-      {...getRootProps({
-        sx: {
-          height: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          bgcolor: "grey.200",
-          borderRadius: 1.5,
-          gap: 1,
-          ...sx,
-        },
-      })}
-    >
+    <Stack {...getRootProps({ sx: { ...imageInputContainerSx, gap: 1, ...sx } })}>
       <input {...getInputProps()} />
 
       <Typography sx={{ fontWeight: 700 }}>
@@ -48,21 +43,12 @@ function ImageInputMobile({ sx, handleAppend, multiple }) {
   const fileInput = React.useRef();
 
   return (
-    <Stack
-      sx={{
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        bgcolor: "grey.200",
-        borderRadius: 1.5,
-        ...sx,
-      }}
-    >
+    <Stack sx={{ ...imageInputContainerSx, ...sx }}>
       <Button
         variant="contained"
         onClick={() => fileInput.current.click()}
         size="large"
-        sx={{ width: "65%", mx: "auto" }}
+        sx={{ width: "65%" }}
         color="grey"
       >
         Upload images
