@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, {useRef, useState, useCallback, useEffect} from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
 import {Button, TextField } from "@mui/material";
@@ -18,51 +18,46 @@ const defaultMapLocation = {
 };
 
 
-export default function MapForm({ initialCoordinates }) {
-  const activityId = useParams().activityId;
 
-  const mutation = useMutation((data) => patchActivity(activityId, data));
 
-   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation, throwError: true });
-    handle(values, formikHelpers);
-  }
-
-  return (
-    <Formik
-      initialValues={{
-        lat: initialCoordinates.lat,
-        lng: initialCoordinates.lng,
-        address: '',
-      }}
-      onSubmit={handleSubmit}
-    >
-      {({ setFieldValue }) => (
-        <Form>
-          <Field type="hidden" name="lat" />
-          <Field type="hidden" name="lng" />
-          <Field type="hidden" name="address" />
-          <Map setFieldValue={setFieldValue} />
-          <button type="submit">Submit</button>
-        </Form>
-      )}
-    </Formik>
-  );
-}
-
-export function Map({setFieldValue} ) {
+export function MapComponent({ setFieldValue, initialCoordinates, initialAddress } ) {
   const [map, setMap] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
-  const [infoOpen, setInfoOpen] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [markerPosition, setMarkerPosition] = useState(initialCoordinates || defaultMapLocation);
+  const [infoOpen, setInfoOpen] = useState(!!initialAddress);
+  const [selectedPlace, setSelectedPlace] = useState(initialAddress ? { formatted_address: initialAddress } : null);
   const [lastClickedMarker, setLastClickedMarker] = useState(null);
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
+  const textFieldRef = useRef(null);
+
+  useEffect(() => {
+    // Set marker to initialCoordinates or defaultMapLocation
+    setMarkerPosition(initialCoordinates || defaultMapLocation);
+
+    // Set the address in the search box if initialAddress is provided
+    if (initialAddress && textFieldRef.current) {
+      textFieldRef.current.querySelector('input').value = initialAddress;
+    }
+
+    // If initialCoordinates are provided, update Formik fields
+    if (initialCoordinates) {
+      setFieldValue("latitude", initialCoordinates.latitude);
+      setFieldValue("longitude", initialCoordinates.longitude);
+    }
+
+    // Update Formik field for address
+    if (initialAddress) {
+      setFieldValue("address", initialAddress);
+    }
+  }, [initialCoordinates, initialAddress, setFieldValue]);
 
   const handleMapLoad = useCallback((map) => {
-    setMap(map);
-    geocoderRef.current = new window.google.maps.Geocoder(); // Create the geocoder here
-  }, []);
+  setMap(map);
+  geocoderRef.current = new window.google.maps.Geocoder(); // Create the geocoder here
+  if (initialCoordinates) {
+    map.setCenter(new window.google.maps.LatLng(initialCoordinates.lat, initialCoordinates.lng));
+  }
+}, [initialCoordinates]);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
@@ -79,6 +74,13 @@ export function Map({setFieldValue} ) {
         lng: location.lng(),
       });
 
+      if (!isNaN(location.lat()) && !isNaN(location.lng())) {
+        setMarkerPosition({ lat: location.lat(), lng: location.lng() });
+        setFieldValue("latitude", location.lat());
+        setFieldValue("longitude", location.lng());
+      }
+      setFieldValue("address", place.formatted_address);
+
       setSelectedPlace(null);
       setInfoOpen(false);
 
@@ -90,14 +92,6 @@ export function Map({setFieldValue} ) {
         map.panTo(location);
       }
     }
-
-    if (map) {
-      // Set a closer zoom level, for example, 15
-      map.setZoom(15);
-      map.panTo(location);
-    }
-
-    setFieldValue("address", place.formatted_address);
   };
 
   const handleMarkerClick = (markerLatLng) => {
@@ -120,8 +114,8 @@ export function Map({setFieldValue} ) {
     });
 
     // Update Formik state
-    setFieldValue("lat", latLng.lat());
-    setFieldValue("lng", latLng.lng());
+    setFieldValue("latitude", latLng.lat());
+    setFieldValue("longitude", latLng.lng());
 
     // Reset InfoWindow content and visibility
     setSelectedPlace(null);
@@ -149,6 +143,7 @@ export function Map({setFieldValue} ) {
                 fullWidth
                 placeholder="Venue address"
                 variant="outlined"
+                ref={textFieldRef}
                 sx={{ ".MuiOutlinedInput-notchedOutline": { borderColor: "black" } }}
               />
             </StandaloneSearchBox>
@@ -166,7 +161,7 @@ export function Map({setFieldValue} ) {
         <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
-            center={defaultMapLocation}
+            center={initialCoordinates}
             zoom={10}
             onLoad={handleMapLoad}
             onClick={handleMapClick}

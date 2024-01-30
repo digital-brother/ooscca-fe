@@ -53,6 +53,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 import { CancelButton, GoBackButton, NextButton } from "./components/buttons";
 import { Editor } from "@tinymce/tinymce-react";
+import MapForm, {MapComponent} from "@/app/activities/[activityId]/components/Map";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -364,6 +365,44 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         Activity will be saved in your accounts page
       </Typography>
     </>
+  );
+}
+
+function Map() {
+  const defaultCoordinates = { lat: 51.5074, lng: -0.1278 };
+  const activityId = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const mutation = useMutation((data) => patchActivity(activityId, data));
+  const initialCoordinates = activity
+  ? { lat: parseFloat(activity.latitude), lng: parseFloat(activity.longitude) }
+  : defaultCoordinates;
+  const initialAddress = activity?.address || ''
+
+   async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, throwError: true });
+    handle(values, formikHelpers);
+  }
+
+  return (
+    <Formik
+      enableReinitialize
+      initialValues={{
+        lat: initialCoordinates.lat,
+        lng: initialCoordinates.lng,
+        address: initialAddress,
+      }}
+      onSubmit={handleSubmit}
+    >
+      {({ setFieldValue }) => (
+        <Form>
+          <Field type="hidden" name="latitude" />
+          <Field type="hidden" name="longitude" />
+          <Field type="hidden" name="address" />
+          <MapComponent setFieldValue={setFieldValue} initialCoordinates={initialCoordinates} initialAddress={initialAddress} />
+          <button type="submit">Submit</button>
+        </Form>
+      )}
+    </Formik>
   );
 }
 
@@ -863,10 +902,12 @@ function TermsAndConditions() {
 }
 
 export default function ActivityEditView() {
+
   return (
     <Container sx={{ my: 10 }}>
-      <Activities />
-      <TermsAndConditions />
+      {/* <Activities /> */}
+      {/* <TermsAndConditions /> */}
+      <Map />
     </Container>
   );
 }
