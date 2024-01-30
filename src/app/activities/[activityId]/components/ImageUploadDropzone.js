@@ -75,9 +75,9 @@ export function ImageInput({ multiple, handleAppend, sx }) {
   );
 }
 
-function ImagePreview({ files, setConfirmDelete }) {
+function ImagePreview({ files, setShowConfirmDelete }) {
   function showImageDeleteConfirmation() {
-    setConfirmDelete(true);
+    setShowConfirmDelete(true);
   }
 
   return (
@@ -107,18 +107,18 @@ function ImagePreview({ files, setConfirmDelete }) {
   );
 }
 
-function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
+function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
   async function imageDeleteConfirm() {
     try {
       if (handleDelete !== undefined) {
         handleDelete();
       }
     } catch (e) {}
-    setConfirmDelete(false);
+    setShowConfirmDelete(false);
   }
 
   function imageDeleteCancel() {
-    setConfirmDelete(false);
+    setShowConfirmDelete(false);
   }
 
   return (
@@ -213,7 +213,7 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
 }
 
 export default function ImageUpload({ files, handleAppend, handleDelete, ...props }) {
-  const [confirmDelete, setConfirmDelete] = useState();
+  const [showConfirmDelete, setShowConfirmDelete] = useState();
 
   return (
     <Box
@@ -227,8 +227,8 @@ export default function ImageUpload({ files, handleAppend, handleDelete, ...prop
         ...props?.sx,
       }}
     >
-      {confirmDelete && (
-        <ImageDeleteConfirm files={files} handleDelete={handleDelete} setConfirmDelete={setConfirmDelete} />
+      {showConfirmDelete && (
+        <ImageDeleteConfirm files={files} handleDelete={handleDelete} setShowConfirmDelete={setShowConfirmDelete} />
       )}
       {files.length === 0 && (
         <ImageInput
@@ -237,7 +237,7 @@ export default function ImageUpload({ files, handleAppend, handleDelete, ...prop
           sx={{ backgroundColor: props?.sx?.backgroundColor || props?.sx?.bgColor }}
         />
       )}
-      {files.length !== 0 && <ImagePreview files={files} setConfirmDelete={setConfirmDelete} key={1} />}
+      {files.length !== 0 && <ImagePreview files={files} setShowConfirmDelete={setShowConfirmDelete} key={1} />}
     </Box>
   );
 }
