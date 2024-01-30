@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -252,7 +252,7 @@ function ImageDeleteConfirm({ handleDelete, setConfirmDelete }) {
   );
 }
 
-export default function DropZoneImageUpload({ files, handleAppend, handleDelete, ...props }) {
+export default function ImageUpload({ files, handleAppend, handleDelete, ...props }) {
   const [confirmDelete, setConfirmDelete] = useState();
 
   return (
