@@ -93,7 +93,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
   };
 
   return (
-    <Box sx={{ width: "100%", height: 700, padding: 5, display: "flex", flexDirection: "column" }}>
+    <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
       <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ width: "65%", mr: 2 }}>

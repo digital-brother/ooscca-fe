@@ -16,7 +16,7 @@ import {
   Stack,
   useMediaQuery,
 } from "@mui/material";
-import { useMutation, useQuery } from "react-query";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import { Field, Form, Formik } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -53,7 +53,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 import { CancelButton, GoBackButton, NextButton } from "./components/buttons";
 import { Editor } from "@tinymce/tinymce-react";
-import MapForm, {MapComponent} from "@/app/activities/[activityId]/components/Map";
+import {MapComponent} from "@/app/activities/[activityId]/components/Map";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -368,13 +368,35 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
   );
 }
 
-function Map() {
+function MapForm() {
   const defaultCoordinates = { lat: 51.5074, lng: -0.1278 };
   const activityId = useParams().activityId;
-  const { data: activity, isLoading, isError } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const queryClient = useQueryClient();
+  const { data: activity, isError } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const [errors, setErrors] = useState('');
 
   const [coordinates, setCoordinates] = useState(defaultCoordinates);
   const [address, setAddress] = useState('');
+
+  const onSuccess = (data) => {
+    queryClient.resetQueries(['activity', activityId], { exact: true });
+    setErrors('');
+  };
+
+  const onError = (error) => {
+    let errorMessage = 'An unexpected error occurred';
+    const errorsResponse = error?.response?.data;
+
+    if (errorsResponse && typeof errorsResponse === 'object') {
+        const errorMessages = Object.entries(errorsResponse).flatMap(([field, errors]) => {
+            return errors.map((error) => `${field}: ${error}`);
+        });
+        errorMessage = errorMessages.join('\n');
+    }
+    setErrors(errorMessage);
+  };
+
+  const mutation = useMutation((data) => patchActivity(activityId, data), { onSuccess, onError });
 
   useEffect(() => {
     if (activity) {
@@ -384,24 +406,9 @@ function Map() {
     }
   }, [activity]);
 
-  const handleDataSubmit = async () => {
+  async function handleSubmit() {
     const data = { latitude: coordinates.lat, longitude: coordinates.lng, address };
-    try {
-      const updatedActivity = await patchActivity(activityId, data);
-      console.log("Activity updated successfully:", updatedActivity);
-      // Additional actions...
-    } catch (error) {
-      console.error("Error updating activity:", error);
-      // Handle errors here...
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-        <CircularProgress />
-      </Box>
-    );
+    mutation.mutate(data);
   }
 
   if (isError) {
@@ -415,16 +422,19 @@ function Map() {
   }
 
   return (
-    <Box>
+    <Box sx={{mt: 2}}>
       <MapComponent
         initialCoordinates={coordinates}
         initialAddress={address}
         setCoordinates={setCoordinates}
         setAddress={setAddress}
       />
-      <Button variant="contained" color="green" size="large" type="submit" onClick={handleDataSubmit}>
+      <Button variant="contained" color="green" size="large" type="submit" onClick={handleSubmit} sx={{mt:2}}>
         Save
       </Button>
+      {errors && (
+        <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>{errors}</Typography>
+      )}
     </Box>
   );
 }
@@ -929,7 +939,7 @@ export default function ActivityEditView() {
   return (
     <Container sx={{ my: 10 }}>
        <Activities />
-       <Map />
+       <MapForm />
        <TermsAndConditions />
     </Container>
   );
