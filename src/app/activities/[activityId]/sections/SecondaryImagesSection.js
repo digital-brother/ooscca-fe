@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "next/navigation";
 
-import ImageUpload from "@/app/activities/[activityId]/components/ImageUploadDropzone";
+import ImageUpload from "../components/ImageUploadDropzone";
 
 import * as React from "react";
 import Grid from "@mui/material/Grid";
@@ -15,7 +15,7 @@ import {
   getSecondaryImages,
   deleteImage,
   postImage,
-} from "@/app/activities/apiImage.mjs";
+} from "../api.mjs";
 
 export function SecondaryImageMessages({ file }) {
   let messageColor = ""
@@ -156,7 +156,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
   )
 }
 
-export default function SecondaryImages() {
+export default function SecondaryImagesSection() {
 
   const [initialFiles, setinitialFiles] = useState([]);
   const [isInitialFilesLoaded, setIsInitialFilesLoaded] = useState(false);
