@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, useMediaQuery } from "@mui/material";
 
-function ImageInputDesktop(handleAppend, multiple, props) {
+function ImageInputDesktop(handleAppend, multiple, sx) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
@@ -27,9 +27,9 @@ function ImageInputDesktop(handleAppend, multiple, props) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor: props?.sx?.backgroundColor || props?.sx?.bgColor || "grey.200",
+          bgcolor: sx?.backgroundColor || sx?.bgColor || "grey.200",
           gap: 1,
-          ...props?.sx,
+          ...sx,
         },
       })}
     >
@@ -45,7 +45,7 @@ function ImageInputDesktop(handleAppend, multiple, props) {
   );
 }
 
-function ImageInputMobile(props, handleAppend, multiple) {
+function ImageInputMobile(sx, handleAppend, multiple) {
   const fileInput = React.useRef();
 
   return (
@@ -56,10 +56,10 @@ function ImageInputMobile(props, handleAppend, multiple) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: props?.sx?.backgroundColor || props?.sx?.bgColor || "grey.200",
+        bgcolor: sx?.backgroundColor || sx?.bgColor || "grey.200",
         gap: 1,
         width: "100%",
-        ...props?.sx,
+        ...sx,
       }}
     >
       <Button
@@ -101,15 +101,15 @@ function ImageInputMobile(props, handleAppend, multiple) {
   );
 }
 
-export function ImageInput({ multiple, handleAppend, ...props }) {
+export function ImageInput({ multiple, handleAppend, sx }) {
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   return (
     <Box sx={{ height: "100%", p: 2 }}>
       {mdUp ? (
-        <ImageInputDesktop {...{ multiple, handleAppend, ...props }} />
+        <ImageInputDesktop {...{ multiple, handleAppend, sx }} />
       ) : (
-        <ImageInputMobile {...{ handleAppend, multiple, ...props }} />
+        <ImageInputMobile {...{ handleAppend, multiple, sx }} />
       )}
     </Box>
   );
