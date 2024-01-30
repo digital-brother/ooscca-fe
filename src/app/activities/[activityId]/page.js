@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
-  Chip,
+  Chip, CircularProgress,
   Dialog,
   FormControl,
   IconButton,
@@ -16,7 +16,7 @@ import {
   Stack,
   useMediaQuery,
 } from "@mui/material";
-import { useMutation, useQuery } from "react-query";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import { Field, Form, Formik } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -53,6 +53,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "./utils";
 import { CancelButton, GoBackButton, NextButton } from "./components/buttons";
 import { Editor } from "@tinymce/tinymce-react";
+import {MapComponent} from "@/app/activities/[activityId]/components/Map";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -364,6 +365,77 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
         Activity will be saved in your accounts page
       </Typography>
     </>
+  );
+}
+
+function MapForm() {
+  const defaultCoordinates = { lat: 51.5074, lng: -0.1278 };
+  const activityId = useParams().activityId;
+  const queryClient = useQueryClient();
+  const { data: activity, isError } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const [errors, setErrors] = useState('');
+
+  const [coordinates, setCoordinates] = useState(defaultCoordinates);
+  const [address, setAddress] = useState('');
+
+  const onSuccess = (data) => {
+    queryClient.resetQueries(['activity', activityId], { exact: true });
+    setErrors('');
+  };
+
+  const onError = (error) => {
+    let errorMessage = 'An unexpected error occurred';
+    const errorsResponse = error?.response?.data;
+
+    if (errorsResponse && typeof errorsResponse === 'object') {
+        const errorMessages = Object.entries(errorsResponse).flatMap(([field, errors]) => {
+            return errors.map((error) => `${field}: ${error}`);
+        });
+        errorMessage = errorMessages.join('\n');
+    }
+    setErrors(errorMessage);
+  };
+
+  const mutation = useMutation((data) => patchActivity(activityId, data), { onSuccess, onError });
+
+  useEffect(() => {
+    if (activity) {
+      const { latitude, longitude, address: activityAddress } = activity;
+      setCoordinates({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
+      setAddress(activityAddress || '');
+    }
+  }, [activity]);
+
+  async function handleSubmit() {
+    const data = { latitude: coordinates.lat, longitude: coordinates.lng, address };
+    mutation.mutate(data);
+  }
+
+  if (isError) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <Typography variant="h6" color="error">
+          Error loading activity data
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{mt: 2}}>
+      <MapComponent
+        initialCoordinates={coordinates}
+        initialAddress={address}
+        setCoordinates={setCoordinates}
+        setAddress={setAddress}
+      />
+      <Button variant="contained" color="green" size="large" type="submit" onClick={handleSubmit} sx={{mt:2}}>
+        Save
+      </Button>
+      {errors && (
+        <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>{errors}</Typography>
+      )}
+    </Box>
   );
 }
 
@@ -863,10 +935,12 @@ function TermsAndConditions() {
 }
 
 export default function ActivityEditView() {
+
   return (
     <Container sx={{ my: 10 }}>
-      <Activities />
-      <TermsAndConditions />
+       <Activities />
+       <MapForm />
+       <TermsAndConditions />
     </Container>
   );
 }
