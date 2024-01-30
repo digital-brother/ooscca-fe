@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, useMediaQuery } from "@mui/material";
 
-function DesktopImageInput(handleAppend, multiple, props) {
+function ImageInputDesktop(handleAppend, multiple, props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
@@ -45,7 +45,7 @@ function DesktopImageInput(handleAppend, multiple, props) {
   );
 }
 
-function MobileImageInput(props, handleAppend, multiple) {
+function ImageInputMobile(props, handleAppend, multiple) {
   const fileInput = React.useRef();
 
   return (
@@ -107,9 +107,9 @@ export function ImageInput({ multiple, handleAppend, ...props }) {
   return (
     <Box sx={{ height: "100%", p: 2 }}>
       {mdUp ? (
-        <DesktopImageInput {...{ multiple, handleAppend, ...props }} />
+        <ImageInputDesktop {...{ multiple, handleAppend, ...props }} />
       ) : (
-        <MobileImageInput {...{ handleAppend, multiple, ...props }} />
+        <ImageInputMobile {...{ handleAppend, multiple, ...props }} />
       )}
     </Box>
   );
