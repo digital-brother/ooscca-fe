@@ -15,14 +15,14 @@ import {
   getSecondaryImages,
   deleteImage,
   postImage,
-} from "@/app/activities/apiImage.mjs";
+} from "@/app/activities/[activityId]/api.mjs";
 
 export function SecondaryImageMessages({ messages }) {
   return (<Box>
     {messages.map((message, index) => (
       <Box key={index}>
         <Typography sx={{
-          color: message.isError ? "red" : "green",
+          color: message.isError ? "red" : "#196B40",
           fontSize: 16,
           fontFamily: "Manrope",
           fontStyle: "normal",
@@ -40,26 +40,24 @@ export function SecondaryImageMessages({ messages }) {
 
 export function getMessages(mutation, frontendErrors) {
   const messages = []
-  console.log("mutation")
-  console.log(mutation)
 
   if (mutation?.error) {
     if (mutation?.error?.response?.data) {  // 2 types errors: from backend & if network failed
       for (const [key, value] of Object.entries(mutation?.error?.response?.data)) {
         messages.push({
-          "isError": true,
-          "text": key + ": " + value,
+          isError: true,
+          text: key + ": " + value,
         })
       }
     } else if (mutation?.error?.message) {
       messages.push({
-        "isError": true,
-        "text": mutation?.error?.message,
+        isError: true,
+        text: mutation?.error?.message,
       })
     } else {
       messages.push({
-        "isError": true,
-        "text": "Unknown error",
+        isError: true,
+        text: "Unknown error",
       })
     }
   }
@@ -67,16 +65,16 @@ export function getMessages(mutation, frontendErrors) {
   if (frontendErrors) {
     frontendErrors.forEach(errorText => {
       messages.push({
-        "isError": true,
-        "text": errorText,
+        isError: true,
+        text: errorText,
       })
     })
   }
 
   if(messages.length === 0) {
     messages.push({
-      "isError": false,
-      "text": "Image approved",
+      isError: false,
+      text: "Image approved",
     })
   }
 
@@ -90,28 +88,34 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
   const [widgetFiles, setWidgetFiles] = useState(initialFiles)  // array with 0 or 1 element
   useEffect(() => {
     setWidgetFiles(widgetFiles => initialFiles)
+    return () => initialFiles.forEach((file) => URL.revokeObjectURL(file.url));
   }, [initialFiles])
 
-  useEffect(() => {
-    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => initialFiles.forEach((file) => URL.revokeObjectURL(file.url));
-  }, [initialFiles]);
 
   function removeFile() {
     setWidgetFiles(widgetFiles => []);
   }
 
-  const deleteMutation = useMutation((data) => deleteImage(data?.id), {
+  function getfrontendErrors(file) {
+    const frontendErrors = []
+    if (file?.size > 5*1024*1024) {
+      frontendErrors.push("image: Max file size is 5.0 MB")
+    }
+    return frontendErrors
+  }
+
+  const deleteMutation = useMutation((data) => deleteImage(activityId, data?.id), {
     onSuccess: (data, sentImage, context) => {
       removeFile()
-      setMessages([])
+      setMessages([{isError: false, text: "Image deleted"}])
     },
     onError: (error, sentImage, context) => {
+      deleteMutation.error = error
       setMessages(getMessages(deleteMutation))
     },
   });
 
-  const postMutation = useMutation((file) => postImage({
+  const postMutation = useMutation((file) => postImage(activityId, {
       "name": file.name,
       "order": file.order,
       "size": file.size,
@@ -120,19 +124,20 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
       "type": "secondary",
     }), {
     onSuccess: (data, sentImage, context) => {
-      sentImage.error = null
+      setMessages([{isError: false, text: "Image approved"}])
       sentImage.id = data.id
     },
     onError: (error, sentImage, context) => {
+      postMutation.error = error
       setMessages(getMessages(postMutation))
+      removeFile()
     },
   });
 
   async function handleDelete() {
       widgetFiles.forEach((file) => {
       if (file?.id) {
-        deleteMutation.mutateAsync(file)
-        // setMessages(getMessages(deleteMutation))
+        deleteMutation.mutate(file)
       } else {
         removeFile();
       }
@@ -140,15 +145,21 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
   }
 
   async function handleAppend(acceptedFiles) {
-    setWidgetFiles(widgetFiles => [...widgetFiles, ...acceptedFiles.map((file, index) => {
+    setWidgetFiles([...acceptedFiles.map((file, index) => {
         const newObject = Object.assign(file, {
           preview: URL.createObjectURL(file),
           order,
         })
-        postMutation.mutate(newObject)
-        // setMessages(getMessages(postMutation))
+        const frontendErrors = getfrontendErrors(newObject)
+        if (frontendErrors.length === 0) {
+          postMutation.mutate(newObject)
+        } else {
+          setMessages(getMessages(null, frontendErrors))
+          return null
+        }
+
         return newObject
-      }),
+      }).filter((file) => file !== null),
     ]);
   }
 
@@ -180,7 +191,7 @@ export default function SecondaryImages() {
   const [isInitialFilesLoaded, setIsInitialFilesLoaded] = useState(false);
   const numberOfElements = 3;
   const imageInputs = [];
-  const activityId = useParams().activityId;
+  const activityId = useParams().activityId
 
   const {
     data: images,
@@ -188,7 +199,7 @@ export default function SecondaryImages() {
     isError,
   } = useQuery({
     queryKey: "secondaryImages",
-    queryFn: () => getSecondaryImages(),
+    queryFn: () => getSecondaryImages(1),
     enabled: !isInitialFilesLoaded,  // disable repeated requests
     onSuccess: (data) => {
       setinitialFiles(initialFiles => data);
