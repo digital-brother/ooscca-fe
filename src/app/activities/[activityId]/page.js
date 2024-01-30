@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
-  Chip,
+  Chip, CircularProgress,
   Dialog,
   FormControl,
   IconButton,
@@ -371,38 +371,61 @@ function DiscountsSlide({ scrollNext, scrollPrev, close, sx }) {
 function Map() {
   const defaultCoordinates = { lat: 51.5074, lng: -0.1278 };
   const activityId = useParams().activityId;
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
-  const mutation = useMutation((data) => patchActivity(activityId, data));
-  const initialCoordinates = activity
-  ? { lat: parseFloat(activity.latitude), lng: parseFloat(activity.longitude) }
-  : defaultCoordinates;
-  const initialAddress = activity?.address || ''
+  const { data: activity, isLoading, isError } = useQuery(["activity", activityId], () => getActivity(activityId));
 
-   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation, throwError: true });
-    handle(values, formikHelpers);
+  const [coordinates, setCoordinates] = useState(defaultCoordinates);
+  const [address, setAddress] = useState('');
+
+  useEffect(() => {
+    if (activity) {
+      const { latitude, longitude, address: activityAddress } = activity;
+      setCoordinates({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
+      setAddress(activityAddress || '');
+    }
+  }, [activity]);
+
+  const handleDataSubmit = async () => {
+    const data = { latitude: coordinates.lat, longitude: coordinates.lng, address };
+    try {
+      const updatedActivity = await patchActivity(activityId, data);
+      console.log("Activity updated successfully:", updatedActivity);
+      // Additional actions...
+    } catch (error) {
+      console.error("Error updating activity:", error);
+      // Handle errors here...
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        <Typography variant="h6" color="error">
+          Error loading activity data
+        </Typography>
+      </Box>
+    );
   }
 
   return (
-    <Formik
-      enableReinitialize
-      initialValues={{
-        lat: initialCoordinates.lat,
-        lng: initialCoordinates.lng,
-        address: initialAddress,
-      }}
-      onSubmit={handleSubmit}
-    >
-      {({ setFieldValue }) => (
-        <Form>
-          <Field type="hidden" name="latitude" />
-          <Field type="hidden" name="longitude" />
-          <Field type="hidden" name="address" />
-          <MapComponent setFieldValue={setFieldValue} initialCoordinates={initialCoordinates} initialAddress={initialAddress} />
-          <button type="submit">Submit</button>
-        </Form>
-      )}
-    </Formik>
+    <Box>
+      <MapComponent
+        initialCoordinates={coordinates}
+        initialAddress={address}
+        setCoordinates={setCoordinates}
+        setAddress={setAddress}
+      />
+      <Button variant="contained" color="green" size="large" type="submit" onClick={handleDataSubmit}>
+        Save
+      </Button>
+    </Box>
   );
 }
 
@@ -905,9 +928,9 @@ export default function ActivityEditView() {
 
   return (
     <Container sx={{ my: 10 }}>
-      {/* <Activities /> */}
-      {/* <TermsAndConditions /> */}
-      <Map />
+       <Activities />
+       <Map />
+       <TermsAndConditions />
     </Container>
   );
 }

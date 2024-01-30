@@ -2,91 +2,70 @@ import React, {useRef, useState, useCallback, useEffect} from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
 import {Button, TextField } from "@mui/material";
-import { Formik, Form, Field } from 'formik';
-import {createHandleSubmit} from "@/app/activities/[activityId]/components/formikFields";
-import {useParams} from "next/navigation";
-import {useMutation, useQuery} from "react-query";
-import {getActivity, patchActivity, patchProvider} from "@/app/activities/[activityId]/api.mjs";
 
-// const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
-const MAP_API_KEY = "AIzaSyCvRilixYTq-080gFVs6uWf_WybV-t8y-g";
-
+const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
-const defaultMapLocation = {
-  lat: 51.5074,
-  lng: -0.1278,
-};
 
-
-
-
-export function MapComponent({ setFieldValue, initialCoordinates, initialAddress } ) {
+export function MapComponent({ setCoordinates, setAddress, initialCoordinates, initialAddress } ) {
   const [map, setMap] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(initialCoordinates || defaultMapLocation);
-  const [infoOpen, setInfoOpen] = useState(!!initialAddress);
-  const [selectedPlace, setSelectedPlace] = useState(initialAddress ? { formatted_address: initialAddress } : null);
-  const [lastClickedMarker, setLastClickedMarker] = useState(null);
+  const [markerState, setMarkerState] = useState({
+    position: initialCoordinates,
+    infoOpen: !!initialAddress,
+    selectedPlace: initialAddress ? { formatted_address: initialAddress } : null,
+    lastClickedMarker: null,
+  });
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
   const textFieldRef = useRef(null);
 
   useEffect(() => {
-    // Set marker to initialCoordinates or defaultMapLocation
-    setMarkerPosition(initialCoordinates || defaultMapLocation);
-
-    // Set the address in the search box if initialAddress is provided
-    if (initialAddress && textFieldRef.current) {
-      textFieldRef.current.querySelector('input').value = initialAddress;
+    if (textFieldRef.current) {
+      textFieldRef.current.querySelector('input').value = initialAddress || '';
     }
-
-    // If initialCoordinates are provided, update Formik fields
-    if (initialCoordinates) {
-      setFieldValue("latitude", initialCoordinates.latitude);
-      setFieldValue("longitude", initialCoordinates.longitude);
-    }
-
-    // Update Formik field for address
-    if (initialAddress) {
-      setFieldValue("address", initialAddress);
-    }
-  }, [initialCoordinates, initialAddress, setFieldValue]);
+  }, [initialAddress]);
 
   const handleMapLoad = useCallback((map) => {
-  setMap(map);
-  geocoderRef.current = new window.google.maps.Geocoder(); // Create the geocoder here
-  if (initialCoordinates) {
-    map.setCenter(new window.google.maps.LatLng(initialCoordinates.lat, initialCoordinates.lng));
-  }
-}, [initialCoordinates]);
+    setMap(map);
+    geocoderRef.current = new window.google.maps.Geocoder();
+    if (initialCoordinates) {
+      const initialLatLng = new window.google.maps.LatLng(initialCoordinates.lat, initialCoordinates.lng);
+      map.setCenter(initialLatLng);
+      setMarkerState((prev) => ({
+        ...prev,
+        position: initialCoordinates,
+        infoOpen: !!initialAddress,
+        selectedPlace: initialAddress ? { formatted_address: initialAddress } : null,
+      }));
+      setCoordinates(initialCoordinates);
+      setAddress(initialAddress);
+    }
+  }, [initialCoordinates, initialAddress, setCoordinates, setAddress]);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
   }, []);
 
+  const updateMarkerAndInfo = (newCoordinates, newAddress) => {
+    setMarkerState({
+      position: newCoordinates,
+      infoOpen: !!newAddress,
+      selectedPlace: newAddress ? { formatted_address: newAddress } : null,
+      lastClickedMarker: null,
+    });
+    setCoordinates(newCoordinates);
+    setAddress(newAddress);
+  };
+
   const onPlacesChanged = () => {
     const places = searchBoxRef.current.getPlaces();
     const place = places && places.length > 0 ? places[0] : null;
-
     if (place && place.geometry) {
       const location = place.geometry.location;
-      setMarkerPosition({
+      const newCoordinates = {
         lat: location.lat(),
         lng: location.lng(),
-      });
-
-      if (!isNaN(location.lat()) && !isNaN(location.lng())) {
-        setMarkerPosition({ lat: location.lat(), lng: location.lng() });
-        setFieldValue("latitude", location.lat());
-        setFieldValue("longitude", location.lng());
-      }
-      setFieldValue("address", place.formatted_address);
-
-      setSelectedPlace(null);
-      setInfoOpen(false);
-
-      setSelectedPlace({ formatted_address: place.formatted_address});
-      setInfoOpen(true);
-
+      };
+      updateMarkerAndInfo(newCoordinates, place.formatted_address);
       if (map) {
         map.setZoom(15);
         map.panTo(location);
@@ -94,40 +73,20 @@ export function MapComponent({ setFieldValue, initialCoordinates, initialAddress
     }
   };
 
-  const handleMarkerClick = (markerLatLng) => {
-    if (lastClickedMarker && lastClickedMarker.lat === markerLatLng.lat && lastClickedMarker.lng === markerLatLng.lng) {
-      // Remove marker if the same one is clicked again
-      setMarkerPosition(null);
-      setInfoOpen(false);
-      setSelectedPlace(null);
-      setLastClickedMarker(null);
-    } else {
-      setLastClickedMarker(markerLatLng);
-    }
-  };
-
   const handleMapClick = (event) => {
     const latLng = event.latLng;
-    setMarkerPosition({
+    const newCoordinates = {
       lat: latLng.lat(),
       lng: latLng.lng(),
-    });
-
-    // Update Formik state
-    setFieldValue("latitude", latLng.lat());
-    setFieldValue("longitude", latLng.lng());
-
-    // Reset InfoWindow content and visibility
-    setSelectedPlace(null);
-    setInfoOpen(false);
-
+    };
     if (geocoderRef.current) {
       geocoderRef.current.geocode({ location: latLng }, (results, status) => {
         if (status === "OK" && results[0]) {
-          setSelectedPlace({ formatted_address: results[0].formatted_address });
-          setInfoOpen(true);  // Reopen InfoWindow with new content
-
-          setFieldValue("address", results[0].formatted_address);
+          const newAddress = results[0].formatted_address;
+          updateMarkerAndInfo(newCoordinates, newAddress);
+        } else {
+          // If geocode was not successful, set marker without address
+          updateMarkerAndInfo(newCoordinates, null);
         }
       });
     }
@@ -161,19 +120,19 @@ export function MapComponent({ setFieldValue, initialCoordinates, initialAddress
         <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
-            center={initialCoordinates}
+            center={markerState.position}
             zoom={10}
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {markerPosition && (
-              <Marker position={markerPosition} onClick={() => handleMarkerClick(markerPosition)}>
-                {infoOpen && selectedPlace && (
-                  <InfoWindow position={markerPosition} onCloseClick={() => setInfoOpen(false)}>
+            {markerState.position && !isNaN(markerState.position.lat) && !isNaN(markerState.position.lng) && (
+              <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onClick={() => handleMarkerClick(markerState.position)}>
+                {markerState.infoOpen && markerState.selectedPlace && (
+                  <InfoWindow position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onCloseClick={() => setMarkerState(prev => ({ ...prev, infoOpen: false }))}>
                     <div>
-                      <strong>{selectedPlace.formatted_address}</strong>
+                      <strong>{markerState.selectedPlace.formatted_address}</strong>
                       <p>
-                        Coords: {markerPosition.lat.toFixed(3)}, {markerPosition.lng.toFixed(3)}
+                        Coords: {markerState.position.lat.toFixed(3)}, {markerState.position.lng.toFixed(3)}
                       </p>
                     </div>
                   </InfoWindow>
