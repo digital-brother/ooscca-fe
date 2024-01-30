@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Button, IconButton, useMediaQuery } from "@mui/material";
+import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
 
 function ImageInputDesktop(handleAppend, multiple, sx) {
   const { getRootProps, getInputProps } = useDropzone({
@@ -19,21 +19,8 @@ function ImageInputDesktop(handleAppend, multiple, sx) {
   });
 
   return (
-    <Box
-      {...getRootProps({
-        sx: {
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: sx?.backgroundColor || sx?.bgColor || "grey.200",
-          gap: 1,
-          p: 2,
-          borderRadius: 1.5,
-          ...sx,
-        },
-      })}
+    <Stack
+      {...getRootProps({ sx: { alignItems: "center", bgcolor: "grey.200", gap: 1, p: 2, borderRadius: 1.5, ...sx } })}
     >
       <input {...getInputProps()} />
 
@@ -43,7 +30,7 @@ function ImageInputDesktop(handleAppend, multiple, sx) {
       </Typography>
 
       <Typography variant="caption">Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px</Typography>
-    </Box>
+    </Stack>
   );
 }
 
@@ -51,25 +38,12 @@ function ImageInputMobile(sx, handleAppend, multiple) {
   const fileInput = React.useRef();
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: sx?.backgroundColor || sx?.bgColor || "grey.200",
-        gap: 1,
-        p: 2,
-        borderRadius: 1.5,
-        width: "100%",
-        ...sx,
-      }}
-    >
+    <Stack sx={{ alignItems: "center", bgcolor: "grey.200", p: 2, borderRadius: 1.5, ...sx }}>
       <Button
         variant="contained"
         onClick={() => fileInput.current.click()}
-        sx={{ height: 55, width: "65%" }}
+        size="large"
+        sx={{ width: "65%", mx: "auto" }}
         color="grey"
       >
         Upload images
@@ -83,7 +57,7 @@ function ImageInputMobile(sx, handleAppend, multiple) {
         onChange={(e) => handleAppend(Array.from(e.target.files))}
         multiple={multiple}
       />
-    </Box>
+    </Stack>
   );
 }
 
