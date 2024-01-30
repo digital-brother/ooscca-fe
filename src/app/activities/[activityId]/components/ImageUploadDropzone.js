@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -213,9 +213,18 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
 export default function ImageUpload({ file, setFile, ...props }) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
 
-  const handleDelete = () => setFile(null);
-  const handleAppend = (file) => setFile(file);
-  
+  const handleDelete = (file) => {
+    setFile(null);
+  };
+
+  const handleAppend = (files) => {
+    file = files[0];
+    file.preview = URL.createObjectURL(file);
+    setFile(file);
+  };
+
+  useEffect(() => () => file?.preview && URL.revokeObjectURL(file.preview), [file?.preview]);
+
   return (
     <Box
       sx={{
@@ -228,7 +237,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
         ...props?.sx,
       }}
     >
-      {showConfirmDelete && ( <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} /> )}
+      {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
       {!file && (
         <ImageInput
           handleAppend={handleAppend}
