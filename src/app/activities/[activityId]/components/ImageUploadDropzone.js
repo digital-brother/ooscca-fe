@@ -27,11 +27,9 @@ function ImageInputDesktop({ handleAppend, multiple, sx }) {
   return (
     <Stack {...getRootProps({ sx: { ...imageInputContainerSx, gap: 1, ...sx } })}>
       <input {...getInputProps()} />
-
       <Typography sx={{ fontWeight: 700 }}>
         Drop your image file here or <span style={{ cursor: "pointer", color: "purple" }}>browse</span>
       </Typography>
-
       <Typography variant="caption">Max. file size: 5MB &nbsp;&nbsp;&nbsp;&nbsp; Dimension: 000 x 000px</Typography>
     </Stack>
   );
@@ -86,15 +84,7 @@ function ImagePreview({ file, setShowConfirmDelete }) {
         onLoad={() => URL.revokeObjectURL(file.url)}
         key={file.preview || file.id}
       />
-      <IconButton
-        color="grey"
-        onClick={showImageDeleteConfirmation}
-        sx={{
-          position: "absolute",
-          top: 10,
-          right: 10,
-        }}
-      >
+      <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
         <DeleteForeverIcon />
       </IconButton>
     </Box>
@@ -113,9 +103,7 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
 
   return (
     <Stack sx={{ ...imageInputContainerSx, width: "80%", gap: 2, mx: "auto", textAlign: "center" }}>
-      <Typography variant="h5">
-        Delete Image?
-      </Typography>
+      <Typography variant="h5">Delete Image?</Typography>
       <Button variant="outlined" onClick={handleCancel} color="grey" fullWidth>
         Cancel
       </Button>
