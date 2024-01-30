@@ -8,6 +8,7 @@ const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
 const ACTIVITIES_PATH = "/activities";
 const DISCOUNTS_SUBPATH = "discounts";
+const IMAGES_SUBPATH = "images/";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -17,6 +18,54 @@ const client = axios.create({
   },
 });
 
+// IMAGES
+export async function getPrimaryImages(activityId) {
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/?type=primary`;
+  const response = await client.get(url);
+  return response.data;
+}
+
+export async function getSecondaryImages(activityId) {
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/?type=secondary`;
+  const response = await client.get(url);
+  return response.data;
+}
+
+export async function postImage(activityId, data) {
+  const formData = new FormData();
+
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      formData.append(key, data[key]);
+    }
+  }
+
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/`;
+  const response = await client.post(url, formData);
+  return response.data;
+}
+
+export async function patchImage(activityId, data) {
+  const formData = new FormData();
+
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      formData.append(key, data[key]);
+    }
+  }
+
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/${data.id}/`;
+  const response = await client.patch(url, formData);
+  return response.data;
+}
+
+export async function deleteImage(activityId, imageId) {
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/${imageId}/`;
+  const response = await client.delete(url);
+  return response.data;
+}
+
+// DISCOUNTS
 export async function createDiscount(activityId, data) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${DISCOUNTS_SUBPATH}/`;
   const response = await client.post(url, data);
@@ -33,6 +82,7 @@ export async function patchDiscount(activityId, discountId, data) {
   return response.data;
 }
 
+// ACTIVITIES
 export async function getActivity(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/`;
   const response = await client.get(url);
@@ -44,11 +94,13 @@ export async function patchActivity(activityId, data) {
   return response.data;
 }
 
+// ACTIVITY TYPES
 export async function getActivityTypes() {
   const response = await client.get(`${ACTIVITY_TYPES_PATH}/`);
   return response.data;
 }
 
+// PROVIDERS
 export async function getProvider(providerId) {
   const response = await client.get(`${PROVIDERS_PATH}/${providerId}/`);
   return response.data;
