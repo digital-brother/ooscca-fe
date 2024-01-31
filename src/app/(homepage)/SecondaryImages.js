@@ -82,7 +82,8 @@ export function getMessages(mutation, frontendErrors) {
 }
 
 export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
-  const activityId = useParams().activityId
+  // const activityId = useParams().activityId
+  const activityId = 1
   const [messages, setMessages] = useState([])
 
   const [widgetFiles, setWidgetFiles] = useState(initialFiles)  // array with 0 or 1 element
@@ -191,7 +192,8 @@ export default function SecondaryImages() {
   const [isInitialFilesLoaded, setIsInitialFilesLoaded] = useState(false);
   const numberOfElements = 3;
   const imageInputs = [];
-  const activityId = useParams().activityId
+  // const activityId = useParams().activityId
+  const activityId = 1
 
   const {
     data: images,
