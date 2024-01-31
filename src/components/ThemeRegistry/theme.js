@@ -35,13 +35,19 @@ const theme = createTheme({
       fontFamily: montserrat.style.fontFamily,
     },
     h3: {
-      fontSize: "2rem", // 32px
-      fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
+      [baseTheme.breakpoints.up("xs")]: {
+        fontSize: "1.5rem", // 24
+        fontWeight: 600,
+      },
+      [baseTheme.breakpoints.up("sm")]: {
+        fontSize: "2rem", // 32
+        fontWeight: 700,
+      },
     },
     h5: {
+      fontFamily: montserrat.style.fontFamily,
       [baseTheme.breakpoints.up("xs")]: {
-        fontFamily: montserrat.style.fontFamily,
         fontSize: "1.25rem", // 20
         fontWeight: 600,
       },
