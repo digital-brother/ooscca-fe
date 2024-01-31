@@ -8,6 +8,7 @@ const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
 const ACTIVITIES_PATH = "/activities";
 const DISCOUNTS_SUBPATH = "discounts";
+const IMAGES_SUBPATH = "images";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -66,5 +67,56 @@ export async function patchProvider(providerId, data, file) {
   }
 
   const response = await client.patch(`${PROVIDERS_PATH}/${providerId}/`, formData);
+  return response.data;
+}
+
+export async function getImages(activityId) {
+  const response = await client.get(`activities/${activityId}/images/`);
+  return response.data;
+}
+
+export async function getPrimaryImages(activityId) {
+  const response = await client.get(`activities/${activityId}/images/?type=primary`);
+  return response.data;
+}
+
+export async function getSecondaryImages(activityId) {
+  const response = await client.get(`activities/${activityId}/images/?type=secondary`);
+  return response.data;
+}
+
+export async function getImage(activityId, ImageId) {
+  const response = await client.get(`activities/${activityId}/images/${ImageId}/`);
+  return response.data;
+}
+
+export async function postImage(activityId, data) {
+  let formData = new FormData();
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      formData.append(key, data[key]);
+    }
+  }
+
+  const response = await client.post(`activities/${activityId}/images/`, formData);
+  return response.data;
+}
+
+export async function patchImage(activityId, data) {
+  const formData = new FormData();
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      formData.append(key, data[key]);
+    }
+  }
+
+  const response = await client.patch(`activities/${activityId}/images/${data.id}/`, formData);
+  return response.data;
+}
+
+export async function deleteImage(activityId, imageId) {
+  const response = await client.delete(`activities/${activityId}/images/${imageId}/`);
   return response.data;
 }
