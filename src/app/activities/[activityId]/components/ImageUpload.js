@@ -134,7 +134,7 @@ export default function ImageUpload({ sx, order }) {
 
   function handleDelete() {
     deleteMutation.mutate(file.id, {
-      onSuccess: () => setFile(null),
+      onSuccess: () => { setFile(null); setErrors([]) },
       onError: (error) => setErrors([error.message]),
     });
   }
@@ -149,7 +149,7 @@ export default function ImageUpload({ sx, order }) {
       order: "1",
     };
     postMutation.mutate(imageData, {
-      onSuccess: (data) => setFile(data),
+      onSuccess: (data) => { setFile(data); setErrors([]) },
       onError: (error) => {
         console.log();
         const imageErrors = error?.response?.data?.image;
