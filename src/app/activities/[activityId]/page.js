@@ -379,7 +379,7 @@ function MapForm() {
   const [address, setAddress] = useState('');
 
   const onSuccess = (data) => {
-    queryClient.resetQueries(['activity', activityId], { exact: true });
+    queryClient.invalidateQueries(['activity', activityId]);
     setErrors('');
   };
 
