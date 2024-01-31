@@ -142,6 +142,4 @@ const theme = createTheme({
   },
 });
 
-// console.log(theme);
-console.log(theme.palette);
 export default theme;
