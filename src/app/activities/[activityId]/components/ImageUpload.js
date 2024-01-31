@@ -82,7 +82,6 @@ function ImagePreview({ file, setShowConfirmDelete }) {
         alt="Preview"
         sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         onLoad={() => URL.revokeObjectURL(file.url)}
-        key={file.preview || file.id}
       />
       <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
         <DeleteForeverIcon />
@@ -116,14 +115,14 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
 
 export default function ImageUpload({ file, setFile, ...props }) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
+  
 
   const handleDelete = (file) => {
     setFile(null);
   };
 
   const handleAppend = (files) => {
-    file = files[0];
-    file.preview = URL.createObjectURL(file);
+    const file = { ...files[0], preview: URL.createObjectURL(files[0]) };
     setFile(file);
   };
 
