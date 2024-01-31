@@ -121,7 +121,7 @@ export default function TermsAndConditionsSection(sx) {
         onClick={() => setTermsCoditionsOpen(true)}
         sx={{ width: "100%", maxWidth: 340 }}
       >
-        Click to add
+        Click to edit
       </Button>
 
       <Dialog
