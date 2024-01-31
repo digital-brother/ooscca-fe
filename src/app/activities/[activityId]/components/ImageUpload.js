@@ -9,6 +9,7 @@ import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { deleteActivityImage, getActivityImagesSecondary, postActivityImage } from "../api.mjs";
 import { useParams } from "next/navigation";
+import { Errors } from "./formikFields";
 
 const imageInputContainerSx = {
   height: "100%",
@@ -119,6 +120,7 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
 export default function ImageUpload({ sx, order }) {
   const activityId = useParams().activityId;
   const [file, setFile] = useState(null);
+  const [errors, setErrors] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
 
   const { data: secondaryImages } = useQuery("activityImagesSecondary", () => getActivityImagesSecondary(activityId));
@@ -133,6 +135,7 @@ export default function ImageUpload({ sx, order }) {
   function handleDelete() {
     deleteMutation.mutate(file.id, {
       onSuccess: () => setFile(null),
+      onError: (error) => setErrors([error.message]),
     });
   }
 
@@ -147,30 +150,39 @@ export default function ImageUpload({ sx, order }) {
     };
     postMutation.mutate(imageData, {
       onSuccess: (data) => setFile(data),
+      onError: (error) => {
+        console.log();
+        const activityErrors = error?.response?.data?.image;
+        const nonFieldErrors = error?.response?.data?.nonFieldErrors;
+        if (activityErrors) setErrors(activityErrors);
+        else if (nonFieldErrors) setErrors((errors) => ([ ...errors, nonFieldErrors ]));
+        else setErrors([error.message]);
+      },
     });
   }
 
   return (
-    <Box
-      sx={{
-        width: 330,
-        height: 330,
-        overflow: "hidden",
-        border: "1px #ADB5BD solid",
-        borderRadius: 1.5,
-        bgcolor: "grey.200",
-        ...sx,
-      }}
-    >
-      {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
-      {!file && (
-        <ImageInput
-          handleAdd={handleAdd}
-          multiple={false}
-          sx={{ backgroundColor: sx?.backgroundColor || sx?.bgColor }}
-        />
-      )}
-      {file && <ImagePreview {...{ file, setShowConfirmDelete }} />}
+    <Box sx={{ width: 330, ...sx }}>
+      <Box
+        sx={{
+          height: 330,
+          overflow: "hidden",
+          border: "1px #ADB5BD solid",
+          borderRadius: 1.5,
+          bgcolor: "grey.200",
+        }}
+      >
+        {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
+        {!file && (
+          <ImageInput
+            handleAdd={handleAdd}
+            multiple={false}
+            sx={{ backgroundColor: sx?.backgroundColor || sx?.bgColor }}
+          />
+        )}
+        {file && <ImagePreview {...{ file, setShowConfirmDelete }} />}
+      </Box>
+      {errors && <Errors errors={errors} />}
     </Box>
   );
 }

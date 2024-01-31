@@ -187,6 +187,10 @@ export function FormikErrors() {
     );
 }
 
+export function Errors({ errors }) {
+  return errors.map((error, index) => <Error key={index}>{error}</Error>)
+}
+
 export function Error({ children }) {
   return (
     children && (
