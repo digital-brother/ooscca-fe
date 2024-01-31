@@ -161,7 +161,7 @@ export default function ImageUpload({ sx, order }) {
         const imageErrors = error?.response?.data?.image;
         const nonFieldErrors = error?.response?.data?.nonFieldErrors;
         if (imageErrors) setErrors(imageErrors);
-        else if (nonFieldErrors) setErrors((errors) => [...errors, nonFieldErrors]);
+        else if (nonFieldErrors) setErrors((errors) => [nonFieldErrors]);
         else setErrors([error.message]);
       },
     });
