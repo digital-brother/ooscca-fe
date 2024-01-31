@@ -117,7 +117,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
             onClick={handleMapClick}
           >
             {markerState.position && !isNaN(markerState.position.lat) && !isNaN(markerState.position.lng) && (
-              <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onClick={() => handleMarkerClick(markerState.position)}>
+              <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }}>
                 {markerState.infoOpen && markerState.selectedPlace && (
                   <InfoWindow position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onCloseClick={() => setMarkerState(prev => ({ ...prev, infoOpen: false }))}>
                     <div>
