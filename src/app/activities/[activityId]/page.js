@@ -133,9 +133,9 @@ function ActivityDetails({ sx }) {
       <SmFlex>
         <b>Activity:</b> {activity?.typeName}
       </SmFlex>
-      {activity?.venue && (
+      {activity?.address && (
         <SmFlex>
-          <b>Venue:</b> {activity?.venue}
+          <b>Venue:</b> {activity?.address}
         </SmFlex>
       )}
       <SmFlex>
