@@ -120,7 +120,7 @@ export default function ImageUpload({ sx, order }) {
   const activityId = useParams().activityId;
   const [file, setFile] = useState(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
-  
+
   const { data: secondaryImages } = useQuery("activityImagesSecondary", () => getActivityImagesSecondary(activityId));
   const initialFile = secondaryImages?.filter((file) => file.order === order)[0];
   useEffect(() => {
@@ -130,12 +130,13 @@ export default function ImageUpload({ sx, order }) {
   const postMutation = useMutation((imageData) => postActivityImage(activityId, imageData));
   const deleteMutation = useMutation((imageId) => deleteActivityImage(activityId, imageId));
 
-  const handleDelete = () => {
-    deleteMutation.mutate(file.id);
-    setFile(null);
-  };
+  function handleDelete() {
+    deleteMutation.mutate(file.id, {
+      onSuccess: () => setFile(null),
+    });
+  }
 
-  const handleAdd = (files) => {
+  function handleAdd(files) {
     const file = files[0];
     const imageData = {
       activity: activityId,
@@ -144,8 +145,10 @@ export default function ImageUpload({ sx, order }) {
       image: file,
       order: "1",
     };
-    postMutation.mutate(imageData, { onSuccess: (data) => setFile(data) });
-  };
+    postMutation.mutate(imageData, {
+      onSuccess: (data) => setFile(data),
+    });
+  }
 
   return (
     <Box
