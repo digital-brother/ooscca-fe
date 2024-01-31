@@ -116,11 +116,16 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
   );
 }
 
-export default function ImageUpload({ sx }) {
-  const [file, setFile] = useState(null);
-
+export default function ImageUpload({ sx, order }) {
   const activityId = useParams().activityId;
+  const [file, setFile] = useState(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
+  
+  const { data: secondaryImages } = useQuery("activityImagesSecondary", () => getActivityImagesSecondary(activityId));
+  const initialFile = secondaryImages?.filter((file) => file.order === order)[0];
+  useEffect(() => {
+    setFile(initialFile);
+  }, [initialFile]);
 
   const postMutation = useMutation((imageData) => postActivityImage(activityId, imageData));
   const deleteMutation = useMutation((imageId) => deleteActivityImage(activityId, imageId));
@@ -131,7 +136,7 @@ export default function ImageUpload({ sx }) {
   };
 
   const handleAdd = (files) => {
-    const file = files[0]
+    const file = files[0];
     const imageData = {
       activity: activityId,
       type: "secondary",
