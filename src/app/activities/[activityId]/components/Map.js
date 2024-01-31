@@ -107,15 +107,6 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
               />
             </StandaloneSearchBox>
           </Box>
-          <Box>
-            <Button
-              variant="text"
-              sx={{ color: "black", textDecoration: "underline", "&:hover": { backgroundColor: "transparent" } }}
-              // TODO: Implement "Get Directions" functionality here
-            >
-              Get directions
-            </Button>
-          </Box>
         </Box>
         <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
           <GoogleMap

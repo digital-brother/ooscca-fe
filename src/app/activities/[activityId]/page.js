@@ -413,8 +413,17 @@ function MapForm() {
 
   if (isError) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-        <Typography variant="h6" color="error">
+      <Box sx={{mt: 2}}>
+        <MapComponent
+          initialCoordinates={coordinates}
+          initialAddress={address}
+          setCoordinates={setCoordinates}
+          setAddress={setAddress}
+        />
+        <Button variant="contained" color="green" size="large" type="submit" onClick={handleSubmit} sx={{mt:2}}>
+          Save
+        </Button>
+        <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>
           Error loading activity data
         </Typography>
       </Box>
