@@ -113,7 +113,7 @@ export default function TermsAndConditionsSection(sx) {
   const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   return (
-    <LgFlex sx={{ my: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, alignItems: "center", ...sx }}>
+    <LgFlex sx={{ my: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, justifyContent: "center", ...sx }}>
       <Typography variant="h5">Terms and Conditions</Typography>
       <Button
         variant="contained"
@@ -121,7 +121,7 @@ export default function TermsAndConditionsSection(sx) {
         onClick={() => setTermsCoditionsOpen(true)}
         sx={{ width: "100%", maxWidth: 340 }}
       >
-        Click to add
+        Click to edit
       </Button>
 
       <Dialog
