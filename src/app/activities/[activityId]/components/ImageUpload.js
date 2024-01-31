@@ -13,13 +13,13 @@ const imageInputContainerSx = {
   alignItems: "center",
 };
 
-function ImageInputDesktop({ handleAppend, multiple, sx }) {
+function ImageInputDesktop({ handleAdd, multiple, sx }) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
     },
     onDrop: (acceptedFiles) => {
-      handleAppend(acceptedFiles);
+      handleAdd(acceptedFiles);
     },
     multiple,
   });
@@ -35,7 +35,7 @@ function ImageInputDesktop({ handleAppend, multiple, sx }) {
   );
 }
 
-function ImageInputMobile({ sx, handleAppend, multiple }) {
+function ImageInputMobile({ sx, handleAdd, multiple }) {
   const fileInput = React.useRef();
 
   return (
@@ -55,18 +55,18 @@ function ImageInputMobile({ sx, handleAppend, multiple }) {
         type="file"
         style={{ display: "none" }}
         accept="image/*" // Only allow image files
-        onChange={(e) => handleAppend(Array.from(e.target.files))}
+        onChange={(e) => handleAdd(Array.from(e.target.files))}
         multiple={multiple}
       />
     </Stack>
   );
 }
 
-export function ImageInput({ multiple, handleAppend, sx }) {
+export function ImageInput({ multiple, handleAdd, sx }) {
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
-  if (mdUp) return <ImageInputDesktop {...{ multiple, handleAppend, sx }} />;
-  else return <ImageInputMobile {...{ handleAppend, multiple, sx }} />;
+  if (mdUp) return <ImageInputDesktop {...{ multiple, handleAdd, sx }} />;
+  else return <ImageInputMobile {...{ handleAdd, multiple, sx }} />;
 }
 
 function ImagePreview({ file, setShowConfirmDelete }) {
@@ -121,7 +121,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
     setFile(null);
   };
 
-  const handleAppend = (files) => {
+  const handleAdd = (files) => {
     const file = { ...files[0], preview: URL.createObjectURL(files[0]) };
     setFile(file);
   };
@@ -143,7 +143,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
       {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
       {!file && (
         <ImageInput
-          handleAppend={handleAppend}
+          handleAdd={handleAdd}
           multiple={false}
           sx={{ backgroundColor: props?.sx?.backgroundColor || props?.sx?.bgColor }}
         />
