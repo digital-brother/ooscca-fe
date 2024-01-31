@@ -9,13 +9,12 @@ export default function SecondaryImagesSection() {
     <Container>
       <Box
         sx={{
-          width: "fit-content",
-          mx: "auto",
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
           justifyItems: "center",
           gap: 5,
           mb: 10,
+          px: { xs: 5, lg: 0 },
         }}
       >
         <ImageUpload key={1} order={1} />

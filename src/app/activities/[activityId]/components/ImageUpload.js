@@ -168,7 +168,7 @@ export default function ImageUpload({ sx, order }) {
   }
 
   return (
-    <Box sx={{ width: 330, ...sx }}>
+    <Box sx={{ width: "100%", maxWidth: 553, ...sx }}>
       <Box
         sx={{
           height: 330,
