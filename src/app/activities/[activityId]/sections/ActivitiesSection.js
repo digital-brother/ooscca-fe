@@ -44,27 +44,15 @@ import { useParams } from "next/navigation";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import Container from "@mui/material/Container";
 import * as Yup from "yup";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "../utils";
 import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
+import { SmFlex } from "../components/responsiveFlexes";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
-
-const SmFlex = styled(Box)(({ theme }) => ({
-  display: "flex",
-  columnGap: "0.5rem",
-  [theme.breakpoints.up("xs")]: {
-    flexDirection: "column",
-    textAlign: "center",
-  },
-  [theme.breakpoints.up("sm")]: {
-    flexDirection: "row",
-    textAlign: "left",
-  },
-}));
 
 function SlideHeader({ label, close }) {
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
