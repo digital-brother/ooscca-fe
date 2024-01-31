@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "next/navigation";
 
-import DropZoneImageUpload from "@/app/activities/[activityId]/components/ImageUploadDropzone";
+import ImageUpload from "@/app/activities/[activityId]/components/ImageUploadDropzone";
 
 import * as React from "react";
 import Grid from "@mui/material/Grid";
@@ -165,7 +165,7 @@ export function SecondaryImageWidget({initialFiles, order, enabled, ...props}) {
 
   return (
     <Grid item md={4} sx={{ borderRadius: 8, width: "100%" }}>
-      <DropZoneImageUpload
+      <ImageUpload
         files={widgetFiles}
         order={order}
         handleDelete={handleDelete}
