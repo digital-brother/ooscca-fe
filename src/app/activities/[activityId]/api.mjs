@@ -19,19 +19,19 @@ const client = axios.create({
 });
 
 // IMAGES
-export async function getPrimaryImages(activityId) {
+export async function getActivityImagesPrimary(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/?type=primary`;
   const response = await client.get(url);
   return response.data;
 }
 
-export async function getSecondaryImages(activityId) {
+export async function getActivityImagesSecondary(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/?type=secondary`;
   const response = await client.get(url);
   return response.data;
 }
 
-export async function postImage(activityId, data) {
+export async function postActivityImage(activityId, data) {
   const formData = new FormData();
 
   for (const key in data) {
@@ -45,7 +45,7 @@ export async function postImage(activityId, data) {
   return response.data;
 }
 
-export async function patchImage(activityId, data) {
+export async function patchActivityImage(activityId, data) {
   const formData = new FormData();
 
   for (const key in data) {
@@ -59,7 +59,7 @@ export async function patchImage(activityId, data) {
   return response.data;
 }
 
-export async function deleteImage(activityId, imageId) {
+export async function deleteActivityImage(activityId, imageId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/${imageId}/`;
   const response = await client.delete(url);
   return response.data;

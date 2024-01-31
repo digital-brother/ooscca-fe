@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
-import { useMutation } from "react-query";
-import { deleteImage, postImage } from "../api.mjs";
+import { useMutation, useQuery } from "react-query";
+import { deleteActivityImage, getActivityImagesSecondary, postActivityImage } from "../api.mjs";
 import { useParams } from "next/navigation";
 
 const imageInputContainerSx = {
@@ -116,12 +116,14 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
   );
 }
 
-export default function ImageUpload({ file, setFile, ...props }) {
+export default function ImageUpload({ sx }) {
+  const [file, setFile] = useState(null);
+
   const activityId = useParams().activityId;
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
 
-  const postMutation = useMutation((imageData) => postImage(activityId, imageData));
-  const deleteMutation = useMutation((imageId) => deleteImage(activityId, imageId));
+  const postMutation = useMutation((imageData) => postActivityImage(activityId, imageData));
+  const deleteMutation = useMutation((imageId) => deleteActivityImage(activityId, imageId));
 
   const handleDelete = () => {
     deleteMutation.mutate(file.id);
@@ -149,7 +151,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
         border: "1px #ADB5BD solid",
         borderRadius: 1.5,
         bgcolor: "grey.200",
-        ...props?.sx,
+        ...sx,
       }}
     >
       {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
@@ -157,7 +159,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
         <ImageInput
           handleAdd={handleAdd}
           multiple={false}
-          sx={{ backgroundColor: props?.sx?.backgroundColor || props?.sx?.bgColor }}
+          sx={{ backgroundColor: sx?.backgroundColor || sx?.bgColor }}
         />
       )}
       {file && <ImagePreview {...{ file, setShowConfirmDelete }} />}
