@@ -123,7 +123,7 @@ export default function ImageUpload({ file, setFile, ...props }) {
   const postMutation = useMutation((imageData) => postImage(activityId, imageData));
   const deleteMutation = useMutation((imageId) => deleteImage(activityId, imageId));
 
-  const handleDelete = (file) => {
+  const handleDelete = () => {
     deleteMutation.mutate(file.id);
     setFile(null);
   };
@@ -137,11 +137,8 @@ export default function ImageUpload({ file, setFile, ...props }) {
       image: file,
       order: "1",
     };
-    postMutation.mutate(imageData);
-    setFile({ ...files[0], preview: URL.createObjectURL(files[0]) });
+    postMutation.mutate(imageData, { onSuccess: (data) => setFile(data) });
   };
-
-  useEffect(() => () => file?.preview && URL.revokeObjectURL(file.preview), [file?.preview]);
 
   return (
     <Box
