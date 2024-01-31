@@ -6,6 +6,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
+import { useMutation } from "react-query";
+import { deleteImage, postImage } from "../api.mjs";
+import { useParams } from "next/navigation";
 
 const imageInputContainerSx = {
   height: "100%",
@@ -114,16 +117,28 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
 }
 
 export default function ImageUpload({ file, setFile, ...props }) {
+  const activityId = useParams().activityId;
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
-  
+
+  const postMutation = useMutation((imageData) => postImage(activityId, imageData));
+  const deleteMutation = useMutation((imageId) => deleteImage(activityId, imageId));
 
   const handleDelete = (file) => {
+    deleteMutation.mutate(file.id);
     setFile(null);
   };
 
   const handleAdd = (files) => {
-    const file = { ...files[0], preview: URL.createObjectURL(files[0]) };
-    setFile(file);
+    const file = files[0]
+    const imageData = {
+      activity: activityId,
+      type: "secondary",
+      name: file.name,
+      image: file,
+      order: "1",
+    };
+    postMutation.mutate(imageData);
+    setFile({ ...files[0], preview: URL.createObjectURL(files[0]) });
   };
 
   useEffect(() => () => file?.preview && URL.revokeObjectURL(file.preview), [file?.preview]);
