@@ -152,10 +152,10 @@ export default function ImageUpload({ sx, order }) {
       onSuccess: (data) => setFile(data),
       onError: (error) => {
         console.log();
-        const activityErrors = error?.response?.data?.image;
+        const imageErrors = error?.response?.data?.image;
         const nonFieldErrors = error?.response?.data?.nonFieldErrors;
-        if (activityErrors) setErrors(activityErrors);
-        else if (nonFieldErrors) setErrors((errors) => ([ ...errors, nonFieldErrors ]));
+        if (imageErrors) setErrors(imageErrors);
+        else if (nonFieldErrors) setErrors((errors) => [...errors, nonFieldErrors]);
         else setErrors([error.message]);
       },
     });

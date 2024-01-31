@@ -15,7 +15,7 @@ export const SmFlex = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const MdFlex = styled(Box)(({ theme }) => ({
+export const LgFlex = styled(Box)(({ theme }) => ({
   display: "flex",
   columnGap: "0.5rem",
   [theme.breakpoints.up("xs")]: {
