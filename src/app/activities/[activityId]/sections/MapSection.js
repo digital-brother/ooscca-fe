@@ -1,22 +1,22 @@
 "use client";
 
-import {useParams} from "next/navigation";
-import {useMutation, useQuery, useQueryClient} from "react-query";
-import React, {useEffect, useState} from "react";
-import {getActivity, patchActivity} from "@/app/activities/[activityId]/api.mjs";
+import { useParams } from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import React, { useEffect, useState } from "react";
+import { getActivity, patchActivity } from "@/app/activities/[activityId]/api.mjs";
 import Box from "@mui/material/Box";
-import {MapComponent} from "@/app/activities/[activityId]/components/Map";
-import {Button, Container} from "@mui/material";
-import {Errors} from "@/app/activities/[activityId]/components/formikFields";
+import { MapComponent } from "@/app/activities/[activityId]/components/Map";
+import { Button, Container } from "@mui/material";
+import { Errors } from "@/app/activities/[activityId]/components/formikFields";
 
 export function MapSection() {
   const activityId = useParams().activityId;
-  
+
   const londonCoordinates = { lat: 51.5074, lng: -0.1278 };
   const [coordinates, setCoordinates] = useState(londonCoordinates);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState("");
   const [errors, setErrors] = useState([]);
-  
+
   const queryClient = useQueryClient();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
@@ -27,7 +27,7 @@ export function MapSection() {
     if (activity) {
       const { latitude, longitude, address: activityAddress } = activity;
       setCoordinates({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
-      setAddress(activityAddress || '');
+      setAddress(activityAddress || "");
     }
   }, [activity]);
 
@@ -52,14 +52,14 @@ export function MapSection() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Box sx={{mt: 2}}>
+      <Box sx={{ mt: 2 }}>
         <MapComponent
           initialCoordinates={coordinates}
           initialAddress={address}
           setCoordinates={setCoordinates}
           setAddress={setAddress}
         />
-        <Button variant="contained" color="green" size="large" type="submit" onClick={handleSubmit} sx={{mt:2}}>
+        <Button variant="contained" color="green" size="large" type="submit" onClick={handleSubmit} sx={{ mt: 2 }}>
           Save
         </Button>
         {errors && <Errors errors={errors} />}
