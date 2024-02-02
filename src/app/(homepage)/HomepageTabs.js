@@ -24,9 +24,9 @@ function HomepageTabsHeader({ sx }) {
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
         You shouldn’t have your work cut out finding and syncing holidays,
-        birthdays and contacts. Once you're on board, you'll have access to
-        crucial information like school holiday schedules, classmates'
-        birthdays, and parents' contact details at your fingertips.
+        birthdays and contacts. Once you&apos;re on board, you&apos;ll have access to
+        crucial information like school holiday schedules, classmates&apos;
+        birthdays, and parents&apos; contact details at your fingertips.
       </Typography>
     </Box>
   );

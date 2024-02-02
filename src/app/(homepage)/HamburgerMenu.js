@@ -20,10 +20,10 @@ export default function HamburgerMenu({sx}) {
 
   return (
     <>
-      {/*================ ICON ================ */}
+      {/* ================ ICON ================ */}
       <IconButton onClick={toggleDrawer(true)} sx={{mr: -1, p: 0.5, ...sx}}>
-        {/*TODO: Fix color*/}
-        {/*Why setting font size here?*/}
+        {/* TODO: Fix color */}
+        {/* Why setting font size here? */}
         <MenuOutlinedIcon sx={{fontSize: 33, color: "#0C0E0F"}}/>
       </IconButton>
 
@@ -32,7 +32,7 @@ export default function HamburgerMenu({sx}) {
         open={isOpened}
         onClose={toggleDrawer(false)}
       >
-        {/*================ MENU CONTAINER ================ */}
+        {/* ================ MENU CONTAINER ================ */}
         <Box
           role="presentation"
           onKeyDown={toggleDrawer(false)}
@@ -49,11 +49,11 @@ export default function HamburgerMenu({sx}) {
             fontWeight: 600,
           }}
         >
-          {/*================ MENU CLOSE ================ */}
+          {/* ================ MENU CLOSE ================ */}
           <IconButton onClick={toggleDrawer(false)} sx={{position: "absolute", top: 32, right: 32, fontSize: 15}}>
             <CloseIcon sx={{fontSize: 20}}/>
           </IconButton>
-          {/*================ MENU LINKS ================*/}
+          {/* ================ MENU LINKS ================ */}
           <NavLinks/>
         </Box>
       </Drawer>
