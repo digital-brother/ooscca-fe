@@ -108,7 +108,8 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
             center={mapCenter}
             zoom={10}
             options={{
-              draggableCursor: 'pointer'
+              draggableCursor: 'pointer',
+              clickableIcons: false
             }}
             onLoad={handleMapLoad}
             onClick={handleMapClick}
