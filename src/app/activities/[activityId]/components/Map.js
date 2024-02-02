@@ -1,13 +1,13 @@
 import React, {useRef, useState, useCallback, useEffect} from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
-import {Button, TextField } from "@mui/material";
+import {TextField } from "@mui/material";
 
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
 export function MapComponent({ setCoordinates, setAddress, initialCoordinates, initialAddress } ) {
-  const [map, setMap] = useState(null);
+  const [mapCenter, setMapCenter] = useState(initialCoordinates);
   const [markerState, setMarkerState] = useState({
     position: initialCoordinates,
     infoOpen: !!initialAddress,
@@ -25,11 +25,9 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
   }, [initialAddress]);
 
   const handleMapLoad = useCallback((map) => {
-    setMap(map);
     geocoderRef.current = new window.google.maps.Geocoder();
     if (initialCoordinates) {
-      const initialLatLng = new window.google.maps.LatLng(initialCoordinates.lat, initialCoordinates.lng);
-      map.setCenter(initialLatLng);
+      setMapCenter(initialCoordinates);
       setMarkerState((prev) => ({
         ...prev,
         position: initialCoordinates,
@@ -66,10 +64,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
         lng: location.lng(),
       };
       updateMarkerAndInfo(newCoordinates, place.formatted_address);
-      if (map) {
-        map.setZoom(15);
-        map.panTo(location);
-      }
+      setMapCenter(newCoordinates);
     }
   };
 
@@ -85,7 +80,6 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
           const newAddress = results[0].formatted_address;
           updateMarkerAndInfo(newCoordinates, newAddress);
         } else {
-          // If geocode was not successful, set marker without address
           updateMarkerAndInfo(newCoordinates, null);
         }
       });
@@ -111,8 +105,11 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
         <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
-            center={markerState.position}
+            center={mapCenter}
             zoom={10}
+            options={{
+              draggableCursor: 'default'
+            }}
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >

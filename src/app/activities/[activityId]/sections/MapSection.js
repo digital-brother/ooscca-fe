@@ -34,16 +34,15 @@ export function MapSection() {
   async function handleSubmit() {
     const data = { latitude: coordinates.lat, longitude: coordinates.lng, address };
     mutation.mutate(data, {
-      onSuccess: () => {
-        // TODO: https://tanstack.com/query/v3/docs/framework/react/guides/updates-from-mutation-responses
-        queryClient.invalidateQueries(["activity", activityId]);
+      onSuccess: (updatedActivity) => {
+        queryClient.setQueryData(["activity", activityId], updatedActivity);
         setErrors([]);
       },
       onError: (error) => {
         const drfErrors = error.response?.data;
         const nonFieldErrors = error?.response?.data?.non_field_errors;
 
-        if (drfErrors) setErrors(Object.values(errors));
+        if (drfErrors) setErrors(Object.values(drfErrors));
         else if (nonFieldErrors && nonFieldErrors.length > 0) setErrors(...nonFieldErrors);
         else setErrors(error.message);
       },
