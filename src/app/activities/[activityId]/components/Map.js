@@ -93,10 +93,11 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
     <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
       <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box sx={{ width: "65%", mr: 2 }}>
+          <Box sx={{ flex: 1, mr: 2 }}>
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
               <TextField
                 fullWidth
+                size="small"
                 placeholder="Venue address"
                 variant="outlined"
                 ref={textFieldRef}
@@ -104,7 +105,7 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
               />
             </StandaloneSearchBox>
           </Box>
-          <Button variant="contained" color="green" size="large" onClick={handleSubmit} sx={{ ml: 2 }}>
+          <Button variant="contained" color="green" onClick={handleSubmit} sx={{ ml: 2 }}>
             Save
           </Button>
         </Box>
