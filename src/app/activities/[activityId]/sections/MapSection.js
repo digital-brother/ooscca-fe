@@ -57,10 +57,8 @@ export function MapSection() {
           initialAddress={address}
           setCoordinates={setCoordinates}
           setAddress={setAddress}
+          handleSubmit={handleSubmit}
         />
-        <Button variant="contained" color="green" size="large" type="submit" onClick={handleSubmit} sx={{ mt: 2 }}>
-          Save
-        </Button>
         {errors && <Errors errors={errors} />}
       </Box>
     </Container>

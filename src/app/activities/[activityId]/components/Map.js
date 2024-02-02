@@ -1,12 +1,12 @@
 import React, {useRef, useState, useCallback, useEffect} from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
-import {TextField } from "@mui/material";
+import {Button, TextField} from "@mui/material";
 
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function MapComponent({ setCoordinates, setAddress, initialCoordinates, initialAddress } ) {
+export function MapComponent({ setCoordinates, setAddress, initialCoordinates, initialAddress, handleSubmit } ) {
   const [mapCenter, setMapCenter] = useState(initialCoordinates);
   const [markerState, setMarkerState] = useState({
     position: initialCoordinates,
@@ -101,6 +101,9 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
               />
             </StandaloneSearchBox>
           </Box>
+          <Button variant="contained" color="green" size="large" onClick={handleSubmit} sx={{ ml: 2 }}>
+            Save
+          </Button>
         </Box>
         <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
           <GoogleMap
