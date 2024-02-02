@@ -62,7 +62,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   file.order = _key
 
   function handleDelete(event) {
-    file.deleted = true
+    file.markedForDeleting = true
     delete file?.error
     file = {...file}
 
@@ -71,7 +71,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
 
   let messageColor = ""
 
-  if (file?.deleted) {
+  if (file?.markedForDeleting) {
     opacity = 0.3
   }
 
@@ -151,52 +151,51 @@ function FilesTable({files, setFiles}) {
   );
 }
 
-export default function UploadImages() {
-  const [files, setFiles] = useState([]);
+export default function PrimaryImages() {
+  const [filesData, setFilesData] = useState([])
   const [isFilesLoaded, setIsFilesLoaded] = useState(false);
-  const activityId = useParams().activityId
+  // const activityId = useParams().activityId
+  const activityId = 1
 
-  const deleteMutation = useMutation((data) => deleteImage(data?.id), {
-    onSuccess: (data, sentImage, context) => {
-      setFiles(files => files.filter(item => item.id !== sentImage?.id));
-    },
-    onError: (error, sentImage, context) => {
-      sentImage.error = error
-    },
+  function removeFile(imagData) {
+    setFilesData(filesData => filesData.filter(fileData => fileData.image !== imagData));
+  }
+
+  function handleErrors(imageData, mutationErrors) {
+    const imageErrors = mutationErrors?.response?.data?.image;
+    const nonFieldErrors = mutationErrors?.response?.data?.nonFieldErrors;
+    if (imageErrors) imageData.errors = imageErrors;
+    else if (nonFieldErrors) imageData.errors = [nonFieldErrors];
+    else imageData.errors = [mutationErrors.message];
+  }
+
+  const deleteMutation = useMutation((imageData) => deleteImage(data?.id), {
+    onSuccess: (data, sentImage) => removeFile(sentImage),
+    onError: (errors, sentImage) => handleErrors(sentImage, errors)
   });
 
-  const patchMutation = useMutation((file) => patchImage({
-      "id": file.id,
-      "name": file.name,
-      "order": file.order,
+  const patchMutation = useMutation((imageData) => patchImage({
+      "id": imageData.id,
+      "name": imageData.name,
+      "order": imageData.order,
     }), {
-    onSuccess: (data, sentImage, context) => {
-      sentImage.error = null
-    },
-    onError: (error, sentImage, context) => {
-      sentImage.error = error
-    },
+    onSuccess: (data, sentImage, context) => { sentImage.errors = [] },
+    onError: (errors, sentImage) => handleErrors(sentImage, errors)
   });
 
-  const postMutation = useMutation((file) => postImage({
-      "name": file.name,
-      "order": file.order,
-      "size": file.size,
+  const postMutation = useMutation((imageData) => postImage({
+      "name": imageData.name,
+      "order": imageData.order,
+      "size": imageData.size,
       "activity": activityId,
       "type": "primary",
-      "image": file,
+      "image": imageData,
     }), {
-    onSuccess: (data, sentImage, context) => {
-      sentImage.error = null
+    onSuccess: (data, sentImage) => {
+      sentImage.errors  = null
       sentImage.id = data.id
     },
-    onError: (error, sentImage, context) => {
-      const imageErrors = error?.response?.data?.image;
-      const nonFieldErrors = error?.response?.data?.nonFieldErrors;
-      if (imageErrors) sentImage.error = imageErrors;
-      else if (nonFieldErrors) sentImage.error = [nonFieldErrors];
-      else sentImage.error = [error.message];
-    },
+    onError: (errors, sentImage) => handleErrors(sentImage, errors),
   });
 
   const {
@@ -223,66 +222,77 @@ export default function UploadImages() {
     return () => files.forEach((file) => URL.revokeObjectURL(file.url));
   }, []);
 
+  async function deleteMarkedForDeletingImages() {
+    // remove not uploaded files
+    setFilesData(filesData => filesData.filter(
+      f => f.id || (!f.id  && !(f?.markedForDeleting))));
+
+    // remove from backend
+    const deletePromises = filesData
+      .filter(filesData => filesData.id && filesData?.markedForDeleting === true)
+      .map(file => deleteMutation.mutateAsync(file));
+
+    // Wait for all delete mutations to complete
+    await Promise.all(deletePromises);
+  }
+
+  async function updateUploadedImages() {
+    // createdInBackendFilesAndNotMarkedForDeleting
+    const patchPromises = filesData
+      .filter(file => file.id)
+      .filter(file => file?.markedForDeleting !== true)
+      .map(file => patchMutation.mutateAsync(file));
+
+    // Wait for all patch mutations to complete
+    await Promise.all(patchPromises);
+  }
+
+  async function uploadNewImages() {
+    // notCreatedInBackendFilesWithoutErrorsAndNotMarkedForDeleting
+    const postPromises = filesData
+      .filter(file => !file.id)
+      .filter(file => !(file?.frontendErrors.length > 0))
+      .filter(file => file?.markedForDeleting !== true)
+      .map(file => postMutation.mutateAsync(file));
+
+    // Wait for all post mutations to complete
+    await Promise.all(postPromises);
+  }
+
   async function SaveButtonHandler(event) {
-    if (Array.isArray(files)) {
+    if (Array.isArray(filesData)) {
       try {
-        files.map((file, index) => {
-          delete file.error
+        filesData.map((fileData, index) => {
+          fileData.errors = []
         });
 
-        setFiles(files => files
-          .filter(file => file.id || (!file.id  && !(file?.deleted)))
-        );
+        await deleteMarkedForDeletingImages()
+        await updateUploadedImages()
+        await uploadNewImages()
 
-        //createdInBackendAndMarkedForDeleting
-        const deletePromises = files
-          .filter(file => file.id && file?.deleted === true)
-          .map(file => deleteMutation.mutateAsync(file));
-        await Promise.all(deletePromises);
-
-        setFiles(files => files.filter(file => file !== null))
 
         function getFilesExistedInBackend(files) {
-          return files.filter(file => file.id)
+          return filesData.filter(file => file.id)
         }
 
         function getFilesNotExistedInBackend(files) {
-          return files.filter(file => !file.id)
+          return filesData.filter(file => !file.id)
         }
 
         function getFilesWithoutFrontendErrors(files) {
-          return files.filter(file => !(file?.frontendErrors.length > 0))
+          return filesData.filter(file => !(file?.frontendErrors.length > 0))
         }
 
         function getFilesMarkedForDeleting(files) {
-          return files.filter(file => file?.deleted === true)
+          return filesData.filter(file => file?.markedForDeleting === true)
         }
 
         function getFilesNotMarkedForDeleting(files) {
-          return files.filter(file => file?.deleted !== true)
+          return filesData.filter(file => file?.markedForDeleting !== true)
         }
 
-        // createdInBackendFilesAndNotMarkedForDeleting
-        const patchPromises = files
-          .filter(file => file.id)
-          .filter(file => file?.deleted !== true)
-          .map(file => patchMutation.mutateAsync(file));
-
-        // notCreatedInBackendFilesWithoutErrorsAndNotMarkedForDeleting
-        const postPromises = files
-          .filter(file => !file.id)
-          .filter(file => !(file?.frontendErrors.length > 0))
-          .filter(file => file?.deleted !== true)
-          .map(file => postMutation.mutateAsync(file));
-
-        // Wait for all patch mutations to complete
-        await Promise.all(patchPromises);
-
-        // Wait for all post mutations to complete
-        await Promise.all(postPromises);
-
         // Update state after all mutations are complete
-        files.map((file, index) => ({
+        filesData.map((file, index) => ({
           key: file.key,
           _key: file._key,
           error: file.error,
