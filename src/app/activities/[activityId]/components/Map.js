@@ -90,7 +90,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
     <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
       <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box sx={{ width: "65%", mr: 2 }}>
+          <Box sx={{ width: "95%", mr: 2 }}>
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
               <TextField
                 fullWidth
@@ -120,12 +120,9 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
             {markerState.position && !isNaN(markerState.position.lat) && !isNaN(markerState.position.lng) && (
               <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }}>
                 {markerState.infoOpen && markerState.selectedPlace && (
-                  <InfoWindow position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onCloseClick={() => setMarkerState(prev => ({ ...prev, infoOpen: false }))}>
+                  <InfoWindow sx={{mr:2}} position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onCloseClick={() => setMarkerState(prev => ({ ...prev, infoOpen: false }))}>
                     <div>
                       <strong>{markerState.selectedPlace.formatted_address}</strong>
-                      <p>
-                        Coords: {markerState.position.lat.toFixed(3)}, {markerState.position.lng.toFixed(3)}
-                      </p>
                     </div>
                   </InfoWindow>
                 )}
