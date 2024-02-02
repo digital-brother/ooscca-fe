@@ -3,23 +3,27 @@
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImageInput } from "./ImageUpload";
 
 import prettyBytes from "pretty-bytes";
+import Image from "next/image";
 
 export default function ImageMultipleUpload() {
-  const [files, setFiles] = useState([]);
+  const [filesData, setFilesData] = useState([]);
 
   function handleAdd(files) {
-    setFiles((previousFiles) => [...previousFiles, ...files]);
+    const filesData = files.map((file) => ({ file, url: URL.createObjectURL(file) }));
+    setFilesData((previousFilesData) => [...previousFilesData, ...filesData]);
   }
 
   function handleDelete(deleteIndex) {
-    setFiles((previousFiles) => previousFiles.filter((_, index) => index !== deleteIndex));
+    setFilesData((previousFilesData) => previousFilesData.filter((_, index) => index !== deleteIndex));
   }
 
-  console.log(files);
+  useEffect(() => {
+    return () => filesData.forEach((fileData) => URL.revokeObjectURL(fileData.url));
+  }, [filesData]);
 
   return (
     <Container sx={{ my: 10 }}>
@@ -28,7 +32,7 @@ export default function ImageMultipleUpload() {
       >
         <ImageInput multiple={true} handleAdd={handleAdd} />
       </Box>
-      {files?.length > 0 && (
+      {filesData?.length > 0 && (
         <TableContainer sx={{ mt: 5 }}>
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
@@ -42,15 +46,17 @@ export default function ImageMultipleUpload() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {files.map((file, index) => (
+              {filesData.map((fileData, index) => (
                 <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell component="th" scope="row">
                     {"|||"}
                   </TableCell>
-                  <TableCell align="right">{"thunb"}</TableCell>
-                  <TableCell align="right">{file.name}</TableCell>
+                  <TableCell align="right">
+                    <Image src={fileData.url} alt="thumbnail" width="50" height="50" />
+                  </TableCell>
+                  <TableCell align="right">{fileData.file.name}</TableCell>
                   <TableCell align="right">{index + 1}</TableCell>
-                  <TableCell align="right">{prettyBytes(file.size)}</TableCell>
+                  <TableCell align="right">{prettyBytes(fileData.file.size)}</TableCell>
                   <TableCell align="right">
                     <IconButton onClick={() => handleDelete(index)}>
                       <DeleteForeverIcon />
