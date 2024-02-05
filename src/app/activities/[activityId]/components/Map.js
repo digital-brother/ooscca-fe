@@ -6,7 +6,7 @@ import { Button, TextField } from "@mui/material";
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function Map({ setCoordinates, setAddress, initialCoordinates, initialAddress, handleSubmit } ) {
+export function Map({ setCoordinates, setAddress, initialCoordinates, initialAddress, handleSubmit, setErrors } ) {
   const [mapCenter, setMapCenter] = useState(initialCoordinates);
   const [markerState, setMarkerState] = useState({
     position: initialCoordinates,
@@ -59,6 +59,7 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
   const onPlacesChanged = () => {
     const places = searchBoxRef.current.getPlaces();
     const place = places && places.length > 0 ? places[0] : null;
+
     if (place && place.geometry) {
       const location = place.geometry.location;
       const newCoordinates = {
@@ -67,6 +68,9 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
       };
       updateMarkerAndInfo(newCoordinates, place.formatted_address);
       setMapCenter(newCoordinates);
+      setErrors([]);
+    } else {
+      setErrors(["Please enter a valid location."]);
     }
   };
 
@@ -101,6 +105,7 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
                 variant="outlined"
                 defaultValue={initialAddress}
                 ref={textFieldRef}
+                onFocus={() => setErrors([])}
                 sx={{ ".MuiOutlinedInput-notchedOutline": { borderColor: "black" } }}
               />
             </StandaloneSearchBox>

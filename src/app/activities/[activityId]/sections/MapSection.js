@@ -58,6 +58,7 @@ export function MapSection() {
           setCoordinates={setCoordinates}
           setAddress={setAddress}
           handleSubmit={handleSubmit}
+          setErrors={setErrors}
         />
         {errors && <Errors errors={errors} />}
       </Box>
