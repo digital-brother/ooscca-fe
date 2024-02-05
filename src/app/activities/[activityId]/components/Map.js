@@ -1,12 +1,12 @@
-import React, {useRef, useState, useCallback, useEffect} from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
-import {Button, TextField} from "@mui/material";
+import { Button, TextField } from "@mui/material";
 
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function MapComponent({ setCoordinates, setAddress, initialCoordinates, initialAddress, handleSubmit } ) {
+export function Map({ setCoordinates, setAddress, initialCoordinates, initialAddress, handleSubmit } ) {
   const [mapCenter, setMapCenter] = useState(initialCoordinates);
   const [markerState, setMarkerState] = useState({
     position: initialCoordinates,
@@ -20,7 +20,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
 
   useEffect(() => {
     if (textFieldRef.current) {
-      textFieldRef.current.querySelector('input').value = initialAddress || '';
+      textFieldRef.current.querySelector("input").value = initialAddress || "";
     }
   }, [initialAddress]);
 
@@ -37,7 +37,9 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
       setCoordinates(initialCoordinates);
       setAddress(initialAddress);
     }
-  }, [initialCoordinates, initialAddress, setCoordinates, setAddress]);
+  },
+  [initialCoordinates, initialAddress, setCoordinates, setAddress]
+);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
@@ -87,13 +89,14 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
   };
 
   return (
-    <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
-      <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
+    <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
+      <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box sx={{ width: "95%", mr: 2 }}>
+          <Box sx={{ flex: 1, mr: 2 }}>
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
               <TextField
                 fullWidth
+                size="small"
                 placeholder="Venue address"
                 variant="outlined"
                 defaultValue={initialAddress}
@@ -102,7 +105,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
               />
             </StandaloneSearchBox>
           </Box>
-          <Button variant="contained" color="green" size="large" onClick={handleSubmit} sx={{ height: "102%", width: "15%"}}>
+          <Button variant="contained" color="green" onClick={handleSubmit} sx={{ ml: 2 }}>
             Save
           </Button>
         </Box>
@@ -112,8 +115,8 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
             center={mapCenter}
             zoom={10}
             options={{
-              draggableCursor: 'pointer',
-              clickableIcons: false
+              draggableCursor: "pointer",
+              clickableIcons: false,
             }}
             onLoad={handleMapLoad}
             onClick={handleMapClick}
@@ -121,7 +124,11 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
             {markerState.position && !isNaN(markerState.position.lat) && !isNaN(markerState.position.lng) && (
               <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }}>
                 {markerState.infoOpen && markerState.selectedPlace && (
-                  <InfoWindow sx={{mr:2}} position={{ lat: markerState.position.lat, lng: markerState.position.lng }} onCloseClick={() => setMarkerState(prev => ({ ...prev, infoOpen: false }))}>
+                  <InfoWindow
+                    position={{ lat: markerState.position.lat, lng: markerState.position.lng }}
+                    onCloseClick={() => setMarkerState((prev) => ({ ...prev, infoOpen: false }))}
+                    sx={{ mr: 2 }}
+                  >
                     <div>
                       <strong>{markerState.selectedPlace.formatted_address}</strong>
                     </div>
@@ -131,7 +138,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
             )}
           </GoogleMap>
         </Box>
-      </LoadScript>
-    </Box>
+      </Box>
+    </LoadScript>
   );
 }

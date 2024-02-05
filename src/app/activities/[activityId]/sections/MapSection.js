@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import React, { useEffect, useState } from "react";
 import { getActivity, patchActivity } from "@/app/activities/[activityId]/api.mjs";
 import Box from "@mui/material/Box";
-import { MapComponent } from "@/app/activities/[activityId]/components/Map";
+import { Map } from "@/app/activities/[activityId]/components/Map";
 import { Container } from "@mui/material";
 import { Errors } from "@/app/activities/[activityId]/components/formikFields";
 
@@ -52,7 +52,7 @@ export function MapSection() {
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ mt: 2 }}>
-        <MapComponent
+        <Map
           initialCoordinates={coordinates}
           initialAddress={address}
           setCoordinates={setCoordinates}
