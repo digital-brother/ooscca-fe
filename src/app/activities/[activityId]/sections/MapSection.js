@@ -53,8 +53,8 @@ export function MapSection() {
     <Container sx={{ my: 10 }}>
       <Box sx={{ mt: 2 }}>
         <Map
-          initialCoordinates={coordinates}
-          initialAddress={address}
+          coordinates={coordinates}
+          address={address}
           setCoordinates={setCoordinates}
           setAddress={setAddress}
           handleSubmit={handleSubmit}
