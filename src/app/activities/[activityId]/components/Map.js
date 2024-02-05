@@ -6,12 +6,12 @@ import { Button, TextField } from "@mui/material";
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function Map({ setCoordinates, setAddress, initialCoordinates, initialAddress, handleSubmit, setErrors } ) {
-  const [mapCenter, setMapCenter] = useState(initialCoordinates);
+export function Map({ setCoordinates, setAddress, coordinates, address, handleSubmit, setErrors } ) {
+  const [mapCenter, setMapCenter] = useState(coordinates);
   const [markerState, setMarkerState] = useState({
-    position: initialCoordinates,
-    infoOpen: !!initialAddress,
-    selectedPlace: initialAddress ? { formatted_address: initialAddress } : null,
+    position: coordinates,
+    infoOpen: !!address,
+    selectedPlace: address ? { formatted_address: address } : null,
     lastClickedMarker: null,
   });
   const searchBoxRef = useRef(null);
@@ -20,25 +20,25 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
 
   useEffect(() => {
     if (textFieldRef.current) {
-      textFieldRef.current.querySelector("input").value = initialAddress || "";
+      textFieldRef.current.querySelector("input").value = address || "";
     }
-  }, [initialAddress]);
+  }, [address]);
 
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
-    if (initialCoordinates) {
-      setMapCenter(initialCoordinates);
+    if (coordinates) {
+      setMapCenter(coordinates);
       setMarkerState((prev) => ({
         ...prev,
-        position: initialCoordinates,
-        infoOpen: !!initialAddress,
-        selectedPlace: initialAddress ? { formatted_address: initialAddress } : null,
+        position: coordinates,
+        infoOpen: !!address,
+        selectedPlace: address ? { formatted_address: address } : null,
       }));
-      setCoordinates(initialCoordinates);
-      setAddress(initialAddress);
+      setCoordinates(coordinates);
+      setAddress(address);
     }
   },
-  [initialCoordinates, initialAddress, setCoordinates, setAddress]
+  [coordinates, address, setCoordinates, setAddress]
 );
 
   const onLoad = useCallback((ref) => {
@@ -103,7 +103,7 @@ export function Map({ setCoordinates, setAddress, initialCoordinates, initialAdd
                 size="small"
                 placeholder="Venue address"
                 variant="outlined"
-                defaultValue={initialAddress}
+                defaultValue={address}
                 ref={textFieldRef}
                 onFocus={() => setErrors([])}
                 sx={{ ".MuiOutlinedInput-notchedOutline": { borderColor: "black" } }}
