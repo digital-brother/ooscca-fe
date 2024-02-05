@@ -113,7 +113,7 @@ export default function TermsAndConditionsSection(sx) {
   const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   return (
-    <LgFlex sx={{ my: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, justifyContent: "center", ...sx }}>
+    <LgFlex sx={{ my: { xs: 5, sm: 10 }, columnGap: 5, rowGap: 1, justifyContent: "center", alignItems: "center", ...sx }}>
       <Typography variant="h5">Terms and Conditions</Typography>
       <Button
         variant="contained"
