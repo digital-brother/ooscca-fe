@@ -10,6 +10,28 @@ import prettyBytes from "pretty-bytes";
 import Image from "next/image";
 import { useDrag, useDrop } from "react-dnd";
 
+function ImagePreview({ index, fileData, handleDelete }) {
+  // Extracted, as every preview needs own useDrag and useDrop
+  return (
+    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+      <TableCell component="th" scope="row">
+        {"|||"}
+      </TableCell>
+      <TableCell align="right">
+        <Image src={fileData.url} alt="thumbnail" width="50" height="50" />
+      </TableCell>
+      <TableCell align="right">{fileData.file.name}</TableCell>
+      <TableCell align="right">{fileData.order}</TableCell>
+      <TableCell align="right">{prettyBytes(fileData.file.size)}</TableCell>
+      <TableCell align="right">
+        <IconButton onClick={() => handleDelete(index)}>
+          <DeleteForeverIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  );
+}
+
 function ImageMultiplePreview({ filesData, handleDelete }) {
   const [, drag] = useDrag(() => ({
     type: "imagePreview",
@@ -41,22 +63,7 @@ function ImageMultiplePreview({ filesData, handleDelete }) {
         </TableHead>
         <TableBody>
           {filesData.map((fileData, index) => (
-            <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell component="th" scope="row">
-                {"|||"}
-              </TableCell>
-              <TableCell align="right">
-                <Image src={fileData.url} alt="thumbnail" width="50" height="50" />
-              </TableCell>
-              <TableCell align="right">{fileData.file.name}</TableCell>
-              <TableCell align="right">{fileData.order}</TableCell>
-              <TableCell align="right">{prettyBytes(fileData.file.size)}</TableCell>
-              <TableCell align="right">
-                <IconButton onClick={() => handleDelete(index)}>
-                  <DeleteForeverIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
+            <ImagePreview key={index} {...{index, fileData, handleDelete}} />
           ))}
         </TableBody>
       </Table>
