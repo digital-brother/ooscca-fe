@@ -24,7 +24,7 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
     }
   }, [initialAddress]);
 
-  const handleMapLoad = useCallback((map) => {
+  const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
     if (initialCoordinates) {
       setMapCenter(initialCoordinates);
@@ -96,12 +96,13 @@ export function MapComponent({ setCoordinates, setAddress, initialCoordinates, i
                 fullWidth
                 placeholder="Venue address"
                 variant="outlined"
+                defaultValue={initialAddress}
                 ref={textFieldRef}
                 sx={{ ".MuiOutlinedInput-notchedOutline": { borderColor: "black" } }}
               />
             </StandaloneSearchBox>
           </Box>
-          <Button variant="contained" color="green" size="large" onClick={handleSubmit} sx={{ ml: 2 }}>
+          <Button variant="contained" color="green" size="large" onClick={handleSubmit} sx={{ height: "102%", width: "15%"}}>
             Save
           </Button>
         </Box>

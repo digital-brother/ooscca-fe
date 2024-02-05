@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { getActivity, patchActivity } from "@/app/activities/[activityId]/api.mjs";
 import Box from "@mui/material/Box";
 import { MapComponent } from "@/app/activities/[activityId]/components/Map";
-import { Button, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import { Errors } from "@/app/activities/[activityId]/components/formikFields";
 
 export function MapSection() {
@@ -44,7 +44,7 @@ export function MapSection() {
 
         if (drfErrors) setErrors(Object.values(drfErrors));
         else if (nonFieldErrors && nonFieldErrors.length > 0) setErrors(...nonFieldErrors);
-        else setErrors(error.message);
+        else setErrors([error.message]);
       },
     });
   }
