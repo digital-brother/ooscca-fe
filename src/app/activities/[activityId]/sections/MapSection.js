@@ -16,6 +16,7 @@ export function MapSection() {
   const [coordinates, setCoordinates] = useState(londonCoordinates);
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState([]);
+  const [addressError, setAddressError] = useState("")
 
   const queryClient = useQueryClient();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
@@ -37,12 +38,18 @@ export function MapSection() {
       onSuccess: (updatedActivity) => {
         queryClient.setQueryData(["activity", activityId], updatedActivity);
         setErrors([]);
+        setAddressError("");
       },
       onError: (error) => {
         const drfErrors = error.response?.data;
         const nonFieldErrors = error?.response?.data?.non_field_errors;
 
         if (drfErrors) setErrors(Object.values(drfErrors));
+        if (drfErrors.address) {
+          setAddressError(drfErrors.address.join(" "));
+          delete drfErrors.address;
+          setErrors(Object.values(drfErrors))
+        }
         else if (nonFieldErrors && nonFieldErrors.length > 0) setErrors(...nonFieldErrors);
         else setErrors([error.message]);
       },
@@ -55,10 +62,11 @@ export function MapSection() {
         <Map
           coordinates={coordinates}
           address={address}
+          addressError={addressError}
+          setAddressError={setAddressError}
           setCoordinates={setCoordinates}
           setAddress={setAddress}
           handleSubmit={handleSubmit}
-          setErrors={setErrors}
         />
         {errors && <Errors errors={errors} />}
       </Box>

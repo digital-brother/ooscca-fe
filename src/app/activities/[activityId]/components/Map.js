@@ -6,7 +6,7 @@ import { Button, TextField } from "@mui/material";
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function Map({ setCoordinates, setAddress, coordinates, address, handleSubmit, setErrors } ) {
+export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit } ) {
   const [mapCenter, setMapCenter] = useState(coordinates);
   const [markerState, setMarkerState] = useState({
     position: coordinates,
@@ -68,9 +68,9 @@ export function Map({ setCoordinates, setAddress, coordinates, address, handleSu
       };
       updateMarkerAndInfo(newCoordinates, place.formatted_address);
       setMapCenter(newCoordinates);
-      setErrors([]);
+      setAddressError("");
     } else {
-      setErrors(["Please enter a valid location."]);
+      setAddressError("Please enter a valid location.");
     }
   };
 
@@ -95,7 +95,7 @@ export function Map({ setCoordinates, setAddress, coordinates, address, handleSu
   return (
     <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
       <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <Box sx={{ flex: 1, mr: 2 }}>
             <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
               <TextField
@@ -105,7 +105,8 @@ export function Map({ setCoordinates, setAddress, coordinates, address, handleSu
                 variant="outlined"
                 defaultValue={address}
                 ref={textFieldRef}
-                onFocus={() => setErrors([])}
+                error={!!addressError}
+                helperText={addressError}
                 sx={{ ".MuiOutlinedInput-notchedOutline": { borderColor: "black" } }}
               />
             </StandaloneSearchBox>
