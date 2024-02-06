@@ -13,7 +13,6 @@ import { useParams } from "next/navigation";
 import { getActivityImagesPrimary } from "../api.mjs";
 
 function ImagePreviewRow({ index, file, handleDelete }) {
-  console.log(file);
   // Extracted, as every preview needs own useDrag and useDrop
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -36,6 +35,8 @@ function ImagePreviewRow({ index, file, handleDelete }) {
 }
 
 function ImagePreviewTable({ files, handleDelete }) {
+  console.log(files);
+
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
@@ -69,16 +70,16 @@ export default function ImageMultipleUpload() {
 
   const filesCount = files?.length;
   function handleAdd(files) {
-    const newFilesData = files.map((file, index) => {
+    const newFiles = files.map((file, index) => {
       file.image = URL.createObjectURL(file);
       file.order = index + filesCount + 1;
       return file
     });
-    setFiles((previousFilesData) => [...previousFilesData, ...newFilesData].sort((a, b) => a.order - b.order));
+    setFiles((previousFiles) => [...previousFiles, ...newFiles].sort((a, b) => a.order - b.order));
   }
 
   function handleDelete(deleteIndex) {
-    setFiles((previousFilesData) => previousFilesData.filter((_, index) => index !== deleteIndex));
+    setFiles((previousFiles) => previousFiles.filter((_, index) => index !== deleteIndex));
   }
 
   function handleSave() {
@@ -88,7 +89,7 @@ export default function ImageMultipleUpload() {
   }
 
   useEffect(() => {
-    return () => files.forEach((fileData) => URL.revokeObjectURL(fileData.image));
+    return () => files.forEach((file) => URL.revokeObjectURL(file.image));
   }, []);
 
   return (
