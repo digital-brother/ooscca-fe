@@ -74,6 +74,7 @@ export default function ImageMultipleUpload() {
   const filesCount = images?.length;
   function handleAdd(files) {
     const newImages = files.map((file, index) => ({
+      activity: activityId,
       url: URL.createObjectURL(file),
       order: index + filesCount + 1,
       name: file.name,
@@ -91,7 +92,7 @@ export default function ImageMultipleUpload() {
     const serverImageIsPresent = (images, serverImages) => images.some((item) => item.id === serverImages.id);
     const deletedImages = serverImages.filter((serverImage) => !serverImageIsPresent(images, serverImage));
 
-    const addedFiles = images.filter((image) => !image.id);
+    const addedImages = images.filter((image) => !image.id);
 
     const fileIsUpdated = (serverImages, image) => {
       const serverImage = serverImages.find((serverImage) => serverImage.id === image.id);
@@ -99,8 +100,8 @@ export default function ImageMultipleUpload() {
     };
     const updatedImages = images.filter((image) => fileIsUpdated(serverImages, image));
 
-    deletedImages.map((file) => deleteMutation.mutate(file.id));
-    // addedFiles.map((file) => postMutation.mutate(file));
+    deletedImages.map((image) => deleteMutation.mutate(image.id));
+    addedImages.map((image) => postMutation.mutate(image, image.file));
   }
 
   useEffect(() => {

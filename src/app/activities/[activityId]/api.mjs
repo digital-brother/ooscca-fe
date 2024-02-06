@@ -29,7 +29,8 @@ export async function getActivityImagesPrimary(activityId) {
 export async function postActivityImagePrimary(activityId, data) {
   const formData = new FormData();
 
-  for (const key in data) {
+  // TODO: Make backend auto-assign activity id
+  for (const key in { ...data, activity: activityId }) {
     if (Object.prototype.hasOwnProperty.call(data, key)) {
       formData.append(key, data[key]);
     }
