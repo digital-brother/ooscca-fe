@@ -69,7 +69,6 @@ export default function ImageMultipleUpload() {
   const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
   const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
 
-
   useEffect(() => {
     setFiles(serverFiles);
   }, [serverFiles]);
@@ -102,7 +101,7 @@ export default function ImageMultipleUpload() {
     const updatedFiles = files.filter((file) => fileIsUpdated(file, serverFiles));
 
     deletedFiles.map((file) => deleteMutation.mutate(file.id));
-
+    // addedFiles.map((file) => postMutation.mutate(file));
   }
 
   useEffect(() => {
