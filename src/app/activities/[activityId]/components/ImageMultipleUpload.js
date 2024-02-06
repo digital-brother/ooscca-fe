@@ -8,7 +8,6 @@ import { ImageInput } from "./ImageUpload";
 
 import prettyBytes from "pretty-bytes";
 import Image from "next/image";
-import { useDrag, useDrop } from "react-dnd";
 
 function ImagePreview({ index, fileData, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
@@ -33,26 +32,11 @@ function ImagePreview({ index, fileData, handleDelete }) {
 }
 
 function ImageMultiplePreview({ filesData, handleDelete }) {
-  const [, drag] = useDrag(() => ({
-    type: "imagePreview",
-    // collect: (monitor) => ({
-    //   isDragging: !!monitor.isDragging(),
-    // }),
-  }));
-
-  // const [, drop] = useDrop(
-  //   () => ({
-  //     accept: "imagePreview",
-  //     drop: () => setImageOrder(order),
-  //   }),
-  //   [order]
-  // );
-
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
-          <TableRow ref={drag}>
+          <TableRow>
             <TableCell></TableCell>
             <TableCell align="right">Thumbnail</TableCell>
             <TableCell align="right">Name</TableCell>
