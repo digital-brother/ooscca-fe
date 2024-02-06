@@ -8,8 +8,12 @@ import { ImageInput } from "./ImageUpload";
 
 import prettyBytes from "pretty-bytes";
 import Image from "next/image";
+import { useQuery } from "react-query";
+import { useParams } from "next/navigation";
+import { getActivityImagesPrimary } from "../api.mjs";
 
-function ImagePreviewRow({ index, fileData, handleDelete }) {
+function ImagePreviewRow({ index, file, handleDelete }) {
+  console.log(file);
   // Extracted, as every preview needs own useDrag and useDrop
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -17,11 +21,11 @@ function ImagePreviewRow({ index, fileData, handleDelete }) {
         {"|||"}
       </TableCell>
       <TableCell align="right">
-        <Image src={fileData.url} alt="thumbnail" width="50" height="50" />
+        <Image src={file.image} alt="thumbnail" width="50" height="50" />
       </TableCell>
-      <TableCell align="right">{fileData.file.name}</TableCell>
-      <TableCell align="right">{fileData.order}</TableCell>
-      <TableCell align="right">{prettyBytes(fileData.file.size)}</TableCell>
+      <TableCell align="right">{file.name}</TableCell>
+      <TableCell align="right">{file.order}</TableCell>
+      <TableCell align="right">{prettyBytes(file.size)}</TableCell>
       <TableCell align="right">
         <IconButton onClick={() => handleDelete(index)}>
           <DeleteForeverIcon />
@@ -31,7 +35,7 @@ function ImagePreviewRow({ index, fileData, handleDelete }) {
   );
 }
 
-function ImagePreviewTable({ filesData, handleDelete }) {
+function ImagePreviewTable({ files, handleDelete }) {
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
@@ -46,8 +50,8 @@ function ImagePreviewTable({ filesData, handleDelete }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filesData.map((fileData, index) => (
-            <ImagePreviewRow key={index} {...{ index, fileData, handleDelete }} />
+          {files.map((file, index) => (
+            <ImagePreviewRow key={index} {...{ index, file, handleDelete }} />
           ))}
         </TableBody>
       </Table>
@@ -56,18 +60,23 @@ function ImagePreviewTable({ filesData, handleDelete }) {
 }
 
 export default function ImageMultipleUpload() {
-  const [filesData, setFilesData] = useState([]);
+  const [files, setFiles] = useState([]);
+
+  const activityId = useParams().activityId;
+  const { data: images } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
+
+  useEffect(() => {setFiles(images)}, [images]);
 
   function handleAdd(files) {
     const newFilesData = files.map((file, index) => {
-      const filesCount = filesData.length;
-      return { file, url: URL.createObjectURL(file), order: index + filesCount + 1 };
+      const filesCount = files.length;
+      return { ...file, image: URL.createObjectURL(file), order: index + filesCount + 1 };
     });
-    setFilesData((previousFilesData) => [...previousFilesData, ...newFilesData].sort((a, b) => a.order - b.order));
+    setFiles((previousFilesData) => [...previousFilesData, ...newFilesData].sort((a, b) => a.order - b.order));
   }
 
   function handleDelete(deleteIndex) {
-    setFilesData((previousFilesData) => previousFilesData.filter((_, index) => index !== deleteIndex));
+    setFiles((previousFilesData) => previousFilesData.filter((_, index) => index !== deleteIndex));
   }
 
   function handleSave() {
@@ -77,7 +86,7 @@ export default function ImageMultipleUpload() {
   }
 
   useEffect(() => {
-    return () => filesData.forEach((fileData) => URL.revokeObjectURL(fileData.url));
+    return () => files.forEach((fileData) => URL.revokeObjectURL(fileData.image));
   }, []);
 
   return (
@@ -85,7 +94,7 @@ export default function ImageMultipleUpload() {
       <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
         <ImageInput multiple={true} handleAdd={handleAdd} />
       </Box>
-      {filesData?.length > 0 && <ImagePreviewTable {...{ filesData, handleDelete }} />}
+      {files?.length > 0 && <ImagePreviewTable {...{ files, handleDelete }} />}
       <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
         Save
       </Button>
