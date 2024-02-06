@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useQuery } from "react-query";
 import { useParams } from "next/navigation";
 import { getActivityImagesPrimary } from "../api.mjs";
+import _ from "lodash";
 
 function ImagePreviewRow({ index, file, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
@@ -66,14 +67,17 @@ export default function ImageMultipleUpload() {
   const activityId = useParams().activityId;
   const { data: serverFiles } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
 
-  useEffect(() => {setFiles(serverFiles)}, [serverFiles]);
+  useEffect(() => {
+    setFiles(serverFiles);
+  }, [serverFiles]);
 
   const filesCount = files?.length;
   function handleAdd(files) {
     const newFiles = files.map((file, index) => {
+      // Spread syntax does not work here, is converts file to object and loses file properties
       file.image = URL.createObjectURL(file);
       file.order = index + filesCount + 1;
-      return file
+      return file;
     });
     setFiles((previousFiles) => [...previousFiles, ...newFiles].sort((a, b) => a.order - b.order));
   }
@@ -88,6 +92,11 @@ export default function ImageMultipleUpload() {
 
     const addedFiles = files.filter((file) => !file.id);
 
+    const fileIsUpdated = (file, serverFiles) => {
+      const serverFile = serverFiles.find((serverFile) => serverFile.id === file.id);
+      return serverFile && !_.isEqual(file, serverFile);
+    };
+    const updatedFiles = files.filter((file) => fileIsUpdated(file, serverFiles));
   }
 
   useEffect(() => {

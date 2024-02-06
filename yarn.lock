@@ -3366,6 +3366,7 @@ __metadata:
     eslint-plugin-promise: "npm:^6.0.0"
     eslint-plugin-react: "npm:^7.33.2"
     formik: "npm:^2.4.5"
+    lodash: "npm:^4.17.21"
     next: "npm:^14.0.4"
     pretty-bytes: "npm:^6.1.1"
     react: "npm:latest"
