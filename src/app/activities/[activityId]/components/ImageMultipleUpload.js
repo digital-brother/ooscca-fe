@@ -13,7 +13,7 @@ import prettyBytes from "pretty-bytes";
 import { useMutation, useQuery } from "react-query";
 import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
 
-function ImagePreviewRow({ index, file, handleDelete }) {
+function ImagePreviewRow({ index, image, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -21,11 +21,11 @@ function ImagePreviewRow({ index, file, handleDelete }) {
         {"|||"}
       </TableCell>
       <TableCell align="right">
-        <Image src={file.image} alt="thumbnail" width="50" height="50" />
+        <Image src={image.url} alt="thumbnail" width="50" height="50" />
       </TableCell>
-      <TableCell align="right">{file.name}</TableCell>
-      <TableCell align="right">{file.order}</TableCell>
-      <TableCell align="right">{prettyBytes(file.size)}</TableCell>
+      <TableCell align="right">{image.name}</TableCell>
+      <TableCell align="right">{image.order}</TableCell>
+      <TableCell align="right">{prettyBytes(image.size)}</TableCell>
       <TableCell align="right">
         <IconButton onClick={() => handleDelete(index)}>
           <DeleteForeverIcon />
@@ -35,9 +35,7 @@ function ImagePreviewRow({ index, file, handleDelete }) {
   );
 }
 
-function ImagePreviewTable({ files, handleDelete }) {
-  console.log(files);
-
+function ImagePreviewTable({ images, handleDelete }) {
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
@@ -52,8 +50,8 @@ function ImagePreviewTable({ files, handleDelete }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {files.map((file, index) => (
-            <ImagePreviewRow key={index} {...{ index, file, handleDelete }} />
+          {images.map((image, index) => (
+            <ImagePreviewRow key={index} {...{ index, image, handleDelete }} />
           ))}
         </TableBody>
       </Table>
@@ -62,50 +60,51 @@ function ImagePreviewTable({ files, handleDelete }) {
 }
 
 export default function ImageMultipleUpload() {
-  const [files, setFiles] = useState([]);
+  const [images, setImages] = useState([]);
 
   const activityId = useParams().activityId;
-  const { data: serverFiles } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
+  const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
   const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
   const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
 
   useEffect(() => {
-    setFiles(serverFiles);
-  }, [serverFiles]);
+    setImages(serverImages);
+  }, [serverImages]);
 
-  const filesCount = files?.length;
+  const filesCount = images?.length;
   function handleAdd(files) {
-    const newFiles = files.map((file, index) => {
-      // Spread syntax does not work here, is converts file to object and loses file properties
-      file.image = URL.createObjectURL(file);
-      file.order = index + filesCount + 1;
-      return file;
-    });
-    setFiles((previousFiles) => [...previousFiles, ...newFiles].sort((a, b) => a.order - b.order));
+    const newImages = files.map((file, index) => ({
+      url: URL.createObjectURL(file),
+      order: index + filesCount + 1,
+      name: file.name,
+      size: file.size,
+      file,
+    }));
+    setImages((previousImages) => [...previousImages, ...newImages].sort((a, b) => a.order - b.order));
   }
 
   function handleDelete(deleteIndex) {
-    setFiles((previousFiles) => previousFiles.filter((_, index) => index !== deleteIndex));
+    setImages((previousImages) => previousImages.filter((_, index) => index !== deleteIndex));
   }
 
   function handleSave() {
-    const fileIsPresent = (serverFile, files) => files.some((file) => file.id === serverFile.id);
-    const deletedFiles = serverFiles.filter((serverFile) => !fileIsPresent(serverFile, files));
+    const serverImageIsPresent = (images, serverImages) => images.some((item) => item.id === serverImages.id);
+    const deletedImages = serverImages.filter((serverImage) => !serverImageIsPresent(images, serverImage));
 
-    const addedFiles = files.filter((file) => !file.id);
+    const addedFiles = images.filter((image) => !image.id);
 
-    const fileIsUpdated = (file, serverFiles) => {
-      const serverFile = serverFiles.find((serverFile) => serverFile.id === file.id);
-      return serverFile && !_.isEqual(file, serverFile);
+    const fileIsUpdated = (serverImages, image) => {
+      const serverImage = serverImages.find((serverImage) => serverImage.id === image.id);
+      return serverImage && !_.isEqual(image, serverImage);
     };
-    const updatedFiles = files.filter((file) => fileIsUpdated(file, serverFiles));
+    const updatedImages = images.filter((image) => fileIsUpdated(serverImages, image));
 
-    deletedFiles.map((file) => deleteMutation.mutate(file.id));
+    deletedImages.map((file) => deleteMutation.mutate(file.id));
     // addedFiles.map((file) => postMutation.mutate(file));
   }
 
   useEffect(() => {
-    return () => files.forEach((file) => URL.revokeObjectURL(file.image));
+    return () => images.forEach((image) => URL.revokeObjectURL(image.file));
   }, []);
 
   return (
@@ -113,7 +112,7 @@ export default function ImageMultipleUpload() {
       <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
         <ImageInput multiple={true} handleAdd={handleAdd} />
       </Box>
-      {files?.length > 0 && <ImagePreviewTable {...{ files, handleDelete }} />}
+      {images?.length > 0 && <ImagePreviewTable {...{ images, handleDelete }} />}
       <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
         Save
       </Button>
