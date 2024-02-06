@@ -22,7 +22,18 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     if (textFieldRef.current) {
       textFieldRef.current.querySelector("input").value = address || "";
     }
-  }, [address]);
+    if (coordinates) {
+      setMapCenter(coordinates);
+      setMarkerState((prev) => ({
+        ...prev,
+        position: coordinates,
+        infoOpen: !!address,
+        selectedPlace: address ? { formatted_address: address } : null,
+      }));
+      setCoordinates(coordinates);
+      setAddress(address);
+    }
+  }, [address, coordinates]);
 
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
