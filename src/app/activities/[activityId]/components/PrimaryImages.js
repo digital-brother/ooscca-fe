@@ -1,16 +1,16 @@
 "use client";
 
+import React from 'react';
 import { useEffect, useState } from "react";
-import {Box, Button, Container} from "@mui/material";
+import { Box, Button, Container, useMediaQuery } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
 import { useParams } from "next/navigation";
 
-import {ImageInput} from "@/app/activities/[activityId]/components/ImageUploadDropzone";
+import { ImageInput } from "./ImageUpload";
 import { useMutation, useQuery } from "react-query";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,14 +18,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { TrashCanIcon } from "@/assets/TrashCanIcon";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import {
   getPrimaryImages,
   patchImage,
   deleteImage,
   postImage,
-} from "@/app/activities/apiImage.mjs";
+} from "@/app/activities/[activityId]/api.mjs";
 
 
 function formatBytes(bytes, decimals) {
@@ -37,7 +38,7 @@ function formatBytes(bytes, decimals) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
 
-function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
+function ImageDataRow({ files, setFiles, file, order, ...props  }) {
   let opacity = 1
   const [, drag] = useDrag({
     type: "ROW",
@@ -47,10 +48,10 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
   const [, drop] = useDrop({
     accept: "ROW",
     hover: (draggedItem) => {
-      if (draggedItem.id !== _key) {
+      if (draggedItem.order !== order) {
         // Reorder the rows
         const draggedIndex = files.findIndex((item) => item.order === draggedItem.order);
-        const hoverIndex = files.findIndex((item) => item.order === _key);
+        const hoverIndex = files.findIndex((item) => item.order === order);
 
         const newFiles = [...files];
         newFiles.splice(hoverIndex, 0, newFiles.splice(draggedIndex, 1)[0]);
@@ -59,7 +60,7 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
     },
   });
 
-  file.order = _key
+  file.order = order
 
   function handleDelete(event) {
     file.markedForDeleting = true
@@ -115,13 +116,13 @@ function ImageDataRow({ files, setFiles, file, _key, ...props  }) {
       </TableCell>
       <TableCell component="th" scope="row" align="center">
         <Button onClick={handleDelete} key={_key}>
-          <TrashCanIcon />
+          <DeleteIcon />
         </Button>
       </TableCell>
     </TableRow>
 }
 
-function FilesTable({files, setFiles}) {
+function ImagesListDesktop({ files, setFiles }) {
   const [isDndReady, setIsDndReady] = useState(false);
   useEffect(() => {
     setIsDndReady(true);
@@ -151,14 +152,69 @@ function FilesTable({files, setFiles}) {
   );
 }
 
+function ImagePreviewMobile({ files, setFiles, file, order, ...props }) {
+  let opacity = 1
+
+  // use drag & drop move to parent
+  const [, drag] = useDrag({
+    type: "ROW",
+    item: file,
+  });
+
+  const [, drop] = useDrop({
+    accept: "ROW",
+    hover: (draggedItem) => {
+      if (draggedItem.order !== order) {
+        // Reorder the rows
+        const draggedIndex = files.findIndex((item) => item.order === draggedItem.order);
+        const hoverIndex = files.findIndex((item) => item.order === order);
+
+        const newFiles = [...files];
+        newFiles.splice(hoverIndex, 0, newFiles.splice(draggedIndex, 1)[0]);
+        setFiles(files => newFiles);
+      }
+    },
+  });
+
+  file.order = order
+
+  function handleDelete(event) {
+    file.markedForDeleting = true
+    delete file?.error
+    file = {...file}  // ?
+    setFiles(files => files.filter(f => f !== null));  // ?
+  }
+
+  if (file?.markedForDeleting) {
+    opacity = 0.3
+  }
+
+  return (<Box
+    component="img"
+    src={file.preview || file.image}
+    alt="Preview"
+    sx={{ width: "100%", height: "100%", objectFit: "cover", opacity: opacity }}
+    onLoad={() => URL.revokeObjectURL(file.url)}
+  />)
+}
+
+function ImagesListMobile() {
+
+}
+
+function ImagesList() {
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
+  if (mdUp) return <ImagesListDesktop {...{ multiple, handleAdd, sx }} />;
+  else return <ImagesListMobile {...{ handleAdd, multiple, sx }} />;
+}
+
 export default function PrimaryImages() {
-  const [filesData, setFilesData] = useState([])
+  const [files, setFiles] = useState([])
   const [isFilesLoaded, setIsFilesLoaded] = useState(false);
-  // const activityId = useParams().activityId
   const activityId = 1
 
   function removeFile(imagData) {
-    setFilesData(filesData => filesData.filter(fileData => fileData.image !== imagData));
+    setFiles(files => files.filter(fileData => fileData.image !== imagData));
   }
 
   function handleErrors(imageData, mutationErrors) {
@@ -224,12 +280,12 @@ export default function PrimaryImages() {
 
   async function deleteMarkedForDeletingImages() {
     // remove not uploaded files
-    setFilesData(filesData => filesData.filter(
+    setFiles(files => files.filter(
       f => f.id || (!f.id  && !(f?.markedForDeleting))));
 
     // remove from backend
-    const deletePromises = filesData
-      .filter(filesData => filesData.id && filesData?.markedForDeleting === true)
+    const deletePromises = files
+      .filter(files => files.id && files?.markedForDeleting === true)
       .map(file => deleteMutation.mutateAsync(file));
 
     // Wait for all delete mutations to complete
@@ -238,7 +294,7 @@ export default function PrimaryImages() {
 
   async function updateUploadedImages() {
     // createdInBackendFilesAndNotMarkedForDeleting
-    const patchPromises = filesData
+    const patchPromises = files
       .filter(file => file.id)
       .filter(file => file?.markedForDeleting !== true)
       .map(file => patchMutation.mutateAsync(file));
@@ -249,7 +305,7 @@ export default function PrimaryImages() {
 
   async function uploadNewImages() {
     // notCreatedInBackendFilesWithoutErrorsAndNotMarkedForDeleting
-    const postPromises = filesData
+    const postPromises = files
       .filter(file => !file.id)
       .filter(file => !(file?.frontendErrors.length > 0))
       .filter(file => file?.markedForDeleting !== true)
@@ -260,9 +316,9 @@ export default function PrimaryImages() {
   }
 
   async function SaveButtonHandler(event) {
-    if (Array.isArray(filesData)) {
+    if (Array.isArray(files)) {
       try {
-        filesData.map((fileData, index) => {
+        files.map((fileData, index) => {
           fileData.errors = []
         });
 
@@ -272,27 +328,27 @@ export default function PrimaryImages() {
 
 
         function getFilesExistedInBackend(files) {
-          return filesData.filter(file => file.id)
+          return files.filter(file => file.id)
         }
 
         function getFilesNotExistedInBackend(files) {
-          return filesData.filter(file => !file.id)
+          return files.filter(file => !file.id)
         }
 
         function getFilesWithoutFrontendErrors(files) {
-          return filesData.filter(file => !(file?.frontendErrors.length > 0))
+          return files.filter(file => !(file?.frontendErrors.length > 0))
         }
 
         function getFilesMarkedForDeleting(files) {
-          return filesData.filter(file => file?.markedForDeleting === true)
+          return files.filter(file => file?.markedForDeleting === true)
         }
 
         function getFilesNotMarkedForDeleting(files) {
-          return filesData.filter(file => file?.markedForDeleting !== true)
+          return files.filter(file => file?.markedForDeleting !== true)
         }
 
         // Update state after all mutations are complete
-        filesData.map((file, index) => ({
+        files.map((file, index) => ({
           key: file.key,
           _key: file._key,
           error: file.error,
