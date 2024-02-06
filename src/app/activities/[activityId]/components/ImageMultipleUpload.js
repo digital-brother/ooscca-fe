@@ -67,10 +67,12 @@ export default function ImageMultipleUpload() {
 
   useEffect(() => {setFiles(images)}, [images]);
 
+  const filesCount = files?.length;
   function handleAdd(files) {
     const newFilesData = files.map((file, index) => {
-      const filesCount = files.length;
-      return { ...file, image: URL.createObjectURL(file), order: index + filesCount + 1 };
+      file.image = URL.createObjectURL(file);
+      file.order = index + filesCount + 1;
+      return file
     });
     setFiles((previousFilesData) => [...previousFilesData, ...newFilesData].sort((a, b) => a.order - b.order));
   }
