@@ -1,7 +1,7 @@
 "use client";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { ImageInput } from "./ImageUpload";
@@ -9,7 +9,7 @@ import { ImageInput } from "./ImageUpload";
 import prettyBytes from "pretty-bytes";
 import Image from "next/image";
 
-function ImagePreview({ index, fileData, handleDelete }) {
+function ImagePreviewRow({ index, fileData, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -31,7 +31,7 @@ function ImagePreview({ index, fileData, handleDelete }) {
   );
 }
 
-function ImageMultiplePreview({ filesData, handleDelete }) {
+function ImagePreviewTable({ filesData, handleDelete }) {
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
@@ -47,7 +47,7 @@ function ImageMultiplePreview({ filesData, handleDelete }) {
         </TableHead>
         <TableBody>
           {filesData.map((fileData, index) => (
-            <ImagePreview key={index} {...{index, fileData, handleDelete}} />
+            <ImagePreviewRow key={index} {...{ index, fileData, handleDelete }} />
           ))}
         </TableBody>
       </Table>
@@ -70,6 +70,12 @@ export default function ImageMultipleUpload() {
     setFilesData((previousFilesData) => previousFilesData.filter((_, index) => index !== deleteIndex));
   }
 
+  function handleSave() {
+    // get added files
+    // get deleted files
+    // get updated files
+  }
+
   useEffect(() => {
     return () => filesData.forEach((fileData) => URL.revokeObjectURL(fileData.url));
   }, []);
@@ -79,7 +85,10 @@ export default function ImageMultipleUpload() {
       <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
         <ImageInput multiple={true} handleAdd={handleAdd} />
       </Box>
-      {filesData?.length > 0 && <ImageMultiplePreview {...{ filesData, handleDelete }} />}
+      {filesData?.length > 0 && <ImagePreviewTable {...{ filesData, handleDelete }} />}
+      <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
+        Save
+      </Button>
     </Container>
   );
 }
