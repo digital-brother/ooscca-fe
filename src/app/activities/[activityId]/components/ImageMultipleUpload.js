@@ -64,9 +64,9 @@ export default function ImageMultipleUpload() {
   const [files, setFiles] = useState([]);
 
   const activityId = useParams().activityId;
-  const { data: images } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
+  const { data: serverFiles } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
 
-  useEffect(() => {setFiles(images)}, [images]);
+  useEffect(() => {setFiles(serverFiles)}, [serverFiles]);
 
   const filesCount = files?.length;
   function handleAdd(files) {
@@ -83,9 +83,11 @@ export default function ImageMultipleUpload() {
   }
 
   function handleSave() {
-    // get added files
-    // get deleted files
-    // get updated files
+    const fileIsPresent = (serverFile, files) => files.some((file) => file.id === serverFile.id);
+    const deletedFiles = serverFiles.filter((serverFile) => !fileIsPresent(serverFile, files));
+
+    const addedFiles = files.filter((file) => !file.id);
+
   }
 
   useEffect(() => {
