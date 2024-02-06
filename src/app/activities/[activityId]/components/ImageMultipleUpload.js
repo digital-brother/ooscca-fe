@@ -6,12 +6,12 @@ import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { ImageInput } from "./ImageUpload";
 
-import prettyBytes from "pretty-bytes";
-import Image from "next/image";
-import { useQuery } from "react-query";
-import { useParams } from "next/navigation";
-import { getActivityImagesPrimary } from "../api.mjs";
 import _ from "lodash";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import prettyBytes from "pretty-bytes";
+import { useMutation, useQuery } from "react-query";
+import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
 
 function ImagePreviewRow({ index, file, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
@@ -66,6 +66,9 @@ export default function ImageMultipleUpload() {
 
   const activityId = useParams().activityId;
   const { data: serverFiles } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
+  const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
+  const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
+
 
   useEffect(() => {
     setFiles(serverFiles);
@@ -97,6 +100,9 @@ export default function ImageMultipleUpload() {
       return serverFile && !_.isEqual(file, serverFile);
     };
     const updatedFiles = files.filter((file) => fileIsUpdated(file, serverFiles));
+
+    deletedFiles.map((file) => deleteMutation.mutate(file.id));
+
   }
 
   useEffect(() => {
