@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
-import { deleteActivityImage, getActivityImagesSecondary, postActivityImage } from "../api.mjs";
+import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "../api.mjs";
 import { useParams } from "next/navigation";
 import { Errors } from "./formikFields";
 
@@ -129,8 +129,8 @@ export default function ImageUpload({ sx, order }) {
     setFile(initialFile);
   }, [initialFile]);
 
-  const postMutation = useMutation((imageData) => postActivityImage(activityId, imageData));
-  const deleteMutation = useMutation((imageId) => deleteActivityImage(activityId, imageId));
+  const postMutation = useMutation((imageData) => postActivityImageSecondary(activityId, imageData));
+  const deleteMutation = useMutation((imageId) => deleteActivityImageSecondary(activityId, imageId));
 
   function handleDelete() {
     deleteMutation.mutate(file.id, {

@@ -8,7 +8,8 @@ const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
 const ACTIVITIES_PATH = "/activities";
 const DISCOUNTS_SUBPATH = "discounts";
-const IMAGES_SUBPATH = "images";
+const IMAGES_PRIMARY_SUBPATH = "primary-images";
+const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -20,18 +21,12 @@ const client = axios.create({
 
 // IMAGES
 export async function getActivityImagesPrimary(activityId) {
-  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/?type=primary`;
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_PRIMARY_SUBPATH}/`;
   const response = await client.get(url);
   return response.data;
 }
 
-export async function getActivityImagesSecondary(activityId) {
-  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/?type=secondary`;
-  const response = await client.get(url);
-  return response.data;
-}
-
-export async function postActivityImage(activityId, data) {
+export async function postActivityImagePrimary(activityId, data) {
   const formData = new FormData();
 
   for (const key in data) {
@@ -40,12 +35,24 @@ export async function postActivityImage(activityId, data) {
     }
   }
 
-  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/`;
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_PRIMARY_SUBPATH}/`;
   const response = await client.post(url, formData);
   return response.data;
 }
 
-export async function patchActivityImage(activityId, data) {
+export async function deleteActivityImagePrimary(activityId, imageId) {
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_PRIMARY_SUBPATH}/${imageId}/`;
+  const response = await client.delete(url);
+  return response.data;
+}
+
+export async function getActivityImagesSecondary(activityId) {
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SECONDARY_SUBPATH}/`;
+  const response = await client.get(url);
+  return response.data;
+}
+
+export async function postActivityImageSecondary(activityId, data) {
   const formData = new FormData();
 
   for (const key in data) {
@@ -54,13 +61,13 @@ export async function patchActivityImage(activityId, data) {
     }
   }
 
-  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/${data.id}/`;
-  const response = await client.patch(url, formData);
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SECONDARY_SUBPATH}/`;
+  const response = await client.post(url, formData);
   return response.data;
 }
 
-export async function deleteActivityImage(activityId, imageId) {
-  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SUBPATH}/${imageId}/`;
+export async function deleteActivityImageSecondary(activityId, imageId) {
+  const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SECONDARY_SUBPATH}/${imageId}/`;
   const response = await client.delete(url);
   return response.data;
 }
