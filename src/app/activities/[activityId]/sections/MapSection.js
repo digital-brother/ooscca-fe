@@ -19,8 +19,12 @@ export function MapSection() {
   const [addressError, setAddressError] = useState("")
 
   const queryClient = useQueryClient();
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { data: activity, refetch } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     // Synchronizes the map's coordinates and address with the fetched activity data,
