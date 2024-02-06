@@ -36,6 +36,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       }));
       setCoordinates(coordinates);
       setAddress(address);
+      console.log("handleMapLoad success: ", coordinates)
     }
   },
   [coordinates, address, setCoordinates, setAddress]
