@@ -19,23 +19,34 @@ export function MapSection() {
   const [addressError, setAddressError] = useState("")
 
   const queryClient = useQueryClient();
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  // const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
+  const { data: activity  } = useQuery(["activity", activityId], () => getActivity(activityId), {
+    onSuccess: (data) => {
+      // Attempt to extract latitude, longitude, and address from the fetched activity data
+      const latitude = data.latitude ? parseFloat(data.latitude) : londonCoordinates.lat;
+      const longitude = data.longitude ? parseFloat(data.longitude) : londonCoordinates.lng;
+      const activityAddress = data.address || "";
+
+      // Set coordinates and address
+      setCoordinates({ lat: latitude, lng: longitude });
+      console.log("Query success: ", coordinates)
+      setAddress(activityAddress);
+    },
+  });
+
 
   useEffect(() => {
-    return () => {
-      queryClient.removeQueries(["activity", activityId]);
-    };
-  }, [queryClient, activityId]);
-
-
-  useEffect(() => {
-    // Synchronizes the map's coordinates and address with the fetched activity data,
-    // ensuring the map correctly represents the current activity's location.
-    if (activity) {
+    if (activity && activity.latitude && activity.longitude) {
+      // Both latitude and longitude exist, so parse and set them
       const { latitude, longitude, address: activityAddress } = activity;
       setCoordinates({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
       setAddress(activityAddress || "");
+      console.log("useEffect success: ", coordinates)
+    } else {
+      // One or both of latitude and longitude do not exist, so set default values
+      setCoordinates(londonCoordinates);
+      setAddress("");
     }
   }, [activity]);
 
