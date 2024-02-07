@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import prettyBytes from "pretty-bytes";
 import { useMutation, useQuery } from "react-query";
 import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
+import { useImmer } from "use-immer";
 
 function ImagePreviewRow({ index, image, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
@@ -60,7 +61,7 @@ function ImagePreviewTable({ images, handleDelete }) {
 }
 
 export default function ImageMultipleUpload() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useImmer([]);
 
   const activityId = useParams().activityId;
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
@@ -81,11 +82,14 @@ export default function ImageMultipleUpload() {
       size: file.size,
       file,
     }));
-    setImages((previousImages) => [...previousImages, ...newImages].sort((a, b) => a.order - b.order));
+    setImages((images) => {
+      images.push(...newImages);
+      images.sort((a, b) => a.order - b.order);
+    });
   }
 
   function handleDelete(deleteIndex) {
-    setImages((previousImages) => previousImages.filter((_, index) => index !== deleteIndex));
+    setImages((images) => images.splice(deleteIndex, 1));
   }
 
   function handleSave() {
