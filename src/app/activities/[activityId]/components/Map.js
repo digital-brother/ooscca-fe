@@ -8,7 +8,7 @@ const libraries = ["places"];
 
 export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit } ) {
   const [mapCenter, setMapCenter] = useState(coordinates);
-  const [markerState, setMarkerState] = useState({
+  const [marker, setMarker] = useState({
     position: coordinates,
     infoOpen: !!address,
     selectedPlace: address ? { formatted_address: address } : null,
@@ -23,7 +23,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       textFieldRef.current.querySelector("input").value = address || "";
     }
     if (coordinates) {
-      setMarkerState((prev) => ({
+      setMarker((prev) => ({
         ...prev,
         position: coordinates,
         infoOpen: !!address,
@@ -45,7 +45,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
   }, []);
 
   const updateMarkerAndInfo = (newCoordinates, newAddress) => {
-    setMarkerState({
+    setMarker({
       position: newCoordinates,
       infoOpen: !!newAddress,
       selectedPlace: newAddress ? { formatted_address: newAddress } : null,
@@ -126,16 +126,16 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {markerState.position && !isNaN(markerState.position.lat) && !isNaN(markerState.position.lng) && (
-              <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }}>
-                {markerState.infoOpen && markerState.selectedPlace && (
+            {marker.position && !isNaN(marker.position.lat) && !isNaN(marker.position.lng) && (
+              <Marker position={{ lat: marker.position.lat, lng: marker.position.lng }}>
+                {marker.infoOpen && marker.selectedPlace && (
                   <InfoWindow
-                    position={{ lat: markerState.position.lat, lng: markerState.position.lng }}
-                    onCloseClick={() => setMarkerState((prev) => ({ ...prev, infoOpen: false }))}
+                    position={{ lat: marker.position.lat, lng: marker.position.lng }}
+                    onCloseClick={() => setMarker((prev) => ({ ...prev, infoOpen: false }))}
                     sx={{ mr: 2 }}
                   >
                     <div>
-                      <strong>{markerState.selectedPlace.formatted_address}</strong>
+                      <strong>{marker.selectedPlace.formatted_address}</strong>
                     </div>
                   </InfoWindow>
                 )}
