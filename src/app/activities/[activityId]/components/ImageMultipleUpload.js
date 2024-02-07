@@ -117,10 +117,14 @@ export default function ImageMultipleUpload() {
       <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
         <ImageInput multiple={true} handleAdd={handleAdd} />
       </Box>
-      {images?.length > 0 && <ImagePreviewTable {...{ images, handleDelete }} />}
-      <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
-        Save
-      </Button>
+      {!!images?.length && (
+        <>
+          <ImagePreviewTable {...{ images, handleDelete }} />
+          <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
+            Save
+          </Button>
+        </>
+      )}
     </Container>
   );
 }
