@@ -8,9 +8,7 @@ const libraries = ["places"];
 
 export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit }) {
   const [mapCenter, setMapCenter] = useState(coordinates);
-  const [marker, setMarker] = useState({
-    infoOpen: !!address,
-  });
+  const [markerInfoOpened, setMarkerInfoOpened] = useState(!!address);
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
   const textFieldRef = useRef(null);
@@ -19,12 +17,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     if (textFieldRef.current) {
       textFieldRef.current.querySelector("input").value = address || "";
     }
-    if (coordinates) {
-      setMarker((previousMarker) => ({
-        ...previousMarker,
-        infoOpen: !!address,
-      }));
-    }
+    if (coordinates) setMarkerInfoOpened(!!address);
   }, [address, coordinates]);
 
   const handleMapLoad = useCallback(() => {
@@ -38,12 +31,8 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     searchBoxRef.current = ref;
   }, []);
 
-  
   const updateMarkerAndInfo = (newCoordinates, newAddress) => {
-    setMarker((previousMarker) => ({
-      ...previousMarker,
-      infoOpen: !!newAddress,
-    }));
+    setMarkerInfoOpened(!!newAddress);
     setCoordinates(newCoordinates);
     setAddress(newAddress);
   };
@@ -121,10 +110,10 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
           >
             {coordinates && !isNaN(coordinates.lat) && !isNaN(coordinates.lng) && (
               <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }}>
-                {marker.infoOpen && address && (
+                {markerInfoOpened && address && (
                   <InfoWindow
                     position={{ lat: coordinates.lat, lng: coordinates.lng }}
-                    onCloseClick={() => setMarker((previousMarker) => ({ ...previousMarker, infoOpen: false }))}
+                    onCloseClick={() => setMarkerInfoOpened(false)}
                     sx={{ mr: 2 }}
                   >
                     <div>
