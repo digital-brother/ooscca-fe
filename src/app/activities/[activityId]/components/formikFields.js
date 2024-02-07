@@ -27,7 +27,7 @@ export function getErrors(error) {
     if (drfErrors) return drfErrors
     if (drfNonFieldErrors) return { nonFieldErrors: drfNonFieldErrors }
   } else {
-    return { submissionError: error.message });
+    return { submissionError: error.message };
   }
 }
 
