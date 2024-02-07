@@ -28,9 +28,8 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
         infoOpen: !!address,
         selectedPlace: address ? { formatted_address: address } : null,
       }));
-      setAddress(address);
     }
-  }, [address, coordinates, setAddress, setCoordinates]);
+  }, [address, coordinates]);
 
   useEffect(() => {
     setMarker((previousMarker) => ({ ...previousMarker, position: coordinates }));
@@ -47,6 +46,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     searchBoxRef.current = ref;
   }, []);
 
+  
   const updateMarkerAndInfo = (newCoordinates, newAddress) => {
     setMarker((previousMarker) => ({
       ...previousMarker,
