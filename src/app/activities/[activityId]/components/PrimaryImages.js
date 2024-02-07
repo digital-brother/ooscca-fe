@@ -116,11 +116,6 @@ function ImageDataRow({ files, setFiles, file, order, ...props  }) {
 }
 
 function ImagesListDesktop({ files, setFiles }) {
-  const [, setIsDndReady] = useState(false);
-  useEffect(() => {
-    setIsDndReady(true);
-  }, []);
-
   return (
     <DndProvider backend={HTML5Backend}>
       <TableContainer component={Paper} sx={{ border: "none", boxShadow: "none"}}>
@@ -145,7 +140,7 @@ function ImagesListDesktop({ files, setFiles }) {
   );
 }
 
-function ImagePreviewMobile({ files, setFiles, file, order, ...props }) {
+function ImagePreviewMobile({ files, setFiles, file, order, sx }) {
   let opacity = 1
 
   // use drag & drop move to parent
@@ -169,8 +164,6 @@ function ImagePreviewMobile({ files, setFiles, file, order, ...props }) {
     },
   });
 
-  file.order = order
-
   function handleDelete(event) {
     file.markedForDeleting = true
     delete file?.error
@@ -178,21 +171,46 @@ function ImagePreviewMobile({ files, setFiles, file, order, ...props }) {
     setFiles(files => files.filter(f => f !== null));  // ?
   }
 
-  if (file?.markedForDeleting) {
-    opacity = 0.3
-  }
+  file.order = order
+  if (file?.markedForDeleting) opacity = 0.3
 
-  return (<Box
-    component="img"
-    src={file.preview || file.image}
-    alt="Preview"
-    sx={{ width: "100%", height: "100%", objectFit: "cover", opacity }}
-    onLoad={() => URL.revokeObjectURL(file.url)}
+  return (
+    <Box
+      component="img"
+      src={file.preview || file.image}
+      alt="Preview"
+      onLoad={() => URL.revokeObjectURL(file.url)}
+      sx={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        opacity,
+        ...sx
+      }}
+
   />)
 }
 
 function ImagesListMobile({ files, setFiles }) {
-
+  return (
+    <Box>
+      <Typography variant="h5">Upload Images</Typography>
+      <DndProvider backend={HTML5Backend}>
+        <Box component={Paper} sx={{ border: "none", boxShadow: "none"}}>
+          {Array.isArray(files) && (files.map((file, index) => (
+            <ImagePreviewMobile
+              files={files}
+              setFiles={setFiles}
+              file={file}
+              key={index+1}
+              order={index+1}
+              sx={{ borderRadius: 3, my: 1, height: {xs: "115px", sm: "300px"} }}
+            />
+          )))}
+        </Box>
+      </DndProvider>
+    </Box>
+  );
 }
 
 function ImagesList({ files, setFiles }) {
@@ -310,53 +328,27 @@ export default function PrimaryImages() {
 
   async function SaveButtonHandler(event) {
     if (Array.isArray(files)) {
-      try {
-        files.map((fileData, index) => {
-          fileData.errors = []
-        });
+      files.map((fileData, index) => {
+        fileData.errors = []
+      });
 
-        await deleteMarkedForDeletingImages()
-        await updateUploadedImages()
-        await uploadNewImages()
+      await deleteMarkedForDeletingImages()
+      await updateUploadedImages()
+      await uploadNewImages()
 
-
-        function getFilesExistedInBackend(files) {
-          return files.filter(file => file.id)
-        }
-
-        function getFilesNotExistedInBackend(files) {
-          return files.filter(file => !file.id)
-        }
-
-        function getFilesWithoutFrontendErrors(files) {
-          return files.filter(file => !(file?.frontendErrors.length > 0))
-        }
-
-        function getFilesMarkedForDeleting(files) {
-          return files.filter(file => file?.markedForDeleting === true)
-        }
-
-        function getFilesNotMarkedForDeleting(files) {
-          return files.filter(file => file?.markedForDeleting !== true)
-        }
-
-        // Update state after all mutations are complete
-        files.map((file, index) => ({
-          key: file.key,
-          _key: file._key,
-          error: file.error,
-          id: file.id,
-          image: file.preview || file.image,
-          name: file.path || file.name,
-          order: file.positon,
-          size: file.size,
-          activity: activityId,
-        }));
-        setFiles(updatedFiles => updatedFiles.filter(f => f !== null));
-      } catch (error) {
-        // Handle errors if needed
-        console.error("Error saving images:", error);
-      }
+      // Update state after all mutations are complete
+      files.map((file, index) => ({
+        key: file.key,
+        _key: file._key,
+        error: file.error,
+        id: file.id,
+        image: file.preview || file.image,
+        name: file.path || file.name,
+        order: file.positon,
+        size: file.size,
+        activity: activityId,
+      }));
+      setFiles(updatedFiles => updatedFiles.filter(f => f !== null));
     }
   }
 
@@ -377,35 +369,21 @@ export default function PrimaryImages() {
       display: "flex",
       flexDirection: "column",
     }}>
-      <Box>
-        <Typography sx={{
-          fontFamily: "Montserrat",
-          fontSize: 20,
-          fontStyle: "normal",
-          fontWeight: "600",
-          lineHeight: 1.4, /* 140% */
-          letterSpacing: 0.2,
-          height: 50,
-          display: "flex",
-          pb: 5,
-        }}>
-          Upload
-        </Typography>
-      </Box>
+      <Typography variant="h5" sx={{ textAlign: "center", mb: 3 }}>
+        Upload Images
+      </Typography>
       <ImageInput files={files} handleAdd={handleAdd} multiple={true} sx={{
         backgroundColor: "#DEE2E6",
         height: 110,
         borderRadius: "16px",
       }}>
       </ImageInput>
-      {files.length !== 0 && (
-        <ImagesList files={files} setFiles={setFiles} />
-      )}
+      {files.length !== 0 && (<ImagesList files={files} setFiles={setFiles} />)}
       {files.length !== 0 && (
         <Button onClick={SaveButtonHandler} color="green" sx={{
-          width: "20%",
-          height: 37,
-          py: 11,
+          width: {xs: "100%", md: "35%"},
+          height: 50,
+          py: 20,
           justifyContent: "center",
           alignItems: "center",
           borderRadius: "7px",
@@ -413,18 +391,31 @@ export default function PrimaryImages() {
           alignSelf: "end",
           py: 3,
         }}>
-          <Typography sx={{
-            color: "#FFF",
-            textAlign: "center",
-            fontFamily: "Manrope",
-            fontStyle: "normal",
-            fontWeight: 800,
-            lineHeight: "131.5%", /* 13.786px */
-          }}>
-            Save
-          </Typography>
+          Save
         </Button>
       )}
     </Container>
   )
 }
+
+function ImagePreviewMobile({ file, setShowConfirmDelete }) {
+  function showImageDeleteConfirmation() {
+    setShowConfirmDelete(true);
+  }
+
+  return (
+    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+      <Box
+        component="img"
+        src={file.preview || file.image}
+        alt="Preview"
+        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+        onLoad={() => URL.revokeObjectURL(file.url)}
+      />
+      <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
+        <DeleteForeverIcon />
+      </IconButton>
+    </Box>
+  );
+}
+
