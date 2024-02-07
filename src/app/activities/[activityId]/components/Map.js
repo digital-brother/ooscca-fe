@@ -9,7 +9,6 @@ const libraries = ["places"];
 export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit }) {
   const [mapCenter, setMapCenter] = useState(coordinates);
   const [marker, setMarker] = useState({
-    position: coordinates,
     infoOpen: !!address,
   });
   const searchBoxRef = useRef(null);
@@ -27,10 +26,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       }));
     }
   }, [address, coordinates]);
-
-  useEffect(() => {
-    setMarker((previousMarker) => ({ ...previousMarker, position: coordinates }));
-  }, [coordinates]);
 
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
@@ -124,11 +119,11 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {marker.position && !isNaN(marker.position.lat) && !isNaN(marker.position.lng) && (
-              <Marker position={{ lat: marker.position.lat, lng: marker.position.lng }}>
+            {coordinates && !isNaN(coordinates.lat) && !isNaN(coordinates.lng) && (
+              <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }}>
                 {marker.infoOpen && address && (
                   <InfoWindow
-                    position={{ lat: marker.position.lat, lng: marker.position.lng }}
+                    position={{ lat: coordinates.lat, lng: coordinates.lng }}
                     onCloseClick={() => setMarker((previousMarker) => ({ ...previousMarker, infoOpen: false }))}
                     sx={{ mr: 2 }}
                   >
