@@ -29,7 +29,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
         infoOpen: !!address,
         selectedPlace: address ? { formatted_address: address } : null,
       }));
-      setCoordinates(coordinates);
       setAddress(address);
     }
   }, [address, coordinates, setAddress, setCoordinates]);
