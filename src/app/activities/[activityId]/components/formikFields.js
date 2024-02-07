@@ -19,6 +19,18 @@ import {
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
+export function getErrors(error) {
+  // If status is 400, it means that DRF returned validation errors
+  if (error?.response?.status === 400) {
+    const drfErrors = error.response?.data;
+    const drfNonFieldErrors = drfErrors?.nonFieldErrors;
+    if (drfErrors) return drfErrors
+    if (drfNonFieldErrors) return { nonFieldErrors: drfNonFieldErrors }
+  } else {
+    return { submissionError: error.message });
+  }
+}
+
 export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
     setStatus(null);
@@ -26,15 +38,7 @@ export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError 
       await mutation.mutateAsync(values);
       onSuccess();
     } catch (error) {
-      // If status is 400, it means that DRF returned validation errors
-      if (error?.response?.status === 400) {
-        const drfErrors = error.response?.data;
-        const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-        drfErrors && setErrors(drfErrors);
-        drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
-      } else {
-        setStatus({ submissionError: error.message });
-      }
+      setErrors(getErrors(error));
       if (throwError) throw error;
     }
   };
