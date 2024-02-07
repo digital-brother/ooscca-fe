@@ -37,17 +37,9 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
     if (coordinates) {
-      setMarkerState((prev) => ({
-        ...prev,
-        position: coordinates,
-        infoOpen: !!address,
-        selectedPlace: address ? { formatted_address: address } : null,
-      }));
-      setCoordinates(coordinates);
-      setAddress(address);
       setMapCenter(coordinates);
     }
-  },[address, coordinates, setAddress, setCoordinates]);
+  },[coordinates]);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
