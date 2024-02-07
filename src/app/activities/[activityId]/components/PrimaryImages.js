@@ -17,6 +17,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Errors } from "./formikFields";
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 
 import {
   getActivityImagesPrimary,
@@ -34,6 +35,19 @@ function formatBytes(bytes, decimals) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
+
+export function SuccessMessages({ successMessages }) {
+  if (successMessages) return successMessages.map((successMessage, index) => <SuccessMessage key={index}>{successMessage}</SuccessMessage>)
+}
+
+export function SuccessMessage({ children }) {
+  return (
+    children && (
+      <Typography sx={{ mt: 1, textAlign: "center", color: "#00A551", fontWeight: 600 }}>{children}</Typography>
+    )
+  );
+}
+
 
 function ImageDataRow({ files, setFiles, file, order, ...props  }) {
   const [, drag] = useDrag({
@@ -62,7 +76,8 @@ function ImageDataRow({ files, setFiles, file, order, ...props  }) {
 
   function handleDelete() {
     file.markedForDeleting = true
-    delete file?.errors
+    file.errors = []
+    file.successMessages = []
     file = {...file}
     setFiles(files => files.filter(f => f !== null));
   }
@@ -77,6 +92,9 @@ function ImageDataRow({ files, setFiles, file, order, ...props  }) {
       }}
       ref={(node) => drag(drop(node))}
     >
+      <TableCell component="th" scope="row" align="center">
+        <ViewHeadlineIcon />
+      </TableCell>
       <TableCell component="th" scope="row" align="center">
         <Box component="img"
           src={file.preview || file.image}
@@ -97,6 +115,7 @@ function ImageDataRow({ files, setFiles, file, order, ...props  }) {
           }}
         >
           {file?.errors && <Errors errors={file?.errors} />}
+          {file?.errors && <SuccessMessages successMessages={file?.successMessages} />}
         </Box>
       </TableCell>
       <TableCell component="th" scope="row" align="center">
@@ -121,6 +140,7 @@ function ImagesListDesktop({ files, setFiles }) {
         <Table sx={{ border: "none", boxShadow: "none"}} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell align="center" />
               <TableCell align="center" width="15%">Thumbnail</TableCell>
               <TableCell align="left" width="50%">Name and status </TableCell>
               <TableCell align="center">Position</TableCell>
@@ -163,18 +183,19 @@ function ImagePreviewMobile({ files, setFiles, file, order, sx }) {
     },
   });
 
-  function handleDelete(event) {
+  function handleDelete() {
     file.markedForDeleting = true
-    delete file?.error
-    file = {...file}  // ?
-    setFiles(files => files.filter(f => f !== null));  // ?
+    file.errors = []
+    file.successMessages = []
+    file = {...file}
+    setFiles(files => files.filter(f => f !== null));
   }
 
   file.order = order
   if (file?.markedForDeleting) opacity = 0.3
 
   return (
-    <Box 
+    <Box
       sx={{ position: "relative", width: "100%", height: "100%" }}>
       <IconButton color="grey" onClick={handleDelete} sx={{ position: "absolute", top: 10, right: 10 }}>
         <DeleteIcon />
@@ -194,6 +215,7 @@ function ImagePreviewMobile({ files, setFiles, file, order, sx }) {
         }}
       />
       {file?.errors && <Errors errors={file?.errors} />}
+      {file?.errors && <SuccessMessages successMessages={file?.successMessages} />}
     </Box>
 
   )
@@ -211,10 +233,10 @@ function ImagesListMobile({ files, setFiles }) {
               file={file}
               key={index+1}
               order={index+1}
-              sx={{ 
-                borderRadius: 3, 
-                my: 1, 
-                height: { xs: 200, sm: 300 } 
+              sx={{
+                borderRadius: 3,
+                my: 1,
+                height: { xs: 200, sm: 300 }
               }}
             />
           )))}
@@ -245,6 +267,12 @@ export default function PrimaryImages() {
     if (imageErrors) imageData.errors = imageErrors;
     else if (nonFieldErrors) imageData.errors = [nonFieldErrors];
     else imageData.errors = [mutationErrors.message];
+    imageData.successMessages = []
+  }
+
+  function handleSuccessMessages(imageData, successMessage) {
+    imageData.errors = [];
+    imageData.successMessages = [successMessage];
   }
 
   const deleteMutation = useMutation((imageData) => deleteActivityImage(activityId, imageData?.id), {
@@ -257,7 +285,7 @@ export default function PrimaryImages() {
       "name": imageData.name,
       "order": imageData.order,
     }), {
-    onSuccess: (data, sentImage) => { sentImage.errors = [] },
+    onSuccess: (data, sentImage) => handleSuccessMessages(sentImage, "Image approved"),
     onError: (errors, sentImage) => handleErrors(sentImage, errors)
   });
 
@@ -270,8 +298,8 @@ export default function PrimaryImages() {
       "image": imageData,
     }), {
     onSuccess: (data, sentImage) => {
-      sentImage.errors  = []
-      sentImage.id = data.id
+      handleSuccessMessages(sentImage, "Image approved");
+      sentImage.id = data.id;
     },
     onError: (errors, sentImage) => handleErrors(sentImage, errors),
   });
@@ -321,27 +349,17 @@ export default function PrimaryImages() {
     await Promise.all(postPromises);
   }
 
-  async function SaveButtonHandler(event) {
+  async function handleSubmit(event) {
     if (Array.isArray(files)) {
-      files.map((fileData, index) => {
-        return (fileData.errors = [])
-      });
-
-      await deleteMarkedForDeletingImages()
-      await updateUploadedImages()
-      await uploadNewImages()
-
-      // Update state after all mutations are complete
-      files.map((file, index) => ({
-        id: file.id,
-        errors: file.errors,
-        image: file.preview || file.image,
-        name: file.path || file.name,
-        order: file.order,
-        size: file.size,
-        activity: activityId,
+      setFiles(files => files.map((fileData, index) => {
+        fileData.errors = [];
+        fileData.successMessages = [];
+        return fileData;
       }));
-      setFiles(updatedFiles => updatedFiles.filter(file => file !== null));
+
+      await deleteMarkedForDeletingImages();
+      await updateUploadedImages();
+      await uploadNewImages();
     }
   }
 
@@ -355,12 +373,12 @@ export default function PrimaryImages() {
   }
 
   return (
-    <Container sx={{ display: "flex", flexDirection: "column" }}>
+    <Container sx={{ display: "flex", flexDirection: "column", mb: 2 }}>
       <Typography variant="h5" align="center">Upload Images</Typography>
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           display: "flex",
-          flexDirection: { xs: "column-reverse", md: "column" } 
+          flexDirection: { xs: "column-reverse", md: "column" }
       }}>
         <ImageInput files={files} handleAdd={handleAdd} multiple={true} sx={{
           backgroundColor: "#DEE2E6",
@@ -371,10 +389,10 @@ export default function PrimaryImages() {
         {files.length !== 0 && (<ImagesList files={files} setFiles={setFiles} />)}
       </Box>
       {files.length !== 0 && (
-        <Button 
-          onClick={SaveButtonHandler} 
-          variant="contained" 
-          color="green" 
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="green"
           sx={{
             width: {xs: "100%", md: "35%"},
             height: 50,
