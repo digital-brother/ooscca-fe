@@ -24,10 +24,24 @@ export function getErrors(error) {
   if (error?.response?.status === 400) {
     const drfErrors = error.response?.data;
     const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-    if (drfErrors) return drfErrors
-    if (drfNonFieldErrors) return { nonFieldErrors: drfNonFieldErrors }
+    if (drfErrors) return drfErrors;
+    if (drfNonFieldErrors) return { nonFieldErrors: drfNonFieldErrors };
   } else {
     return { submissionError: error.message };
+  }
+}
+
+// TODO: rationalize it
+export function getFlatErrors(error) {
+  // If status is 400, it means that DRF returned validation errors
+  if (error?.response?.status === 400) {
+    const drfErrors = error.response?.data;
+    const drfNonFieldErrors = drfErrors?.nonFieldErrors;
+
+    if (drfErrors) return Object.values(drfErrors);
+    if (drfNonFieldErrors) return drfNonFieldErrors;
+  } else {
+    return [error.message];
   }
 }
 
@@ -192,7 +206,7 @@ export function FormikErrors() {
 }
 
 export function Errors({ errors }) {
-  return errors.map((error, index) => <Error key={index}>{error}</Error>)
+  return errors?.map((error, index) => <Error key={index}>{error}</Error>);
 }
 
 export function Error({ children }) {
