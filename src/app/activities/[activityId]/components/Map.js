@@ -11,7 +11,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
   const [marker, setMarker] = useState({
     position: coordinates,
     infoOpen: !!address,
-    selectedPlace: address ? { formatted_address: address } : null,
     lastClickedMarker: null,
   });
   const searchBoxRef = useRef(null);
@@ -26,7 +25,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       setMarker((previousMarker) => ({
         ...previousMarker,
         infoOpen: !!address,
-        selectedPlace: address ? { formatted_address: address } : null,
       }));
     }
   }, [address, coordinates]);
@@ -51,7 +49,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     setMarker((previousMarker) => ({
       ...previousMarker,
       infoOpen: !!newAddress,
-      selectedPlace: newAddress ? { formatted_address: newAddress } : null,
       lastClickedMarker: null,
     }));
     setCoordinates(newCoordinates);
@@ -131,14 +128,14 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
           >
             {marker.position && !isNaN(marker.position.lat) && !isNaN(marker.position.lng) && (
               <Marker position={{ lat: marker.position.lat, lng: marker.position.lng }}>
-                {marker.infoOpen && marker.selectedPlace && (
+                {marker.infoOpen && address && (
                   <InfoWindow
                     position={{ lat: marker.position.lat, lng: marker.position.lng }}
                     onCloseClick={() => setMarker((previousMarker) => ({ ...previousMarker, infoOpen: false }))}
                     sx={{ mr: 2 }}
                   >
                     <div>
-                      <strong>{marker.selectedPlace.formatted_address}</strong>
+                      <strong>{address}</strong>
                     </div>
                   </InfoWindow>
                 )}
