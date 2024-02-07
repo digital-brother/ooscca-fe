@@ -6,7 +6,8 @@ import { Button, TextField } from "@mui/material";
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit }) {
+export function Map({ location, addressError, setAddressError, setLocation, handleSubmit }) {
+  const { address, coordinates } = location;
   const [mapCenter, setMapCenter] = useState(coordinates);
   const [markerInfoOpened, setMarkerInfoOpened] = useState(!!address);
   const searchBoxRef = useRef(null);
@@ -31,10 +32,9 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     searchBoxRef.current = ref;
   }, []);
 
-  const updateMarkerAndInfo = (newCoordinates, newAddress) => {
+  const updateLocation = (newCoordinates, newAddress) => {
     setMarkerInfoOpened(!!newAddress);
-    setCoordinates(newCoordinates);
-    setAddress(newAddress);
+    setLocation({ coordinates: newCoordinates, address: newAddress });
   };
 
   const onPlacesChanged = () => {
@@ -47,7 +47,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
         lat: location.lat(),
         lng: location.lng(),
       };
-      updateMarkerAndInfo(newCoordinates, place.formatted_address);
+      updateLocation(newCoordinates, place.formatted_address);
       setMapCenter(newCoordinates);
       setAddressError("");
     } else {
@@ -65,9 +65,9 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       geocoderRef.current.geocode({ location: latLng }, (results, status) => {
         if (status === "OK" && results[0]) {
           const newAddress = results[0].formatted_address;
-          updateMarkerAndInfo(newCoordinates, newAddress);
+          updateLocation(newCoordinates, newAddress);
         } else {
-          updateMarkerAndInfo(newCoordinates, null);
+          updateLocation(newCoordinates, null);
         }
       });
     }
