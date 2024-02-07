@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, React } from "react";
-import { Box, Button, Container, useMediaQuery } from "@mui/material";
+import { Box, Button, Container, useMediaQuery, IconButton, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
 
@@ -175,26 +175,32 @@ function ImagePreviewMobile({ files, setFiles, file, order, sx }) {
   if (file?.markedForDeleting) opacity = 0.3
 
   return (
-    <Box
-      component="img"
-      src={file.preview || file.image}
-      alt="Preview"
-      onLoad={() => URL.revokeObjectURL(file.url)}
-      sx={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        opacity,
-        ...sx
-      }}
+    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+      <IconButton color="grey" onClick={handleDelete} sx={{ position: "absolute", top: 10, right: 10 }}>
+        <DeleteIcon />
+      </IconButton>
+      <Box
+        component="img"
+        src={file.preview || file.image}
+        alt="Preview"
+        onLoad={() => URL.revokeObjectURL(file.url)}
+        sx={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity,
+          ...sx
+        }}
+      />
+      {file?.errors && <Errors errors={file?.errors} />}
+    </Box>
 
-  />)
+  )
 }
 
 function ImagesListMobile({ files, setFiles }) {
   return (
     <Box>
-      <Typography variant="h5">Upload Images</Typography>
       <DndProvider backend={HTML5Backend}>
         <Box component={Paper} sx={{ border: "none", boxShadow: "none"}}>
           {Array.isArray(files) && (files.map((file, index) => (
@@ -369,16 +375,20 @@ export default function PrimaryImages() {
       display: "flex",
       flexDirection: "column",
     }}>
-      <Typography variant="h5" sx={{ textAlign: "center", mb: 3 }}>
-        Upload Images
-      </Typography>
-      <ImageInput files={files} handleAdd={handleAdd} multiple={true} sx={{
-        backgroundColor: "#DEE2E6",
-        height: 110,
-        borderRadius: "16px",
+      <Typography variant="h5" align="center">Upload Images</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column-reverse", md: "column" }
       }}>
-      </ImageInput>
-      {files.length !== 0 && (<ImagesList files={files} setFiles={setFiles} />)}
+        <ImageInput files={files} handleAdd={handleAdd} multiple={true} sx={{
+          backgroundColor: "#DEE2E6",
+          height: 110,
+          borderRadius: "16px",
+          my: 2,
+        }} />
+        {files.length !== 0 && (<ImagesList files={files} setFiles={setFiles} />)}
+      </Box>
       {files.length !== 0 && (
         <Button onClick={SaveButtonHandler} color="green" sx={{
           width: {xs: "100%", md: "35%"},
@@ -398,10 +408,78 @@ export default function PrimaryImages() {
   )
 }
 
-function ImagePreviewMobile({ file, setShowConfirmDelete }) {
+function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
+  async function handleConfirm() {
+    handleDelete();
+    setShowConfirmDelete(false);
+  }
+
+  function handleCancel() {
+    setShowConfirmDelete(false);
+  }
+
+  return (
+    <Stack sx={{ ...imageInputContainerSx, width: "80%", gap: 2, mx: "auto", textAlign: "center" }}>
+      <Typography variant="h5">Delete Image?</Typography>
+      <Button variant="outlined" onClick={handleCancel} color="grey" fullWidth>
+        Cancel
+      </Button>
+      <Button variant="contained" onClick={handleConfirm} color="grey" fullWidth>
+        Confirm
+      </Button>
+    </Stack>
+  );
+}
+
+export function ImagePreviewMobileNotWorking({ files, setFiles, file, order, sx }) {
+  // const activityId = useParams().activityId;
+  const activityId = 1;
+  const [errors, setErrors] = useState([]);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(null);
+  let opacity = 1
+
+  function handleDelete(event) {
+    file.markedForDeleting = true
+    delete file?.error
+    file = {...file}  // ?
+    setFiles(files => files.filter(f => f !== null));  // ?
+  }
+
+  file.order = order
+  if (file?.markedForDeleting) opacity = 0.3
+
+  return (
+    <Box sx={{ width: "100%", ...sx }}>
+      <Box
+        sx={{
+          // height: 330,
+          overflow: "hidden",
+          border: "1px #ADB5BD solid",
+          borderRadius: 1.5,
+          bgcolor: "grey.200",
+        }}
+      >
+        {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
+        {file && <ImagePreviewInner {...{ file, setShowConfirmDelete }} />}
+      </Box>
+      {errors && <Errors errors={errors} />}
+    </Box>
+  );
+}
+
+const imageInputContainerSx = {
+  // height: "100%",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
+function ImagePreviewInner({ file, setShowConfirmDelete }) {
   function showImageDeleteConfirmation() {
     setShowConfirmDelete(true);
   }
+
+  let opacity = 1
+  if (file?.markedForDeleting) opacity = 0.3
 
   return (
     <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
@@ -409,13 +487,12 @@ function ImagePreviewMobile({ file, setShowConfirmDelete }) {
         component="img"
         src={file.preview || file.image}
         alt="Preview"
-        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+        sx={{ width: "100%", height: "100%", objectFit: "cover", opacity, }}
         onLoad={() => URL.revokeObjectURL(file.url)}
       />
       <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
-        <DeleteForeverIcon />
+        <DeleteIcon />
       </IconButton>
     </Box>
   );
 }
-
