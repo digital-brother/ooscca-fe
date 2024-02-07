@@ -13,27 +13,27 @@ export function MapSection() {
   const activityId = useParams().activityId;
 
   const londonCoordinates = { lat: 51.5074, lng: -0.1278 };
-  const [coordinates, setCoordinates] = useState(londonCoordinates);
-  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState({ coordinates: londonCoordinates, address: "" });
+
   const [errors, setErrors] = useState([]);
-  const [addressError, setAddressError] = useState("")
+  const [addressError, setAddressError] = useState("");
 
   const queryClient = useQueryClient();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
 
   useEffect(() => {
-    // Synchronizes the map's coordinates and address with the fetched activity data,
-    // ensuring the map correctly represents the current activity's location.
-    if (activity) {
+    if (activity && activity.latitude && activity.longitude) {
       const { latitude, longitude, address: activityAddress } = activity;
-      setCoordinates({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
-      setAddress(activityAddress || "");
+      setLocation({
+        coordinates: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+        address: activityAddress || "",
+      });
     }
   }, [activity]);
 
   async function handleSubmit() {
-    const data = { latitude: coordinates.lat, longitude: coordinates.lng, address };
+    const data = { latitude: location.coordinates.lat, longitude: location.coordinates.lng, address: location.address };
     mutation.mutate(data, {
       onSuccess: (updatedActivity) => {
         queryClient.setQueryData(["activity", activityId], updatedActivity);
@@ -48,9 +48,8 @@ export function MapSection() {
         if (drfErrors.address) {
           setAddressError(drfErrors.address.join(" "));
           delete drfErrors.address;
-          setErrors(Object.values(drfErrors))
-        }
-        else if (nonFieldErrors && nonFieldErrors.length > 0) setErrors(...nonFieldErrors);
+          setErrors(Object.values(drfErrors));
+        } else if (nonFieldErrors && nonFieldErrors.length > 0) setErrors(...nonFieldErrors);
         else setErrors([error.message]);
       },
     });
@@ -59,15 +58,7 @@ export function MapSection() {
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ mt: 2 }}>
-        <Map
-          coordinates={coordinates}
-          address={address}
-          addressError={addressError}
-          setAddressError={setAddressError}
-          setCoordinates={setCoordinates}
-          setAddress={setAddress}
-          handleSubmit={handleSubmit}
-        />
+        <Map {...{ location, setLocation, handleSubmit, addressError, setAddressError }} />
         {errors && <Errors errors={errors} />}
       </Box>
     </Container>

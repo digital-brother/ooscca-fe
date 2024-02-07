@@ -6,14 +6,10 @@ import { Button, TextField } from "@mui/material";
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit } ) {
+export function Map({ location, addressError, setAddressError, setLocation, handleSubmit }) {
+  const { address, coordinates } = location;
   const [mapCenter, setMapCenter] = useState(coordinates);
-  const [markerState, setMarkerState] = useState({
-    position: coordinates,
-    infoOpen: !!address,
-    selectedPlace: address ? { formatted_address: address } : null,
-    lastClickedMarker: null,
-  });
+  const [markerInfoOpened, setMarkerInfoOpened] = useState(!!address);
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
   const textFieldRef = useRef(null);
@@ -22,38 +18,23 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     if (textFieldRef.current) {
       textFieldRef.current.querySelector("input").value = address || "";
     }
-  }, [address]);
+    if (coordinates) setMarkerInfoOpened(!!address);
+  }, [address, coordinates]);
 
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
     if (coordinates) {
       setMapCenter(coordinates);
-      setMarkerState((prev) => ({
-        ...prev,
-        position: coordinates,
-        infoOpen: !!address,
-        selectedPlace: address ? { formatted_address: address } : null,
-      }));
-      setCoordinates(coordinates);
-      setAddress(address);
     }
-  },
-  [coordinates, address, setCoordinates, setAddress]
-);
+  }, [coordinates]);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
   }, []);
 
-  const updateMarkerAndInfo = (newCoordinates, newAddress) => {
-    setMarkerState({
-      position: newCoordinates,
-      infoOpen: !!newAddress,
-      selectedPlace: newAddress ? { formatted_address: newAddress } : null,
-      lastClickedMarker: null,
-    });
-    setCoordinates(newCoordinates);
-    setAddress(newAddress);
+  const updateLocation = (newCoordinates, newAddress) => {
+    setMarkerInfoOpened(!!newAddress);
+    setLocation({ coordinates: newCoordinates, address: newAddress });
   };
 
   const onPlacesChanged = () => {
@@ -66,7 +47,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
         lat: location.lat(),
         lng: location.lng(),
       };
-      updateMarkerAndInfo(newCoordinates, place.formatted_address);
+      updateLocation(newCoordinates, place.formatted_address);
       setMapCenter(newCoordinates);
       setAddressError("");
     } else {
@@ -84,9 +65,9 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       geocoderRef.current.geocode({ location: latLng }, (results, status) => {
         if (status === "OK" && results[0]) {
           const newAddress = results[0].formatted_address;
-          updateMarkerAndInfo(newCoordinates, newAddress);
+          updateLocation(newCoordinates, newAddress);
         } else {
-          updateMarkerAndInfo(newCoordinates, null);
+          updateLocation(newCoordinates, null);
         }
       });
     }
@@ -127,16 +108,16 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {markerState.position && !isNaN(markerState.position.lat) && !isNaN(markerState.position.lng) && (
-              <Marker position={{ lat: markerState.position.lat, lng: markerState.position.lng }}>
-                {markerState.infoOpen && markerState.selectedPlace && (
+            {coordinates && !isNaN(coordinates.lat) && !isNaN(coordinates.lng) && (
+              <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }}>
+                {markerInfoOpened && address && (
                   <InfoWindow
-                    position={{ lat: markerState.position.lat, lng: markerState.position.lng }}
-                    onCloseClick={() => setMarkerState((prev) => ({ ...prev, infoOpen: false }))}
+                    position={{ lat: coordinates.lat, lng: coordinates.lng }}
+                    onCloseClick={() => setMarkerInfoOpened(false)}
                     sx={{ mr: 2 }}
                   >
                     <div>
-                      <strong>{markerState.selectedPlace.formatted_address}</strong>
+                      <strong>{address}</strong>
                     </div>
                   </InfoWindow>
                 )}
