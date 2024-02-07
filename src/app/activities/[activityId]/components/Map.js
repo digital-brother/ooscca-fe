@@ -32,16 +32,14 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       setCoordinates(coordinates);
       setAddress(address);
     }
-  }, [address, coordinates]);
+  }, [address, coordinates, setAddress, setCoordinates]);
 
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
     if (coordinates) {
       setMapCenter(coordinates);
     }
-  },
-  [coordinates]
-);
+  },[coordinates]);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
