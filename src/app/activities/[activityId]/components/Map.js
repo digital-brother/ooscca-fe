@@ -11,7 +11,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
   const [marker, setMarker] = useState({
     position: coordinates,
     infoOpen: !!address,
-    lastClickedMarker: null,
   });
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
@@ -49,7 +48,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     setMarker((previousMarker) => ({
       ...previousMarker,
       infoOpen: !!newAddress,
-      lastClickedMarker: null,
     }));
     setCoordinates(newCoordinates);
     setAddress(newAddress);
