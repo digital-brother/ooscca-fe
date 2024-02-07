@@ -1,7 +1,17 @@
 "use client";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { ImageInput } from "./ImageUpload";
@@ -10,9 +20,10 @@ import _ from "lodash";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import prettyBytes from "pretty-bytes";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
 import { useImmer } from "use-immer";
+import { Errors, getFlatErrors } from "./formikFields";
 
 function ImagePreviewRow({ index, image, handleDelete }) {
   // Extracted, as every preview needs own useDrag and useDrop
@@ -24,7 +35,10 @@ function ImagePreviewRow({ index, image, handleDelete }) {
       <TableCell align="right">
         <Image src={image.url} alt="thumbnail" width="50" height="50" />
       </TableCell>
-      <TableCell align="right">{image.name}</TableCell>
+      <TableCell align="right">
+        <Typography>{image.name}</Typography>
+        {!!image.errors && <Errors errors={image.errors} />}
+      </TableCell>
       <TableCell align="right">{image.order}</TableCell>
       <TableCell align="right">{prettyBytes(image.size)}</TableCell>
       <TableCell align="right">
@@ -45,7 +59,7 @@ function ImagePreviewTable({ images, handleDelete }) {
             <TableCell></TableCell>
             <TableCell align="right">Thumbnail</TableCell>
             <TableCell align="right">Name</TableCell>
-            <TableCell align="right">Position</TableCell>
+            <TableCell align="right">Order</TableCell>
             <TableCell align="right">Size</TableCell>
             <TableCell align="right">Delete</TableCell>
           </TableRow>
@@ -64,6 +78,7 @@ export default function ImageMultipleUpload() {
   const [images, setImages] = useImmer([]);
 
   const activityId = useParams().activityId;
+  const queryClient = useQueryClient();
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
   const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
   const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
@@ -89,23 +104,44 @@ export default function ImageMultipleUpload() {
   }
 
   function handleDelete(deleteIndex) {
-    setImages((images) => { images.splice(deleteIndex, 1) });
+    setImages((images) => {
+      images[deleteIndex].toBeDeleted = true;
+    });
   }
 
   function handleSave() {
-    const serverImageIsPresent = (images, serverImages) => images.some((item) => item.id === serverImages.id);
-    const deletedImages = serverImages.filter((serverImage) => !serverImageIsPresent(images, serverImage));
+    images.forEach((image, index) => {
+      const isAdded = !image.id;
+      const isUpdated = serverImages.some(
+        (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
+      );
 
-    const addedImages = images.filter((image) => !image.id);
+      if (isAdded)
+        postMutation.mutate(image, {
+          onError: (error) => {
+            setImages((images) => {
+              const errors = getFlatErrors(error);
+              images[index].errors = errors;
+            });
+          },
+          onSuccess: () => {
+            queryClient.invalidateQueries(["primaryImages", activityId]);
+          },
+        });
 
-    const fileIsUpdated = (serverImages, image) => {
-      const serverImage = serverImages.find((serverImage) => serverImage.id === image.id);
-      return serverImage && !_.isEqual(image, serverImage);
-    };
-    const updatedImages = images.filter((image) => fileIsUpdated(serverImages, image));
-
-    deletedImages.map((image) => deleteMutation.mutate(image.id));
-    addedImages.map((image) => postMutation.mutate(image, image.file));
+      if (image.toBeDeleted)
+        deleteMutation.mutate(image.id, {
+          onError: (error) => {
+            setImages((images) => {
+              const errors = getFlatErrors(error);
+              images[index].errors = errors;
+            });
+          },
+          onSuccess: () => {
+            queryClient.invalidateQueries(["primaryImages", activityId]);
+          },
+        });
+    });
   }
 
   useEffect(() => {
