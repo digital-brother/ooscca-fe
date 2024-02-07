@@ -89,7 +89,7 @@ export default function ImageMultipleUpload() {
   }
 
   function handleDelete(deleteIndex) {
-    setImages((images) => images.splice(deleteIndex, 1));
+    setImages((images) => { images.splice(deleteIndex, 1) });
   }
 
   function handleSave() {
