@@ -23,7 +23,6 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       textFieldRef.current.querySelector("input").value = address || "";
     }
     if (coordinates) {
-      setMapCenter(coordinates);
       setMarkerState((prev) => ({
         ...prev,
         position: coordinates,
@@ -39,17 +38,9 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     geocoderRef.current = new window.google.maps.Geocoder();
     if (coordinates) {
       setMapCenter(coordinates);
-      setMarkerState((prev) => ({
-        ...prev,
-        position: coordinates,
-        infoOpen: !!address,
-        selectedPlace: address ? { formatted_address: address } : null,
-      }));
-      setCoordinates(coordinates);
-      setAddress(address);
     }
   },
-  [coordinates, address, setCoordinates, setAddress]
+  [coordinates]
 );
 
   const onLoad = useCallback((ref) => {
