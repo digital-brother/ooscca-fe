@@ -209,10 +209,11 @@ export function Errors({ errors }) {
   return errors?.map((error, index) => <Error key={index}>{error}</Error>);
 }
 
+// TODO: Fix how Errors look in form
 export function Error({ children }) {
   return (
     children && (
-      <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>{children}</Typography>
+      <Typography sx={{ color: "error.main", fontWeight: 600 }}>{children}</Typography>
     )
   );
 }
