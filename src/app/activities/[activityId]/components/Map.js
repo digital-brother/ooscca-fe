@@ -6,7 +6,7 @@ import { Button, TextField } from "@mui/material";
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
-export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit } ) {
+export function Map({ coordinates, address, addressError, setAddressError, setCoordinates, setAddress, handleSubmit }) {
   const [mapCenter, setMapCenter] = useState(coordinates);
   const [marker, setMarker] = useState({
     position: coordinates,
@@ -23,9 +23,8 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
       textFieldRef.current.querySelector("input").value = address || "";
     }
     if (coordinates) {
-      setMarker((prev) => ({
-        ...prev,
-        position: coordinates,
+      setMarker((previousMarker) => ({
+        ...previousMarker,
         infoOpen: !!address,
         selectedPlace: address ? { formatted_address: address } : null,
       }));
@@ -33,24 +32,28 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
     }
   }, [address, coordinates, setAddress, setCoordinates]);
 
+  useEffect(() => {
+    setMarker((previousMarker) => ({ ...previousMarker, position: coordinates }));
+  }, [coordinates]);
+
   const handleMapLoad = useCallback(() => {
     geocoderRef.current = new window.google.maps.Geocoder();
     if (coordinates) {
       setMapCenter(coordinates);
     }
-  },[coordinates]);
+  }, [coordinates]);
 
   const onLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
   }, []);
 
   const updateMarkerAndInfo = (newCoordinates, newAddress) => {
-    setMarker({
-      position: newCoordinates,
+    setMarker((previousMarker) => ({
+      ...previousMarker,
       infoOpen: !!newAddress,
       selectedPlace: newAddress ? { formatted_address: newAddress } : null,
       lastClickedMarker: null,
-    });
+    }));
     setCoordinates(newCoordinates);
     setAddress(newAddress);
   };
@@ -131,7 +134,7 @@ export function Map({ coordinates, address, addressError, setAddressError, setCo
                 {marker.infoOpen && marker.selectedPlace && (
                   <InfoWindow
                     position={{ lat: marker.position.lat, lng: marker.position.lng }}
-                    onCloseClick={() => setMarker((prev) => ({ ...prev, infoOpen: false }))}
+                    onCloseClick={() => setMarker((previousMarker) => ({ ...previousMarker, infoOpen: false }))}
                     sx={{ mr: 2 }}
                   >
                     <div>
