@@ -51,20 +51,16 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
 
   const handleMapClick = (event) => {
     const latLng = event.latLng;
-    const newCoordinates = {
-      lat: latLng.lat(),
-      lng: latLng.lng(),
-    };
-    if (geocoderRef.current) {
-      geocoderRef.current.geocode({ location: latLng }, (results, status) => {
-        if (status === "OK" && results[0]) {
-          const newAddress = results[0].formatted_address;
-          updateLocation(newCoordinates, newAddress);
-        } else {
-          updateLocation(newCoordinates, null);
-        }
-      });
-    }
+    const newCoordinates = { lat: latLng.lat(), lng: latLng.lng() };
+    
+    geocoderRef.current?.geocode({ location: latLng }, (foundAddresses, status) => {
+      if (status === "OK" && foundAddresses[0]) {
+        const newAddress = foundAddresses[0].formatted_address;
+        updateLocation(newCoordinates, newAddress);
+      } else {
+        updateLocation(newCoordinates, null);
+      }
+    });
   };
 
   return (
