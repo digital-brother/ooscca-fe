@@ -48,6 +48,15 @@ export function SuccessMessage({ children }) {
   );
 }
 
+function getFrontendErrors(file) {
+  const frontendErrors = [];
+
+  if (file?.size > 5 * 1024 * 1024) {
+    frontendErrors.push("image: Max file size is 5.0 MB");
+  }
+
+  return frontendErrors;
+}
 
 function ImageDataRow({ files, setFiles, file, order, ...props  }) {
   const [, drag] = useDrag({
@@ -367,6 +376,7 @@ export default function PrimaryImages() {
     setFiles(files => [...files, ...acceptedFiles.map((file, index) => {
         return Object.assign(file, {
           preview: URL.createObjectURL(file),
+          errors: getFrontendErrors(file),
         })
       }),
     ]);
