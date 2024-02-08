@@ -41,11 +41,11 @@ function FormBlock() {
             label={
               <Typography>
                 I accept the{' '}
-                <Link href="/terms" sx={{ cursor: 'pointer'}}>
+                <Link href="/terms" sx={{ cursor: 'pointer' }}>
                   Terms and Conditions
                 </Link>
                 {' and '}
-                <Link href="/privacy" sx={{ cursor: 'pointer'}}>
+                <Link href="/privacy" sx={{ cursor: 'pointer' }}>
                   Privacy Policy
                 </Link>.
               </Typography>
