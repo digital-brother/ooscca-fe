@@ -26,9 +26,12 @@ import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
 
 function ImagePreviewRow({ index, image, handleDelete }) {
+  let colorSx;
+  if (!image.id) colorSx = { color: "green.600" };
+  if (image.toBeDeleted) colorSx = { color: "grey.400" };
   // Extracted, as every preview needs own useDrag and useDrop
   return (
-    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 }, ...colorSx }}>
       <TableCell component="th" scope="row">
         {"|||"}
       </TableCell>
@@ -36,7 +39,7 @@ function ImagePreviewRow({ index, image, handleDelete }) {
         <Image src={image.url} alt="thumbnail" width="50" height="50" />
       </TableCell>
       <TableCell align="right">
-        <Typography>{image.name}</Typography>
+        <Typography sx={colorSx}>{image.name}</Typography>
         {!!image.errors && <Errors errors={image.errors} />}
       </TableCell>
       <TableCell align="right">{image.order}</TableCell>
@@ -93,7 +96,12 @@ export default function ImageMultipleUpload() {
   }
 
   function handleAdd(files) {
-    const filesCount = images?.length;
+    const maxImagesAllowed = 5;
+    if (images?.length + files?.length > maxImagesAllowed) {
+      setFrontEndErrors([`Maximum ${maxImagesAllowed} images allowed.`]);
+      return;
+    }
+
     const newImages = [];
     const errors = [];
 
@@ -104,7 +112,7 @@ export default function ImageMultipleUpload() {
         newImages.push({
           activity: activityId,
           url: URL.createObjectURL(file),
-          order: index + filesCount + 1,
+          order: index + images?.length + 1,
           name: file.name,
           size: file.size,
           file,
