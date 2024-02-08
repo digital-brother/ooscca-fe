@@ -73,9 +73,9 @@ export function ImageInput({ multiple, handleAdd, sx }) {
   else return <ImageInputMobile {...{ handleAdd, multiple, sx }} />;
 }
 
-function ImagePreview({ image, setShowConfirmDelete }) {
+export function ImagePreview({ image, handleDelete }) {
   function showImageDeleteConfirmation() {
-    setShowConfirmDelete(true);
+    handleDelete(true);
   }
 
   return (
@@ -84,7 +84,7 @@ function ImagePreview({ image, setShowConfirmDelete }) {
         component="img"
         src={image.url}
         alt="Preview"
-        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+        sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 2}}
         onLoad={() => URL.revokeObjectURL(image.url)}
       />
       <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
@@ -186,7 +186,7 @@ export default function ImageUpload({ sx, order }) {
             sx={{ backgroundColor: sx?.backgroundColor || sx?.bgColor }}
           />
         )}
-        {image && <ImagePreview {...{ image, setShowConfirmDelete }} />}
+        {image && <ImagePreview {...{ image, handleDelete: () => setShowConfirmDelete(true) }} />}
       </Box>
       {errors && <Errors errors={errors} />}
     </Box>

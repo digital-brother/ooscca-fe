@@ -11,10 +11,11 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import { ImageInput } from "./ImageUpload";
+import { ImageInput, ImagePreview } from "./ImageUpload";
 
 import _ from "lodash";
 import Image from "next/image";
@@ -59,6 +60,16 @@ function ImagePreviewRow({ index, image, handleDelete }) {
   );
 }
 
+function ImagePreviewMobile({ images, handleDelete }) {
+  return (
+    <Box sx={{ display:"flex", flexDirection: "column", gap: 2, mt: 5 }}>
+      {images.map((image, index) => (
+        <ImagePreview key={index} image={image} />
+      ))}
+    </Box>
+  );
+}
+
 function ImagePreviewTable({ images, handleDelete }) {
   return (
     <TableContainer sx={{ mt: 5 }}>
@@ -92,6 +103,8 @@ export default function ImageMultipleUpload() {
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
   const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
   const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
+
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   useEffect(() => {
     setImages(serverImages);
@@ -195,7 +208,8 @@ export default function ImageMultipleUpload() {
       </Box>
       {!!images?.length && (
         <>
-          <ImagePreviewTable {...{ images, handleDelete }} />
+          {mdUp && <ImagePreviewTable {...{ images, handleDelete }} />}
+          {!mdUp && <ImagePreviewMobile {...{ images, handleDelete }} />}
           <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
             <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
