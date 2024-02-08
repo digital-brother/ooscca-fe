@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import {Button, Grid, Typography, Box, FormControlLabel, Checkbox, Container} from "@mui/material";
+import { Button, Grid, Typography, Box, FormControlLabel, Checkbox, Container } from "@mui/material";
 import Link from "next/link";
-
 
 function FormBlock() {
   return (
@@ -20,8 +19,8 @@ function FormBlock() {
               bgcolor: "#333",
               color: "white",
               "&:hover": {
-                bgcolor: "#555"
-              }
+                bgcolor: "#555",
+              },
             }}
           >
             Save and come back later
@@ -57,7 +56,7 @@ function FormBlock() {
 function ImageBlock() {
   return (
     <Box>
-      <Box component="img" src="/rate.png" alt="Rating" sx={{ width: "100%"}} />
+      <Box component="img" src="/rate.png" alt="Rating" sx={{ width: "100%", mb: -3 }} />
     </Box>
   );
 }
