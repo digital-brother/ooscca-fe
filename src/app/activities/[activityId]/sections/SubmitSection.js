@@ -6,7 +6,7 @@ import Link from "next/link";
 
 function FormBlock() {
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box>
       <Typography variant="h3" gutterBottom>
         Let's get your activities live and in front of parents!
       </Typography>
