@@ -91,6 +91,16 @@ export default function ImageMultipleUpload() {
     setImages(serverImages);
   }, [serverImages]);
 
+  useEffect(() => {
+    setImages((images) => {
+      let order = 1;
+      images?.forEach((image) => {
+        if (!image.toBeDeleted) image.order = order++;
+        else image.order = null;
+      });
+    });
+  }, [images]);
+
   function validateFile(file) {
     if (file.size > 5 * 1024 * 1024) return `Image "${file.name}" size (${prettyBytes(file.size)}) exceeds 5 MB.`;
   }
@@ -112,7 +122,6 @@ export default function ImageMultipleUpload() {
         newImages.push({
           activity: activityId,
           url: URL.createObjectURL(file),
-          order: index + images?.length + 1,
           name: file.name,
           size: file.size,
           file,
@@ -120,7 +129,7 @@ export default function ImageMultipleUpload() {
     });
     setImages((images) => {
       images.push(...newImages);
-      images.sort((a, b) => a.order - b.order);
+      // images.sort((a, b) => a.order - b.order);
     });
     setFrontEndErrors(errors);
   }
