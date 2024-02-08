@@ -403,13 +403,22 @@ export default function PrimaryImages() {
     }
   }
 
-  async function handleAdd( acceptedFiles ) {
-    setFiles(files => [...files, ...acceptedFiles.map((file, index) => {
-        return Object.assign(file, {
+  async function handleAdd(acceptedFiles) {
+    const newFiles = await Promise.all(
+      acceptedFiles.map(async (file) => {
+        const frontendErrors = await getFrontendErrors(file);
+        Object.assign(file, {
           preview: URL.createObjectURL(file),
-          errors: getFrontendErrors(file),
-        })
-      }),
+          errors: frontendErrors,
+          frontendErrors,
+        });
+        console.log(file);
+        return file;
+      })
+    )
+    setFiles((files) => [
+      ...files,
+      ...newFiles,
     ]);
   }
 
