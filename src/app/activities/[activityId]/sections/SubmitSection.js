@@ -12,17 +12,7 @@ function FormBlock() {
       </Typography>
       <Grid container spacing={2} justifyContent="left">
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            sx={{
-              width: { xs: "100%", sm: "90%", lg: "80%" },
-              bgcolor: "#333",
-              color: "white",
-              "&:hover": {
-                bgcolor: "#555",
-              },
-            }}
-          >
+          <Button variant="contained" color="grey" sx={{ width: { xs: "100%", sm: "90%", lg: "80%" } }}>
             Save and come back later
           </Button>
         </Grid>
