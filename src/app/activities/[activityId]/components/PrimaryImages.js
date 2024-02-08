@@ -48,15 +48,47 @@ export function SuccessMessage({ children }) {
   );
 }
 
-function getFrontendErrors(file) {
+async function getFrontendErrors(file) {
   const frontendErrors = [];
 
   if (file?.size > 5 * 1024 * 1024) {
     frontendErrors.push("image: Max file size is 5.0 MB");
   }
 
+  // Image resolution validation
+  const image = new Image();
+  const url = URL.createObjectURL(file);
+
+  const resolutionValidation = new Promise((resolve, reject) => {
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+
+      const maxWidth = 5000;
+      const maxHeight = 5000;
+
+      if (image.width > maxWidth) {
+        frontendErrors.push(`image: Max file width is ${maxWidth}px`);
+      }
+
+      if (image.height > maxHeight) {
+        frontendErrors.push(`image: Max file height is ${maxHeight}px`);
+      }
+
+      resolve();
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+    };
+
+    image.src = url;
+  });
+
+  await Promise.all([resolutionValidation]);
+
   return frontendErrors;
 }
+
 
 function ImageDataRow({ files, setFiles, file, order, ...props  }) {
   const [, drag] = useDrag({
