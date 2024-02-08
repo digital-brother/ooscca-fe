@@ -73,21 +73,17 @@ export function ImageInput({ multiple, handleAdd, sx }) {
   else return <ImageInputMobile {...{ handleAdd, multiple, sx }} />;
 }
 
-export function ImagePreview({ image, handleDelete }) {
-  function showImageDeleteConfirmation() {
-    handleDelete(true);
-  }
-
+export function ImagePreview({ image, handleDelete, sx }) {
   return (
-    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+    <Box sx={{ position: "relative", width: "100%", height: "100%", ...sx }}>
       <Box
         component="img"
         src={image.url}
         alt="Preview"
-        sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 2}}
+        sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 2 }}
         onLoad={() => URL.revokeObjectURL(image.url)}
       />
-      <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
+      <IconButton color="grey" onClick={handleDelete} sx={{ position: "absolute", top: 10, right: 10 }}>
         <DeleteForeverIcon />
       </IconButton>
     </Box>
