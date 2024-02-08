@@ -10,7 +10,7 @@ function FormBlock() {
       <Typography variant="h3" gutterBottom>
         Let's get your activities live and in front of parents!
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'left', mt: 4}}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'left', mt: 6}}>
         <Button
           size="large"
           variant="contained"
@@ -41,7 +41,7 @@ function FormBlock() {
 function ImageBlock() {
   return (
     <Box>
-      <Box component="img" src="/rate.png" alt="Rating" sx={{ width: "100%", mb: -3 }} />
+      <Box component="img" src="/rate.png" alt="Rating" sx={{ width: "100%", mb: -3, mt: { xs: 8, lg: 0 }}} />
     </Box>
   );
 }
