@@ -105,7 +105,9 @@ export default function ImageMultipleUpload() {
 
   function handleDelete(deleteIndex) {
     setImages((images) => {
-      images[deleteIndex].toBeDeleted = true;
+      const image = images[deleteIndex];
+      if (image.id) images[deleteIndex].toBeDeleted = true;
+      else images.splice(deleteIndex, 1);
     });
   }
 
