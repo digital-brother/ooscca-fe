@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, useTheme } from "@mui/material";
 
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
@@ -30,7 +30,6 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
   }, [coordinates]);
 
   const updateLocation = (newCoordinates, newAddress) => {
-    setMarkerInfoOpened(!!newAddress);
     setLocation({ coordinates: newCoordinates, address: newAddress });
   };
 
@@ -52,7 +51,7 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
   const handleMapClick = (event) => {
     const latLng = event.latLng;
     const newCoordinates = { lat: latLng.lat(), lng: latLng.lng() };
-    
+
     geocoderRef.current?.geocode({ location: latLng }, (foundAddresses, status) => {
       if (status === "OK" && foundAddresses[0]) {
         const newAddress = foundAddresses[0].formatted_address;
@@ -65,9 +64,9 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
 
   return (
     <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
-      <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <Box sx={{ flex: 1, mr: 2 }}>
+      <Box>
+        <Box sx={{ display: "flex", alignItems: "start" }}>
+          <Box sx={{ flex: 1 }}>
             <StandaloneSearchBox
               onLoad={(ref) => {
                 searchBoxRef.current = ref;
@@ -91,9 +90,9 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
             Save
           </Button>
         </Box>
-        <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
+        <Box sx={{ mt: 2 }}>
           <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "100%" }}
+            mapContainerStyle={{ height: 700 }}
             center={mapCenter}
             zoom={10}
             options={{
@@ -103,7 +102,7 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {coordinates && !isNaN(coordinates.lat) && !isNaN(coordinates.lng) && (
+            {coordinates && !!coordinates.lat && !!coordinates.lng && (
               <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }}>
                 {markerInfoOpened && address && (
                   <InfoWindow
