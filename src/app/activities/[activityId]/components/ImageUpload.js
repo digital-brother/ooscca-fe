@@ -149,7 +149,7 @@ export default function ImageUpload({ sx, order }) {
       type: "secondary",
       name: file.name,
       image: file,
-      order: "1",
+      order,
     };
     postMutation.mutate(imageData, {
       onSuccess: (data) => {
