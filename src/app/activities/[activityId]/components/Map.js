@@ -10,6 +10,7 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
   const { address, coordinates } = location;
   const [mapCenter, setMapCenter] = useState(coordinates);
   const [markerInfoOpened, setMarkerInfoOpened] = useState(!!address);
+
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
   const textFieldRef = useRef(null);
@@ -27,10 +28,6 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
       setMapCenter(coordinates);
     }
   }, [coordinates]);
-
-  const onLoad = useCallback((ref) => {
-    searchBoxRef.current = ref;
-  }, []);
 
   const updateLocation = (newCoordinates, newAddress) => {
     setMarkerInfoOpened(!!newAddress);
@@ -78,7 +75,12 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
       <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <Box sx={{ flex: 1, mr: 2 }}>
-            <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+            <StandaloneSearchBox
+              onLoad={(ref) => {
+                searchBoxRef.current = ref;
+              }}
+              onPlacesChanged={onPlacesChanged}
+            >
               <TextField
                 fullWidth
                 size="small"
