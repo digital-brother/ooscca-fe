@@ -56,8 +56,8 @@ function FormBlock() {
 
 function ImageBlock() {
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box component="img" src="/rate.png" alt="Rating" />
+    <Box>
+      <Box component="img" src="/rate.png" alt="Rating" sx={{ width: "100%"}} />
     </Box>
   );
 }
