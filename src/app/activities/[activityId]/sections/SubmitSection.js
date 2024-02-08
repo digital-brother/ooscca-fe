@@ -2,8 +2,6 @@
 
 import React from 'react';
 import {Button, Grid, Typography, Box, FormControlLabel, Checkbox, Container} from '@mui/material';
-import {LgFlex} from "@/app/activities/[activityId]/components/responsiveFlexes";
-import ImageUpload from "@/app/activities/[activityId]/components/ImageUpload";
 import Link from "next/link";
 
 
@@ -13,17 +11,16 @@ function FormBlock() {
       <Typography variant="h3" gutterBottom>
         Let's get your activities live and in front of parents!
       </Typography>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="left">
         <Grid item xs={12}>
           <Button
             variant="contained"
-            fullWidth
             sx={{
-              width: "70%",
-              bgcolor: '#333', // This is a dark gray, almost black color
+              width: { xs: "100%", sm: "90%", lg: "80%" },
+              bgcolor: '#333',
               color: 'white',
               '&:hover': {
-                bgcolor: '#555' // Slightly lighter gray for the hover state
+                bgcolor: '#555'
               }
             }}
           >
@@ -31,7 +28,7 @@ function FormBlock() {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" fullWidth sx={{ width: "70%" }}>
+          <Button variant="contained" color="primary" sx={{ width: { xs: "100%", sm: "90%", lg: "80%" } }}>
             Submit
           </Button>
         </Grid>
@@ -65,7 +62,7 @@ function ImageBlock() {
   );
 }
 
-export function SubmitSection(sx) {
+export function SubmitSection() {
   return (
     <Container sx={{ mt: 2 }}>
       <Box
