@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "@react-google-maps/api";
 import Box from "@mui/material/Box";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, useTheme } from "@mui/material";
 
 const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
@@ -10,6 +10,7 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
   const { address, coordinates } = location;
   const [mapCenter, setMapCenter] = useState(coordinates);
   const [markerInfoOpened, setMarkerInfoOpened] = useState(!!address);
+
   const searchBoxRef = useRef(null);
   const geocoderRef = useRef(null);
   const textFieldRef = useRef(null);
@@ -28,25 +29,17 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
     }
   }, [coordinates]);
 
-  const onLoad = useCallback((ref) => {
-    searchBoxRef.current = ref;
-  }, []);
-
   const updateLocation = (newCoordinates, newAddress) => {
-    setMarkerInfoOpened(!!newAddress);
     setLocation({ coordinates: newCoordinates, address: newAddress });
   };
 
-  const onPlacesChanged = () => {
+  const handleAddressType = () => {
     const places = searchBoxRef.current.getPlaces();
-    const place = places && places.length > 0 ? places[0] : null;
+    const place = places?.[0] || null;
 
-    if (place && place.geometry) {
+    if (place?.geometry) {
       const location = place.geometry.location;
-      const newCoordinates = {
-        lat: location.lat(),
-        lng: location.lng(),
-      };
+      const newCoordinates = { lat: location.lat(), lng: location.lng() };
       updateLocation(newCoordinates, place.formatted_address);
       setMapCenter(newCoordinates);
       setAddressError("");
@@ -57,28 +50,29 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
 
   const handleMapClick = (event) => {
     const latLng = event.latLng;
-    const newCoordinates = {
-      lat: latLng.lat(),
-      lng: latLng.lng(),
-    };
-    if (geocoderRef.current) {
-      geocoderRef.current.geocode({ location: latLng }, (results, status) => {
-        if (status === "OK" && results[0]) {
-          const newAddress = results[0].formatted_address;
-          updateLocation(newCoordinates, newAddress);
-        } else {
-          updateLocation(newCoordinates, null);
-        }
-      });
-    }
+    const newCoordinates = { lat: latLng.lat(), lng: latLng.lng() };
+
+    geocoderRef.current?.geocode({ location: latLng }, (foundAddresses, status) => {
+      if (status === "OK" && foundAddresses[0]) {
+        const newAddress = foundAddresses[0].formatted_address;
+        updateLocation(newCoordinates, newAddress);
+      } else {
+        updateLocation(newCoordinates, null);
+      }
+    });
   };
 
   return (
     <LoadScript googleMapsApiKey={MAP_API_KEY} libraries={libraries}>
-      <Box sx={{ width: "100%", height: 700, display: "flex", flexDirection: "column" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <Box sx={{ flex: 1, mr: 2 }}>
-            <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+      <Box>
+        <Box sx={{ display: "flex", alignItems: "start" }}>
+          <Box sx={{ flex: 1 }}>
+            <StandaloneSearchBox
+              onLoad={(ref) => {
+                searchBoxRef.current = ref;
+              }}
+              onPlacesChanged={handleAddressType}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -96,9 +90,9 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
             Save
           </Button>
         </Box>
-        <Box sx={{ width: "100%", height: "100%", mt: 2 }}>
+        <Box sx={{ mt: 2 }}>
           <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "100%" }}
+            mapContainerStyle={{ height: 700 }}
             center={mapCenter}
             zoom={10}
             options={{
@@ -108,7 +102,7 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
             onLoad={handleMapLoad}
             onClick={handleMapClick}
           >
-            {coordinates && !isNaN(coordinates.lat) && !isNaN(coordinates.lng) && (
+            {coordinates && !!coordinates.lat && !!coordinates.lng && (
               <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }}>
                 {markerInfoOpened && address && (
                   <InfoWindow
