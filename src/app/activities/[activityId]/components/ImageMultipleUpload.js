@@ -105,6 +105,7 @@ export default function ImageMultipleUpload() {
         else image.order = null;
       });
     });
+    setFrontEndErrors([]);
   }, [images]);
 
   function validateFile(file) {
@@ -196,9 +197,14 @@ export default function ImageMultipleUpload() {
         <>
           <ImagePreviewTable {...{ images, handleDelete }} />
           <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
-          <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
-            Save
-          </Button>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
+            <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
+              Cancel
+            </Button>
+            <Button onClick={handleSave} variant="contained" color="green">
+              Save
+            </Button>
+          </Box>
         </>
       )}
     </Container>
