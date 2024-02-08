@@ -31,23 +31,29 @@ function ImagePreviewRow({ index, image, handleDelete }) {
   if (image.toBeDeleted) colorSx = { color: "grey.400" };
   // Extracted, as every preview needs own useDrag and useDrop
   return (
-    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 }, ...colorSx }}>
+    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
       <TableCell component="th" scope="row">
         {"|||"}
       </TableCell>
-      <TableCell align="right">
+      <TableCell align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
         <Image src={image.url} alt="thumbnail" width="50" height="50" />
       </TableCell>
       <TableCell align="right">
         <Typography sx={colorSx}>{image.name}</Typography>
         {!!image.errors && <Errors errors={image.errors} />}
       </TableCell>
-      <TableCell align="right">{image.order}</TableCell>
-      <TableCell align="right">{prettyBytes(image.size)}</TableCell>
+      <TableCell align="right" sx={colorSx}>
+        {image.order}
+      </TableCell>
+      <TableCell align="right" sx={colorSx}>
+        {prettyBytes(image.size)}
+      </TableCell>
       <TableCell align="right">
-        <IconButton onClick={() => handleDelete(index)}>
-          <DeleteForeverIcon />
-        </IconButton>
+        {!image.toBeDeleted && (
+          <IconButton onClick={() => handleDelete(index)}>
+            <DeleteForeverIcon sx={colorSx} />
+          </IconButton>
+        )}
       </TableCell>
     </TableRow>
   );
