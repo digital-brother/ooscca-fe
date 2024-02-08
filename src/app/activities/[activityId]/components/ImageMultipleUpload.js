@@ -171,38 +171,22 @@ export default function ImageMultipleUpload() {
   }
 
   function handleSave() {
-    images.forEach((image, index) => {
+    images.forEach(async (image, index) => {
       const isAdded = !image.id;
       const isUpdated = serverImages.some(
         (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
       );
-
-      if (isAdded)
-        postMutation.mutate(image, {
-          onError: (error) => {
-            setImages((images) => {
-              const errors = getFlatErrors(error);
-              images[index].errors = errors;
-            });
-          },
-          onSuccess: () => {
-            queryClient.invalidateQueries(["primaryImages", activityId]);
-          },
+      try {
+        if (isAdded) await postMutation.mutateAsync(image);
+        if (image.toBeDeleted) await deleteMutation.mutateAsync(image.id);
+      } catch (error) {
+        setImages((images) => {
+          const errors = getFlatErrors(error);
+          images[index].errors = errors;
         });
-
-      if (image.toBeDeleted)
-        deleteMutation.mutate(image.id, {
-          onError: (error) => {
-            setImages((images) => {
-              const errors = getFlatErrors(error);
-              images[index].errors = errors;
-            });
-          },
-          onSuccess: () => {
-            queryClient.invalidateQueries(["primaryImages", activityId]);
-          },
-        });
+      }
     });
+    queryClient.invalidateQueries(["primaryImages", activityId]);
   }
 
   useEffect(() => {
