@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Grid, Typography, Box, FormControlLabel, Checkbox, Container } from "@mui/material";
+import { Button, Typography, Box, Checkbox, Container } from "@mui/material";
 import Link from "next/link";
 
 function FormBlock() {
@@ -10,35 +10,30 @@ function FormBlock() {
       <Typography variant="h3" gutterBottom>
         Let's get your activities live and in front of parents!
       </Typography>
-      <Grid container spacing={2} justifyContent="left">
-        <Grid item xs={12}>
-          <Button variant="contained" color="grey" sx={{ width: { xs: "100%", sm: "90%", lg: "80%" } }}>
-            Save and come back later
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" sx={{ width: { xs: "100%", sm: "90%", lg: "80%" } }}>
-            Submit
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox name="checkedC" />}
-            label={
-              <Typography>
-                I accept the{" "}
-                <Link href="/terms" sx={{ cursor: "pointer" }}>
-                  Terms and Conditions
-                </Link>
-                {" and "}
-                <Link href="/privacy" sx={{ cursor: "pointer" }}>
-                  Privacy Policy
-                </Link>
-              </Typography>
-            }
-          />
-        </Grid>
-      </Grid>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'left', mt: 4}}>
+        <Button
+          size="large"
+          variant="contained"
+          color="grey"
+          sx={{ width: { xs: "100%", sm: "90%", lg: "80%" }}}
+        >
+          Save and come back later
+        </Button>
+        <Button
+          size="large"
+          variant="contained"
+          color="primary"
+          sx={{ width: { xs: "100%", sm: "90%", lg: "80%" }}}
+        >
+          Submit
+        </Button>
+        <Box sx={{display: "flex", alignItems: "center"}}>
+          <Checkbox size="small" sx={{ml: -1}}/>
+          <Typography variant="body2" color="text.secondary">
+            I accept the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>
+          </Typography>
+        </Box>
+      </Box>
     </Box>
   );
 }
