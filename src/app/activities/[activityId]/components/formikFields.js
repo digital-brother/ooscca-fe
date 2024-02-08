@@ -205,15 +205,15 @@ export function FormikErrors() {
     );
 }
 
-export function Errors({ errors }) {
-  return errors?.map((error, index) => <Error key={index}>{error}</Error>);
+export function Errors({ errors, sx }) {
+  return errors?.map((error, index) => <Error key={index} sx={sx}>{error}</Error>);
 }
 
 // TODO: Fix how Errors look in form
-export function Error({ children }) {
+export function Error({ children, sx }) {
   return (
     children && (
-      <Typography sx={{ color: "error.main", fontWeight: 600 }}>{children}</Typography>
+      <Typography sx={{ color: "error.main", fontWeight: 600, ...sx }}>{children}</Typography>
     )
   );
 }

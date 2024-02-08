@@ -76,6 +76,7 @@ function ImagePreviewTable({ images, handleDelete }) {
 
 export default function ImageMultipleUpload() {
   const [images, setImages] = useImmer([]);
+  const [frontEndErrors, setFrontEndErrors] = useState([]);
 
   const activityId = useParams().activityId;
   const queryClient = useQueryClient();
@@ -87,20 +88,33 @@ export default function ImageMultipleUpload() {
     setImages(serverImages);
   }, [serverImages]);
 
-  const filesCount = images?.length;
+  function validateFile(file) {
+    if (file.size > 5 * 1024 * 1024) return `Image "${file.name}" size (${prettyBytes(file.size)}) exceeds 5 MB.`;
+  }
+
   function handleAdd(files) {
-    const newImages = files.map((file, index) => ({
-      activity: activityId,
-      url: URL.createObjectURL(file),
-      order: index + filesCount + 1,
-      name: file.name,
-      size: file.size,
-      file,
-    }));
+    const filesCount = images?.length;
+    const newImages = [];
+    const errors = [];
+
+    files.forEach((file, index) => {
+      const error = validateFile(file);
+      if (error) errors.push(error);
+      else
+        newImages.push({
+          activity: activityId,
+          url: URL.createObjectURL(file),
+          order: index + filesCount + 1,
+          name: file.name,
+          size: file.size,
+          file,
+        });
+    });
     setImages((images) => {
       images.push(...newImages);
       images.sort((a, b) => a.order - b.order);
     });
+    setFrontEndErrors(errors);
   }
 
   function handleDelete(deleteIndex) {
@@ -158,6 +172,7 @@ export default function ImageMultipleUpload() {
       {!!images?.length && (
         <>
           <ImagePreviewTable {...{ images, handleDelete }} />
+          <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
           <Button onClick={handleSave} variant="contained" color="green" sx={{ mt: 4, display: "block", ml: "auto" }}>
             Save
           </Button>
