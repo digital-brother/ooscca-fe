@@ -365,7 +365,6 @@ export default function PrimaryImages() {
       .filter(files => files.id && files?.markedForDeleting === true)
       .map(file => deleteMutation.mutateAsync(file));
 
-    // Wait for all delete mutations to complete
     await Promise.all(deletePromises);
   }
 
@@ -383,7 +382,7 @@ export default function PrimaryImages() {
     // notCreatedInBackendFilesWithoutFEErrorsAndNotMarkedForDeleting
     const postPromises = files
       .filter(file => !file.id)
-      // .filter(file => (file?.frontendErrors.length === 0))
+      .filter(file => (file?.frontendErrors.length === 0))
       .filter(file => file?.markedForDeleting !== true)
       .map(file => postMutation.mutateAsync(file));
 
@@ -393,7 +392,7 @@ export default function PrimaryImages() {
   async function handleSubmit(event) {
     if (Array.isArray(files)) {
       setFiles(files => files.map((fileData, index) => {
-        fileData.errors = [];
+        fileData.errors = fileData?.frontendErrors || [];
         fileData.successMessages = [];
         return fileData;
       }));
