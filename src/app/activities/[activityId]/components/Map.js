@@ -34,16 +34,13 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
     setLocation({ coordinates: newCoordinates, address: newAddress });
   };
 
-  const onPlacesChanged = () => {
+  const handleAddressType = () => {
     const places = searchBoxRef.current.getPlaces();
-    const place = places && places.length > 0 ? places[0] : null;
+    const place = places?.[0] || null;
 
-    if (place && place.geometry) {
+    if (place?.geometry) {
       const location = place.geometry.location;
-      const newCoordinates = {
-        lat: location.lat(),
-        lng: location.lng(),
-      };
+      const newCoordinates = { lat: location.lat(), lng: location.lng() };
       updateLocation(newCoordinates, place.formatted_address);
       setMapCenter(newCoordinates);
       setAddressError("");
@@ -79,7 +76,7 @@ export function Map({ location, addressError, setAddressError, setLocation, hand
               onLoad={(ref) => {
                 searchBoxRef.current = ref;
               }}
-              onPlacesChanged={onPlacesChanged}
+              onPlacesChanged={handleAddressType}
             >
               <TextField
                 fullWidth
