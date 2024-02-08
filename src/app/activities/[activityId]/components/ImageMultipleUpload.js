@@ -62,9 +62,17 @@ function ImagePreviewRow({ index, image, handleDelete }) {
 
 function ImagePreviewMobile({ images, handleDelete }) {
   return (
-    <Box sx={{ display:"flex", flexDirection: "column", gap: 2, mt: 5 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 5 }}>
       {images.map((image, index) => (
-        <ImagePreview key={index} image={image} />
+        <>
+          <ImagePreview
+            key={index}
+            image={image}
+            handleDelete={() => handleDelete(index)}
+            sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}
+          />
+          <Errors errors={image.errors} sx={{ textAlign: "center" }} />
+        </>
       ))}
     </Box>
   );
@@ -86,7 +94,7 @@ function ImagePreviewTable({ images, handleDelete }) {
         </TableHead>
         <TableBody>
           {images.map((image, index) => (
-            <ImagePreviewRow key={index} {...{ index, image, handleDelete }} />
+            <ImagePreviewRow key={index} {...{ index, image, handleDelete: () => handleDelete(index) }} />
           ))}
         </TableBody>
       </Table>
@@ -203,24 +211,26 @@ export default function ImageMultipleUpload() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
-        <ImageInput multiple={true} handleAdd={handleAdd} />
+      <Box sx={{ maxWidth: { xs: 540, md: "none" }, mx: "auto" }}>
+        <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
+          <ImageInput multiple={true} handleAdd={handleAdd} />
+        </Box>
+        {!!images?.length && (
+          <>
+            {mdUp && <ImagePreviewTable {...{ images, handleDelete }} />}
+            {!mdUp && <ImagePreviewMobile {...{ images, handleDelete }} />}
+            <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
+              <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
+                Cancel
+              </Button>
+              <Button onClick={handleSave} variant="contained" color="green">
+                Save
+              </Button>
+            </Box>
+          </>
+        )}
       </Box>
-      {!!images?.length && (
-        <>
-          {mdUp && <ImagePreviewTable {...{ images, handleDelete }} />}
-          {!mdUp && <ImagePreviewMobile {...{ images, handleDelete }} />}
-          <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
-            <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
-              Cancel
-            </Button>
-            <Button onClick={handleSave} variant="contained" color="green">
-              Save
-            </Button>
-          </Box>
-        </>
-      )}
     </Container>
   );
 }
