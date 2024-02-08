@@ -1,7 +1,7 @@
 "use client";
 
-import React from 'react';
-import {Button, Grid, Typography, Box, FormControlLabel, Checkbox, Container} from '@mui/material';
+import React from "react";
+import {Button, Grid, Typography, Box, FormControlLabel, Checkbox, Container} from "@mui/material";
 import Link from "next/link";
 
 
@@ -17,10 +17,10 @@ function FormBlock() {
             variant="contained"
             sx={{
               width: { xs: "100%", sm: "90%", lg: "80%" },
-              bgcolor: '#333',
-              color: 'white',
-              '&:hover': {
-                bgcolor: '#555'
+              bgcolor: "#333",
+              color: "white",
+              "&:hover": {
+                bgcolor: "#555"
               }
             }}
           >
@@ -37,14 +37,14 @@ function FormBlock() {
             control={<Checkbox name="checkedC" />}
             label={
               <Typography>
-                I accept the{' '}
-                <Link href="/terms" sx={{ cursor: 'pointer' }}>
+                I accept the{" "}
+                <Link href="/terms" sx={{ cursor: "pointer" }}>
                   Terms and Conditions
                 </Link>
-                {' and '}
-                <Link href="/privacy" sx={{ cursor: 'pointer' }}>
+                {" and "}
+                <Link href="/privacy" sx={{ cursor: "pointer" }}>
                   Privacy Policy
-                </Link>.
+                </Link>
               </Typography>
             }
           />
