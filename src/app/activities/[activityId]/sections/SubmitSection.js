@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Button, Typography, Box, Checkbox, Container} from "@mui/material";
-import Link from "next/link";
+import Link from "@/app/(homepage)/components/Link";
 
 function FormBlock() {
 
