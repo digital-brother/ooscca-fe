@@ -132,8 +132,8 @@ export default function ImageMultipleUpload() {
   useEffect(updateOrder, [images]);
 
   async function validateFile(file) {
-    const maxWidth = 5;
-    const maxHeight = 5;
+    const maxWidth = 5000;
+    const maxHeight = 5000;
 
     const errors = [];
     if (file.size > 5 * 1024 * 1024) errors.push(`Image "${file.name}" size (${prettyBytes(file.size)}) exceeds 5 MB.`);
