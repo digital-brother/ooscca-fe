@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { useMutation, useQuery } from "react-query";
 import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "../api.mjs";
-import { useParams } from "next/navigation";
-import { Errors } from "./formikFields";
+import { Errors, getFlatErrors } from "./formikFields";
 
 const imageInputContainerSx = {
   height: "100%",
@@ -153,12 +153,8 @@ export default function ImageUpload({ sx, order }) {
         setErrors([]);
       },
       onError: (error) => {
-        console.log();
-        const imageErrors = error?.response?.data?.image;
-        const nonFieldErrors = error?.response?.data?.nonFieldErrors;
-        if (imageErrors) setErrors(imageErrors);
-        else if (nonFieldErrors) setErrors((errors) => [nonFieldErrors]);
-        else setErrors([error.message]);
+        const errors = getFlatErrors(error);
+        setErrors(errors);
       },
     });
   }

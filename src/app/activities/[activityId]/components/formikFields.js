@@ -60,7 +60,7 @@ export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError 
     } catch (error) {
       const { fieldErrors, formErrors } = getFormAndFieldErrors(error);
       setErrors(fieldErrors);
-      setStatus(formErrors);
+      setStatus({ formErrors });
       if (throwError) throw error;
     }
   };

@@ -41,6 +41,7 @@ export function MapSection() {
         setAddressError("");
       },
       onError: (error) => {
+        // TODO: Refactor this to use getErrors
         const drfErrors = error.response?.data;
         const nonFieldErrors = error?.response?.data?.non_field_errors;
 
