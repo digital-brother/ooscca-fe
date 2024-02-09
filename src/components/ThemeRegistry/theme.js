@@ -67,6 +67,10 @@ const theme = createTheme({
       fontWeight: 700,
       color: colors.orange.main,
     },
+    benefitDetails: {
+      fontSize: "1rem", // 16px
+      fontWeight: 700,
+    }
   },
   components: {
     MuiAlert: {
