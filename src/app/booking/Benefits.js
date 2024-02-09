@@ -6,25 +6,25 @@ import Link from '@mui/material/Link';
 const BENEFITS = [
   {
     image: "/invite-favourite-clubs-ooscca.png",
-    header: "Invite your favourite clubs and providers to join OOSCCA",
+    header: "Invite your favouriteclubs and providersto join OOSCCA",
     subheader: "Spread the word",
     description: "Do your children love their current clubs and activity providers? Help us make OOSCCA even better by inviting them to join our platform. It's a simple way to keep all your bookings in one place and to support your favourite providers with the tools they need to thrive. Just enter their name and email, and we'll introduce them to the world of OOSCCA.",
-    linkText: "  Let’s get more providers. Let’s get more choice",
+    linkText: "Let’s get more providers. Let’s get more choice",
     link: "#",
   },
   {
     image: "/new-feature-on-the-horizon.png",
     header: "New Features on the Horizon",
     subheader: "Exciting Futures Ahead",
-    description: "At OOSCCA, we are continuously evolving, crafting an experience that grows with your family. Our platform thrives on innovation, and we're excited to announce that new features and updates are just around the corner—designed to make your OOSCCA experience even more seamless and enjoyable. We're more than just a platform; we're a community. And every community thrives on collaboration. Share your suggestions with us, and let's build the future of OOSCCA together.  ",
-    linkText: "  Suggest a feature",
+    description: "At OOSCCA, we are continuously evolving, crafting an experience that grows with your family. Our platform thrives on innovation, and we're excited to announce that new features and updates are just around the corner—designed to make your OOSCCA experience even more seamless and enjoyable. We're more than just a platform; we're a community. And every community thrives on collaboration. Share your suggestions with us, and let's build the future of OOSCCA together.",
+    linkText: "Suggest a feature",
     link: "#",
   },
   {
     image: "/spread-the-word-invite.png",
-    header: "Spread the word: Invite your favourite clubs and providers",
+    header: "Spread the word:Invite your favourite clubs and providers",
     subheader: "Simplify your search",
-    description: "Do your children love their current clubs and activity providers? Help us make OOSCCA even better by inviting them to join our platform. It's a simple way to keep all your bookings in one place and to support your favourite providers with the tools they need to thrive. Just enter their name and email, and we'll introduce them to the world of OOSCCA.  ",
+    description: "Do your children love their current clubs and activity providers? Help us make OOSCCA even better by inviting them to join our platform. It's a simple way to keep all your bookings in one place and to support your favourite providers with the tools they need to thrive. Just enter their name and email, and we'll introduce them to the world of OOSCCA.",
     linkText: "Fill in the detail",
     link: "#",
   },
