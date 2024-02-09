@@ -22,20 +22,33 @@ import Typography from "@mui/material/Typography";
 export function getErrors(error) {
   // If status is 400, it means that DRF returned validation errors
   if (error?.response?.status === 400) {
-    const drfErrors = error.response?.data;
-    const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-    if (drfErrors) return drfErrors;
-    if (drfNonFieldErrors) return { nonFieldErrors: drfNonFieldErrors };
+    const fieldErrors = error?.response?.data;
+    const nonFieldErrors = error?.response?.data?.nonFieldErrors;
+    return { fieldErrors, nonFieldErrors };
   } else {
-    return { submissionError: error.message };
+    const genericError = error?.message;
+    return { genericError };
   }
 }
 
+export function getFormAndFieldErrors(error) {
+  const { fieldErrors, nonFieldErrors, genericError } = getErrors(error);
+  if (fieldErrors || nonFieldErrors) {
+    const errors = {};
+    if (fieldErrors) errors.fieldErrors = fieldErrors;
+    if (nonFieldErrors) errors.formErrors = nonFieldErrors;
+    return errors;
+  } else return { formErrors: [genericError] };
+}
+
 export function getFlatErrors(error) {
-  const errors = getErrors(error);
-  if (errors.drfErrors) return errors.drfErrors;
-  if (errors.drfNonFieldErrors) return errors.drfNonFieldErrors;
-  if (errors.submissionError) return [errors.submissionError];
+  const { fieldErrors, nonFieldErrors, genericError } = getErrors(error);
+  if (fieldErrors || nonFieldErrors) {
+    const errors = [];
+    if (fieldErrors) errors.push(fieldErrors);
+    if (nonFieldErrors) errors.push(nonFieldErrors);
+    return errors;
+  } else return [genericError];
 }
 
 export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
@@ -45,7 +58,9 @@ export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError 
       await mutation.mutateAsync(values);
       onSuccess();
     } catch (error) {
-      setErrors(getErrors(error));
+      const { fieldErrors, formErrors } = getFormAndFieldErrors(error);
+      setErrors(fieldErrors);
+      setStatus(formErrors);
       if (throwError) throw error;
     }
   };
@@ -186,12 +201,10 @@ export function FormikSelect({ name, items, label, sx, variant, fullwidth, child
 
 export function FormikErrors() {
   const { status } = useFormikContext();
-  if (status?.submissionError) return <Error>{status.submissionError}</Error>;
-
-  if (status?.nonFieldErrors)
+  if (status?.formErrors)
     return (
       <Box>
-        {status.nonFieldErrors.map((error, index) => (
+        {status.formErrors.map((error, index) => (
           <Error key={index}>{error}</Error>
         ))}
       </Box>
@@ -199,14 +212,14 @@ export function FormikErrors() {
 }
 
 export function Errors({ errors, sx }) {
-  return errors?.map((error, index) => <Error key={index} sx={sx}>{error}</Error>);
+  return errors?.map((error, index) => (
+    <Error key={index} sx={sx}>
+      {error}
+    </Error>
+  ));
 }
 
 // TODO: Fix how Errors look in form
 export function Error({ children, sx }) {
-  return (
-    children && (
-      <Typography sx={{ color: "error.main", fontWeight: 600, ...sx }}>{children}</Typography>
-    )
-  );
+  return children && <Typography sx={{ color: "error.main", fontWeight: 600, ...sx }}>{children}</Typography>;
 }
