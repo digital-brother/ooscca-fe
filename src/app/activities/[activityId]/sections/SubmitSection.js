@@ -38,7 +38,7 @@ function FormBlock() {
         >
           Submit
         </Button>
-        <Box sx={{display: "flex", alignItems: "center", justifyContent: {xs: "center", lg: "left"}}}>
+        <Box sx={{display: "flex", alignItems: "center"}}>
           <Checkbox size="small" sx={{ml: -1}}/>
           <Typography variant="body2" color="text.secondary">
             I accept the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>
