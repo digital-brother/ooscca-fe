@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { ImageInput, ImagePreview } from "./ImageUpload";
 
 import _ from "lodash";
-import Image from "next/image";
+import NextImage from "next/image";
 import { useParams } from "next/navigation";
 import prettyBytes from "pretty-bytes";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -37,7 +37,7 @@ function ImagePreviewRow({ index, image, handleDelete }) {
         {"|||"}
       </TableCell>
       <TableCell align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
-        <Image src={image.url} alt="thumbnail" width="50" height="50" />
+        <NextImage src={image.url} alt="thumbnail" width="50" height="50" />
       </TableCell>
       <TableCell align="right">
         <Typography sx={colorSx}>{image.name}</Typography>
@@ -129,37 +129,60 @@ export default function ImageMultipleUpload() {
     setFrontEndErrors([]);
   }, [images]);
 
-  function validateFile(file) {
-    if (file.size > 5 * 1024 * 1024) return `Image "${file.name}" size (${prettyBytes(file.size)}) exceeds 5 MB.`;
+  async function validateFile(file) {
+    const maxWidth = 5;
+    const maxHeight = 5;
+
+    const errors = [];
+    if (file.size > 5 * 1024 * 1024) errors.push(`Image "${file.name}" size (${prettyBytes(file.size)}) exceeds 5 MB.`);
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    await new Promise((resolve) => {
+      img.onload = resolve;
+      img.onerror = () => {
+        errors.push(`Unable to load image ${file.name}.`);
+        resolve();
+      };
+    });
+
+    if (img.width > maxWidth || img.height > maxHeight)
+      errors.push(`${file.name} should be less then ${maxWidth}x${maxHeight} px.`);
+    
+    URL.revokeObjectURL(img.src);
+    return errors;
   }
 
-  function handleAdd(files) {
+  async function handleAdd(files) {
     const maxImagesAllowed = 5;
-    if (images?.length + files?.length > maxImagesAllowed) {
+    const imagesCount = images.filter((image) => !image.toBeDeleted).length;
+    if (imagesCount + files?.length > maxImagesAllowed) {
       setFrontEndErrors([`Maximum ${maxImagesAllowed} images allowed.`]);
       return;
     }
 
     const newImages = [];
-    const errors = [];
+    const formErrors = [];
 
-    files.forEach((file, index) => {
-      const error = validateFile(file);
-      if (error) errors.push(error);
-      else
-        newImages.push({
-          activity: activityId,
-          url: URL.createObjectURL(file),
-          name: file.name,
-          size: file.size,
-          file,
-        });
-    });
+    await Promise.all(
+      files.map(async (file) => {
+        const fileErrors = await validateFile(file);
+        if (fileErrors) formErrors.push(...fileErrors);
+        else
+          newImages.push({
+            activity: activityId,
+            url: URL.createObjectURL(file),
+            name: file.name,
+            size: file.size,
+            file,
+          });
+      })
+    );
     setImages((images) => {
       images.push(...newImages);
       // images.sort((a, b) => a.order - b.order);
     });
-    setFrontEndErrors(errors);
+    setFrontEndErrors(formErrors);
   }
 
   function handleDelete(deleteIndex) {
@@ -173,9 +196,9 @@ export default function ImageMultipleUpload() {
   function handleSave() {
     images.forEach(async (image, index) => {
       const isAdded = !image.id;
-      const isUpdated = serverImages.some(
-        (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
-      );
+      // const isUpdated = serverImages.some(
+      //   (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
+      // );
       try {
         if (isAdded) await postMutation.mutateAsync(image);
         if (image.toBeDeleted) await deleteMutation.mutateAsync(image.id);
