@@ -31,18 +31,11 @@ export function getErrors(error) {
   }
 }
 
-// TODO: rationalize it
 export function getFlatErrors(error) {
-  // If status is 400, it means that DRF returned validation errors
-  if (error?.response?.status === 400) {
-    const drfErrors = error.response?.data;
-    const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-
-    if (drfErrors) return Object.values(drfErrors);
-    if (drfNonFieldErrors) return drfNonFieldErrors;
-  } else {
-    return [error.message];
-  }
+  const errors = getErrors(error);
+  if (errors.drfErrors) return errors.drfErrors;
+  if (errors.drfNonFieldErrors) return errors.drfNonFieldErrors;
+  if (errors.submissionError) return [errors.submissionError];
 }
 
 export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
