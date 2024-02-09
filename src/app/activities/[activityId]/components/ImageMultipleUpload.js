@@ -150,6 +150,7 @@ export default function ImageMultipleUpload() {
       };
     });
 
+    // TODO: Fix image onload error: do not check width, height
     if (img.width > maxWidth || img.height > maxHeight)
       errors.push(`${file.name} should be less then ${maxWidth}x${maxHeight} px.`);
 
@@ -167,7 +168,6 @@ export default function ImageMultipleUpload() {
 
     const newImages = [];
     const formErrors = [];
-
     await Promise.all(
       files.map(async (file) => {
         const fileErrors = await validateFile(file);
@@ -182,6 +182,7 @@ export default function ImageMultipleUpload() {
           });
       })
     );
+    
     setImages((images) => {
       images.push(...newImages);
       // images.sort((a, b) => a.order - b.order);
