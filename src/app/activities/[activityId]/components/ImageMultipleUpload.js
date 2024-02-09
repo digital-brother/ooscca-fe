@@ -30,7 +30,7 @@ function ImagePreviewRow({ index, image, handleDelete }) {
   let colorSx;
   if (!image.id) colorSx = { color: "green.600" };
   if (image.toBeDeleted) colorSx = { color: "grey.400" };
-  
+
   // TODO: Make colorSx DRY
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -134,9 +134,11 @@ export default function ImageMultipleUpload() {
   async function validateFile(file) {
     const maxWidth = 5000;
     const maxHeight = 5000;
+    const maxFileSizeMb = 5;
 
     const errors = [];
-    if (file.size > 5 * 1024 * 1024) errors.push(`Image "${file.name}" size (${prettyBytes(file.size)}) exceeds 5 MB.`);
+    if (file.size > maxFileSizeMb * 1024 * 1024)
+      errors.push(`Image "${file.name}" size (${prettyBytes(file.size)}) exceeds ${maxFileSizeMb} MB.`);
 
     const img = new Image();
     img.src = URL.createObjectURL(file);
