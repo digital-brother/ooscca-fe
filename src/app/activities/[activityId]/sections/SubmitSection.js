@@ -12,16 +12,17 @@ function FormBlock() {
         variant="h3"
         gutterBottom
         sx={{
-          textAlign: {xs: 'center', lg: 'left'}, // Center text on small and middle screens
-          width: '100%' // Ensure the typography takes full width for proper alignment
-        }}>
+          textAlign: {xs: 'center', lg: 'left'},
+          width: '100%'
+        }}
+      >
         Let's get your activities live and in front of parents!
       </Typography>
       <Box sx={{
         display: 'grid',
         justifyContent: {xs: "center", lg: "left"},
         gap: 2,
-        mt: 3,
+        mt: 3
         }}>
         <Button
           size="large"
