@@ -67,6 +67,13 @@ const theme = createTheme({
       fontWeight: 700,
       color: colors.orange.main,
     },
+    introSubheading: {
+      fontFamily: manrope.style.fontFamily,
+      fontSize: "1.5rem", // 24px
+      fontWeight: 100,
+      paragraph: true,
+      display: "block",
+    },
     benefitDetails: {
       fontSize: "1rem", // 16px
       fontWeight: 700,
