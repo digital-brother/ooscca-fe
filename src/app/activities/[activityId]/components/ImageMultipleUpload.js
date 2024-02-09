@@ -30,7 +30,8 @@ function ImagePreviewRow({ index, image, handleDelete }) {
   let colorSx;
   if (!image.id) colorSx = { color: "green.600" };
   if (image.toBeDeleted) colorSx = { color: "grey.400" };
-  // Extracted, as every preview needs own useDrag and useDrop
+  
+  // TODO: Make colorSx DRY
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
       <TableCell component="th" scope="row">
@@ -118,7 +119,7 @@ export default function ImageMultipleUpload() {
     setImages(serverImages);
   }, [serverImages]);
 
-  useEffect(() => {
+  function updateOrder() {
     setImages((images) => {
       let order = 1;
       images?.forEach((image) => {
@@ -127,7 +128,8 @@ export default function ImageMultipleUpload() {
       });
     });
     setFrontEndErrors([]);
-  }, [images]);
+  }
+  useEffect(updateOrder, [images]);
 
   async function validateFile(file) {
     const maxWidth = 5;
@@ -148,7 +150,7 @@ export default function ImageMultipleUpload() {
 
     if (img.width > maxWidth || img.height > maxHeight)
       errors.push(`${file.name} should be less then ${maxWidth}x${maxHeight} px.`);
-    
+
     URL.revokeObjectURL(img.src);
     return errors;
   }
