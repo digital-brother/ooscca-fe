@@ -171,7 +171,7 @@ export default function ImageMultipleUpload() {
     await Promise.all(
       files.map(async (file) => {
         const fileErrors = await validateFile(file);
-        if (fileErrors) formErrors.push(...fileErrors);
+        if (fileErrors.length) formErrors.push(...fileErrors);
         else
           newImages.push({
             activity: activityId,
@@ -182,10 +182,9 @@ export default function ImageMultipleUpload() {
           });
       })
     );
-    
+
     setImages((images) => {
       images.push(...newImages);
-      // images.sort((a, b) => a.order - b.order);
     });
     setFrontEndErrors(formErrors);
   }
