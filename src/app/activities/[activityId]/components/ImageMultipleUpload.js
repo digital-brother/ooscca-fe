@@ -79,7 +79,7 @@ function ImagePreviewMobile({ images, handleDelete }) {
   );
 }
 
-function ImagePreviewTable({ images, handleDelete }) {
+function ImagePreviewDesktop({ images, handleDelete }) {
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
@@ -95,7 +95,7 @@ function ImagePreviewTable({ images, handleDelete }) {
         </TableHead>
         <TableBody>
           {images.map((image, index) => (
-            <ImagePreviewRow key={index} {...{ index, image, handleDelete: () => handleDelete(index) }} />
+            <ImagePreviewDesktopRow key={index} {...{ index, image, handleDelete: () => handleDelete(index) }} />
           ))}
         </TableBody>
       </Table>
@@ -150,8 +150,7 @@ export default function ImageMultipleUpload() {
       };
     });
 
-    // TODO: Fix image onload error: do not check width, height
-    if (img.width > maxWidth || img.height > maxHeight)
+    if (img.complete && (img.width > maxWidth || img.height > maxHeight))
       errors.push(`${file.name} should be less then ${maxWidth}x${maxHeight} px.`);
 
     URL.revokeObjectURL(img.src);
@@ -228,7 +227,7 @@ export default function ImageMultipleUpload() {
         </Box>
         {!!images?.length && (
           <>
-            {mdUp && <ImagePreviewTable {...{ images, handleDelete }} />}
+            {mdUp && <ImagePreviewDesktop {...{ images, handleDelete }} />}
             {!mdUp && <ImagePreviewMobile {...{ images, handleDelete }} />}
             <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
