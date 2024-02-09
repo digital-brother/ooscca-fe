@@ -19,6 +19,7 @@ const client = axios.create({
   },
 });
 
+// TODO: Rationalize mutation and api layer (duplicate function code)
 // IMAGES
 export async function getActivityImagesPrimary(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_PRIMARY_SUBPATH}/`;
