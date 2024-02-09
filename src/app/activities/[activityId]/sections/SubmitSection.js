@@ -1,21 +1,32 @@
 "use client";
 
 import React from "react";
-import { Button, Typography, Box, Checkbox, Container } from "@mui/material";
+import {Button, Typography, Box, Checkbox, Container} from "@mui/material";
 import Link from "next/link";
 
 function FormBlock() {
+
   return (
     <Box>
-      <Typography variant="h3" gutterBottom>
+      <Typography
+        variant="h3"
+        gutterBottom
+        sx={{
+          textAlign: {xs: 'center', lg: 'left'}, // Center text on small and middle screens
+          width: '100%' // Ensure the typography takes full width for proper alignment
+        }}>
         Let's get your activities live and in front of parents!
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'left', mt: 6}}>
+      <Box sx={{
+        display: 'grid',
+        justifyContent: {xs: "center", lg: "left"},
+        gap: 2,
+        mt: 3,
+        }}>
         <Button
           size="large"
           variant="contained"
           color="grey"
-          sx={{ width: { xs: "100%", sm: "90%", lg: "80%" }}}
         >
           Save and come back later
         </Button>
@@ -23,11 +34,10 @@ function FormBlock() {
           size="large"
           variant="contained"
           color="primary"
-          sx={{ width: { xs: "100%", sm: "90%", lg: "80%" }}}
         >
           Submit
         </Button>
-        <Box sx={{display: "flex", alignItems: "center"}}>
+        <Box sx={{display: "flex", alignItems: "center", justifyContent: {xs: "center", lg: "left"}}}>
           <Checkbox size="small" sx={{ml: -1}}/>
           <Typography variant="body2" color="text.secondary">
             I accept the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>
@@ -40,26 +50,25 @@ function FormBlock() {
 
 function ImageBlock() {
   return (
-    <Box>
-      <Box component="img" src="/rate.png" alt="Rating" sx={{ width: "100%", mb: -3, mt: { xs: 8, lg: 0 }}} />
-    </Box>
+    <Box component="img" src="/rate.png" alt="Rating" sx={{width: "100%", maxWidth: 540, mb: -3, mt: {xs: 3, lg: 0}}}/>
   );
 }
 
 export function SubmitSection() {
   return (
-    <Container sx={{ mt: 2 }}>
+    <Container sx={{mt: 4}}>
       <Box
         sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+          display: "flex",
+          flexDirection: {xs: "column", lg: "row"},
+          justifyContent: "centre",
           gap: 3,
-          maxWidth: { xs: 540, lg: "none" },
+          maxWidth: {xs: 540, lg: "none"},
           mx: "auto",
         }}
       >
-        <FormBlock />
-        <ImageBlock />
+        <FormBlock/>
+        <ImageBlock/>
       </Box>
     </Container>
   );
