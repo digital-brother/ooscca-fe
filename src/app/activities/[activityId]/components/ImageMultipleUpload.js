@@ -13,7 +13,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { Box, Container } from "@mui/system";
+import { Box, Container, styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { ImageInput, ImagePreview } from "./ImageUpload";
 
@@ -26,37 +26,37 @@ import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImage
 import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
 
-function ImagePreviewRow({ index, image, handleDelete }) {
+function ImagePreviewDesktopRow({ index, image, handleDelete }) {
   let colorSx;
   if (!image.id) colorSx = { color: "green.600" };
   if (image.toBeDeleted) colorSx = { color: "grey.400" };
+  const ColoredTableCell = styled(TableCell)({color: "inherit"})
 
-  // TODO: Make colorSx DRY
   return (
-    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-      <TableCell component="th" scope="row">
+    <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 }, ...colorSx }}>
+      <ColoredTableCell component="th" scope="row">
         {"|||"}
-      </TableCell>
-      <TableCell align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
+      </ColoredTableCell>
+      <ColoredTableCell  align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
         <NextImage src={image.url} alt="thumbnail" width="50" height="50" />
-      </TableCell>
-      <TableCell align="right">
-        <Typography sx={colorSx}>{image.name}</Typography>
+      </ColoredTableCell>
+      <ColoredTableCell align="right" sx={{}}>
+        <Typography>{image.name}</Typography>
         {!!image.errors && <Errors errors={image.errors} />}
-      </TableCell>
-      <TableCell align="right" sx={colorSx}>
+      </ColoredTableCell>
+      <ColoredTableCell align="right" sx={colorSx}>
         {image.order}
-      </TableCell>
-      <TableCell align="right" sx={colorSx}>
+      </ColoredTableCell>
+      <ColoredTableCell align="right" sx={colorSx}>
         {prettyBytes(image.size)}
-      </TableCell>
-      <TableCell align="right">
+      </ColoredTableCell>
+      <ColoredTableCell align="right">
         {!image.toBeDeleted && (
           <IconButton onClick={() => handleDelete(index)}>
             <DeleteForeverIcon sx={colorSx} />
           </IconButton>
         )}
-      </TableCell>
+      </ColoredTableCell>
     </TableRow>
   );
 }
