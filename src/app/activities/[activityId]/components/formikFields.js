@@ -1,29 +1,29 @@
-import { useField, useFormikContext } from "formik";
-import TextField from "@mui/material/TextField";
-import React from "react";
-import { TimeField } from "@mui/x-date-pickers/TimeField";
-import dayjs from "dayjs";
-import Calendar from "./Calendar";
-import { NumericFormat } from "react-number-format";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import "dayjs/locale/en-gb";
 import {
   Checkbox,
-  FormControlLabel,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   InputLabel,
   Select as MUISelect,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimeField } from "@mui/x-date-pickers/TimeField";
+import dayjs from "dayjs";
+import "dayjs/locale/en-gb";
+import { useField, useFormikContext } from "formik";
+import _ from "lodash";
+import { NumericFormat } from "react-number-format";
+import Calendar from "./Calendar";
 
 export function getErrors(error) {
   // If status is 400, it means that DRF returned validation errors
   if (error?.response?.status === 400) {
-    const fieldErrors = error?.response?.data;
-    const nonFieldErrors = error?.response?.data?.nonFieldErrors;
+    let { nonFieldErrors, ...fieldErrors } = error?.response?.data;
+    if (_.isEmpty(fieldErrors)) fieldErrors = undefined;
     return { fieldErrors, nonFieldErrors };
   } else {
     const genericError = error?.message;
@@ -45,8 +45,8 @@ export function getFlatErrors(error) {
   const { fieldErrors, nonFieldErrors, genericError } = getErrors(error);
   if (fieldErrors || nonFieldErrors) {
     const errors = [];
-    if (fieldErrors) errors.push(fieldErrors);
-    if (nonFieldErrors) errors.push(nonFieldErrors);
+    if (fieldErrors) errors.push(...(_.flatten(_.values(fieldErrors))));
+    if (nonFieldErrors) errors.push(...nonFieldErrors);
     return errors;
   } else return [genericError];
 }
