@@ -63,7 +63,7 @@ function ImagePreviewDesktopRow({ index, image, handleDelete }) {
   );
 }
 
-function ImagePreviewMobile({ images, handleDelete }) {
+function ImagesPreviewMobile({ images, handleDelete }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 5 }}>
       {images.map((image, index) => (
@@ -81,7 +81,7 @@ function ImagePreviewMobile({ images, handleDelete }) {
   );
 }
 
-function ImagePreviewDesktop({ images, handleDelete }) {
+function ImagesPreviewDesktop({ images, handleDelete }) {
   return (
     <TableContainer sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 650 }}>
@@ -105,12 +105,11 @@ function ImagePreviewDesktop({ images, handleDelete }) {
   );
 }
 
-export default function ImageMultipleUpload() {
+export default function ImagesMultipleUpload() {
   const [images, setImages] = useImmer([]);
   const [frontEndErrors, setFrontEndErrors] = useState([]);
 
   const activityId = useParams().activityId;
-  const queryClient = useQueryClient();
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
   const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
   const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
@@ -240,8 +239,8 @@ export default function ImageMultipleUpload() {
         </Box>
         {!!images?.length && (
           <>
-            {mdUp && <ImagePreviewDesktop {...{ images, handleDelete }} />}
-            {!mdUp && <ImagePreviewMobile {...{ images, handleDelete }} />}
+            {mdUp && <ImagesPreviewDesktop {...{ images, handleDelete }} />}
+            {!mdUp && <ImagesPreviewMobile {...{ images, handleDelete }} />}
             <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
               <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
