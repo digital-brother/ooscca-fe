@@ -42,7 +42,15 @@ function BenefitText({benefit, sx}) {
       <Typography my={2} variant="body1" color="text.secondary">
         {benefit.description}
       </Typography>
-      <Link href={benefit.link} underline="none" color="purple.main" variant="benefitDetails">
+      <Link
+        href={benefit.link}
+        underline="none"
+        color="purple.main"
+        variant="benefitLink"
+        sx={{
+          fontSize: "1rem", // 16px
+          fontWeight: 700,
+      }}>
         {benefit.linkText.trim()} {"  >"}
       </Link>
     </Box>
