@@ -16,7 +16,7 @@ function FormBlock() {
           width: '100%'
         }}
       >
-        Let's get your activities live and in front of parents!
+        Let&apos;s get your activities live and in front of parents!
       </Typography>
       <Box sx={{
         display: 'grid',
