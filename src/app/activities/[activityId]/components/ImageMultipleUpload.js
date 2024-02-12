@@ -27,17 +27,19 @@ import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
 
 function ImagePreviewDesktopRow({ index, image, handleDelete }) {
+  if (!image) return null;
+
   let colorSx;
   if (!image.id) colorSx = { color: "green.600" };
   if (image.toBeDeleted) colorSx = { color: "grey.400" };
-  const ColoredTableCell = styled(TableCell)({color: "inherit"})
+  const ColoredTableCell = styled(TableCell)({ color: "inherit" });
 
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 }, ...colorSx }}>
       <ColoredTableCell component="th" scope="row">
         {"|||"}
       </ColoredTableCell>
-      <ColoredTableCell  align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
+      <ColoredTableCell align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
         <NextImage src={image.url} alt="thumbnail" width="50" height="50" />
       </ColoredTableCell>
       <ColoredTableCell align="right" sx={{}}>
@@ -116,7 +118,7 @@ export default function ImageMultipleUpload() {
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   useEffect(() => {
-    setImages(serverImages);
+    setImages(serverImages ?? []);
   }, [serverImages]);
 
   function updateOrder() {
@@ -196,15 +198,25 @@ export default function ImageMultipleUpload() {
     });
   }
 
-  function handleSave() {
-    images.forEach(async (image, index) => {
+  async function handleSave() {
+    const promises = images.map(async (image, index) => {
       const isAdded = !image.id;
       // const isUpdated = serverImages.some(
       //   (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
       // );
       try {
-        if (isAdded) await postMutation.mutateAsync(image);
-        if (image.toBeDeleted) await deleteMutation.mutateAsync(image.id);
+        if (isAdded) {
+          const data = await postMutation.mutateAsync(image);
+          setImages((images) => {
+            images[index] = data;
+          });
+        }
+        if (image.toBeDeleted) {
+          await deleteMutation.mutateAsync(image.id);
+          setImages((images) => {
+            images[index] = null;
+          });
+        }
       } catch (error) {
         setImages((images) => {
           const errors = getFlatErrors(error);
@@ -212,7 +224,8 @@ export default function ImageMultipleUpload() {
         });
       }
     });
-    queryClient.invalidateQueries(["primaryImages", activityId]);
+    await Promise.all(promises);
+    setImages((images) => images.filter((image) => image !== null));
   }
 
   useEffect(() => {
