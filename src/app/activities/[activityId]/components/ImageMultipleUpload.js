@@ -27,11 +27,12 @@ import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
 
 function ImagePreviewDesktopRow({ index, image, handleDelete }) {
-  if (!image) return null;
+  const { data, errors } = image;
+  if (!data) return null;
 
   let colorSx;
-  if (!image.id) colorSx = { color: "green.600" };
-  if (image.toBeDeleted) colorSx = { color: "grey.400" };
+  if (!data.id) colorSx = { color: "green.600" };
+  if (data.toBeDeleted) colorSx = { color: "grey.400" };
   const ColoredTableCell = styled(TableCell)({ color: "inherit" });
 
   return (
@@ -39,21 +40,21 @@ function ImagePreviewDesktopRow({ index, image, handleDelete }) {
       <ColoredTableCell component="th" scope="row">
         {"|||"}
       </ColoredTableCell>
-      <ColoredTableCell align="right" sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}>
-        <NextImage src={image.url} alt="thumbnail" width="50" height="50" />
+      <ColoredTableCell align="right" sx={{ opacity: data.toBeDeleted ? 0.3 : 1 }}>
+        <NextImage src={data.url} alt="thumbnail" width="50" height="50" />
       </ColoredTableCell>
       <ColoredTableCell align="right" sx={{}}>
-        <Typography>{image.name}</Typography>
-        {!!image.errors && <Errors errors={image.errors} />}
+        <Typography>{data.name}</Typography>
+        {!!errors && <Errors errors={errors} />}
       </ColoredTableCell>
       <ColoredTableCell align="right" sx={colorSx}>
-        {image.order}
+        {data.order}
       </ColoredTableCell>
       <ColoredTableCell align="right" sx={colorSx}>
-        {prettyBytes(image.size)}
+        {prettyBytes(data.size)}
       </ColoredTableCell>
       <ColoredTableCell align="right">
-        {!image.toBeDeleted && (
+        {!data.toBeDeleted && (
           <IconButton onClick={() => handleDelete(index)}>
             <DeleteForeverIcon sx={colorSx} />
           </IconButton>
@@ -70,9 +71,9 @@ function ImagesPreviewMobile({ images, handleDelete }) {
         <>
           <ImagePreview
             key={index}
-            image={image}
+            image={image.data}
             handleDelete={() => handleDelete(index)}
-            sx={{ opacity: image.toBeDeleted ? 0.3 : 1 }}
+            sx={{ opacity: image.data.toBeDeleted ? 0.3 : 1 }}
           />
           <Errors errors={image.errors} sx={{ textAlign: "center" }} />
         </>
@@ -117,15 +118,18 @@ export default function ImagesMultipleUpload() {
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   useEffect(() => {
-    setImages(serverImages ?? []);
+    if (!serverImages || images.length > 0) return;
+    setImages(serverImages.map((image) => ({ data: image })) ?? []);
+    console.log("updage");
   }, [serverImages]);
 
   function updateOrder() {
     setImages((images) => {
       let order = 1;
-      images?.forEach((image) => {
-        if (!image.toBeDeleted) image.order = order++;
-        else image.order = null;
+      images?.forEach(({ data }) => {
+        if (!data) return
+        if (!data.toBeDeleted) data.order = order++;
+        else data.order = null;
       });
     });
     setFormErrors([]);
@@ -160,7 +164,7 @@ export default function ImagesMultipleUpload() {
 
   async function handleAdd(files) {
     const maxImagesAllowed = 5;
-    const imagesCount = images.filter((image) => !image.toBeDeleted).length;
+    const imagesCount = images.filter(({ data }) => !data.toBeDeleted).length;
     if (imagesCount + files?.length > maxImagesAllowed) {
       setFormErrors([`Maximum ${maxImagesAllowed} images allowed.`]);
       return;
@@ -174,11 +178,7 @@ export default function ImagesMultipleUpload() {
         if (fileErrors.length) formErrors.push(...fileErrors);
         else
           newImages.push({
-            activity: activityId,
-            url: URL.createObjectURL(file),
-            name: file.name,
-            size: file.size,
-            file,
+            data: { activity: activityId, url: URL.createObjectURL(file), name: file.name, size: file.size, file },
           });
       })
     );
@@ -191,29 +191,29 @@ export default function ImagesMultipleUpload() {
 
   function handleDelete(deleteIndex) {
     setImages((images) => {
-      const image = images[deleteIndex];
-      if (image.id) images[deleteIndex].toBeDeleted = true;
+      const data = images[deleteIndex].data;
+      if (data.id) data.toBeDeleted = true;
       else images.splice(deleteIndex, 1);
     });
   }
 
   async function handleSave() {
-    const promises = images.map(async (image, index) => {
-      const isAdded = !image.id;
+    const promises = images.map(async ({ data }, index) => {
+      const isAdded = !data.id;
       // const isUpdated = serverImages.some(
       //   (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
       // );
       try {
         if (isAdded) {
-          const data = await postMutation.mutateAsync(image);
+          const response = await postMutation.mutateAsync(data);
           setImages((images) => {
-            images[index] = data;
+            images[index].data = response;
           });
         }
-        if (image.toBeDeleted) {
-          await deleteMutation.mutateAsync(image.id);
+        if (data.toBeDeleted) {
+          await deleteMutation.mutateAsync(data.id);
           setImages((images) => {
-            images[index] = null;
+            images[index].data = null;
           });
         }
       } catch (error) {
@@ -224,11 +224,11 @@ export default function ImagesMultipleUpload() {
       }
     });
     await Promise.all(promises);
-    setImages((images) => images.filter((image) => image !== null));
+    setImages((images) => images.filter(({ data }) => data !== null));
   }
 
   useEffect(() => {
-    return () => images.forEach((image) => URL.revokeObjectURL(image.file));
+    return () => images.forEach(({ data }) => URL.revokeObjectURL(data.file));
   }, []);
 
   return (
@@ -243,7 +243,11 @@ export default function ImagesMultipleUpload() {
             {!mdUp && <ImagesPreviewMobile {...{ images, handleDelete }} />}
             <Errors errors={formErrors} sx={{ textAlign: "center" }} />
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
-              <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
+              <Button
+                onClick={() => setImages(serverImages.map((serverImage) => ({ data: serverImage })))}
+                variant="outlined"
+                color="grey"
+              >
                 Cancel
               </Button>
               <Button onClick={handleSave} variant="contained" color="green">
