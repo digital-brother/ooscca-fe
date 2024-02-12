@@ -5,7 +5,7 @@ import DemoStepper from "@/app/(homepage)/DemoStepper";
 function DemoHeader({sx}) {
   return (
     <Box sx={{textAlign: "center", maxWidth: 735, ...sx}}>
-      <Typography variant="subheading">
+      <Typography variant="subtitle1">
         Directly from the calendar
       </Typography>
       <Typography mt={2} variant="h2">

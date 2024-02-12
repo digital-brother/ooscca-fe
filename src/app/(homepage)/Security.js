@@ -11,7 +11,7 @@ function SecurityHeader() {
     <Container
       sx={{ textAlign: "center", maxWidth: 730, minWidth: { lg: 530 } }}
     >
-      <Typography variant="subheading">Your Trust, Our Commitment</Typography>
+      <Typography variant="subtitle1">Your Trust, Our Commitment</Typography>
       <Typography
         variant={smUp ? "h1" : "h3"}
         sx={{ mt: 2, color: "#FFF", letterSpacing: -3 }}

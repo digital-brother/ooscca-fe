@@ -16,7 +16,7 @@ import { manrope, montserrat } from "@/components/ThemeRegistry/theme";
 function HomepageTabsHeader({ sx }) {
   return (
     <Box {...sx}>
-      <Typography variant="subheading">
+      <Typography variant="subtitle1">
         Effortless tracking of every important detail
       </Typography>
       <Typography mt={2} variant="h2">
@@ -105,7 +105,7 @@ function Tabs(props) {
               >
                 <Typography
                   mb={2}
-                  variant="subheading"
+                  variant="subtitle1"
                   sx={{
                     fontFamily: montserrat.style.fontFamily,
                     display: { xs: "none", md: "block" },
@@ -157,7 +157,7 @@ function Tabs(props) {
                 >
                   <Typography
                     sx={{ fontFamily: manrope.style.fontFamily }}
-                    variant="subheading"
+                    variant="subtitle1"
                   >
                     Unlock birthday calendar
                   </Typography>
@@ -204,7 +204,7 @@ function Tabs(props) {
               >
                 <Typography
                   mb={2}
-                  variant="subheading"
+                  variant="subtitle1"
                   sx={{
                     fontFamily: montserrat.style.fontFamily,
                     display: { xs: "none", md: "block" },
@@ -255,7 +255,7 @@ function Tabs(props) {
                 >
                   <Typography
                     sx={{ fontFamily: manrope.style.fontFamily }}
-                    variant="subheading"
+                    variant="subtitle1"
                   >
                     Remembering made easy
                   </Typography>
