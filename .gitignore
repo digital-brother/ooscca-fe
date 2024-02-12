@@ -10,3 +10,4 @@ alex.js
 alex.mjs
 .vscode/
 __pycache__/
+.env
