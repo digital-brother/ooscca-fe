@@ -5,9 +5,11 @@ todo.txt
 src/app/sandbox/
 src/app/snippet/
 .yarn/
+yarn.lock
 .env.local
 alex.js
 alex.mjs
 .vscode/
 __pycache__/
 .env
+package-lock.json
