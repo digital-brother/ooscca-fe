@@ -75,12 +75,21 @@ function Tabs(props) {
             sx={{ border: "1px #CED4DA solid", borderRadius: 2 }}
             orientation={isSmallScreen ? "vertical" : "horizontal"}
           >
-            <CustomTab label="OOS calendar" value="oosCalendar" />
+            <CustomTab
+              label="OOS calendar"
+              value="oosCalendar"
+              sx={{"&.Mui-selected": {backgroundColor: "grey.light", color: "black"}}}
+            />
             <CustomTab
               label="Class birthday calendar"
               value="classBirthdayCalendar"
+              sx={{"&.Mui-selected": {backgroundColor: "grey.light", color: "black"}}}
             />
-            <CustomTab label="Whose who" value="whoseWho" />
+            <CustomTab
+              label="Whose who"
+              value="whoseWho"
+              sx={{"&.Mui-selected": {backgroundColor: "grey.light", color: "black"}}}
+            />
           </TabList>
         </Box>
         <Box sx={{ pt: { xs: 4, md: 10 } }}>
