@@ -2,7 +2,7 @@
 
 import React from "react";
 import Box from "@mui/material/Box";
-import { Container, styled } from "@mui/material";
+import {Button, Container, styled} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -35,8 +35,8 @@ function HomepageTabsHeader({ sx }) {
 const CustomTab = styled(Tab)(({ theme }) => ({
   textTransform: "none",
   "&.Mui-selected": {
-    color: "#FFFFFF",
-    backgroundColor: "#BD54C2",
+    color: "black",
+    backgroundColor: theme.palette.grey.light,
   },
   [theme.breakpoints.down("sm")]: {
     borderRight: null,
@@ -53,6 +53,168 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   fontWeight: "bold",
   fontSize: 16,
 }));
+
+
+function ClassBirthday(props) {
+  const theme = useTheme();
+
+  return (
+    <Box
+      sx={{
+        display: {md: "flex", xs: "block"},
+        alignItems: "center",
+        textAlign: {xs: "center", md: "left"},
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: 730,
+          mr: {xs: 0, md: 16},
+        }}
+      >
+        <Typography
+          mb={2}
+          variant="subtitle1"
+          sx={{ display: {xs: "none", md: "block"} }}
+        >
+          Celebrate Every Milestone
+        </Typography>
+        <Typography
+          mb={3}
+          variant="h3"
+        >
+          Birthdays matter. Of course they matter!
+        </Typography>
+        <Typography
+          mb={6.7}
+          variant="body1"
+          color="text.secondary"
+        >
+          Birthdays parties, presents, cakes, pictures, cards, friends
+          invite lists, plans, surprises, upsets —they all matter. To
+          the child and the parents it is a very important personal
+          event.
+        </Typography>
+        <Button variant="outlined" color="orange" sx={{
+          textTransform: 'none',
+          fontSize: theme.typography.htmlFontSize,
+        }}>
+          Unlock birthday calendar
+        </Button>
+      </Box>
+      <Box
+        component="img"
+        src="/school1.png"
+        sx={{
+          width: {md: 543, xs: 347},
+        }}
+      />
+    </Box>
+  );
+}
+
+function WhoseWho(props) {
+  return (
+    <Box
+      sx={{
+        display: {md: "flex", xs: "block"},
+        alignItems: "center",
+        textAlign: {xs: "center", md: "left"},
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: 730,
+          mr: {xs: 0, md: 16},
+        }}
+      >
+        <Typography
+          mb={2}
+          variant="subtitle1"
+          sx={{
+            fontFamily: montserrat.style.fontFamily,
+            display: {xs: "none", md: "block"},
+          }}
+        >
+          Build meaningful connections
+        </Typography>
+        <Typography
+          mb={4}
+          sx={{fontFamily: montserrat.style.fontFamily}}
+          variant="h2"
+        >
+          Whose that again?
+        </Typography>
+        <Typography
+          sx={{fontFamily: manrope.style.fontFamily}}
+          mb={6}
+          variant="body1"
+          color="text.secondary"
+        >
+          Avoid the awkward conversations about whose who when you meet
+          at the gates or the next gathering. Your one place to get all
+          your links, names and classmates in order!
+        </Typography>
+        <Box
+          mb={6}
+          component="img"
+          src="/school2.png"
+          sx={{
+            width: {md: 544, xs: 369},
+            height: {md: 391, xs: 240},
+            mx: {xs: "auto", md: 0},
+            display: {xs: "inline-block", md: "none"},
+          }}
+        />
+        <Box
+          mb={2}
+          sx={{
+            width: 262,
+            height: 64,
+            py: 2,
+            px: 4,
+            gap: 16,
+            borderRadius: 4,
+            border: "2px solid #FF8919",
+            mx: {md: 0, xs: "auto"},
+          }}
+        >
+          <Typography
+            sx={{fontFamily: manrope.style.fontFamily}}
+            variant="subtitle1"
+          >
+            Remembering made easy
+          </Typography>
+        </Box>
+        <CustomTab
+          sx={{
+            display: {
+              xs: "block",
+              md: "none",
+            },
+            mx: {md: 0, xs: "auto"},
+            fontFamily: manrope.style.fontFamily,
+          }}
+          label="It’s all in the name"
+          value="itsallinthename"
+        />
+      </Box>
+      <Box
+        component="img"
+        src="/school2.png"
+        sx={{
+          width: {md: 544, xs: 369},
+          height: {md: 391, xs: 187},
+          display: {xs: "none", md: "inline-block"},
+        }}
+      />
+    </Box>
+  );
+}
 
 function Tabs(props) {
   const [value, setValue] = React.useState("oosCalendar");
@@ -78,17 +240,14 @@ function Tabs(props) {
             <CustomTab
               label="OOS calendar"
               value="oosCalendar"
-              sx={{"&.Mui-selected": {backgroundColor: "grey.light", color: "black"}}}
             />
             <CustomTab
               label="Class birthday calendar"
               value="classBirthdayCalendar"
-              sx={{"&.Mui-selected": {backgroundColor: "grey.light", color: "black"}}}
             />
             <CustomTab
               label="Whose who"
               value="whoseWho"
-              sx={{"&.Mui-selected": {backgroundColor: "grey.light", color: "black"}}}
             />
           </TabList>
         </Box>
@@ -97,201 +256,10 @@ function Tabs(props) {
             <SchoolStats />
           </TabPanel>
           <TabPanel value="classBirthdayCalendar">
-            <Box
-              sx={{
-                display: { md: "flex", xs: "block" },
-                alignItems: "center",
-                textAlign: { xs: "center", md: "left" },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  maxWidth: 730,
-                  mr: { xs: 0, md: 16 },
-                }}
-              >
-                <Typography
-                  mb={2}
-                  variant="subtitle1"
-                  sx={{
-                    fontFamily: montserrat.style.fontFamily,
-                    display: { xs: "none", md: "block" },
-                  }}
-                >
-                  Celebrate Every Milestone
-                </Typography>
-                <Typography
-                  mb={3}
-                  sx={{ fontFamily: montserrat.style.fontFamily }}
-                  variant="h2"
-                >
-                  Birthdays matter. Of course they matter!
-                </Typography>
-                <Typography
-                  sx={{ fontFamily: manrope.style.fontFamily }}
-                  mb={6.7}
-                  variant="body1"
-                  color="text.secondary"
-                >
-                  Birthdays parties, presents, cakes, pictures, cards, friends
-                  invite lists, plans, surprises, upsets —they all matter. To
-                  the child and the parents it is a very important personal
-                  event.
-                </Typography>
-                <Box
-                  mb={6.7}
-                  component="img"
-                  src="/school1.png"
-                  sx={{
-                    width: { md: 543, xs: 347 },
-                    height: { md: 430, xs: 305 },
-                    mx: { xs: "auto", md: 0 },
-                    display: { xs: "block", md: "none" },
-                  }}
-                />
-                <Box
-                  mb={2}
-                  sx={{
-                    width: 262,
-                    height: 64,
-                    py: 2,
-                    px: 4,
-                    gap: 16,
-                    borderRadius: 4,
-                    border: "2px solid #FF8919",
-                    mx: { md: 0, xs: "auto" },
-                  }}
-                >
-                  <Typography
-                    sx={{ fontFamily: manrope.style.fontFamily }}
-                    variant="subtitle1"
-                  >
-                    Unlock birthday calendar
-                  </Typography>
-                </Box>
-                <CustomTab
-                  sx={{
-                    display: {
-                      xs: "block",
-                      md: "none",
-                    },
-                    mx: { md: 0, xs: "auto" },
-                    fontFamily: manrope.style.fontFamily,
-                  }}
-                  label="Sweat the small stuff"
-                  value="sweatthesmallstuff"
-                />
-              </Box>
-              <Box
-                component="img"
-                src="/school1.png"
-                sx={{
-                  width: { md: 543, xs: 347 },
-                  height: { md: 430, xs: 305 },
-                  display: { xs: "none", md: "inline-block" },
-                }}
-              />
-            </Box>
+            <ClassBirthday />
           </TabPanel>
           <TabPanel value="whoseWho">
-            <Box
-              sx={{
-                display: { md: "flex", xs: "block" },
-                alignItems: "center",
-                textAlign: { xs: "center", md: "left" },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  maxWidth: 730,
-                  mr: { xs: 0, md: 16 },
-                }}
-              >
-                <Typography
-                  mb={2}
-                  variant="subtitle1"
-                  sx={{
-                    fontFamily: montserrat.style.fontFamily,
-                    display: { xs: "none", md: "block" },
-                  }}
-                >
-                  Build meaningful connections
-                </Typography>
-                <Typography
-                  mb={4}
-                  sx={{ fontFamily: montserrat.style.fontFamily }}
-                  variant="h2"
-                >
-                  Whose that again?
-                </Typography>
-                <Typography
-                  sx={{ fontFamily: manrope.style.fontFamily }}
-                  mb={6}
-                  variant="body1"
-                  color="text.secondary"
-                >
-                  Avoid the awkward conversations about whose who when you meet
-                  at the gates or the next gathering. Your one place to get all
-                  your links, names and classmates in order!
-                </Typography>
-                <Box
-                  mb={6}
-                  component="img"
-                  src="/school2.png"
-                  sx={{
-                    width: { md: 544, xs: 369 },
-                    height: { md: 391, xs: 240 },
-                    mx: { xs: "auto", md: 0 },
-                    display: { xs: "inline-block", md: "none" },
-                  }}
-                />
-                <Box
-                  mb={2}
-                  sx={{
-                    width: 262,
-                    height: 64,
-                    py: 2,
-                    px: 4,
-                    gap: 16,
-                    borderRadius: 4,
-                    border: "2px solid #FF8919",
-                    mx: { md: 0, xs: "auto" },
-                  }}
-                >
-                  <Typography
-                    sx={{ fontFamily: manrope.style.fontFamily }}
-                    variant="subtitle1"
-                  >
-                    Remembering made easy
-                  </Typography>
-                </Box>
-                <CustomTab
-                  sx={{
-                    display: {
-                      xs: "block",
-                      md: "none",
-                    },
-                    mx: { md: 0, xs: "auto" },
-                    fontFamily: manrope.style.fontFamily,
-                  }}
-                  label="It’s all in the name"
-                  value="itsallinthename"
-                />
-              </Box>
-              <Box
-                component="img"
-                src="/school2.png"
-                sx={{
-                  width: { md: 544, xs: 369 },
-                  height: { md: 391, xs: 187 },
-                  display: { xs: "none", md: "inline-block" },
-                }}
-              />
-            </Box>
+            <WhoseWho />
           </TabPanel>
         </Box>
       </TabContext>
