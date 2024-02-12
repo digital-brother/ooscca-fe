@@ -45,7 +45,7 @@ export function getFlatErrors(error) {
   const { fieldErrors, nonFieldErrors, genericError } = getErrors(error);
   if (fieldErrors || nonFieldErrors) {
     const errors = [];
-    if (fieldErrors) errors.push(...(_.flatten(_.values(fieldErrors))));
+    if (fieldErrors) errors.push(..._.flatten(_.values(fieldErrors)));
     if (nonFieldErrors) errors.push(...nonFieldErrors);
     return errors;
   } else return [genericError];
@@ -211,15 +211,10 @@ export function FormikErrors() {
     );
 }
 
-export function Errors({ errors, sx }) {
-  return errors?.map((error, index) => (
-    <Error key={index} sx={sx}>
-      {error}
-    </Error>
-  ));
+export function Errors({ errors }) {
+  return errors?.map((error, index) => <Error key={index}>{error}</Error>);
 }
 
-// TODO: Fix how Errors look in form
-export function Error({ children, sx }) {
-  return children && <Typography sx={{ color: "error.main", fontWeight: 600, ...sx }}>{children}</Typography>;
+export function Error({ children }) {
+  return children && <Typography sx={{ color: "error.main", fontWeight: 600 }}>{children}</Typography>;
 }
