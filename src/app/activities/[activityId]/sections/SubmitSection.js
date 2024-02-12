@@ -11,10 +11,7 @@ function FormBlock() {
       <Typography
         variant="h3"
         gutterBottom
-        sx={{
-          textAlign: {xs: 'center', lg: 'left'},
-          width: '100%'
-        }}
+        sx={{textAlign: {xs: 'center', lg: 'left'}}}
       >
         Let&apos;s get your activities live and in front of parents!
       </Typography>
