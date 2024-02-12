@@ -21,7 +21,6 @@ module.exports = (phase, { defaultConfig }) => {
           {
             protocol: "http",
             hostname: "localhost",
-            port: "8000",
             pathname: "/media/**",
           },
         ],
@@ -37,7 +36,6 @@ module.exports = (phase, { defaultConfig }) => {
         {
           protocol: "https",
           hostname: backendUrl.hostname,
-          port: "443",
           pathname: "/media/**",
         },
       ],
