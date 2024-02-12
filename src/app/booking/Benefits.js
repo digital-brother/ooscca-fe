@@ -53,7 +53,6 @@ export default function Benefits() {
   return (
     <Container sx={{py: {xs: 6, md: 10}}}>
       <Box sx={{
-        mt: {xs: 6, md: 10},
         display: "flex",
         flexDirection: "column",
         gap: 4,
@@ -61,16 +60,22 @@ export default function Benefits() {
         mx: "auto",
       }}>
         {BENEFITS.map((benefit, index) => (
-          <Grid key={index} container rowSpacing={8} columnSpacing={6} sx={{
+          <Grid key={index} container columnSpacing={6} sx={{
             justifyContent: "center",
             alignItems: "center",
             flexDirection: index % 2 ? "row" : "row-reverse",
+            mt: {xs: 5, md: 0},
           }}>
             <Grid item xs={12} md={6}>
               <Box component="img" src={benefit.image} width="100%" sx={{maxWidth: 500}}/>
             </Grid>
             <Grid item xs={12} md={6}>
-              <BenefitText benefit={benefit} sx={{textAlign: {xs: "center", md: "left"}, maxWidth: {md: "90%"}}}/>
+              <BenefitText
+                benefit={benefit}
+                sx={{
+                  textAlign: {xs: "center", md: "left"},
+                  maxWidth: {md: "90%"}
+              }}/>
             </Grid>
           </Grid>
         ))}
