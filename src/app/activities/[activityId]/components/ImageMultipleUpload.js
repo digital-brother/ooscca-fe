@@ -107,7 +107,7 @@ function ImagesPreviewDesktop({ images, handleDelete }) {
 
 export default function ImagesMultipleUpload() {
   const [images, setImages] = useImmer([]);
-  const [frontEndErrors, setFrontEndErrors] = useState([]);
+  const [formErrors, setFormErrors] = useState([]);
 
   const activityId = useParams().activityId;
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
@@ -128,7 +128,7 @@ export default function ImagesMultipleUpload() {
         else image.order = null;
       });
     });
-    setFrontEndErrors([]);
+    setFormErrors([]);
   }
   useEffect(updateOrder, [images]);
 
@@ -162,7 +162,7 @@ export default function ImagesMultipleUpload() {
     const maxImagesAllowed = 5;
     const imagesCount = images.filter((image) => !image.toBeDeleted).length;
     if (imagesCount + files?.length > maxImagesAllowed) {
-      setFrontEndErrors([`Maximum ${maxImagesAllowed} images allowed.`]);
+      setFormErrors([`Maximum ${maxImagesAllowed} images allowed.`]);
       return;
     }
 
@@ -186,7 +186,7 @@ export default function ImagesMultipleUpload() {
     setImages((images) => {
       images.push(...newImages);
     });
-    setFrontEndErrors(formErrors);
+    setFormErrors(formErrors);
   }
 
   function handleDelete(deleteIndex) {
@@ -241,7 +241,7 @@ export default function ImagesMultipleUpload() {
           <>
             {mdUp && <ImagesPreviewDesktop {...{ images, handleDelete }} />}
             {!mdUp && <ImagesPreviewMobile {...{ images, handleDelete }} />}
-            <Errors errors={frontEndErrors} sx={{ textAlign: "center" }} />
+            <Errors errors={formErrors} sx={{ textAlign: "center" }} />
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
               <Button onClick={() => setImages(serverImages)} variant="outlined" color="grey">
                 Cancel
