@@ -16,7 +16,9 @@ function FormBlock() {
         Let&apos;s get your activities live and in front of parents!
       </Typography>
       <Box sx={{
-        display: 'grid',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: {xs: "center", lg: "start"},
         justifyContent: {xs: "center", lg: "left"},
         gap: 2,
         mt: 3
@@ -25,6 +27,7 @@ function FormBlock() {
           size="large"
           variant="contained"
           color="grey"
+          sx={{ width: { xs: "90%", lg: "70%" }}}
         >
           Save and come back later
         </Button>
@@ -32,6 +35,7 @@ function FormBlock() {
           size="large"
           variant="contained"
           color="primary"
+          sx={{ width: { xs: "90%", lg: "70%" }}}
         >
           Submit
         </Button>
@@ -59,7 +63,7 @@ export function SubmitSection() {
         sx={{
           display: "flex",
           flexDirection: {xs: "column", lg: "row"},
-          justifyContent: "centre",
+          justifyContent: "center",
           gap: 3,
           maxWidth: {xs: 540, lg: "none"},
           mx: "auto",
