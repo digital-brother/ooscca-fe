@@ -15,17 +15,14 @@ import SchoolStats from "@/app/(homepage)/SchoolStats";
 function HomepageTabsHeader({ sx }) {
   return (
     <Box {...sx}>
-      <Typography variant="subheading">
-        Effortless tracking of every important detail
-      </Typography>
+      <Typography variant="subheading">Effortless tracking of every important detail</Typography>
       <Typography mt={2} variant="h2">
         Your central hub for key school details
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
-        You shouldn’t have your work cut out finding and syncing holidays,
-        birthdays and contacts. Once you&apos;re on board, you&apos;ll have access to
-        crucial information like school holiday schedules, classmates&apos;
-        birthdays, and parents&apos; contact details at your fingertips.
+        You shouldn’t have your work cut out finding and syncing holidays, birthdays and contacts. Once you&apos;re on
+        board, you&apos;ll have access to crucial information like school holiday schedules, classmates&apos; birthdays,
+        and parents&apos; contact details at your fingertips.
       </Typography>
     </Box>
   );
@@ -53,10 +50,26 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   fontSize: 16,
 }));
 
-function Tabs(props) {
-  const [value, setValue] = React.useState("oosCalendar");
+function CustomTabList({ children, handleChange }) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  return (
+    <TabList
+      onChange={handleChange}
+      aria-label="lab API tabs example"
+      variant="fullWidth"
+      TabIndicatorProps={{ sx: { display: "none" } }}
+      sx={{ border: "1px #CED4DA solid", borderRadius: 2 }}
+      orientation={isSmallScreen ? "vertical" : "horizontal"}
+    >
+      {children}
+    </TabList>
+  );
+}
+
+function Tabs(props) {
+  const [value, setValue] = React.useState("oosCalendar");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -66,29 +79,17 @@ function Tabs(props) {
     <Box {...props}>
       <TabContext value={value}>
         <Box>
-          <TabList
-            onChange={handleChange}
-            aria-label="lab API tabs example"
-            variant="fullWidth"
-            TabIndicatorProps={{ sx: { display: "none" } }}
-            sx={{ border: "1px #CED4DA solid", borderRadius: 2 }}
-            orientation={isSmallScreen ? "vertical" : "horizontal"}
-          >
+          <CustomTabList handleChange={handleChange}>
             <CustomTab label="OOS calendar" value="oosCalendar" />
-            <CustomTab
-              label="Class birthday calendar"
-              value="classBirthdayCalendar"
-            />
+            <CustomTab label="Class birthday calendar" value="classBirthdayCalendar" />
             <CustomTab label="Whose who" value="whoseWho" />
-          </TabList>
+          </CustomTabList>
         </Box>
-        <Box sx={{pt: {xs: 4, md: 10 }}}>
+        <Box sx={{ pt: { xs: 4, md: 10 } }}>
           <TabPanel sx={{ p: 0 }} value="oosCalendar">
             <SchoolStats />
           </TabPanel>
-          <TabPanel value="classBirthdayCalendar">
-            Class birthday calendar
-          </TabPanel>
+          <TabPanel value="classBirthdayCalendar">Class birthday calendar</TabPanel>
           <TabPanel value="whoseWho">Whose who</TabPanel>
         </Box>
       </TabContext>
