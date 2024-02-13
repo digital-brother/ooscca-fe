@@ -1,19 +1,26 @@
+"use client";
+
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { styled } from "@mui/system";
+
+const BookingBox = styled(Box)(({ theme }) => ({
+  flex: 1,
+  border: "1px solid",
+  borderColor: theme.palette.grey[400],
+  borderRadius: theme.spacing(1),
+  padding: theme.spacing(2),
+}));
 
 function Booking({ booking }) {
   return (
-    <Box
+    <BookingBox
       sx={{
-        flex: 1,
         display: "flex",
         flexDirection: "column",
-        border: "1px solid",
-        borderColor: "grey.400",
-        borderRadius: 1,
         bgcolor: "green.100",
-        p: 2,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -30,16 +37,24 @@ function Booking({ booking }) {
           <DeleteForeverIcon />
         </IconButton>
       </Box>
-    </Box>
+    </BookingBox>
+  );
+}
+
+function EmptyBooking() {
+  return (
+    <BookingBox sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Button color="grey" startIcon={<AddCircleOutlineIcon />}>Add activity</Button>
+    </BookingBox>
   );
 }
 
 function BookingDay({ bookings = [] }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, width: 200, height: 400 }}>
-      {bookings.map((booking, index) => (
-        <Booking key={index} booking={booking} />
-      ))}
+      {bookings.map((booking, index) =>
+        booking ? <Booking key={index} booking={booking} /> : <EmptyBooking key={index} />
+      )}
     </Box>
   );
 }
@@ -65,7 +80,10 @@ function BookingCalendar({ sx }) {
       }}
     >
       <BookingDay bookings={[booking]} />
-      <BookingDay bookings={[booking, booking]} />
+      <BookingDay bookings={[booking, null]} />
+      <BookingDay bookings={[null, booking]} />
+      <BookingDay bookings={[null, null]} />
+      <BookingDay bookings={[null]} />
     </Box>
   );
 }

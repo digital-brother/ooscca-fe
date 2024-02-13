@@ -97,7 +97,7 @@ const theme = createTheme({
     MuiButton: {
       defaultProps: {
         disableElevation: true,
-        disableRipple: true,
+
       },
       styleOverrides: {
         root: {
@@ -124,6 +124,13 @@ const theme = createTheme({
             },
             "&:active": {
               backgroundColor: alpha(theme.palette[ownerState.color].main, 0.18),
+            },
+          };
+        },
+        text: ({ ownerState, theme }) => {
+          return {
+            "&:hover": {
+              backgroundColor: theme.palette[ownerState.color][100],
             },
           };
         },
