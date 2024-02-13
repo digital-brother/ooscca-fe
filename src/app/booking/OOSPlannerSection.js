@@ -2,21 +2,18 @@ import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-function Booking({booking}) {
+function Booking({ booking }) {
   return (
     <Box
       sx={{
-        // mt: 5,
+        flex: 1,
         display: "flex",
         flexDirection: "column",
-        maxWidth: 200,
-        minHeight: 200,
-        p: 2,
-        position: "relative",
         border: "1px solid",
         borderColor: "grey.400",
         borderRadius: 1,
         bgcolor: "green.100",
+        p: 2,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -37,7 +34,17 @@ function Booking({booking}) {
   );
 }
 
-function Day() {
+function BookingDay({ bookings = [] }) {
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, width: 200, height: 400 }}>
+      {bookings.map((booking, index) => (
+        <Booking key={index} booking={booking} />
+      ))}
+    </Box>
+  );
+}
+
+function BookingCalendar({ sx }) {
   const booking = {
     type: "Football",
     time: "7:30 - 12:00 AM",
@@ -45,17 +52,20 @@ function Day() {
     price: 45,
   };
   return (
-    <>
-      <Booking booking={booking} />
-      <Booking booking={booking} />
-    </>
-  );
-}
-
-function OOSPlanner({ sx }) {
-  return (
-    <Box sx={{ borderRadius: 2, bgcolor: "white", border: "1px solid", borderColor: "grey.300", ...sx }}>
-      <Day />
+    <Box
+      sx={{
+        display: "flex",
+        columnGap: 2,
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "grey.300",
+        bgcolor: "white",
+        p: 5,
+        ...sx,
+      }}
+    >
+      <BookingDay bookings={[booking]} />
+      <BookingDay bookings={[booking, booking]} />
     </Box>
   );
 }
@@ -70,7 +80,7 @@ export default function OOSPlannerSection() {
             Enjoy the ease of booking activities without the text and email tennis
           </Typography>
         </Box>
-        <OOSPlanner sx={{ mt: 8, p: 5 }} />
+        <BookingCalendar sx={{ mt: 8 }} />
       </Container>
     </Box>
   );
