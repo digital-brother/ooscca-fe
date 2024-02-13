@@ -100,6 +100,6 @@ const colorsDefault = Object.fromEntries(
 
 export const colors = {
   ...colorsDefault,
-  grey: { ...grey, light: grey[400], main: grey[600], dark: "#000000", contrastText: "#FFFFFF" },
+  grey: { ...grey, light: grey[500], main: grey[600], dark: "#000000", contrastText: "#FFFFFF" },
   yellow: {...yellow, light: yellow[400], main: yellow[500], dark: yellow[600], contrastText: grey[900]}
 };

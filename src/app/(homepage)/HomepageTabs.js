@@ -13,7 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
 
 
-const SchoolDetail = {
+const SCHOOL_DETAIL = {
   classBirthdayCalendar: {
     image: "/school1.png",
     header: "Birthdays matter. Of course they matter!",
@@ -76,7 +76,7 @@ function HomepageTabsHeader({ sx }) {
 
 function ContentPanel({ type }) {
   const theme = useTheme();
-  const data = SchoolDetail[type];
+  const data = SCHOOL_DETAIL[type];
 
   return (
     <Box
@@ -100,10 +100,7 @@ function ContentPanel({ type }) {
         <Typography mb={6.7} variant="body1" color="text.secondary">
           {data.description}
         </Typography>
-        <Button variant="outlined" color="orange" size="large" sx={{
-          textTransform: 'none',
-          fontSize: theme.typography.htmlFontSize,
-        }}>
+        <Button variant="outlined" color="orange" size="large" >
           {data.button}
         </Button>
       </Box>
