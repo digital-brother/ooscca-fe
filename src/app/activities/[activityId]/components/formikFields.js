@@ -1,23 +1,55 @@
-import { useField, useFormikContext } from "formik";
-import TextField from "@mui/material/TextField";
-import React from "react";
-import { TimeField } from "@mui/x-date-pickers/TimeField";
-import dayjs from "dayjs";
-import Calendar from "./Calendar";
-import { NumericFormat } from "react-number-format";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import "dayjs/locale/en-gb";
 import {
   Checkbox,
-  FormControlLabel,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   InputLabel,
   Select as MUISelect,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimeField } from "@mui/x-date-pickers/TimeField";
+import dayjs from "dayjs";
+import "dayjs/locale/en-gb";
+import { useField, useFormikContext } from "formik";
+import _ from "lodash";
+import { NumericFormat } from "react-number-format";
+import Calendar from "./Calendar";
+
+export function getErrors(error) {
+  // If status is 400, it means that DRF returned validation errors
+  if (error?.response?.status === 400) {
+    let { nonFieldErrors, ...fieldErrors } = error?.response?.data;
+    if (_.isEmpty(fieldErrors)) fieldErrors = undefined;
+    return { fieldErrors, nonFieldErrors };
+  } else {
+    const genericError = error?.message;
+    return { genericError };
+  }
+}
+
+export function getFormAndFieldErrors(error) {
+  const { fieldErrors, nonFieldErrors, genericError } = getErrors(error);
+  if (fieldErrors || nonFieldErrors) {
+    const errors = {};
+    if (fieldErrors) errors.fieldErrors = fieldErrors;
+    if (nonFieldErrors) errors.formErrors = nonFieldErrors;
+    return errors;
+  } else return { formErrors: [genericError] };
+}
+
+export function getFlatErrors(error) {
+  const { fieldErrors, nonFieldErrors, genericError } = getErrors(error);
+  if (fieldErrors || nonFieldErrors) {
+    const errors = [];
+    if (fieldErrors) errors.push(..._.flatten(_.values(fieldErrors)));
+    if (nonFieldErrors) errors.push(...nonFieldErrors);
+    return errors;
+  } else return [genericError];
+}
 
 export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError = false }) {
   return async function handleSubmit(values, { setErrors, setStatus }) {
@@ -26,15 +58,9 @@ export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError 
       await mutation.mutateAsync(values);
       onSuccess();
     } catch (error) {
-      // If status is 400, it means that DRF returned validation errors
-      if (error?.response?.status === 400) {
-        const drfErrors = error.response?.data;
-        const drfNonFieldErrors = drfErrors?.nonFieldErrors;
-        drfErrors && setErrors(drfErrors);
-        drfNonFieldErrors && setStatus({ nonFieldErrors: drfNonFieldErrors });
-      } else {
-        setStatus({ submissionError: error.message });
-      }
+      const { fieldErrors, formErrors } = getFormAndFieldErrors(error);
+      setErrors(fieldErrors);
+      setStatus({ formErrors });
       if (throwError) throw error;
     }
   };
@@ -175,12 +201,10 @@ export function FormikSelect({ name, items, label, sx, variant, fullwidth, child
 
 export function FormikErrors() {
   const { status } = useFormikContext();
-  if (status?.submissionError) return <Error>{status.submissionError}</Error>;
-
-  if (status?.nonFieldErrors)
+  if (status?.formErrors)
     return (
       <Box>
-        {status.nonFieldErrors.map((error, index) => (
+        {status.formErrors.map((error, index) => (
           <Error key={index}>{error}</Error>
         ))}
       </Box>
@@ -188,13 +212,9 @@ export function FormikErrors() {
 }
 
 export function Errors({ errors }) {
-  return errors.map((error, index) => <Error key={index}>{error}</Error>)
+  return errors?.map((error, index) => <Error key={index}>{error}</Error>);
 }
 
 export function Error({ children }) {
-  return (
-    children && (
-      <Typography sx={{ mt: 1, textAlign: "center", color: "error.main", fontWeight: 600 }}>{children}</Typography>
-    )
-  );
+  return children && <Typography sx={{ color: "error.main", fontWeight: 600 }}>{children}</Typography>;
 }

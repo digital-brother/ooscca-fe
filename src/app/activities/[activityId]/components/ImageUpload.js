@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
-import { useMutation, useQuery } from "react-query";
-import { deleteActivityImage, getActivityImagesSecondary, postActivityImage } from "../api.mjs";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { useParams } from "next/navigation";
-import { Errors } from "./formikFields";
+import React, { useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useMutation, useQuery } from "react-query";
+import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "../api.mjs";
+import { Errors, getFlatErrors } from "./formikFields";
 
 const imageInputContainerSx = {
   height: "100%",
@@ -73,21 +73,17 @@ export function ImageInput({ multiple, handleAdd, sx }) {
   else return <ImageInputMobile {...{ handleAdd, multiple, sx }} />;
 }
 
-function ImagePreview({ file, setShowConfirmDelete }) {
-  function showImageDeleteConfirmation() {
-    setShowConfirmDelete(true);
-  }
-
+export function ImagePreview({ image, handleDelete, sx }) {
   return (
-    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+    <Box sx={{ position: "relative", width: "100%", height: "100%", ...sx }}>
       <Box
         component="img"
-        src={file.preview || file.image}
+        src={image.url}
         alt="Preview"
-        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-        onLoad={() => URL.revokeObjectURL(file.url)}
+        sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 2 }}
+        onLoad={() => URL.revokeObjectURL(image.url)}
       />
-      <IconButton color="grey" onClick={showImageDeleteConfirmation} sx={{ position: "absolute", top: 10, right: 10 }}>
+      <IconButton color="grey" onClick={handleDelete} sx={{ position: "absolute", top: 10, right: 10 }}>
         <DeleteForeverIcon />
       </IconButton>
     </Box>
@@ -119,23 +115,23 @@ function ImageDeleteConfirm({ handleDelete, setShowConfirmDelete }) {
 
 export default function ImageUpload({ sx, order }) {
   const activityId = useParams().activityId;
-  const [file, setFile] = useState(null);
+  const [image, setImage] = useState(null);
   const [errors, setErrors] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(null);
 
   const { data: secondaryImages } = useQuery("activityImagesSecondary", () => getActivityImagesSecondary(activityId));
-  const initialFile = secondaryImages?.filter((file) => file.order === order)[0];
+  const initialImage = secondaryImages?.filter((secondaryImage) => secondaryImage.order === order)[0];
   useEffect(() => {
-    setFile(initialFile);
-  }, [initialFile]);
+    setImage(initialImage);
+  }, [initialImage]);
 
-  const postMutation = useMutation((imageData) => postActivityImage(activityId, imageData));
-  const deleteMutation = useMutation((imageId) => deleteActivityImage(activityId, imageId));
+  const postMutation = useMutation((imageData) => postActivityImageSecondary(activityId, imageData));
+  const deleteMutation = useMutation((imageId) => deleteActivityImageSecondary(activityId, imageId));
 
   function handleDelete() {
-    deleteMutation.mutate(file.id, {
+    deleteMutation.mutate(image.id, {
       onSuccess: () => {
-        setFile(null);
+        setImage(null);
         setErrors([]);
       },
       onError: (error) => setErrors([error.message]),
@@ -144,25 +140,21 @@ export default function ImageUpload({ sx, order }) {
 
   function handleAdd(files) {
     const file = files[0];
-    const imageData = {
+    const image = {
       activity: activityId,
       type: "secondary",
       name: file.name,
-      image: file,
+      file,
       order,
     };
-    postMutation.mutate(imageData, {
+    postMutation.mutate(image, {
       onSuccess: (data) => {
-        setFile(data);
+        setImage(data);
         setErrors([]);
       },
       onError: (error) => {
-        console.log();
-        const imageErrors = error?.response?.data?.image;
-        const nonFieldErrors = error?.response?.data?.nonFieldErrors;
-        if (imageErrors) setErrors(imageErrors);
-        else if (nonFieldErrors) setErrors((errors) => [nonFieldErrors]);
-        else setErrors([error.message]);
+        const errors = getFlatErrors(error);
+        setErrors(errors);
       },
     });
   }
@@ -178,15 +170,15 @@ export default function ImageUpload({ sx, order }) {
           bgcolor: "grey.200",
         }}
       >
-        {showConfirmDelete && <ImageDeleteConfirm {...{ file, handleDelete, setShowConfirmDelete }} />}
-        {!file && (
+        {showConfirmDelete && <ImageDeleteConfirm {...{ handleDelete, setShowConfirmDelete }} />}
+        {!image && (
           <ImageInput
             handleAdd={handleAdd}
             multiple={false}
             sx={{ backgroundColor: sx?.backgroundColor || sx?.bgColor }}
           />
         )}
-        {file && <ImagePreview {...{ file, setShowConfirmDelete }} />}
+        {image && <ImagePreview {...{ image, handleDelete: () => setShowConfirmDelete(true) }} />}
       </Box>
       {errors && <Errors errors={errors} />}
     </Box>
