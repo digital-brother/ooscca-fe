@@ -6,52 +6,24 @@ import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import DemoStepper from "./DemoStepper"
 import { montserrat } from "@/components/ThemeRegistry/theme";
+import { manrope } from "@/components/ThemeRegistry/theme";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
   Button,
   Chip,
   FormControl,
+  Icon,
+  SvgIcon,
   IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   Stack,
+  Checkbox,
   useMediaQuery,
 } from "@mui/material";
 
-function TitleBlock2({ title, subtitle }) {
-  return (
-    <>
-      <Typography variant="h5">Advantage Day Camp</Typography>
-      <Typography variant="subheader">123 street, Town, Post code</Typography>
-
-      <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails sx={{ flex: 1 }} />
-
-      <Error>{mutation.isError && mutation.error.message}</Error>
-      <SmFlex sx={{ mt: 3, rowGap: 1 }}>
-        {smDown && <CancelButton onClick={close} />}
-        <GoBackButton onClick={scrollPrev} />
-        <NextButton onClick={handleSave} label="Save" />
-      </SmFlex>
-      <Typography variant="body2" sx={{ mt: 1.5, textAlign: "center" }}>
-        Activity will be saved in your accounts page
-      </Typography>
-
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6">{label}</Typography>
-
-        {smUp && (
-          <IconButton size="small" onClick={close}>
-            <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
-          </IconButton>
-        )}
-      </Box>
-    </>
-  );
-
-
-}
 
 export default function Card(props) {
   function TitleBlock({ title, subtitle, sx }) {
@@ -101,6 +73,86 @@ export default function Card(props) {
     );
   }
 
+  function Schedule(sx) {
+    return (
+      <Box>
+        <Typography sx={{
+          fontFamily: manrope.style.fontFamily,
+          fontSize: "0.75rem",  // 12px
+        }}>
+          <Icon size="small" sx={{mr: 1.5, height: "12px", width: "12px", fontSize: "12px" }}><AccessTimeIcon /></Icon>
+          Mon 8:30 AM - 3:30 PM
+        </Typography>
+
+        <Typography sx={{
+          fontFamily: manrope.style.fontFamily,
+          fontSize: "0.75rem",  // 12px
+        }}>
+          <Checkbox size="small" sx={{p:0, pr: 0.5, mt: -0.25, ml: 0}} />
+          <span style={{color: "green", fontWeight: 700}}>FREE</span> Early drop off 8:00 am
+        </Typography>
+
+        <Typography sx={{
+          fontFamily: manrope.style.fontFamily,
+          fontSize: "0.75rem",  // 12px
+        }}>
+          <Checkbox size="small" sx={{p:0, pr: 0.5, mt: -0.25, ml: 0}}/>
+          <span style={{color: "green", fontWeight: 700}}>FREE</span> Late pick-up: 4:00 pm
+        </Typography>
+      </Box>
+    )
+  }
+
+  function Calculations(sx) {
+    return (
+      <Box sx={{
+        width: 85,
+        height: 70,
+      }}>
+        <Typography align="right" sx={{
+          color: "green.500",
+          fontWeight: 700,
+          fontFamily: manrope.style.fontFamily,
+          fontSize: "0.75rem",
+        }}>
+          10% off
+        </Typography>
+        <Typography align="right" sx={{
+          fontWeight: 900,
+          fontFamily: manrope.style.fontFamily,
+        }}>
+          £90.00
+        </Typography>
+        <Typography align="right" sx={{
+          color: "grey.500",
+          fontWeight: 700,
+          fontFamily: manrope.style.fontFamily,
+          fontSize: "0.75rem",
+          textDecoration: "line-through",
+        }}>
+          £100.00
+        </Typography>
+      </Box>
+    )
+  }
+
+  function Buttons(sx) {
+    return (
+      <Box sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}>
+        <Button variant="outlined" size="medium" color="orange" sx={{ width: "47%", fontSize: "13px" }}>
+          Learn more
+        </Button>
+        <Button variant="contained" size="medium" color="orange" sx={{ width: "47%", fontSize: "13px" }}>
+          Add to calendar
+        </Button>
+      </Box>
+    )
+  }
+
   return (
     <Box sx={{
       width: 353,
@@ -113,25 +165,38 @@ export default function Card(props) {
       <ImagePreview />
       <Container sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "space-between",
-        mt: 2,
-        p: 0,
+        mt: 1,
       }}>
-        <Box>
-          <TitleBlock
-            title="Advantage Day Camp"
-            subtitle="123 street, Town, Post code"
-            sx={{ mb: 3 }}
-          />
-          <TitleBlock
-            title="Day camp"
-            subtitle="(ages 6-12)"
-          />
+        <Box sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          mb: 1,
+        }}>
+          <Box>
+            <TitleBlock
+              title="Advantage Day Camp"
+              subtitle="123 street, Town, Post code"
+              sx={{ mb: 3 }}
+            />
+            <TitleBlock
+              title="Day camp"
+              subtitle="(ages 6-12)"
+            />
+          </Box>
+          <Chips />
         </Box>
-        <Chips />
-        <Schedule />
-        <Calculations />
+        <Box sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          mb: 1,
+        }}>
+          <Schedule />
+          <Calculations />
+        </Box>
         <Buttons />
       </Container>
     </Box>
