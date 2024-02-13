@@ -14,12 +14,6 @@ import MUIStepConnector, {
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
-const STEPS = [
-  "Find the activities your child will love",
-  "Add them to child’s calendar",
-  "Review and then pay for all in one click",
-];
-
 const StepConnector = styled(MUIStepConnector)({
   [`&.${MUIStepConnectorClasses.horizontal}`]: {
     top: 30,
@@ -65,7 +59,7 @@ function StepIcon({ icon }) {
   );
 }
 
-export default function DemoStepper({ sx }) {
+export default function DemoStepper({ steps, sx }) {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
@@ -80,7 +74,7 @@ export default function DemoStepper({ sx }) {
           alignItems: "center",
         }}
       >
-        {STEPS.map((label, index) => {
+        {steps.map((label, index) => {
           return (
             <Step key={index}>
               <StepLabel
