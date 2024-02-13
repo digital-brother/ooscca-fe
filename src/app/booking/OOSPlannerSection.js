@@ -2,18 +2,11 @@ import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-function Booking() {
-  const booking = {
-    type: "Football",
-    time: "7:30 - 12:00 AM",
-    address: "123 Clubs, Street name, postcode",
-    price: 45,
-  };
-
+function Booking({booking}) {
   return (
     <Box
       sx={{
-        mt: 5,
+        // mt: 5,
         display: "flex",
         flexDirection: "column",
         maxWidth: 200,
@@ -44,10 +37,25 @@ function Booking() {
   );
 }
 
+function Day() {
+  const booking = {
+    type: "Football",
+    time: "7:30 - 12:00 AM",
+    address: "123 Clubs, Street name, postcode",
+    price: 45,
+  };
+  return (
+    <>
+      <Booking booking={booking} />
+      <Booking booking={booking} />
+    </>
+  );
+}
+
 function OOSPlanner({ sx }) {
   return (
     <Box sx={{ borderRadius: 2, bgcolor: "white", border: "1px solid", borderColor: "grey.300", ...sx }}>
-      OOS Planner
+      <Day />
     </Box>
   );
 }
@@ -62,8 +70,7 @@ export default function OOSPlannerSection() {
             Enjoy the ease of booking activities without the text and email tennis
           </Typography>
         </Box>
-        <OOSPlanner sx={{ mt: 8, py: 5 }} />
-        <Booking />
+        <OOSPlanner sx={{ mt: 8, p: 5 }} />
       </Container>
     </Box>
   );
