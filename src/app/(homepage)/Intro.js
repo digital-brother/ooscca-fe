@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 function IntroText(props) {
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
-      <Typography variant="subtitle1">
+      <Typography variant="subheading">
         OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
       </Typography>
       <Typography mt={3} variant="h1">

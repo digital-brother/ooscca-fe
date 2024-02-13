@@ -26,7 +26,7 @@ const BENEFITS = [
 function BenefitText({benefit, sx}) {
   return (
     <Box {...sx}>
-      <Typography variant="subtitle1">
+      <Typography variant="subheading">
         {benefit.subheader}
       </Typography>
       <Typography mt={2} variant="h3">
@@ -42,7 +42,7 @@ function BenefitText({benefit, sx}) {
 function BenefitsHeader() {
   return (
     <Box sx={{textAlign: "center"}}>
-      <Typography variant="subtitle1">
+      <Typography variant="subheading">
         Built by parents, for parents
       </Typography>
       <Typography variant="h2" sx={{mt: 2}}>

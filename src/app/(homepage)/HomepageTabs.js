@@ -57,7 +57,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
 function HomepageTabsHeader({ sx }) {
   return (
     <Box {...sx}>
-      <Typography variant="subtitle1">
+      <Typography variant="subheading">
         Effortless tracking of every important detail
       </Typography>
       <Typography mt={2} variant="h2">
@@ -91,7 +91,7 @@ function ContentPanel({ type }) {
       }}
     >
       <Box>
-        <Typography mb={2} variant="subtitle1">
+        <Typography mb={2} variant="subheading">
           {data.subheader}
         </Typography>
         <Typography mb={3} variant="h3">
