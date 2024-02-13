@@ -67,6 +67,12 @@ const theme = createTheme({
       fontWeight: 700,
       color: theme.palette.orange.main,
     }),
+    overlineBold: ({
+      fontFamily: montserrat.style.fontFamily,
+      fontWeight: 700,
+      fontSize: "1rem", // 16px
+      color: colors.orange.main,
+    }),
   },
   components: {
     MuiAlert: {
