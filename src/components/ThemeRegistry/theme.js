@@ -25,9 +25,14 @@ const theme = createTheme({
   typography: {
     fontFamily: manrope.style.fontFamily,
     h1: {
-      fontSize: "3rem", // 48px
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
+      [baseTheme.breakpoints.up("xs")]: {
+        fontSize: "2rem", // 32
+      },
+      [baseTheme.breakpoints.up("sm")]: {
+        fontSize: "3rem", // 48
+      },
     },
     h2: {
       fontSize: "2.5rem", // 40px

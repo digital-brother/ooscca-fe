@@ -21,11 +21,20 @@ function IntroText(props) {
         Discover, book and track activities without clicking,
         typing and scrolling marathons
       </Typography>
-      <Typography mt={5} color="text.secondary" variant="introSubheading">
+      <Typography
+        mt={5}
+        color="text.secondary"
+        variant="introSubheading"
+        display={{ xs: "none", md: "block" }}
+      >
         We know when kids are going to be Out Of School so why not plan by
         calendar instead by activities. It’s that simple, easy and intuitive.
       </Typography>
-      <Typography mt={5} mb={3} variant="introSubheading">
+      <Typography
+        mt={5} mb={3}
+        variant="introSubheading"
+        display={{ xs: "none", md: "block" }}
+      >
         The cure to complexity of booking activities in
         <span style={{ color: "purple", fontWeight: 700 }}> 3 simple steps</span>
       </Typography>
@@ -61,7 +70,7 @@ export default function Intro() {
         xs={12}
         sx={{
           maxHeight: { md: 818 },
-          height: { xs: 595, md: "auto" },
+          height: { xs: 300, md: "auto" },
         }}
       >
         <IntroImage />
@@ -78,7 +87,7 @@ export default function Intro() {
         <Container
           sx={{ mx: 0, maxWidth: { xs: 735, md: "950px" } }}
         >
-          <IntroText py={{ xs: 6, md: 10 }} />
+          <IntroText py={{ xs: 0, md: 4 }} />
         </Container>
       </Grid>
     </Grid>
