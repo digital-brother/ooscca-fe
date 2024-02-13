@@ -1,8 +1,52 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, IconButton, Typography } from "@mui/material";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
+function Booking() {
+  const booking = {
+    type: "Football",
+    time: "7:30 - 12:00 AM",
+    address: "123 Clubs, Street name, postcode",
+    price: 45,
+  };
+
+  return (
+    <Box
+      sx={{
+        mt: 5,
+        display: "flex",
+        flexDirection: "column",
+        maxWidth: 200,
+        minHeight: 200,
+        p: 2,
+        position: "relative",
+        border: "1px solid",
+        borderColor: "grey.400",
+        borderRadius: 1,
+        bgcolor: "green.100",
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography sx={{ fontWeight: 700 }}>{booking.type}</Typography>
+        <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.price}</Typography>
+      </Box>
+      <Typography>{booking.time}</Typography>
+      <Typography>{booking.address}</Typography>
+      <Box sx={{ mt: "auto", mb: -1.5, mx: -1.5, display: "flex", justifyContent: "space-between" }}>
+        <IconButton>
+          <IosShareIcon />
+        </IconButton>
+        <IconButton>
+          <DeleteForeverIcon />
+        </IconButton>
+      </Box>
+    </Box>
+  );
+}
 
 function OOSPlanner({ sx }) {
   return (
-    <Box sx={{ borderRadius: 2, bgcolor: "white", border: "1px solid", borderColor: "grey.200", ...sx }}>
+    <Box sx={{ borderRadius: 2, bgcolor: "white", border: "1px solid", borderColor: "grey.300", ...sx }}>
       OOS Planner
     </Box>
   );
@@ -19,6 +63,7 @@ export default function OOSPlannerSection() {
           </Typography>
         </Box>
         <OOSPlanner sx={{ mt: 8, py: 5 }} />
+        <Booking />
       </Container>
     </Box>
   );
