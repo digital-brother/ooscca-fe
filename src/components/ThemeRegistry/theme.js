@@ -61,12 +61,11 @@ const theme = createTheme({
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },
-    subheading: ({ theme }) => ({
+    subheading: {
       fontFamily: montserrat.style.fontFamily,
       fontSize: "1rem", // 16px
       fontWeight: 700,
-      color: theme.palette.orange.main,
-    }),
+    },
   },
   components: {
     MuiAlert: {
