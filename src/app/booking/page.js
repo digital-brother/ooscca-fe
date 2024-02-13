@@ -1,9 +1,9 @@
-import OOSPlanner from "./OOSPlanner";
+import OOSPlannerSection from "./OOSPlannerSection";
 
 export default function Booking() {
   return (
     <>
-      <OOSPlanner />
+      <OOSPlannerSection />
     </>
   )
 }
