@@ -4,7 +4,6 @@ import { Box, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import DemoStepper from "./DemoStepper"
 import { montserrat } from "@/components/ThemeRegistry/theme";
 import { manrope } from "@/components/ThemeRegistry/theme";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
