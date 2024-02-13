@@ -74,10 +74,6 @@ const theme = createTheme({
       paragraph: true,
       display: "block",
     },
-    benefitDetails: {
-      fontSize: "1rem", // 16px
-      fontWeight: 700,
-    }
   },
   components: {
     MuiAlert: {

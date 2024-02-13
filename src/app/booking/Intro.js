@@ -5,9 +5,16 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import DemoStepper from "./DemoStepper"
+import DemoStepper from "@/app/(homepage)/DemoStepper";
 
 function IntroText(props) {
+
+  const STEPS = [
+    "Select activities",
+    "Activities are added to your child’s calendar",
+    "Pay for all bookings in one go",
+  ];
+
   return (
     <Box textAlign="center" {...props}>
       <Typography my={3} variant="h1">
@@ -22,7 +29,7 @@ function IntroText(props) {
         The cure to complexity of booking activities in
         <span style={{ color: "purple", fontWeight: 700 }}> 3 simple steps</span>
       </Typography>
-      <DemoStepper />
+      <DemoStepper steps={STEPS} />
     </Box>
   );
 }
