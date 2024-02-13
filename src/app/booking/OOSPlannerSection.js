@@ -8,8 +8,6 @@ import { styled } from "@mui/system";
 
 const BookingBox = styled(Box)(({ theme }) => ({
   flex: 1,
-  border: "1px solid",
-  borderColor: theme.palette.grey[400],
   borderRadius: theme.spacing(1),
   padding: theme.spacing(2),
 }));
@@ -43,8 +41,19 @@ function Booking({ booking }) {
 
 function EmptyBooking() {
   return (
-    <BookingBox sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <Button color="grey" startIcon={<AddCircleOutlineIcon />}>Add activity</Button>
+    <BookingBox
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "1px solid",
+        borderColor: "grey.main",
+        borderStyle: "dashed",
+      }}
+    >
+      <Button color="grey" startIcon={<AddCircleOutlineIcon />}>
+        Add activity
+      </Button>
     </BookingBox>
   );
 }
