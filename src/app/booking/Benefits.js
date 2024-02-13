@@ -59,35 +59,37 @@ function BenefitText({benefit, sx}) {
 
 export default function Benefits() {
   return (
-    <Container sx={{py: {xs: 6, md: 10}}}>
-      <Box sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 4,
-        maxWidth: {xs: 500, md: "100%"},
-        mx: "auto",
-      }}>
-        {BENEFITS.map((benefit, index) => (
-          <Grid key={index} container columnSpacing={6} sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: index % 2 ? "row" : "row-reverse",
-            mt: {xs: 5, md: 0},
-          }}>
-            <Grid item xs={12} md={6}>
-              <Box component="img" src={benefit.image} width="100%" sx={{maxWidth: 500}}/>
+    <Box backgroundColor={{ xs:"grey.100", md: "white" }}>
+      <Container py={3}>
+        <Box sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+          maxWidth: {xs: 500, md: "100%"},
+          mx: "auto",
+        }}>
+          {BENEFITS.map((benefit, index) => (
+            <Grid key={index} container columnSpacing={6} sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: index % 2 ? "row" : "row-reverse",
+              mt: {xs: 5, md: 0},
+            }}>
+              <Grid item xs={12} md={6}>
+                <Box component="img" src={benefit.image} width="100%" sx={{maxWidth: 500}}/>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <BenefitText
+                  benefit={benefit}
+                  sx={{
+                    textAlign: {xs: "center", md: "left"},
+                    maxWidth: {md: "90%"}
+                }}/>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <BenefitText
-                benefit={benefit}
-                sx={{
-                  textAlign: {xs: "center", md: "left"},
-                  maxWidth: {md: "90%"}
-              }}/>
-            </Grid>
-          </Grid>
-        ))}
-      </Box>
-    </Container>
+          ))}
+        </Box>
+      </Container>
+    </Box>
   )
 }
