@@ -68,6 +68,10 @@ function BookingDay({ bookings = [] }) {
   );
 }
 
+function FamilyBookings() {
+  return <>Family Bookings</>;
+}
+
 function BookingCalendar({ sx }) {
   const booking = {
     type: "Football",
@@ -78,8 +82,6 @@ function BookingCalendar({ sx }) {
   return (
     <Box
       sx={{
-        display: "flex",
-        columnGap: 2,
         borderRadius: 2,
         border: "1px solid",
         borderColor: "grey.300",
@@ -88,11 +90,14 @@ function BookingCalendar({ sx }) {
         ...sx,
       }}
     >
-      <BookingDay bookings={[booking]} />
-      <BookingDay bookings={[booking, null]} />
-      <BookingDay bookings={[null, booking]} />
-      <BookingDay bookings={[null, null]} />
-      <BookingDay bookings={[null]} />
+      <FamilyBookings />
+      <Box sx={{display: "flex", columnGap: 2, mt: 3}}>
+        <BookingDay bookings={[booking]} />
+        <BookingDay bookings={[booking, null]} />
+        <BookingDay bookings={[null, booking]} />
+        <BookingDay bookings={[null, null]} />
+        <BookingDay bookings={[null]} />
+      </Box>
     </Box>
   );
 }
