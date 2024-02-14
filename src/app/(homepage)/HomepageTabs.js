@@ -86,7 +86,7 @@ function ContentPanel({ type }) {
         alignItems: {xs: "center", md: "start"},
         textAlign: {xs: 'center', md: 'left'},
         gap: 3,
-        maxWidth: {xs: 544, md: "none"},
+        maxWidth: {xs: 500, md: "none"},
         mx: "auto",
       }}
     >
@@ -104,22 +104,22 @@ function ContentPanel({ type }) {
           {data.button}
         </Button>
       </Box>
-      <Box
-        sx={{
-          flex: 1,
-          width: '100%',
-          minWidth: 400,
-          mt: {xs: 3, md: 0},
-        }}
-      >
-      <Image
-        src={data.image}
-        width={544}
-        height={280}
-        layout="responsive"
-        objectFit="contain"
-        />
-      </Box>
+       <Box
+       sx={{
+         flex: 1,
+         width: '100%',
+         mt: {xs: 3, md: 0},
+       }}
+       >
+       <Image
+         src={data.image}
+         alt="School"
+         width={564}
+         height={280}
+         layout="responsive"
+         objectFit="contain"
+         />
+        </Box>
     </Box>
   );
 }
@@ -159,14 +159,14 @@ function Tabs(props) {
             />
           </TabList>
         </Box>
-        <Box sx={{ pt: { xs: 4, md: 10 } }}>
+        <Box sx={{ p: 0, pt: { xs: 4, md: 10 } }}>
           <TabPanel sx={{ p: 0 }} value="oosCalendar">
             <SchoolStats />
           </TabPanel>
-          <TabPanel value="classBirthdayCalendar">
+          <TabPanel sx={{ p: 0 }} value="classBirthdayCalendar">
             <ContentPanel type="classBirthdayCalendar" />
           </TabPanel>
-          <TabPanel value="whoseWho">
+          <TabPanel sx={{ p: 0 }} value="whoseWho">
             <ContentPanel type="whoseWho" />
           </TabPanel>
         </Box>
@@ -177,7 +177,7 @@ function Tabs(props) {
 
 export default function HomepageTabs() {
   return (
-    <Container sx={{ py: { xs: 6, md: 10 } }}>
+    <Container sx={{ pt: { xs: 6, md: 10 } }}>
       <HomepageTabsHeader
         sx={{ maxWidth: 730, textAlign: "center", mx: "auto" }}
       />
