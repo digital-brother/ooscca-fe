@@ -11,6 +11,7 @@ import Tab from "@mui/material/Tab";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
+import Image from 'next/image';
 
 
 const SCHOOL_DETAIL = {
@@ -105,14 +106,20 @@ function ContentPanel({ type }) {
         </Button>
       </Box>
       <Box
-        component="img"
-        src={data.image}
         sx={{
           width: '100%',
-          maxWidth: { xs: '90vw', sm: '70vw', md: '45vw', lg: 544 },
-          mt: {xs: 3, md: 0}
+          minWidth: 400,
+          mt: {xs: 3, md: 0},
         }}
-      />
+      >
+      <Image
+        src={data.image}
+        width={544}
+        height={280}
+        layout="responsive"
+        objectFit="contain"
+        />
+      </Box>
     </Box>
   );
 }
