@@ -80,7 +80,8 @@ function ContentPanel({ type }) {
         flexDirection: { xs: "column", md: "row" },
         alignItems: { xs: "center", md: "stretch" },
         textAlign: { xs: "center", md: "left" },
-        gap: 3,
+        rowGap: 6,
+        columnGap: 3,
         maxWidth: { xs: 500, md: "none" },
         mx: "auto",
       }}
@@ -99,7 +100,7 @@ function ContentPanel({ type }) {
           {data.button}
         </Button>
       </Box>
-      <Box sx={{ flex: 1, width: "100%", mt: { xs: 3, md: 0 } }}>
+      <Box sx={{ flex: 1}}>
         <Image
           src={data.image}
           alt="School"
@@ -157,7 +158,7 @@ function Tabs(props) {
 
 export default function HomepageTabs() {
   return (
-    <Container sx={{ pt: { xs: 6, md: 10 } }}>
+    <Container sx={{ py: { xs: 6, md: 10 } }}>
       <HomepageTabsHeader sx={{ maxWidth: 730, textAlign: "center", mx: "auto" }} />
       <Tabs sx={{ mt: 5 }} />
     </Container>
