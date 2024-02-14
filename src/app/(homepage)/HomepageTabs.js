@@ -104,22 +104,22 @@ function ContentPanel({ type }) {
           {data.button}
         </Button>
       </Box>
-       <Box
-       sx={{
-         flex: 1,
-         width: '100%',
-         mt: {xs: 3, md: 0},
-       }}
-       >
-       <Image
-         src={data.image}
-         alt="School"
-         width={564}
-         height={280}
-         layout="responsive"
-         objectFit="contain"
-         />
-        </Box>
+      <Box
+        sx={{
+          flex: 1,
+          width: '100%',
+          mt: {xs: 3, md: 0},
+        }}
+        >
+        <Image
+          src={data.image}
+          alt="School"
+          width="0"
+          height="0"
+          sizes="100vw"
+          style={{ width: '100%', height: 'auto' }}
+        />
+      </Box>
     </Box>
   );
 }
@@ -164,10 +164,10 @@ function Tabs(props) {
             <SchoolStats />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="classBirthdayCalendar">
-            <ContentPanel type="classBirthdayCalendar" />
+            <ContentPanel type={value} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="whoseWho">
-            <ContentPanel type="whoseWho" />
+            <ContentPanel type={value} />
           </TabPanel>
         </Box>
       </TabContext>
