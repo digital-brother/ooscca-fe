@@ -39,7 +39,7 @@ function SignUpForm() {
 
 export default function SignUp() {
   return (
-    <Container sx={{pt: 14}}>
+    <Container sx={{pt: {xs: 5, md: 10}}}>
       <Grid container spacing={{xs: 10, md: 5}} sx={{
         textAlign: "center",
       }}>

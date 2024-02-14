@@ -1,4 +1,4 @@
-import { alpha, createTheme, darken } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
 import { Manrope, Montserrat } from "next/font/google";
 import { colors } from "./colors";
 
@@ -61,18 +61,18 @@ const theme = createTheme({
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },
-    subheading: ({ theme }) => ({
+    subheading: {
       fontFamily: montserrat.style.fontFamily,
       fontSize: "1rem", // 16px
       fontWeight: 700,
-      color: theme.palette.orange.main,
-    }),
-    overlineBold: ({
+      color: colors.orange.main,
+    },
+    overlineBold: {
       fontFamily: montserrat.style.fontFamily,
       fontWeight: 700,
       fontSize: "1rem", // 16px
       color: colors.orange.main,
-    }),
+    },
   },
   components: {
     MuiAlert: {

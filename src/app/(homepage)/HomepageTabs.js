@@ -2,7 +2,7 @@
 
 import React from "react";
 import Box from "@mui/material/Box";
-import { Container, styled } from "@mui/material";
+import { Button, Container, styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -11,28 +11,32 @@ import Tab from "@mui/material/Tab";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
+import Image from "next/image";
 
-function HomepageTabsHeader({ sx }) {
-  return (
-    <Box {...sx}>
-      <Typography variant="subheading">Effortless tracking of every important detail</Typography>
-      <Typography mt={2} variant="h2">
-        Your central hub for key school details
-      </Typography>
-      <Typography mt={2} variant="body1" color="text.secondary">
-        You shouldn’t have your work cut out finding and syncing holidays, birthdays and contacts. Once you&apos;re on
-        board, you&apos;ll have access to crucial information like school holiday schedules, classmates&apos; birthdays,
-        and parents&apos; contact details at your fingertips.
-      </Typography>
-    </Box>
-  );
-}
+const TABS_CONTENT = {
+  classBirthdayCalendar: {
+    image: "/school1.png",
+    header: "Birthdays matter. Of course they matter!",
+    subheader: "Celebrate Every Milestone",
+    button: "Unlock birthday calendar",
+    description:
+      "Birthdays parties, presents, cakes, pictures, cards, friends invite lists, plans, surprises, upsets —they all matter. To the child and the parents it is a very important personal event.",
+  },
+  whoseWho: {
+    image: "/school2.png",
+    header: "Whose that again?",
+    subheader: "Build meaningful connections",
+    button: "Remembering made easy",
+    description:
+      "Avoid the awkward conversations about whose who when you meet at the gates or the next gathering. Your one place to get all your links, names and classmates in order!",
+  },
+};
 
 const CustomTab = styled(Tab)(({ theme }) => ({
   textTransform: "none",
   "&.Mui-selected": {
-    color: "#FFFFFF",
-    backgroundColor: "#BD54C2",
+    color: "black",
+    backgroundColor: theme.palette.grey[300],
   },
   [theme.breakpoints.down("sm")]: {
     borderRight: null,
@@ -50,7 +54,67 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   fontSize: 16,
 }));
 
-function CustomTabList({ children, handleChange }) {
+function HomepageTabsHeader({ sx }) {
+  return (
+    <Box {...sx}>
+      <Typography variant="subheading">Effortless tracking of every important detail</Typography>
+      <Typography mt={2} variant="h2">
+        Your central hub for key school details
+      </Typography>
+      <Typography mt={2} variant="body1" color="text.secondary">
+        You shouldn’t have your work cut out finding and syncing holidays, birthdays and contacts. Once you&apos;re on
+        board, you&apos;ll have access to crucial information like school holiday schedules, classmates&apos; birthdays,
+        and parents&apos; contact details at your fingertips.
+      </Typography>
+    </Box>
+  );
+}
+
+function ContentPanel({ type }) {
+  const data = TABS_CONTENT[type];
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        alignItems: { xs: "center", md: "stretch" },
+        textAlign: { xs: "center", md: "left" },
+        rowGap: 6,
+        columnGap: 3,
+        maxWidth: { xs: 500, md: "none" },
+        mx: "auto",
+      }}
+    >
+      <Box sx={{ flex: 1 }}>
+        <Typography mb={2} variant="subheading">
+          {data.subheader}
+        </Typography>
+        <Typography mb={3} variant="h3">
+          {data.header}
+        </Typography>
+        <Typography mb={3} variant="body1" color="text.secondary">
+          {data.description}
+        </Typography>
+        <Button variant="outlined" color="orange" size="large">
+          {data.button}
+        </Button>
+      </Box>
+      <Box sx={{ flex: 1, textAlign: "right"}}>
+        <Image
+          src={data.image}
+          alt="School"
+          width="0"
+          height="0"
+          sizes="100vw"
+          style={{ width: "100%", height: "auto", maxWidth: 500 }}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+function CustomTabList({children, handleChange}) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -85,12 +149,16 @@ function Tabs(props) {
             <CustomTab label="Whose who" value="whoseWho" />
           </CustomTabList>
         </Box>
-        <Box sx={{ pt: { xs: 4, md: 10 } }}>
+        <Box sx={{ p: 0, pt: 5 }}>
           <TabPanel sx={{ p: 0 }} value="oosCalendar">
             <SchoolStats />
           </TabPanel>
-          <TabPanel value="classBirthdayCalendar">Class birthday calendar</TabPanel>
-          <TabPanel value="whoseWho">Whose who</TabPanel>
+          <TabPanel sx={{ p: 0 }} value="classBirthdayCalendar">
+            <ContentPanel type={value} />
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value="whoseWho">
+            <ContentPanel type={value} />
+          </TabPanel>
         </Box>
       </TabContext>
     </Box>
