@@ -99,13 +99,7 @@ function ContentPanel({ type }) {
           {data.button}
         </Button>
       </Box>
-      <Box
-        sx={{
-          flex: 1,
-          width: "100%",
-          mt: { xs: 3, md: 0 },
-        }}
-      >
+      <Box sx={{ flex: 1, width: "100%", mt: { xs: 3, md: 0 } }}>
         <Image
           src={data.image}
           alt="School"
