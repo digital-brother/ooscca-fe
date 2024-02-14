@@ -1,26 +1,16 @@
 "use client";
 
-import { Box, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
-import { montserrat } from "@/components/ThemeRegistry/theme";
-import { manrope } from "@/components/ThemeRegistry/theme";
+import { manrope, montserrat } from "@/components/ThemeRegistry/theme";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
   Button,
   Chip,
-  FormControl,
   Icon,
-  SvgIcon,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   Checkbox,
-  useMediaQuery,
+  Box,
+  Container
 } from "@mui/material";
 
 
@@ -61,11 +51,7 @@ export default function Card(props) {
 
   function Chips(sx) {
     return (
-      <Stack
-        spacing={1}
-        sx={{
-          width: { xs: "50%", sm: "max-content" }
-      }}>
+      <Stack spacing={1} width="max-content">
         <Chip label="Going fast" sx={{ bgcolor: "#e72e84", color: "white" }} />
         <Chip label="3 Spots left" sx={{ bgcolor: "#e7a71d", color: "black" }} />
       </Stack>
