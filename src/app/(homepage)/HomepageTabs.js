@@ -90,7 +90,7 @@ function ContentPanel({ type }) {
         mx: "auto",
       }}
     >
-      <Box>
+      <Box sx={{flex: 1}}>
         <Typography mb={2} variant="subheading">
           {data.subheader}
         </Typography>
@@ -106,6 +106,7 @@ function ContentPanel({ type }) {
       </Box>
       <Box
         sx={{
+          flex: 1,
           width: '100%',
           minWidth: 400,
           mt: {xs: 3, md: 0},
