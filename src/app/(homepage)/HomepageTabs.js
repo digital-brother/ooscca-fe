@@ -14,7 +14,7 @@ import SchoolStats from "@/app/(homepage)/SchoolStats";
 import Image from 'next/image';
 
 
-const SCHOOL_DETAIL = {
+const TABS_CONTENT = {
   classBirthdayCalendar: {
     image: "/school1.png",
     header: "Birthdays matter. Of course they matter!",
@@ -36,7 +36,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   textTransform: "none",
   "&.Mui-selected": {
     color: "black",
-    backgroundColor: theme.palette.grey.light,
+    backgroundColor: theme.palette.grey[300],
   },
   [theme.breakpoints.down("sm")]: {
     borderRight: null,
@@ -76,8 +76,7 @@ function HomepageTabsHeader({ sx }) {
 
 
 function ContentPanel({ type }) {
-  const theme = useTheme();
-  const data = SCHOOL_DETAIL[type];
+  const data = TABS_CONTENT[type];
 
   return (
     <Box
