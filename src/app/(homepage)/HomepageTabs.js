@@ -93,21 +93,21 @@ function ContentPanel({ type }) {
         <Typography mb={3} variant="h3">
           {data.header}
         </Typography>
-        <Typography mb={6.7} variant="body1" color="text.secondary">
+        <Typography mb={3} variant="body1" color="text.secondary">
           {data.description}
         </Typography>
         <Button variant="outlined" color="orange" size="large">
           {data.button}
         </Button>
       </Box>
-      <Box sx={{ flex: 1}}>
+      <Box sx={{ flex: 1, textAlign: "right"}}>
         <Image
           src={data.image}
           alt="School"
           width="0"
           height="0"
           sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "auto", maxWidth: 500 }}
         />
       </Box>
     </Box>
@@ -140,7 +140,7 @@ function Tabs(props) {
             <CustomTab label="Whose who" value="whoseWho" />
           </TabList>
         </Box>
-        <Box sx={{ p: 0, pt: { xs: 4, md: 10 } }}>
+        <Box sx={{ p: 0, pt: 5 }}>
           <TabPanel sx={{ p: 0 }} value="oosCalendar">
             <SchoolStats />
           </TabPanel>
