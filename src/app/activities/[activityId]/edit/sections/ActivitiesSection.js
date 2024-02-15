@@ -26,7 +26,7 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
-} from "@/app/activities/[activityId]/api.mjs";
+} from "@/app/activities/[activityId]/edit/api.mjs";
 import "dayjs/locale/en-gb";
 import {
   FormikErrors,

@@ -3,11 +3,11 @@
 import { useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import React, { useEffect, useState } from "react";
-import { getActivity, patchActivity } from "@/app/activities/[activityId]/api.mjs";
+import { getActivity, patchActivity } from "@/app/activities/[activityId]/edit/api.mjs";
 import Box from "@mui/material/Box";
-import { Map } from "@/app/activities/[activityId]/components/Map";
+import { Map } from "@/app/activities/[activityId]/edit/components/Map";
 import { Container } from "@mui/material";
-import { Errors } from "@/app/activities/[activityId]/components/formikFields";
+import { Errors } from "@/app/activities/[activityId]/edit/components/formikFields";
 
 export function MapSection() {
   const activityId = useParams().activityId;
