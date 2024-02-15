@@ -1,10 +1,26 @@
 "use client";
 
-import { Box, Button, Container, IconButton, Typography } from "@mui/material";
-import IosShareIcon from "@mui/icons-material/IosShare";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import {
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/system";
+import dayjs from "dayjs";
+import weekday from "dayjs/plugin/weekday";
+
+dayjs.extend(weekday);
 
 const BookingBox = styled(Box)(({ theme }) => ({
   flex: 1,
@@ -58,9 +74,9 @@ function EmptyBooking() {
   );
 }
 
-function BookingDay({ bookings = [] }) {
+function BookingDay({ bookings = [], sx }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, width: 200, height: 400 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, width: 150, height: 400, ...sx }}>
       {bookings.map((booking, index) =>
         booking ? <Booking key={index} booking={booking} /> : <EmptyBooking key={index} />
       )}
@@ -69,10 +85,79 @@ function BookingDay({ bookings = [] }) {
 }
 
 function FamilyBookings() {
-  return <>Family Bookings</>;
+  const today = dayjs();
+  let firstWeekDayDate;
+  if (today.weekday() === 0 || today.weekday() === 6) {
+    firstWeekDayDate = today.startOf("week").add(1, "day");
+  } else {
+    firstWeekDayDate = today.startOf("week").add(1, "day");
+  }
+  const weekDates = Array.from({ length: 5 }, (_, i) => firstWeekDayDate.add(i, "day"));
+  const children = ["Milly", "Daniel"];
+
+  const formatDate = (date) => date.format("ddd D");
+
+  const booking = {
+    type: "Football",
+    time: "7:30 - 12:00 AM",
+    address: "123 Clubs, Street name, postcode",
+    price: 45,
+  };
+
+  const StyledHeaderTableCell = styled(TableCell)(({ theme }) => ({
+    borderBottom: "none",
+    "&:first-child": {
+      borderRight: "1px solid",
+      borderRightColor: theme.palette.grey[500],
+    },
+  }));
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    justifyContent: "center",
+    borderBottom: "none",
+    "&:not(:last-child)": {
+      borderRight: "1px dashed",
+      borderRightColor: theme.palette.grey[300],
+    },
+    "&:first-child": {
+      borderRight: "1px solid",
+      borderRightColor: theme.palette.grey[500],
+    },
+  }));
+
+  return (
+    <TableContainer component={Box}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.500" }}>
+            <StyledHeaderTableCell></StyledHeaderTableCell>
+            {weekDates.map((date, index) => (
+              <StyledHeaderTableCell key={index} align="center">
+                {formatDate(date)}
+              </StyledHeaderTableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {children.map((child, index) => (
+            <TableRow key={index} sx={{ "&:not(:last-child)": { borderBottom: "1px solid", borderColor: "grey.500" } }}>
+              <StyledTableCell component="th" scope="row">
+                {child}
+              </StyledTableCell>
+              {weekDates.map((date, index) => (
+                <StyledTableCell key={index} align="left">
+                  <BookingDay bookings={[booking, booking]} sx={{ mx: "auto" }} />
+                </StyledTableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }
 
-function BookingCalendar({ sx }) {
+function Wrapper({ sx }) {
   const booking = {
     type: "Football",
     time: "7:30 - 12:00 AM",
@@ -91,7 +176,7 @@ function BookingCalendar({ sx }) {
       }}
     >
       <FamilyBookings />
-      <Box sx={{display: "flex", columnGap: 2, mt: 3}}>
+      <Box sx={{ display: "flex", columnGap: 2, mt: 7 }}>
         <BookingDay bookings={[booking]} />
         <BookingDay bookings={[booking, null]} />
         <BookingDay bookings={[null, booking]} />
@@ -112,7 +197,7 @@ export default function OOSPlannerSection() {
             Enjoy the ease of booking activities without the text and email tennis
           </Typography>
         </Box>
-        <BookingCalendar sx={{ mt: 8 }} />
+        <Wrapper sx={{ mt: 8 }} />
       </Container>
     </Box>
   );
