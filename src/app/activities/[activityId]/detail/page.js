@@ -2,7 +2,9 @@ import ImagesMultipleUpload from "./components/ImageMultipleUpload";
 import ActivitiesSection from "./sections/ActivitiesSection";
 import SecondaryImagesSection from "./sections/SecondaryImagesSection";
 import {MapSection} from "./sections/MapSection";
-import {SubmitSection} from "./sections/SubmitSection";
+import Image from "next/image";
+import React from "react";
+import {Box} from "@mui/system";
 
 export default function ActivityDetailsPage() {
   return (
@@ -11,7 +13,21 @@ export default function ActivityDetailsPage() {
       <ActivitiesSection />
       <MapSection />
       <SecondaryImagesSection />
-      <SubmitSection />
+      <Box
+        sx={{
+        display: "flex",
+        justifyContent: "center",
+        mx: 2,
+      }}>
+        <Image
+          src={ "/calendar.png" }
+          alt="School"
+          width="0"
+          height="0"
+          sizes="100vw"
+          style={{ width: "100%", height: "auto", maxWidth: 500 }}
+        />
+      </Box>
     </>
   );
 }

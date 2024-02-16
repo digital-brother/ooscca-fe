@@ -160,7 +160,7 @@ export default function ImagesMultipleUpload() {
       <Box sx={{ maxWidth: { xs: 540, md: "none" }, mx: "auto" }}>
         <Carousel>
           {
-            images.map((item, i) => <Item key={i} item={item} />)
+            serverImages.map((item, i) => <Item key={i} item={item} />)
           }
         </Carousel>
       </Box>
