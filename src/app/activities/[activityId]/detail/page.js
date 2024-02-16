@@ -5,10 +5,12 @@ import {MapSection} from "./sections/MapSection";
 import Image from "next/image";
 import React from "react";
 import {Box} from "@mui/system";
+import ProviderLogo from "./sections/LogoSection";
 
 export default function ActivityDetailsPage() {
   return (
     <>
+      <ProviderLogo />
       <ImagesMultipleUpload />
       <ActivitiesSection />
       <MapSection />

@@ -15,7 +15,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Box, Container, styled } from "@mui/system";
-import { useEffect, useState } from "react";
 import { ImageInput, ImagePreview } from "./ImageUpload";
 
 import _ from "lodash";
@@ -26,7 +25,10 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
 import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
-import Carousel from 'react-material-ui-carousel';
+import React, { createContext, useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+
+export const EmblaApiContext = createContext(undefined);
 
 function ImagePreviewDesktopRow({ index, image, handleDelete }) {
   const { data, errors } = image;
@@ -108,20 +110,6 @@ function ImagesPreviewDesktop({ images, handleDelete }) {
   );
 }
 
-function Item(props) {
-  return (
-    <Paper>
-      <h2>{props.item.name}</h2>
-      <p>{props.item.description}</p>
-
-      <img src={props.item.imageUrl} alt={props.item.name} style={{width: "100%", maxHeight: "500px", objectFit: "cover"}}/>
-
-      <Button className="CheckButton">
-        Check it out!
-      </Button>
-    </Paper>
-  )
-}
 
 export default function ImagesMultipleUpload() {
   const [images, setImages] = useImmer([]);
@@ -130,7 +118,20 @@ export default function ImagesMultipleUpload() {
   const activityId = useParams().activityId;
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
 
-  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    watchDrag: false,
+    startIndex: 4,
+  });
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   useEffect(() => {
     if (!serverImages || images.length > 0) return;
@@ -138,31 +139,39 @@ export default function ImagesMultipleUpload() {
     console.log("updage");
   }, [serverImages]);
 
-  function updateOrder() {
-    setImages((images) => {
-      let order = 1;
-      images?.forEach(({ data }) => {
-        if (!data) return
-        if (!data.toBeDeleted) data.order = order++;
-        else data.order = null;
-      });
-    });
-    setFormErrors([]);
-  }
-  useEffect(updateOrder, [images]);
+  // function updateOrder() {
+  //   setImages((images) => {
+  //     let order = 1;
+  //     images?.forEach(({ data }) => {
+  //       if (!data) return
+  //       if (!data.toBeDeleted) data.order = order++;
+  //       else data.order = null;
+  //     });
+  //   });
+  //   setFormErrors([]);
+  // }
+  // useEffect(updateOrder, [images]);
 
-  useEffect(() => {
-    return () => images.forEach(({ data }) => URL.revokeObjectURL(data.file));
-  }, []);
+  // useEffect(() => {
+  //   return () => images.forEach(({ data }) => URL.revokeObjectURL(data.file));
+  // }, []);
 
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ maxWidth: { xs: 540, md: "none" }, mx: "auto" }}>
-        <Carousel>
-          {
-            serverImages.map((item, i) => <Item key={i} item={item} />)
-          }
-        </Carousel>
+        <EmblaApiContext.Provider value={{ scrollPrev, scrollNext }}>
+          <Box className="embla" sx={{ overflow: "hidden" }}>
+            <Box className="embla__viewport" ref={emblaRef}>
+              <Box className="embla__container" sx={{ display: "flex" }}>
+                {React.Children.map(serverImages, (child, index) => (
+                  <Box className="embla__slide" key={index} sx={{ flex: "0 0 100%", minWidth: 0 }}>
+                    {child}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Box>
+        </EmblaApiContext.Provider>
       </Box>
     </Container>
   );
