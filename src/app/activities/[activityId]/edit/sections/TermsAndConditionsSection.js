@@ -1,6 +1,6 @@
 "use client";
 
-import { getActivity, patchProvider } from "@/app/activities/[activityId]/api.mjs";
+import { getActivity, patchProvider } from "../api.mjs";
 import { Button, Dialog, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
