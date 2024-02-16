@@ -4,6 +4,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   Button,
   IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -25,6 +26,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
 import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
+import Carousel from 'react-material-ui-carousel';
 
 function ImagePreviewDesktopRow({ index, image, handleDelete }) {
   const { data, errors } = image;
@@ -106,14 +108,27 @@ function ImagesPreviewDesktop({ images, handleDelete }) {
   );
 }
 
+function Item(props) {
+  return (
+    <Paper>
+      <h2>{props.item.name}</h2>
+      <p>{props.item.description}</p>
+
+      <img src={props.item.imageUrl} alt={props.item.name} style={{width: "100%", maxHeight: "500px", objectFit: "cover"}}/>
+
+      <Button className="CheckButton">
+        Check it out!
+      </Button>
+    </Paper>
+  )
+}
+
 export default function ImagesMultipleUpload() {
   const [images, setImages] = useImmer([]);
   const [formErrors, setFormErrors] = useState([]);
 
   const activityId = useParams().activityId;
   const { data: serverImages } = useQuery(["primaryImages", activityId], () => getActivityImagesPrimary(activityId));
-  const postMutation = useMutation((data) => postActivityImagePrimary(activityId, data));
-  const deleteMutation = useMutation((data) => deleteActivityImagePrimary(activityId, data));
 
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
@@ -136,97 +151,6 @@ export default function ImagesMultipleUpload() {
   }
   useEffect(updateOrder, [images]);
 
-  async function validateFile(file) {
-    const maxWidth = 5000;
-    const maxHeight = 5000;
-    const maxFileSizeMb = 5;
-
-    const errors = [];
-    if (file.size > maxFileSizeMb * 1024 * 1024)
-      errors.push(`Image "${file.name}" size (${prettyBytes(file.size)}) exceeds ${maxFileSizeMb} MB.`);
-
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    await new Promise((resolve) => {
-      img.onload = resolve;
-      img.onerror = () => {
-        errors.push(`Unable to load image ${file.name}.`);
-        resolve();
-      };
-    });
-
-    if (img.complete && (img.width > maxWidth || img.height > maxHeight))
-      errors.push(`${file.name} should be less then ${maxWidth}x${maxHeight} px.`);
-
-    URL.revokeObjectURL(img.src);
-    return errors;
-  }
-
-  async function handleAdd(files) {
-    const maxImagesAllowed = 5;
-    const imagesCount = images.filter(({ data }) => !data.toBeDeleted).length;
-    if (imagesCount + files?.length > maxImagesAllowed) {
-      setFormErrors([`Maximum ${maxImagesAllowed} images allowed.`]);
-      return;
-    }
-
-    const newImages = [];
-    const formErrors = [];
-    await Promise.all(
-      files.map(async (file) => {
-        const fileErrors = await validateFile(file);
-        if (fileErrors.length) formErrors.push(...fileErrors);
-        else
-          newImages.push({
-            data: { activity: activityId, url: URL.createObjectURL(file), name: file.name, size: file.size, file },
-          });
-      })
-    );
-
-    setImages((images) => {
-      images.push(...newImages);
-    });
-    setFormErrors(formErrors);
-  }
-
-  function handleDelete(deleteIndex) {
-    setImages((images) => {
-      const data = images[deleteIndex].data;
-      if (data.id) data.toBeDeleted = true;
-      else images.splice(deleteIndex, 1);
-    });
-  }
-
-  async function handleSave() {
-    const promises = images.map(async ({ data }, index) => {
-      const isAdded = !data.id;
-      // const isUpdated = serverImages.some(
-      //   (serverImage) => serverImage.id === image.id && !_.isEqual(image, serverImage)
-      // );
-      try {
-        if (isAdded) {
-          const response = await postMutation.mutateAsync(data);
-          setImages((images) => {
-            images[index].data = response;
-          });
-        }
-        if (data.toBeDeleted) {
-          await deleteMutation.mutateAsync(data.id);
-          setImages((images) => {
-            images[index].data = null;
-          });
-        }
-      } catch (error) {
-        setImages((images) => {
-          const errors = getFlatErrors(error);
-          images[index].errors = errors;
-        });
-      }
-    });
-    await Promise.all(promises);
-    setImages((images) => images.filter(({ data }) => data !== null));
-  }
-
   useEffect(() => {
     return () => images.forEach(({ data }) => URL.revokeObjectURL(data.file));
   }, []);
@@ -234,28 +158,11 @@ export default function ImagesMultipleUpload() {
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ maxWidth: { xs: 540, md: "none" }, mx: "auto" }}>
-        <Box sx={{ height: 110, border: "1px #ADB5BD solid", borderRadius: 1.5, bgcolor: "grey.200" }}>
-          <ImageInput multiple={true} handleAdd={handleAdd} />
-        </Box>
-        {!!images?.length && (
-          <>
-            {mdUp && <ImagesPreviewDesktop {...{ images, handleDelete }} />}
-            {!mdUp && <ImagesPreviewMobile {...{ images, handleDelete }} />}
-            <Errors errors={formErrors} sx={{ textAlign: "center" }} />
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
-              <Button
-                onClick={() => setImages(serverImages.map((serverImage) => ({ data: serverImage })))}
-                variant="outlined"
-                color="grey"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleSave} variant="contained" color="green">
-                Save
-              </Button>
-            </Box>
-          </>
-        )}
+        <Carousel>
+          {
+            images.map((item, i) => <Item key={i} item={item} />)
+          }
+        </Carousel>
       </Box>
     </Container>
   );

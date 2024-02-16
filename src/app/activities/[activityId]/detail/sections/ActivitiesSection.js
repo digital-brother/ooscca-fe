@@ -26,7 +26,7 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
-} from "@/app/activities/[activityId]/edit/api.mjs";
+} from "../api.mjs";
 import "dayjs/locale/en-gb";
 import {
   FormikErrors,
@@ -642,9 +642,6 @@ function DescriptionForm() {
               },
             }}
           />
-          <Button variant="contained" color="green" size="large" type="submit">
-            Save
-          </Button>
           <FormikErrors />
         </Stack>
       </Form>
