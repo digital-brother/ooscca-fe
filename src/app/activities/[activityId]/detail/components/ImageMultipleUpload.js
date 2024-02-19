@@ -146,11 +146,11 @@ export default function ImagesMultipleUpload() {
           <Box className="embla" sx={{ overflow: "hidden" }}>
             <Box className="embla__viewport" ref={emblaRef}>
               <Box className="embla__container" sx={{ display: "flex" }}>
-                {React.Children.map(serverImages, (child, index) => (
-                  <Box className="embla__slide" key={index} sx={{flex: "0 0 100%", minWidth: 0}}>
-                    <img src={serverImages.url} alt={`Slide ${index}`} style={{width: '100%', height: 'auto'}}/>
-                  </Box>
-                ))}
+                {/* {React.Children.map(serverImages, (child, index) => ( */}
+                {/*  <Box className="embla__slide" key={index} sx={{flex: "0 0 100%", minWidth: 0}}> */}
+                {/*    <img src={serverImages.url} alt={`Slide ${index}`} style={{width: '100%', height: 'auto'}}/> */}
+                {/*  </Box> */}
+                {/* ))} */}
               </Box>
             </Box>
           </Box>
