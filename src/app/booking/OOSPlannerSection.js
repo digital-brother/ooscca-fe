@@ -3,6 +3,8 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import IosShareIcon from "@mui/icons-material/IosShare";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
   Button,
@@ -76,7 +78,7 @@ function EmptyBooking() {
 
 function BookingDay({ bookings = [], sx }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, width: 150, height: 400, ...sx }}>
+    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 400, ...sx }}>
       {bookings.map((booking, index) =>
         booking ? <Booking key={index} booking={booking} /> : <EmptyBooking key={index} />
       )}
@@ -108,7 +110,7 @@ function FamilyBookings() {
     borderBottom: "none",
     "&:first-child": {
       borderRight: "1px solid",
-      borderRightColor: theme.palette.grey[500],
+      borderRightColor: theme.palette.grey[300],
     },
   }));
 
@@ -121,7 +123,7 @@ function FamilyBookings() {
     },
     "&:first-child": {
       borderRight: "1px solid",
-      borderRightColor: theme.palette.grey[500],
+      borderRightColor: theme.palette.grey[300],
     },
   }));
 
@@ -129,7 +131,27 @@ function FamilyBookings() {
     <TableContainer component={Box}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
-          <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.500" }}>
+          <TableRow>
+            <StyledTableCell></StyledTableCell>
+            <StyledTableCell colSpan={5}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Typography>September 2023</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <IconButton>
+                    <ArrowBackIosNewIcon />
+                  </IconButton>
+                  <Typography>Today</Typography>
+                  <IconButton>
+                    <ArrowForwardIosIcon />
+                  </IconButton>
+                </Box>
+                <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
+                  Share Calendar
+                </Button>
+              </Box>
+            </StyledTableCell>
+          </TableRow>
+          <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
             <StyledHeaderTableCell></StyledHeaderTableCell>
             {weekDates.map((date, index) => (
               <StyledHeaderTableCell key={index} align="center">
@@ -140,7 +162,7 @@ function FamilyBookings() {
         </TableHead>
         <TableBody>
           {children.map((child, index) => (
-            <TableRow key={index} sx={{ "&:not(:last-child)": { borderBottom: "1px solid", borderColor: "grey.500" } }}>
+            <TableRow key={index} sx={{ "&:not(:last-child)": { borderBottom: "1px solid", borderColor: "grey.300" } }}>
               <StyledTableCell component="th" scope="row">
                 {child}
               </StyledTableCell>
@@ -171,7 +193,6 @@ function Wrapper({ sx }) {
         border: "1px solid",
         borderColor: "grey.300",
         bgcolor: "white",
-        p: 5,
         ...sx,
       }}
     >
