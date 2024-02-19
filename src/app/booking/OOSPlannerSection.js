@@ -1,27 +1,28 @@
 "use client";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import IosShareIcon from "@mui/icons-material/IosShare";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import {
   Box,
   Button,
   Container,
   IconButton,
-  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Typography
 } from "@mui/material";
 import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
+import { useQuery } from "react-query";
+import { getBookings, getChildren } from "../activities/[activityId]/api.mjs";
 
 dayjs.extend(weekday);
 
@@ -79,7 +80,7 @@ function EmptyBooking() {
 
 function BookingDay({ bookings = [], sx }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 400, ...sx }}>
+    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 320, ...sx }}>
       {bookings.map((booking, index) =>
         booking ? <Booking key={index} booking={booking} /> : <EmptyBooking key={index} />
       )}
@@ -96,7 +97,8 @@ function FamilyBookings() {
     firstWeekDayDate = today.startOf("week").add(1, "day");
   }
   const weekDates = Array.from({ length: 5 }, (_, i) => firstWeekDayDate.add(i, "day"));
-  const children = ["Milly", "Daniel"];
+  const {data: children} = useQuery("children", getChildren);
+  const { date: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
   const formatDate = (date) => date.format("ddd D");
 
@@ -162,12 +164,12 @@ function FamilyBookings() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {children.map((child, index) => {
+          {children?.map((child, index) => {
             const isLastChild = index + 1 === children.length;
             return (
-              <TableRow key={index} sx={!isLastChild && { borderBottom: "1px solid", borderColor: "grey.300" }}>
+              <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
                 <StyledTableCell component="th" scope="row">
-                  {child}
+                  {child.name}
                 </StyledTableCell>
                 {weekDates.map((date, index) => (
                   <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
@@ -180,7 +182,9 @@ function FamilyBookings() {
           <TableRow>
             <StyledTableCell></StyledTableCell>
             <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-              <Button variant="contained" color="yellow">Proceed to checkout</Button>
+              <Button variant="contained" color="yellow">
+                Proceed to checkout
+              </Button>
             </StyledTableCell>
           </TableRow>
         </TableBody>
@@ -207,13 +211,6 @@ function Wrapper({ sx }) {
       }}
     >
       <FamilyBookings />
-      <Box sx={{ display: "flex", columnGap: 2, mt: 7 }}>
-        <BookingDay bookings={[booking]} />
-        <BookingDay bookings={[booking, null]} />
-        <BookingDay bookings={[null, booking]} />
-        <BookingDay bookings={[null, null]} />
-        <BookingDay bookings={[null]} />
-      </Box>
     </Box>
   );
 }
