@@ -10,6 +10,7 @@ import {
   Button,
   Container,
   IconButton,
+  Tab,
   Table,
   TableBody,
   TableCell,
@@ -161,18 +162,27 @@ function FamilyBookings() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {children.map((child, index) => (
-            <TableRow key={index} sx={{ "&:not(:last-child)": { borderBottom: "1px solid", borderColor: "grey.300" } }}>
-              <StyledTableCell component="th" scope="row">
-                {child}
-              </StyledTableCell>
-              {weekDates.map((date, index) => (
-                <StyledTableCell key={index} align="left">
-                  <BookingDay bookings={[booking, booking]} sx={{ mx: "auto" }} />
+          {children.map((child, index) => {
+            const isLastChild = index + 1 === children.length;
+            return (
+              <TableRow key={index} sx={!isLastChild && { borderBottom: "1px solid", borderColor: "grey.300" }}>
+                <StyledTableCell component="th" scope="row">
+                  {child}
                 </StyledTableCell>
-              ))}
-            </TableRow>
-          ))}
+                {weekDates.map((date, index) => (
+                  <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
+                    <BookingDay bookings={[booking, booking]} sx={{ mx: "auto" }} />
+                  </StyledTableCell>
+                ))}
+              </TableRow>
+            );
+          })}
+          <TableRow>
+            <StyledTableCell></StyledTableCell>
+            <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
+              <Button variant="contained" color="yellow">Proceed to checkout</Button>
+            </StyledTableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
