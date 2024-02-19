@@ -122,7 +122,7 @@ export default function ImagesMultipleUpload() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     watchDrag: false,
-    startIndex: 4,
+    startIndex: 0,
   });
 
   const scrollPrev = useCallback(() => {
@@ -139,23 +139,6 @@ export default function ImagesMultipleUpload() {
     console.log("updage");
   }, [serverImages]);
 
-  // function updateOrder() {
-  //   setImages((images) => {
-  //     let order = 1;
-  //     images?.forEach(({ data }) => {
-  //       if (!data) return
-  //       if (!data.toBeDeleted) data.order = order++;
-  //       else data.order = null;
-  //     });
-  //   });
-  //   setFormErrors([]);
-  // }
-  // useEffect(updateOrder, [images]);
-
-  // useEffect(() => {
-  //   return () => images.forEach(({ data }) => URL.revokeObjectURL(data.file));
-  // }, []);
-
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ maxWidth: { xs: 540, md: "none" }, mx: "auto" }}>
@@ -164,8 +147,8 @@ export default function ImagesMultipleUpload() {
             <Box className="embla__viewport" ref={emblaRef}>
               <Box className="embla__container" sx={{ display: "flex" }}>
                 {React.Children.map(serverImages, (child, index) => (
-                  <Box className="embla__slide" key={index} sx={{ flex: "0 0 100%", minWidth: 0 }}>
-                    {child}
+                  <Box className="embla__slide" key={index} sx={{flex: "0 0 100%", minWidth: 0}}>
+                    <img src={serverImages.url} alt={`Slide ${index}`} style={{width: '100%', height: 'auto'}}/>
                   </Box>
                 ))}
               </Box>
