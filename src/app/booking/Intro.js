@@ -10,7 +10,7 @@ export default function Intro() {
   const theme = useTheme();
   const steps = [
     "Find the activities your child will love",
-    "Add them to child’s calendar",
+    "Add them to child's calendar",
     "Review and then pay for all in one click",
   ];
 
@@ -30,8 +30,8 @@ export default function Intro() {
           style={{ objectFit: "cover", objectPosition: "bottom" }}
         />
       </Box>
-      <Container>
-        <Box sx={{ maxWidth: 800, textAlign: "center", mx: "auto", mt: 3 }}>
+      <Container sx={{ textAlign: "center" }}>
+        <Box sx={{ maxWidth: 800, mx: "auto", mt: 3 }}>
           <Typography variant="h6" color="orange.main">
             Keeping it simple
           </Typography>
@@ -43,9 +43,7 @@ export default function Intro() {
             is simpler, easier and more intuitive.
           </Typography>
         </Box>
-      </Container>
-      <Container sx={{ textAlign: "center", mt: { xs: 6, md: 10 }, mb: 10 }}>
-        <Box sx={{ maxWidth: 800, mx: "auto" }}>
+        <Box sx={{ maxWidth: 800, mx: "auto", mt: { xs: 6, md: 10 }, mb: 10 }}>
           <Typography variant="subtitle1">
             The cure to complexity of booking activities in
             <span style={{ color: theme.palette.purple.main }}> 3 simple steps</span>
