@@ -4,7 +4,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import bookingIntroImage from "/public/booking-intro.png";
-import DemoStepper from "../(homepage)/DemoStepper";
+import OosStepper from "@/components/OosStepper";
 
 export default function Intro() {
   const theme = useTheme();
@@ -50,7 +50,7 @@ export default function Intro() {
             The cure to complexity of booking activities in
             <span style={{ color: theme.palette.purple.main }}> 3 simple steps</span>
           </Typography>
-          <DemoStepper steps={steps} sx={{ mt: 3 }} />
+          <OosStepper steps={steps} sx={{ mt: 3 }} />
         </Box>
       </Container>
     </>

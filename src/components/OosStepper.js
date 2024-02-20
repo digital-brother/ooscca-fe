@@ -59,7 +59,7 @@ function StepIcon({ icon }) {
   );
 }
 
-export default function DemoStepper({ sx, steps }) {
+export default function OosStepper({ sx, steps }) {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
