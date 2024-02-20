@@ -23,7 +23,8 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import { useQuery } from "react-query";
 import { getBookings, getChildren } from "../activities/[activityId]/api.mjs";
-import _ from 'lodash';
+import _ from "lodash";
+import { useState } from "react";
 
 dayjs.extend(weekday);
 
@@ -46,7 +47,9 @@ function Booking({ booking }) {
         <Typography sx={{ fontWeight: 700 }}>{booking.activity.type}</Typography>
         <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
       </Box>
-      <Typography>{booking.activity.startTime} - {booking.activity.endTime}</Typography>
+      <Typography>
+        {booking.activity.startTime} - {booking.activity.endTime}
+      </Typography>
       <Typography>{booking.activity.address}</Typography>
       <Box sx={{ mt: "auto", mb: -1.5, mx: -1.5, display: "flex", justifyContent: "space-between" }}>
         <IconButton>
@@ -91,13 +94,15 @@ function BookingDay({ bookings = [], sx }) {
 
 function FamilyBookings() {
   const today = dayjs();
-  let firstWeekDayDate;
+
+  let currentWeekFirstDayDate;
   if (today.weekday() === 0 || today.weekday() === 6) {
-    firstWeekDayDate = today.startOf("week").add(1, "day");
+    currentWeekFirstDayDate = today.startOf("week").add(1, "day")
   } else {
-    firstWeekDayDate = today.startOf("week").add(1, "day");
+    currentWeekFirstDayDate = today.startOf("week").add(1, "day")
   }
-  const weekDates = Array.from({ length: 5 }, (_, i) => firstWeekDayDate.add(i, "day"));
+  const [weekFirstDayDate, setWeekFirstDayDate] = useState(currentWeekFirstDayDate);
+  const weekDates = Array.from({ length: 5 }, (_, i) => weekFirstDayDate.add(i, "day"));
   const { data: children } = useQuery("children", getChildren);
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
@@ -126,6 +131,9 @@ function FamilyBookings() {
     },
   }));
 
+  const handleNextWeek = () => setWeekFirstDayDate(weekFirstDayDate.add(7, "day"))
+  const handlePreviosWeek = () => setWeekFirstDayDate(weekFirstDayDate.subtract(7, "day"));
+
   return (
     <TableContainer component={Box}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -136,11 +144,11 @@ function FamilyBookings() {
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Typography>September 2023</Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <IconButton>
+                  <IconButton onClick={handlePreviosWeek}>
                     <ArrowBackIosNewIcon />
                   </IconButton>
                   <Typography>Today</Typography>
-                  <IconButton>
+                  <IconButton onClick={handleNextWeek}>
                     <ArrowForwardIosIcon />
                   </IconButton>
                 </Box>
@@ -170,8 +178,8 @@ function FamilyBookings() {
                 {weekDates.map((date, index) => {
                   let dateBookings = bookings?.filter(
                     (booking) => booking.participant === child.id && dayjs(booking.date).isSame(date, "day")
-                  )
-                  if (!dateBookings || _.isEmpty(dateBookings)) dateBookings = [null]
+                  );
+                  if (!dateBookings || _.isEmpty(dateBookings)) dateBookings = [null];
                   return (
                     <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
                       <BookingDay bookings={dateBookings} sx={{ mx: "auto" }} />
