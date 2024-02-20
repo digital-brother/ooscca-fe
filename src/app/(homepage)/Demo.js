@@ -16,11 +16,16 @@ function DemoHeader({sx}) {
 }
 
 export default function Demo() {
+  const steps = [
+    "Find the activities your child will love",
+    "Add them to child’s calendar",
+    "Review and then pay for all in one click",
+  ];
   return (
-    <Container sx={{py: {xs: 6, md: 10}}}>
-      <DemoHeader sx={{mx: "auto"}}/>
-      <DemoStepper sx={{mt: 4, maxWidth: 700, mx: "auto"}}/>
-      <Box component="img" src="/demo.png" sx={{mt: {xs: 2, sm: 10}, width: "100%"}}/>
+    <Container sx={{ py: { xs: 6, md: 10 } }}>
+      <DemoHeader sx={{ mx: "auto" }} />
+      <DemoStepper sx={{ mt: 4, maxWidth: 700, mx: "auto" }} steps={steps} />
+      <Box component="img" src="/demo.png" sx={{ mt: { xs: 2, sm: 10 }, width: "100%" }} />
     </Container>
-  )
+  );
 }

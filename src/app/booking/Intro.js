@@ -1,8 +1,19 @@
+"use client";
+
+import { Box, Container, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import bookingIntroImage from "/public/booking-intro.png";
-import { Box, Container, Typography } from "@mui/material";
+import DemoStepper from "../(homepage)/DemoStepper";
 
 export default function Intro() {
+  const theme = useTheme();
+  const steps = [
+    "Find the activities your child will love",
+    "Add them to child’s calendar",
+    "Review and then pay for all in one click",
+  ];
+
   return (
     <>
       <Box
@@ -20,7 +31,7 @@ export default function Intro() {
         />
       </Box>
       <Container>
-        <Box sx={{ maxWidth: 800, textAlign: "center", mx: "auto", mt: 3, mb: 10 }}>
+        <Box sx={{ maxWidth: 800, textAlign: "center", mx: "auto", mt: 3 }}>
           <Typography variant="h6" color="orange.main">
             Keeping it simple
           </Typography>
@@ -31,6 +42,15 @@ export default function Intro() {
             We know when kids are going to be Out Of School so why not plan by calendar instead of activities. It&apos;s
             is simpler, easier and more intuitive.
           </Typography>
+        </Box>
+      </Container>
+      <Container sx={{ textAlign: "center", mt: { xs: 6, md: 10 }, mb: 10 }}>
+        <Box sx={{ maxWidth: 800, mx: "auto" }}>
+          <Typography variant="subtitle1">
+            The cure to complexity of booking activities in
+            <span style={{ color: theme.palette.purple.main }}> 3 simple steps</span>
+          </Typography>
+          <DemoStepper steps={steps} sx={{ mt: 3 }} />
         </Box>
       </Container>
     </>
