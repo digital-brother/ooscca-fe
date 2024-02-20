@@ -16,13 +16,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import { useQuery } from "react-query";
 import { getBookings, getChildren } from "../activities/[activityId]/api.mjs";
+import _ from 'lodash';
 
 dayjs.extend(weekday);
 
@@ -42,11 +43,11 @@ function Booking({ booking }) {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography sx={{ fontWeight: 700 }}>{booking.type}</Typography>
-        <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.price}</Typography>
+        <Typography sx={{ fontWeight: 700 }}>{booking.activity.type}</Typography>
+        <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
       </Box>
-      <Typography>{booking.time}</Typography>
-      <Typography>{booking.address}</Typography>
+      <Typography>{booking.activity.startTime} - {booking.activity.endTime}</Typography>
+      <Typography>{booking.activity.address}</Typography>
       <Box sx={{ mt: "auto", mb: -1.5, mx: -1.5, display: "flex", justifyContent: "space-between" }}>
         <IconButton>
           <IosShareIcon />
@@ -97,21 +98,16 @@ function FamilyBookings() {
     firstWeekDayDate = today.startOf("week").add(1, "day");
   }
   const weekDates = Array.from({ length: 5 }, (_, i) => firstWeekDayDate.add(i, "day"));
-  const {data: children} = useQuery("children", getChildren);
-  const { date: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
+  const { data: children } = useQuery("children", getChildren);
+  const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
   const formatDate = (date) => date.format("ddd D");
 
-  const booking = {
-    type: "Football",
-    time: "7:30 - 12:00 AM",
-    address: "123 Clubs, Street name, postcode",
-    price: 45,
-  };
-
   const StyledHeaderTableCell = styled(TableCell)(({ theme }) => ({
     borderBottom: "none",
+    width: "18%",
     "&:first-child": {
+      width: "auto",
       borderRight: "1px solid",
       borderRightColor: theme.palette.grey[300],
     },
@@ -171,11 +167,17 @@ function FamilyBookings() {
                 <StyledTableCell component="th" scope="row">
                   {child.name}
                 </StyledTableCell>
-                {weekDates.map((date, index) => (
-                  <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                    <BookingDay bookings={[booking, booking]} sx={{ mx: "auto" }} />
-                  </StyledTableCell>
-                ))}
+                {weekDates.map((date, index) => {
+                  let dateBookings = bookings?.filter(
+                    (booking) => booking.participant === child.id && dayjs(booking.date).isSame(date, "day")
+                  )
+                  if (!dateBookings || _.isEmpty(dateBookings)) dateBookings = [null]
+                  return (
+                    <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
+                      <BookingDay bookings={dateBookings} sx={{ mx: "auto" }} />
+                    </StyledTableCell>
+                  );
+                })}
               </TableRow>
             );
           })}
