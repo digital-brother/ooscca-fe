@@ -9,6 +9,10 @@ import { useState } from "react";
 
 function PickerDate({ date, setSelectedDate, selectedDate }) {
   const isSelectedDate = date.isSame(selectedDate, "day");
+  console.log("=========");
+  console.log(selectedDate);
+  console.log(date);
+  console.log(isSelectedDate);
   return (
     <Box sx={{ pb: 2, borderBottom: "3px solid", borderColor: isSelectedDate ? "grey.900" : "transparent" }}>
       <Box
