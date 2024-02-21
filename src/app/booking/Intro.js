@@ -3,7 +3,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import bookingIntroImage from "/public/booking-intro.png";
 import OosStepper from "@/components/OosStepper";
 
 export default function Intro() {
@@ -24,7 +23,7 @@ export default function Intro() {
         }}
       >
         <Image
-          src={bookingIntroImage}
+          src="/booking-intro.png"
           alt="Booking intro"
           fill
           style={{ objectFit: "cover", objectPosition: "bottom" }}
