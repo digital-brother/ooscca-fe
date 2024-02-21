@@ -27,6 +27,7 @@ export default function Intro() {
           alt="Booking intro"
           fill
           style={{ objectFit: "cover", objectPosition: "bottom" }}
+          priority
         />
       </Box>
       <Container sx={{ textAlign: "center" }}>
@@ -42,7 +43,7 @@ export default function Intro() {
             is simpler, easier and more intuitive.
           </Typography>
         </Box>
-        <Box sx={{ maxWidth: 800, mx: "auto", mt: { xs: 6, md: 10 }, mb: 10 }}>
+        <Box sx={{ maxWidth: 800, mx: "auto", mt: { xs: 6, md: 10 } }}>
           <Typography variant="subtitle1">
             The cure to complexity of booking activities in
             <span style={{ color: theme.palette.purple.main }}> 3 simple steps</span>
