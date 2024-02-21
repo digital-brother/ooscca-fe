@@ -37,6 +37,10 @@ export default function ActivitiesCalendar() {
         </IconButton>
         {weekDates.map((date, index) => {
           const isSelectedDate = date.isSame(selectedDate, "day");
+          console.log("========");
+          console.log(date);
+          console.log(selectedDate);
+          console.log(isSelectedDate);
           return (
             <Box
               key={index}
