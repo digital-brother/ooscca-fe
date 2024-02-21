@@ -27,6 +27,7 @@ export default function Intro() {
           alt="Booking intro"
           fill
           style={{ objectFit: "cover", objectPosition: "bottom" }}
+          priority
         />
       </Box>
       <Container sx={{ textAlign: "center" }}>
