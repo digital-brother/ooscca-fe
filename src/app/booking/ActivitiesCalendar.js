@@ -13,8 +13,9 @@ function PickerDate({ date, setSelectedDate, selectedDate }) {
   console.log(selectedDate);
   console.log(date);
   console.log(isSelectedDate);
+  const borderColor = isSelectedDate ? "grey.900" : "transparent";
   return (
-    <Box sx={{ pb: 2, borderBottom: "3px solid", borderColor: isSelectedDate ? "grey.900" : "transparent" }}>
+    <Box sx={{ pb: 2, borderBottom: "3px solid", borderColor }}>
       <Box
         onClick={() => setSelectedDate(date)}
         sx={{
