@@ -7,16 +7,9 @@ import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-function PickerDate({ date, setSelectedDate, selectedDate }) {
-  const isSelectedDate = date.isSame(selectedDate, "day");
-  console.log("=========");
-  console.log(selectedDate);
-  console.log(date);
-  console.log(isSelectedDate);
-  const borderColor = isSelectedDate ? "grey.900" : "transparent";
-  console.log(borderColor);
+function PickerDate({ date, setSelectedDate, isSelectedDate }) {
   return (
-    <Box sx={{ pb: 2, borderBottom: "3px solid", borderColor }}>
+    <Box sx={{ pb: 2, borderBottom: "3px solid", borderColor: isSelectedDate ? "grey.900" : "transparent" }}>
       <Box
         onClick={() => setSelectedDate(date)}
         sx={{
@@ -70,9 +63,10 @@ export default function ActivitiesCalendar() {
         <IconButton onClick={() => setSelectedDate(selectedDate.subtract(1, "week"))}>
           <ArrowBackIosNewIcon />
         </IconButton>
-        {weekDates.map((date, index) => (
-          <PickerDate key={index} {...{ date, setSelectedDate, selectedDate }} />
-        ))}
+        {weekDates.map((date, index) => {
+          const isSelectedDate = date.isSame(selectedDate, "day");
+          return <PickerDate key={index} {...{ date, setSelectedDate, isSelectedDate }} />;
+        })}
         <IconButton onClick={() => setSelectedDate(selectedDate.add(1, "week"))}>
           <ArrowForwardIosIcon />
         </IconButton>
