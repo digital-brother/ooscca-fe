@@ -5,7 +5,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
 import { useState } from "react";
+
+dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
   return (
@@ -36,9 +40,8 @@ function PickerDate({ date, setSelectedDate, isSelectedDate }) {
 }
 
 export default function ActivitiesCalendar() {
-  const today = dayjs();
-  const dayOfWeek = today.day();
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(dayjs.utc());
+  const dayOfWeek = selectedDate.day();
 
   let monday;
   if (dayOfWeek === 0 || dayOfWeek === 6) {
@@ -46,7 +49,6 @@ export default function ActivitiesCalendar() {
   } else {
     monday = selectedDate.startOf("week").add(1, "day");
   }
-
   const weekDates = Array.from({ length: 5 }, (_, i) => monday.add(i, "day"));
 
   return (
