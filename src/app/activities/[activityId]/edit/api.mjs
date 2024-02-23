@@ -11,6 +11,8 @@ const DISCOUNTS_SUBPATH = "discounts";
 const IMAGES_PRIMARY_SUBPATH = "primary-images";
 const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
+const BOOKINGS_PATH = "/bookings";
+
 const client = axios.create({
   baseURL: API_HOST,
   timeout: 1000,
@@ -19,6 +21,14 @@ const client = axios.create({
   },
 });
 
+// BOOKINGS
+export async function getBooking(bookingId) {
+  const url = `${BOOKINGS_PATH}/${bookingId}/`;
+  const response = await client.get(url);
+  return response.data;
+}
+
+// ACTIVITY IMAGES
 // TODO: Rationalize mutation and api layer (duplicate function code)
 // IMAGES
 export async function getActivityImagesPrimary(activityId) {

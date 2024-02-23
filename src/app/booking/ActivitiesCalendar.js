@@ -2,7 +2,7 @@
 
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -10,6 +10,7 @@ import Image from "next/image";
 
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { getBooking } from "../activities/[activityId]/edit/api.mjs";
 
 dayjs.extend(utc);
 
@@ -79,11 +80,60 @@ function DateSwitcher() {
 
 function ActivityCard() {
   const bookingId = 1;
-  const { data: booking } = useQuery(["bookings", bookingId], getBooking);
+  const { data: booking } = useQuery(["bookings", bookingId], () => getBooking(bookingId));
+  console.log(booking);
 
   return (
-    <Box sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2 }}>
-      <Image alt="Activity image" src= />
+    <Box sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
+      <Box sx={{ height: 200, position: "relative" }}>
+        <Image alt="Activity image" src={booking?.activity?.imageUrl} fill objectFit="cover" />
+      </Box>
+      <Box sx={{ p: 2 }}>
+        <Typography>{booking?.activity?.provider}</Typography>
+        <Typography>{booking?.activity?.address}</Typography>
+        <Typography>{booking?.activity?.type}</Typography>
+        <Typography>
+          {booking?.activity?.ageTo
+            ? `(ages ${booking?.activity?.ageFrom}-${booking?.activity?.ageTo})`
+            : `(age ${booking?.activity?.ageFrom})`}
+        </Typography>
+        {booking?.activity?.earlyDropOff && (
+          <Typography>
+            <b>
+              {booking?.activity?.earlyDropOffPrice ? (
+                `£${booking?.activity?.earlyDropOffPrice}`
+              ) : (
+                <Box component="span" sx={{ color: "green.main" }}>
+                  FREE
+                </Box>
+              )}
+            </b>
+            &nbsp; Early drop off {booking?.activity?.earlyDropOffTime}
+          </Typography>
+        )}
+        {booking?.activity?.latePickUp && (
+          <Typography>
+            <b>
+              {booking?.activity?.latePickUpPrice ? (
+                `£${booking?.activity?.latePickUpPrice}`
+              ) : (
+                <Box component="span" sx={{ color: "green.main" }}>
+                  FREE
+                </Box>
+              )}
+            </b>
+            &nbsp; Late pick up {booking?.activity?.latePickUpTime}
+          </Typography>
+        )}
+        <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
+          <Button variant="outlined" sx={{ flex: 1 }}>
+            Learn more
+          </Button>
+          <Button variant="contained" sx={{ flex: 1 }}>
+            Add
+          </Button>
+        </Box>
+      </Box>
     </Box>
   );
 }
