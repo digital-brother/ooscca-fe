@@ -89,18 +89,21 @@ function ActivityCard() {
         <Image alt="Activity image" src={booking?.activity?.imageUrl} fill objectFit="cover" />
       </Box>
       <Box sx={{ p: 2 }}>
-        <Typography>{booking?.activity?.provider}</Typography>
-        <Typography>{booking?.activity?.address}</Typography>
-        <Typography>{booking?.activity?.type}</Typography>
-        <Typography>
+        <Typography variant="subtitle1">{booking?.activity?.provider}</Typography>
+        <Typography variant="bodyRegular3">{booking?.activity?.address}</Typography>
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>
+          {booking?.activity?.type}
+        </Typography>
+        <Typography variant="bodyRegular3" sx={{ mb: 3 }}>
           {booking?.activity?.ageTo
             ? `(ages ${booking?.activity?.ageFrom}-${booking?.activity?.ageTo})`
             : `(age ${booking?.activity?.ageFrom})`}
         </Typography>
+
         {booking?.activity?.earlyDropOff && (
-          <Typography>
+          <Typography variant="bodyRegular3">
             <b>
-              {booking?.activity?.earlyDropOffPrice ? (
+              {parseFloat(booking?.activity?.earlyDropOffPrice) ? (
                 `£${booking?.activity?.earlyDropOffPrice}`
               ) : (
                 <Box component="span" sx={{ color: "green.main" }}>
@@ -112,9 +115,9 @@ function ActivityCard() {
           </Typography>
         )}
         {booking?.activity?.latePickUp && (
-          <Typography>
+          <Typography variant="bodyRegular3">
             <b>
-              {booking?.activity?.latePickUpPrice ? (
+              {parseFloat(booking?.activity?.latePickUpPrice) ? (
                 `£${booking?.activity?.latePickUpPrice}`
               ) : (
                 <Box component="span" sx={{ color: "green.main" }}>

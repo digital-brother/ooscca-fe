@@ -72,8 +72,18 @@ const theme = createTheme({
       fontWeight: 700,
       color: colors.orange.main,
     },
+    bodyRegular3: {
+      fontSize: "0.75rem", // 12px
+    },
   },
   components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          bodyRegular3: "p",
+        },
+      },
+    },
     MuiAlert: {
       styleOverrides: {
         root: ({ ownerState }) => ({
