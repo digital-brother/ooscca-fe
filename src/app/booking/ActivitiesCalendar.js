@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { getActivitiesForDate } from "../activities/[activityId]/edit/api.mjs";
+import { date } from "yup";
 
 dayjs.extend(utc);
 
@@ -43,8 +44,7 @@ function PickerDate({ date, setSelectedDate, isSelectedDate }) {
   );
 }
 
-function DateSwitcher() {
-  const [selectedDate, setSelectedDate] = useState(dayjs.utc());
+function DateSwitcher({ selectedDate, setSelectedDate }) {
   const dayOfWeek = selectedDate.day();
 
   let monday;
@@ -143,7 +143,7 @@ function ActivityCard({ activity }) {
                 </Typography>
               </>
             ) : (
-              <Typography variant="body1">£{activity.price}</Typography>
+              <Typography variant="h5">£{activity.price}</Typography>
             )}
           </Box>
         </Box>
@@ -161,9 +161,14 @@ function ActivityCard({ activity }) {
   );
 }
 
-function ActivitiesList({ sx }) {
-  const date = dayjs("2024-2-28");
-  const { status, data: activities } = useQuery(["activitiesForDate", date], () => getActivitiesForDate(date));
+function ActivitiesList({ sx, selectedDate }) {
+  const formatDate = (date) => date.format("YYYY-MM-DD");
+
+  const { status, data: activities } = useQuery(
+    ["activitiesForDate", formatDate(selectedDate)],
+    () => getActivitiesForDate(selectedDate),
+    { staleTime: 1000 * 60 * 2 }
+  );
 
   if (status === "success")
     return (
@@ -176,10 +181,12 @@ function ActivitiesList({ sx }) {
 }
 
 export default function ActivitiesCalendar() {
+  const [selectedDate, setSelectedDate] = useState(dayjs.utc());
+
   return (
     <Container sx={{ my: 10 }}>
-      <DateSwitcher />
-      <ActivitiesList sx={{ mt: 4 }} />
+      <DateSwitcher {...{ selectedDate, setSelectedDate }} />
+      <ActivitiesList sx={{ mt: 4 }} {...{ selectedDate }} />
     </Container>
   );
 }
