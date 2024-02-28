@@ -2,6 +2,7 @@
 
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Button, IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
@@ -10,7 +11,7 @@ import Image from "next/image";
 
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { getActivitiesForDate, getActivity, getBooking } from "../activities/[activityId]/edit/api.mjs";
+import { getActivitiesForDate } from "../activities/[activityId]/edit/api.mjs";
 
 dayjs.extend(utc);
 
@@ -94,6 +95,12 @@ function ActivityCard({ activity }) {
           {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
         </Typography>
 
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <AccessTimeIcon fontSize="15" />
+          <Typography variant="body2">
+            {activity.startTime} - {activity.endTime}
+          </Typography>
+        </Box>
         {activity?.earlyDropOff && (
           <Typography variant="body2">
             <b>
