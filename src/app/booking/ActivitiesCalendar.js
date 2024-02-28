@@ -10,7 +10,7 @@ import Image from "next/image";
 
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { getBooking } from "../activities/[activityId]/edit/api.mjs";
+import { getActivitiesForDate, getActivity, getBooking } from "../activities/[activityId]/edit/api.mjs";
 
 dayjs.extend(utc);
 
@@ -78,54 +78,48 @@ function DateSwitcher() {
   );
 }
 
-function ActivityCard() {
-  const bookingId = 1;
-  const { data: booking } = useQuery(["bookings", bookingId], () => getBooking(bookingId));
-  console.log(booking);
-
+function ActivityCard({ activity }) {
   return (
     <Box sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, position: "relative" }}>
-        <Image alt="Activity image" src={booking?.activity?.imageUrl} fill objectFit="cover" />
+        <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
       </Box>
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1">{booking?.activity?.provider}</Typography>
-        <Typography variant="bodyRegular3">{booking?.activity?.address}</Typography>
+        <Typography variant="subtitle1">{activity?.provider}</Typography>
+        <Typography variant="body2">{activity?.address}</Typography>
         <Typography variant="subtitle1" sx={{ mt: 2 }}>
-          {booking?.activity?.type}
+          {activity?.type}
         </Typography>
-        <Typography variant="bodyRegular3" sx={{ mb: 3 }}>
-          {booking?.activity?.ageTo
-            ? `(ages ${booking?.activity?.ageFrom}-${booking?.activity?.ageTo})`
-            : `(age ${booking?.activity?.ageFrom})`}
+        <Typography variant="body2" sx={{ mb: 3 }}>
+          {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
         </Typography>
 
-        {booking?.activity?.earlyDropOff && (
-          <Typography variant="bodyRegular3">
+        {activity?.earlyDropOff && (
+          <Typography variant="body2">
             <b>
-              {parseFloat(booking?.activity?.earlyDropOffPrice) ? (
-                `£${booking?.activity?.earlyDropOffPrice}`
+              {parseFloat(activity?.earlyDropOffPrice) ? (
+                `£${activity?.earlyDropOffPrice}`
               ) : (
                 <Box component="span" sx={{ color: "green.main" }}>
                   FREE
                 </Box>
               )}
             </b>
-            &nbsp; Early drop off {booking?.activity?.earlyDropOffTime}
+            &nbsp; Early drop off {activity?.earlyDropOffTime}
           </Typography>
         )}
-        {booking?.activity?.latePickUp && (
-          <Typography variant="bodyRegular3">
+        {activity?.latePickUp && (
+          <Typography variant="body2">
             <b>
-              {parseFloat(booking?.activity?.latePickUpPrice) ? (
-                `£${booking?.activity?.latePickUpPrice}`
+              {parseFloat(activity?.latePickUpPrice) ? (
+                `£${activity?.latePickUpPrice}`
               ) : (
                 <Box component="span" sx={{ color: "green.main" }}>
                   FREE
                 </Box>
               )}
             </b>
-            &nbsp; Late pick up {booking?.activity?.latePickUpTime}
+            &nbsp; Late pick up {activity?.latePickUpTime}
           </Typography>
         )}
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
@@ -142,11 +136,17 @@ function ActivityCard() {
 }
 
 function ActivitiesList({ sx }) {
-  return (
-    <Box sx={{ ...sx }}>
-      <ActivityCard />
-    </Box>
-  );
+  const date = dayjs("2024-2-28");
+  const { status, data: activities } = useQuery(["activitiesForDate", date], () => getActivitiesForDate(date));
+
+  if (status === "success")
+    return (
+      <Box sx={{ ...sx }}>
+        {activities.map((activity) => (
+          <ActivityCard key={activity.id} activity={activity} />
+        ))}
+      </Box>
+    );
 }
 
 export default function ActivitiesCalendar() {

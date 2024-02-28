@@ -28,9 +28,9 @@ export async function getBooking(bookingId) {
   return response.data;
 }
 
-// ACTIVITY IMAGES
 // TODO: Rationalize mutation and api layer (duplicate function code)
 // IMAGES
+// PRIMARY IMAGES
 export async function getActivityImagesPrimary(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_PRIMARY_SUBPATH}/`;
   const response = await client.get(url);
@@ -58,6 +58,7 @@ export async function deleteActivityImagePrimary(activityId, imageId) {
   return response.data;
 }
 
+// SECONDARY IMAGES
 export async function getActivityImagesSecondary(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${IMAGES_SECONDARY_SUBPATH}/`;
   const response = await client.get(url);
@@ -98,6 +99,14 @@ export async function getActivityDiscounts(activityId) {
 export async function patchDiscount(activityId, discountId, data) {
   const url = `${ACTIVITIES_PATH}/${activityId}/${DISCOUNTS_SUBPATH}/${discountId}/`;
   const response = await client.patch(url, data);
+  return response.data;
+}
+
+// ACTIVITIES FOR DATE
+export async function getActivitiesForDate(date) {
+  const dateStr = date.format("YYYY-MM-DD")
+  const url = `${ACTIVITIES_PATH}/${dateStr}/`;
+  const response = await client.get(url);
   return response.data;
 }
 
