@@ -86,49 +86,68 @@ function ActivityCard({ activity }) {
         <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
       </Box>
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1">{activity?.provider}</Typography>
-        <Typography variant="body2">{activity?.address}</Typography>
-        <Typography variant="subtitle1" sx={{ mt: 2 }}>
-          {activity?.type}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 3 }}>
-          {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
-        </Typography>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <AccessTimeIcon fontSize="15" />
-          <Typography variant="body2">
-            {activity.startTime} - {activity.endTime}
-          </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box>
+            <Typography variant="subtitle1">{activity?.provider}</Typography>
+            <Typography variant="body2">{activity?.address}</Typography>
+            <Typography variant="subtitle1" sx={{ mt: 2 }}>
+              {activity?.type}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 3 }}>
+              {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+              <AccessTimeIcon fontSize="15" />
+              <Typography variant="body2">
+                {activity.startTime} - {activity.endTime}
+              </Typography>
+            </Box>
+            {activity?.earlyDropOff && (
+              <Typography variant="body2">
+                <b>
+                  {parseFloat(activity?.earlyDropOffPrice) ? (
+                    `£${activity?.earlyDropOffPrice}`
+                  ) : (
+                    <Box component="span" sx={{ color: "green.main" }}>
+                      FREE
+                    </Box>
+                  )}
+                </b>
+                &nbsp; Early drop off {activity?.earlyDropOffTime}
+              </Typography>
+            )}
+            {activity?.latePickUp && (
+              <Typography variant="body2">
+                <b>
+                  {parseFloat(activity?.latePickUpPrice) ? (
+                    `£${activity?.latePickUpPrice}`
+                  ) : (
+                    <Box component="span" sx={{ color: "green.main" }}>
+                      FREE
+                    </Box>
+                  )}
+                </b>
+                &nbsp; Late pick up {activity?.latePickUpTime}
+              </Typography>
+            )}
+          </Box>
+          <Box sx={{ mt: "auto", textAlign: "right" }}>
+            {activity?.discountPercent ? (
+              <>
+                <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
+                  {activity.discountPercent}% off
+                </Typography>
+                <Typography variant="h5">£{activity.discountedPrice}</Typography>
+                <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
+                  £{activity.price}
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="body1">£{activity.price}</Typography>
+            )}
+          </Box>
         </Box>
-        {activity?.earlyDropOff && (
-          <Typography variant="body2">
-            <b>
-              {parseFloat(activity?.earlyDropOffPrice) ? (
-                `£${activity?.earlyDropOffPrice}`
-              ) : (
-                <Box component="span" sx={{ color: "green.main" }}>
-                  FREE
-                </Box>
-              )}
-            </b>
-            &nbsp; Early drop off {activity?.earlyDropOffTime}
-          </Typography>
-        )}
-        {activity?.latePickUp && (
-          <Typography variant="body2">
-            <b>
-              {parseFloat(activity?.latePickUpPrice) ? (
-                `£${activity?.latePickUpPrice}`
-              ) : (
-                <Box component="span" sx={{ color: "green.main" }}>
-                  FREE
-                </Box>
-              )}
-            </b>
-            &nbsp; Late pick up {activity?.latePickUpTime}
-          </Typography>
-        )}
+
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
           <Button variant="outlined" sx={{ flex: 1 }}>
             Learn more
