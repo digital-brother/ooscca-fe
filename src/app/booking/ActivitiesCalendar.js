@@ -81,7 +81,7 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 
 function ActivityCard({ activity }) {
   return (
-    <Box sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
+    <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
         {activity?.imageUrl ? (
           <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
@@ -93,7 +93,7 @@ function ActivityCard({ activity }) {
           </Stack>
         )}
       </Box>
-      <Stack sx={{ p: 2 }}>
+      <Stack sx={{ p: 2, flex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
           <Box>
             <Typography variant="subtitle1">{activity?.provider}</Typography>
@@ -166,8 +166,8 @@ function ActivityCard({ activity }) {
             </Box>
           </Stack>
         </Box>
-
-        <Box sx={{ display: "flex", mt: "auto", gap: 2 }}>
+        <Box flex={1}></Box>
+        <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
           <Button variant="outlined" sx={{ flex: 1 }}>
             Learn more
           </Button>
@@ -176,7 +176,7 @@ function ActivityCard({ activity }) {
           </Button>
         </Box>
       </Stack>
-    </Box>
+    </Stack>
   );
 }
 
