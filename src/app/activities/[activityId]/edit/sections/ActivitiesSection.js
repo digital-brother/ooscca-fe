@@ -623,7 +623,7 @@ function DescriptionForm() {
   return (
     <Formik
       initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-      onSubmit={createHandleSubmit(mutation)}
+      onSubmit={createHandleSubmit({ mutation })}
       enableReinitialize
     >
       <Form>
