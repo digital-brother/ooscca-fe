@@ -82,10 +82,18 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 function ActivityCard({ activity }) {
   return (
     <Box sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
-      <Box sx={{ height: 200, position: "relative" }}>
-        <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
+      <Box sx={{ height: 200, width: 351, position: "relative" }}>
+        {activity?.imageUrl ? (
+          <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
+        ) : (
+          <Stack sx={{ bgcolor: "grey.100", height: "100%", justifyContent: "center", alignItems: "center" }}>
+            <Typography variant="h5" color="grey.500">
+              No image
+            </Typography>
+          </Stack>
+        )}
       </Box>
-      <Box sx={{ p: 2 }}>
+      <Stack sx={{ p: 2 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
           <Box>
             <Typography variant="subtitle1">{activity?.provider}</Typography>
@@ -159,7 +167,7 @@ function ActivityCard({ activity }) {
           </Stack>
         </Box>
 
-        <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
+        <Box sx={{ display: "flex", mt: "auto", gap: 2 }}>
           <Button variant="outlined" sx={{ flex: 1 }}>
             Learn more
           </Button>
@@ -167,7 +175,7 @@ function ActivityCard({ activity }) {
             Add
           </Button>
         </Box>
-      </Box>
+      </Stack>
     </Box>
   );
 }
@@ -183,7 +191,7 @@ function ActivitiesList({ sx, selectedDate }) {
 
   if (status === "success")
     return (
-      <Box sx={{ ...sx }}>
+      <Box sx={{ display: "flex", gap: 2, ...sx }}>
         {activities.map((activity) => (
           <ActivityCard key={activity.id} activity={activity} />
         ))}
