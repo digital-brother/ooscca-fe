@@ -3,7 +3,7 @@
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Button, IconButton, Typography } from "@mui/material";
+import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -86,7 +86,7 @@ function ActivityCard({ activity }) {
         <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
       </Box>
       <Box sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
           <Box>
             <Typography variant="subtitle1">{activity?.provider}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
@@ -131,21 +131,32 @@ function ActivityCard({ activity }) {
               </Typography>
             )}
           </Box>
-          <Box sx={{ mt: "auto", textAlign: "right" }}>
-            {activity?.discountPercent ? (
-              <>
-                <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
-                  {activity.discountPercent}% off
-                </Typography>
-                <Typography variant="h5">£{activity.discountedPrice}</Typography>
-                <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
-                  £{activity.price}
-                </Typography>
-              </>
-            ) : (
-              <Typography variant="h5">£{activity.price}</Typography>
-            )}
-          </Box>
+
+          <Stack sx={{ justifyContent: "space-between" }}>
+            <Stack sx={{ gap: 0.5 }}>
+              {activity?.goingFast && (
+                <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
+              )}
+              {activity?.spacesLeft <= 5 && (
+                <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
+              )}
+            </Stack>
+            <Box sx={{ textAlign: "right" }}>
+              {activity?.discountPercent ? (
+                <>
+                  <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
+                    {activity.discountPercent}% off
+                  </Typography>
+                  <Typography variant="h5">£{activity.discountedPrice}</Typography>
+                  <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
+                    £{activity.price}
+                  </Typography>
+                </>
+              ) : (
+                <Typography variant="h5">£{activity.price}</Typography>
+              )}
+            </Box>
+          </Stack>
         </Box>
 
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
