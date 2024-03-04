@@ -205,7 +205,7 @@ export default function ActivitiesCalendar() {
   return (
     <Container sx={{ my: 10 }}>
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
-      <ActivitiesList sx={{ mt: 4 }} {...{ selectedDate }} />
+      <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
     </Container>
   );
 }
