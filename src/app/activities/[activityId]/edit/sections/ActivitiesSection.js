@@ -116,7 +116,7 @@ function ActivityDetails({ sx }) {
         <Box>
           {activity?.dateRanges.map((dateRange, index) => (
             <Typography key={index}>
-              {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
+              {formatDateString(dateRange.start)} - {formatDateString(dateRange.end)}
             </Typography>
           ))}
         </Box>
