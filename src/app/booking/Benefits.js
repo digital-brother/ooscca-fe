@@ -27,7 +27,14 @@ const BENEFITS = [
 
 function Benefit({ benefit, reverse }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: { xs: "column", md: reverse ? "row" : "row-reverse" }, rowGap: 5, columnGap: 5 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: reverse ? "row" : "row-reverse" },
+        rowGap: 5,
+        columnGap: 5,
+      }}
+    >
       <Box sx={{ flex: 1, textAlign: { xs: "center", md: "left" } }}>
         <Typography variant="captionBold">{benefit.subheader}</Typography>
         <Typography variant="h3" sx={{ mt: 2 }}>
@@ -36,9 +43,7 @@ function Benefit({ benefit, reverse }) {
         <Typography variant="bodyMedium" color="grey.500" sx={{ mt: 2 }}>
           {benefit.text}
         </Typography>
-        <Typography sx={{ fontWeight: 700, color: "purple.main", mt: 2 }}>
-          Let&apos;s get more providers. Let&apos;s get more choice &gt;
-        </Typography>
+        <Typography sx={{ fontWeight: 700, color: "purple.main", mt: 2 }}>{benefit.cta}</Typography>
       </Box>
       <Box sx={{ flex: 1, position: "relative", textAlign: "center", minHeight: { xs: 250, sm: 270, md: 290 } }}>
         <Image
