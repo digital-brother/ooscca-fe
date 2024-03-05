@@ -33,7 +33,8 @@ export default function Benefits() {
               src="/booking-benefit-1.png"
               alt="Invite your favourite clubs to join OOSCCA"
               fill
-              objectFit="contain"
+              sizes="290px"
+              style={{ objectFit: "contain" }}
             />
           </Box>
         </Box>
