@@ -116,7 +116,7 @@ function ActivityDetails({ sx }) {
         <Box>
           {activity?.dateRanges.map((dateRange, index) => (
             <Typography key={index}>
-              {formatDateString(dateRange.start)} - {formatDateString(dateRange.start)}
+              {formatDateString(dateRange.start)} - {formatDateString(dateRange.end)}
             </Typography>
           ))}
         </Box>
@@ -623,7 +623,7 @@ function DescriptionForm() {
   return (
     <Formik
       initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-      onSubmit={createHandleSubmit(mutation)}
+      onSubmit={createHandleSubmit({ mutation })}
       enableReinitialize
     >
       <Form>
