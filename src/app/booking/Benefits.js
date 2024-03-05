@@ -1,16 +1,42 @@
 import { Box, Container, Typography } from "@mui/material";
+import Image from "next/image";
+
+const BENEFITS = [
+  {
+    subheader: "Spread the word",
+    header: "Invite your favourite clubs to join OOSCCA",
+    text: "It's a simple way to keep all your bookings in one place and to support the local community of providers. Just enter their name and email, and we'll introduce them to the world of OOSCCA.",
+    cta: "Let's get more providers. Let's get more choice >",
+  },
+];
 
 export default function Benefits() {
   return (
     <Container sx={{ my: 10 }}>
-      <Box>
-        <Typography variant="captionBold">Spread the word</Typography>
-        <Typography variant="h3">Invite your favourite clubs to join OOSCCA</Typography>
-        <Typography variant="bodyMedium" color="grey.500">
-          It&apos;s a simple way to keep all your bookings in one place and to support the local community of providers.
-          Just enter their name and email, and we&apos;ll introduce them to the world of OOSCCA.
-        </Typography>
-        <Typography sx={{fontWeight: 700, color: "purple.main"}}>Let&apos;s get more providers. Let&apos;s get more choice &gt;</Typography>
+      <Box sx={{ maxWidth: { xs: 500, md: "none" }, mx: "auto" }}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, rowGap: 5 }}>
+          <Box sx={{ flex: 1, textAlign: { xs: "center", md: "left" } }}>
+            <Typography variant="captionBold">Spread the word</Typography>
+            <Typography variant="h3" sx={{ mt: 2 }}>
+              Invite your favourite clubs to join OOSCCA
+            </Typography>
+            <Typography variant="bodyMedium" color="grey.500" sx={{ mt: 2 }}>
+              It&apos;s a simple way to keep all your bookings in one place and to support the local community of
+              providers. Just enter their name and email, and we&apos;ll introduce them to the world of OOSCCA.
+            </Typography>
+            <Typography sx={{ fontWeight: 700, color: "purple.main", mt: 2 }}>
+              Let&apos;s get more providers. Let&apos;s get more choice &gt;
+            </Typography>
+          </Box>
+          <Box sx={{ flex: 1, position: "relative", textAlign: "center", minHeight: { xs: 250, md: 290 } }}>
+            <Image
+              src="/booking-benefit-1.png"
+              alt="Invite your favourite clubs to join OOSCCA"
+              fill
+              objectFit="contain"
+            />
+          </Box>
+        </Box>
       </Box>
     </Container>
   );

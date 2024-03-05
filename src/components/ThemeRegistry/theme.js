@@ -82,6 +82,13 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          bodyMedium: "p",
+        },
+      },
+    },
     MuiAlert: {
       styleOverrides: {
         root: ({ ownerState }) => ({
