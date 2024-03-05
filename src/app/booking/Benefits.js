@@ -11,18 +11,18 @@ const BENEFITS = [
 ];
 
 export default function Benefits() {
+  const benefit = BENEFITS[0];
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ maxWidth: { xs: 500, md: "none" }, mx: "auto" }}>
         <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, rowGap: 5 }}>
           <Box sx={{ flex: 1, textAlign: { xs: "center", md: "left" } }}>
-            <Typography variant="captionBold">Spread the word</Typography>
+            <Typography variant="captionBold">{benefit.subheader}</Typography>
             <Typography variant="h3" sx={{ mt: 2 }}>
-              Invite your favourite clubs to join OOSCCA
+              {benefit.header}
             </Typography>
             <Typography variant="bodyMedium" color="grey.500" sx={{ mt: 2 }}>
-              It&apos;s a simple way to keep all your bookings in one place and to support the local community of
-              providers. Just enter their name and email, and we&apos;ll introduce them to the world of OOSCCA.
+              {benefit.text}
             </Typography>
             <Typography sx={{ fontWeight: 700, color: "purple.main", mt: 2 }}>
               Let&apos;s get more providers. Let&apos;s get more choice &gt;
