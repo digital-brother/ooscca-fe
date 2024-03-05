@@ -83,9 +83,11 @@ export function ImagePreview({ image, handleDelete, sx }) {
         sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 2 }}
         onLoad={() => URL.revokeObjectURL(image.url)}
       />
-      <IconButton color="grey" onClick={handleDelete} sx={{ position: "absolute", top: 10, right: 10 }}>
-        <DeleteForeverIcon />
-      </IconButton>
+      {handleDelete && (
+        <IconButton color="grey" onClick={handleDelete} sx={{ position: "absolute", top: 10, right: 10 }}>
+          <DeleteForeverIcon />
+        </IconButton>
+      )}
     </Box>
   );
 }
@@ -166,7 +168,7 @@ export default function ImageUpload({ sx, order }) {
           height: 330,
           overflow: "hidden",
           border: "1px #ADB5BD solid",
-          borderRadius: 1.5,
+          borderRadius: 2,
           bgcolor: "grey.200",
         }}
       >
