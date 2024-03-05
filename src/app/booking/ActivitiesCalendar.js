@@ -84,7 +84,7 @@ function ActivityCard({ activity }) {
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
         {activity?.imageUrl ? (
-          <Image alt="Activity image" src={activity?.imageUrl} fill objectFit="cover" />
+          <Image alt="Activity image" src={activity?.imageUrl} fill sizes="351px" style={{ objectFit: "cover" }} />
         ) : (
           <Stack sx={{ bgcolor: "grey.100", height: "100%", justifyContent: "center", alignItems: "center" }}>
             <Typography variant="h5" color="grey.500">
