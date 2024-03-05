@@ -17,6 +17,21 @@ const imageInputContainerSx = {
   alignItems: "center",
 };
 
+export const ImageContainer = ({ children, sx }) => (
+  <Box
+    sx={{
+      height: 330,
+      overflow: "hidden",
+      border: "1px #ADB5BD solid",
+      borderRadius: 2,
+      bgcolor: "grey.200",
+      ...sx
+    }}
+  >
+    {children}
+  </Box>
+);
+
 function ImageInputDesktop({ handleAdd, multiple, sx }) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -163,15 +178,7 @@ export default function ImageUpload({ sx, order }) {
 
   return (
     <Box sx={{ width: "100%", maxWidth: 553, ...sx }}>
-      <Box
-        sx={{
-          height: 330,
-          overflow: "hidden",
-          border: "1px #ADB5BD solid",
-          borderRadius: 2,
-          bgcolor: "grey.200",
-        }}
-      >
+      <ImageContainer>
         {showConfirmDelete && <ImageDeleteConfirm {...{ handleDelete, setShowConfirmDelete }} />}
         {!image && (
           <ImageInput
@@ -181,7 +188,7 @@ export default function ImageUpload({ sx, order }) {
           />
         )}
         {image && <ImagePreview {...{ image, handleDelete: () => setShowConfirmDelete(true) }} />}
-      </Box>
+      </ImageContainer>
       {errors && <Errors errors={errors} />}
     </Box>
   );

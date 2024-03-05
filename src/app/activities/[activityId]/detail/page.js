@@ -4,7 +4,7 @@ import { Box, Container } from "@mui/material";
 import { useQuery } from "react-query";
 import { getActivityImagesSecondary } from "../edit/api.mjs";
 import { useParams } from "next/navigation";
-import { ImagePreview } from "../edit/components/ImageUpload";
+import { ImageContainer, ImagePreview } from "../edit/components/ImageUpload";
 import { grid } from "@mui/system";
 
 function SecondaryImages() {
@@ -29,21 +29,16 @@ function SecondaryImages() {
         }}
       >
         {secondaryImages?.map((secondaryImage, index) => (
-          <Box
+          <ImageContainer
             key={index}
             sx={{
-              height: 330,
               width: "100%",
-              overflow: "hidden",
-              border: "1px #ADB5BD solid",
-              borderRadius: 2,
-              bgcolor: "grey.200",
               gridColumn: index === 2 ? { md: "span 2", lg: "auto" } : "auto",
               maxWidth: 553,
             }}
           >
             <ImagePreview image={secondaryImage} />
-          </Box>
+          </ImageContainer>
         ))}
       </Box>
     </Container>
