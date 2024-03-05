@@ -60,12 +60,14 @@ function Benefit({ benefit, reverse }) {
 
 export default function Benefits() {
   return (
-    <Container sx={{ my: 10 }}>
-      <Stack sx={{ maxWidth: { xs: 500, md: "none" }, mx: "auto", gap: 10 }}>
-        {BENEFITS.map((benefit, index) => (
-          <Benefit key={index} benefit={benefit} reverse={index % 2} />
-        ))}
-      </Stack>
-    </Container>
+    <Box sx={{bgcolor: "grey.50" }}>
+      <Container sx={{ mt: 10, py: 10, }}>
+        <Stack sx={{ maxWidth: { xs: 500, md: "none" }, mx: "auto", gap: 10 }}>
+          {BENEFITS.map((benefit, index) => (
+            <Benefit key={index} benefit={benefit} reverse={index % 2} />
+          ))}
+        </Stack>
+      </Container>
+    </Box>
   );
 }
