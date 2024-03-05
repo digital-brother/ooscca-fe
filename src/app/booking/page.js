@@ -1,4 +1,5 @@
 import ActivitiesCalendar from "./ActivitiesCalendar";
+import Benefits from "./Benefits";
 import Intro from "./Intro";
 
 export default function Booking() {
@@ -6,6 +7,7 @@ export default function Booking() {
     <>
       <Intro />
       <ActivitiesCalendar />
+      <Benefits />
     </>
   )
 }

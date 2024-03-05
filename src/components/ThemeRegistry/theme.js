@@ -72,6 +72,14 @@ const theme = createTheme({
       fontWeight: 700,
       color: colors.orange.main,
     },
+    captionBold: {
+      fontFamily: montserrat.style.fontFamily,
+      fontWeight: 700,
+      color: colors.orange.main,
+    },
+    bodyMedium: {
+      fontWeight: 500,
+    },
   },
   components: {
     MuiAlert: {
