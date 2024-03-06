@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
@@ -55,12 +55,10 @@ function Map() {
 
   return (
     <Container sx={{ my: 10 }}>
+      <Typography sx={{ fontWeight: 600 }}>{activity?.providerName}</Typography>
+      <Typography sx={{ mb: 2 }}>{activity?.address}</Typography>
       <LoadScript googleMapsApiKey={MAP_API_KEY}>
-        <GoogleMap
-          mapContainerStyle={{ height: 700 }}
-          center={coordinates || londonCoordinates}
-          zoom={10}
-        >
+        <GoogleMap mapContainerStyle={{ height: 700 }} center={coordinates || londonCoordinates} zoom={10}>
           {coordinates && !!coordinates.lat && !!coordinates.lng && (
             <Marker position={{ lat: coordinates.lat, lng: coordinates.lng }}></Marker>
           )}
