@@ -652,7 +652,7 @@ function DescriptionForm() {
   );
 }
 
-export default function ActivitiesSection() {
+export default function ActivityInfoSection() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
