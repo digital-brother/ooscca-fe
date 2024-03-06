@@ -4,10 +4,11 @@ import { Box, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { getActivity, getActivityImagesSecondary } from "../edit/api.mjs";
-import { ImageContainer, ImagePreview } from "../edit/components/ImageUpload";
-import { MAP_API_KEY } from "../edit/components/Map";
+import { getActivity, getActivityForDate, getActivityImagesSecondary } from "../../edit/api.mjs";
+import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
+import { MAP_API_KEY } from "../../edit/components/Map";
 import { AirlineSeatLegroomReducedOutlined } from "@mui/icons-material";
+import { ActivityCard } from "@/app/booking/ActivitiesCalendar";
 
 function SecondaryImages() {
   const activityId = useParams().activityId;
@@ -75,20 +76,26 @@ function ActivityDescription() {
   const preRequisitesLines = activity?.preRequisites.split("\n");
 
   return (
-    <>
+    <Box>
       <Typography variant="h5">Description</Typography>
       {activity?.description}
 
       <Typography sx={{ mt: 3, fontWeight: 700 }}>Pre-requisites to join this class:</Typography>
       {preRequisitesLines && preRequisitesLines.map((line, index) => <Typography key={index}>- {line}</Typography>)}
-    </>
+    </Box>
   );
 }
 
 function ActivityInfo() {
+  const activityId = useParams().activityId;
+  const dateStr = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivityForDate(activityId, dateStr));
   return (
     <Container sx={{ my: 10 }}>
-      <ActivityDescription />
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
+        <ActivityDescription />
+        <ActivityCard activity={activity} />
+      </Box>
     </Container>
   );
 }

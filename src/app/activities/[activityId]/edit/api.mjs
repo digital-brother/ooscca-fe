@@ -102,6 +102,13 @@ export async function getActivitiesForDate(date) {
   return response.data;
 }
 
+export async function getActivityForDate(activityId, date) {
+  const dateStr = date.format("YYYY-MM-DD");
+  const url = `${ACTIVITIES_PATH}/${activityId}/${dateStr}/`;
+  const response = await client.get(url);
+  return response.data;
+}
+
 // ACTIVITIES
 export async function getActivity(activityId) {
   const url = `${ACTIVITIES_PATH}/${activityId}/`;

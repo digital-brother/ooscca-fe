@@ -1,8 +1,8 @@
 "use client";
 
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { getActivitiesForDate } from "../activities/[activityId]/edit/api.mjs";
-import { date } from "yup";
+import Link from "next/link";
 
 dayjs.extend(utc);
 
@@ -79,7 +79,7 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
   );
 }
 
-function ActivityCard({ activity }) {
+export function ActivityCard({ activity }) {
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
@@ -96,10 +96,10 @@ function ActivityCard({ activity }) {
       <Stack sx={{ p: 2, flex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
           <Box>
-            <Typography variant="subtitle1">{activity?.provider}</Typography>
+            <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
-              {activity?.type}
+              {activity?.typeName}
             </Typography>
             <Typography variant="body2" sx={{ mb: 3 }}>
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
@@ -107,7 +107,7 @@ function ActivityCard({ activity }) {
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <AccessTimeIcon fontSize="15" />
               <Typography variant="body2">
-                {activity.startTime} - {activity.endTime}
+                {activity?.startTime} - {activity?.endTime}
               </Typography>
             </Box>
             {activity?.earlyDropOff && (
@@ -161,16 +161,18 @@ function ActivityCard({ activity }) {
                   </Typography>
                 </>
               ) : (
-                <Typography variant="h5">£{activity.price}</Typography>
+                <Typography variant="h5">£{activity?.price}</Typography>
               )}
             </Box>
           </Stack>
         </Box>
         <Box flex={1}></Box>
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
-          <Button variant="outlined" sx={{ flex: 1 }}>
-            Learn more
-          </Button>
+          {/* <Link href={activityDetailUrl} passHref> */}
+            <Button variant="outlined" sx={{ flex: 1 }}>
+              Learn more
+            </Button>
+          {/* </Link> */}
           <Button variant="contained" sx={{ flex: 1 }}>
             Add
           </Button>
