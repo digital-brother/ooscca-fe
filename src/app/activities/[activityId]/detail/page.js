@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import { getActivity, getActivityImagesSecondary } from "../edit/api.mjs";
 import { ImageContainer, ImagePreview } from "../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../edit/components/Map";
+import { AirlineSeatLegroomReducedOutlined } from "@mui/icons-material";
 
 function SecondaryImages() {
   const activityId = useParams().activityId;
@@ -68,9 +69,34 @@ function Map() {
   );
 }
 
+function ActivityDescription() {
+  const activityId = useParams().activityId;
+  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const preRequisitesLines = activity?.preRequisites.split("\n");
+
+  return (
+    <>
+      <Typography variant="h5">Description</Typography>
+      {activity?.description}
+
+      <Typography sx={{ mt: 3, fontWeight: 700 }}>Pre-requisites to join this class:</Typography>
+      {preRequisitesLines && preRequisitesLines.map((line, index) => <Typography key={index}>- {line}</Typography>)}
+    </>
+  );
+}
+
+function ActivityInfo() {
+  return (
+    <Container sx={{ my: 10 }}>
+      <ActivityDescription />
+    </Container>
+  );
+}
+
 export default function ActivityDetailPage() {
   return (
     <>
+      <ActivityInfo />
       <Map />
       <SecondaryImages />
     </>
