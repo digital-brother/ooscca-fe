@@ -3,7 +3,7 @@ import { GoogleMap, Marker, LoadScript, StandaloneSearchBox, InfoWindow } from "
 import Box from "@mui/material/Box";
 import { Button, TextField } from "@mui/material";
 
-const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
+export const MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
 const libraries = ["places"];
 
 export function Map({ location, addressError, setAddressError, setLocation, handleSubmit }) {
