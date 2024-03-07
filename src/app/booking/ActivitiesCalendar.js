@@ -1,8 +1,8 @@
 "use client";
 
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { getActivitiesForDate } from "../activities/[activityId]/edit/api.mjs";
-import { date } from "yup";
+import Link from "next/link";
 
 dayjs.extend(utc);
 
@@ -79,7 +79,8 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
   );
 }
 
-function ActivityCard({ activity }) {
+export function ActivityCard({ activity, targetDate }) {
+  const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
@@ -96,10 +97,10 @@ function ActivityCard({ activity }) {
       <Stack sx={{ p: 2, flex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
           <Box>
-            <Typography variant="subtitle1">{activity?.provider}</Typography>
+            <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
-              {activity?.type}
+              {activity?.typeName}
             </Typography>
             <Typography variant="body2" sx={{ mb: 3 }}>
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
@@ -107,7 +108,7 @@ function ActivityCard({ activity }) {
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <AccessTimeIcon fontSize="15" />
               <Typography variant="body2">
-                {activity.startTime} - {activity.endTime}
+                {activity?.startTime} - {activity?.endTime}
               </Typography>
             </Box>
             {activity?.earlyDropOff && (
@@ -142,35 +143,18 @@ function ActivityCard({ activity }) {
 
           <Stack sx={{ justifyContent: "space-between" }}>
             <Stack sx={{ gap: 0.5 }}>
-              {activity?.goingFast && (
-                <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
-              )}
-              {activity?.spacesLeft <= 5 && (
-                <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
-              )}
+              <ActivityClientBadges activity={activity} />
             </Stack>
-            <Box sx={{ textAlign: "right" }}>
-              {activity?.discountPercent ? (
-                <>
-                  <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
-                    {activity.discountPercent}% off
-                  </Typography>
-                  <Typography variant="h5">£{activity.discountedPrice}</Typography>
-                  <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
-                    £{activity.price}
-                  </Typography>
-                </>
-              ) : (
-                <Typography variant="h5">£{activity.price}</Typography>
-              )}
-            </Box>
+            <ActivityDiscountedPrice activity={activity} />
           </Stack>
         </Box>
         <Box flex={1}></Box>
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
+          <Link href={activityDetailUrl} passHref>
           <Button variant="outlined" sx={{ flex: 1 }}>
             Learn more
           </Button>
+          </Link>
           <Button variant="contained" sx={{ flex: 1 }}>
             Add
           </Button>
@@ -193,7 +177,7 @@ function ActivitiesList({ sx, selectedDate }) {
     return (
       <Box sx={{ display: "flex", gap: 2, ...sx }}>
         {activities.map((activity) => (
-          <ActivityCard key={activity.id} activity={activity} />
+          <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
         ))}
       </Box>
     );
@@ -207,5 +191,36 @@ export default function ActivitiesCalendar() {
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
       <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
     </Container>
+  );
+}
+
+export function ActivityClientBadges({ activity }) {
+  return (
+    <>
+      {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
+      {activity?.spacesLeft <= 5 && (
+        <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
+      )}
+    </>
+  );
+}
+
+export function ActivityDiscountedPrice({ activity }) {
+  return (
+    <Box sx={{ textAlign: "right" }}>
+      {activity?.discountPercent ? (
+        <>
+          <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
+            {activity.discountPercent}% off
+          </Typography>
+          <Typography variant="h5">Total £{activity.discountedPrice}</Typography>
+          <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
+            £{activity.price}
+          </Typography>
+        </>
+      ) : (
+        <Typography variant="h5">Total £{activity?.price}</Typography>
+      )}
+    </Box>
   );
 }

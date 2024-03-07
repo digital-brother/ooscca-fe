@@ -11,6 +11,7 @@ import React, { useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { LgFlex, SmFlex } from "../components/responsiveFlexes";
 import { Error } from "../components/formikFields";
+import { styled } from "@mui/system";
 
 function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
   const activityId = useParams().activityId;
@@ -37,14 +38,7 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
   }
 
   return (
-    <Box
-      sx={{
-        minWidth: { xs: 300, md: 500 },
-        minHeight: { xs: 300, md: 200 },
-        px: { xs: 2.5, md: 7 },
-        py: { xs: 3, md: 5 },
-      }}
-    >
+    <TermsAndConditionsContainer>
       <Typography variant="h3" textAlign="center">
         Add your Terms & Contitions here
       </Typography>
@@ -105,7 +99,7 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
           Save
         </Button>
       </SmFlex>
-    </Box>
+    </TermsAndConditionsContainer>
   );
 }
 
@@ -134,3 +128,13 @@ export default function TermsAndConditionsSection(sx) {
     </LgFlex>
   );
 }
+
+export const TermsAndConditionsContainer = styled(Box)(({ theme }) =>
+  theme.unstable_sx({
+    minWidth: { xs: 300, md: 500 },
+    minHeight: { xs: 300, md: 200 },
+    px: { xs: 2.5, md: 7 },
+    py: { xs: 3, md: 5 },
+    overflow:"hidden"
+  })
+);

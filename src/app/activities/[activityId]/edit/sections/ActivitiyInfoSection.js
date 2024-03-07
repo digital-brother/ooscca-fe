@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
+  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -26,6 +27,7 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
+  getActivityForDate,
 } from "../api.mjs";
 import "dayjs/locale/en-gb";
 import {
@@ -51,6 +53,10 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "../utils";
 import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import { SmFlex } from "../components/responsiveFlexes";
+import { styled } from "@mui/system";
+import { ActivityClientBadges, ActivityDiscountedPrice } from "@/app/booking/ActivitiesCalendar";
+import { StyledMuiLink } from "@/app/(homepage)/components/Link";
+import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -69,14 +75,29 @@ function SlideHeader({ label, close }) {
   );
 }
 
-function ActivityDetails({ sx }) {
-  const { activityId } = useParams();
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+function TermsAndConditionsView({ activity, handleClose }) {
+  return (
+    <TermsAndConditionsContainer>
+      <Box dangerouslySetInnerHTML={{ __html: activity?.termsAndConditions }} />
+      <Button variant="contained" color="green" fullWidth onClick={handleClose} sx={{ mt: 2 }}>
+        Close
+      </Button>
+    </TermsAndConditionsContainer>
+  );
+}
+
+export function ActivityDetails({ sx }) {
+  const { activityId, targetDate } = useParams();
+  const forDate = Boolean(targetDate);
+  const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : () => getActivity(activityId);
+
+  const { data: activity } = useQuery(["activity", activityId], activityGetter);
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
 
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   return (
     <Box
@@ -84,7 +105,6 @@ function ActivityDetails({ sx }) {
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        mt: 3,
         position: "relative",
         alignItems: { xs: "center", sm: "stretch" },
         ...sx,
@@ -94,8 +114,14 @@ function ActivityDetails({ sx }) {
         spacing={1}
         sx={{ position: { xs: "static", sm: "absolute" }, right: 0, width: { xs: "50%", sm: "max-content" } }}
       >
-        <Chip label="Early birds" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
-        <Chip label="Ending soon" sx={{ bgcolor: "blue.main", color: "common.white" }} />
+        {!forDate ? (
+          <>
+            <Chip label="Early birds" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
+            <Chip label="Ending soon" sx={{ bgcolor: "blue.main", color: "common.white" }} />
+          </>
+        ) : (
+          <ActivityClientBadges activity={activity} />
+        )}
       </Stack>
 
       <SmFlex>
@@ -113,13 +139,16 @@ function ActivityDetails({ sx }) {
         <Typography>
           <b>When:</b>
         </Typography>
-        <Box>
-          {activity?.dateRanges.map((dateRange, index) => (
-            <Typography key={index}>
-              {formatDateString(dateRange.start)} - {formatDateString(dateRange.end)}
-            </Typography>
-          ))}
-        </Box>
+        {!forDate && (
+          <Box>
+            {activity?.dateRanges.map((dateRange, index) => (
+              <Typography key={index}>
+                {formatDateString(dateRange.start)} - {formatDateString(dateRange.end)}
+              </Typography>
+            ))}
+          </Box>
+        )}
+        {forDate && formatDateString(targetDate)}
         <Typography sx={{ ml: { sm: "auto" } }}>
           {activity?.startTime} - {activity?.endTime}
         </Typography>
@@ -155,32 +184,52 @@ function ActivityDetails({ sx }) {
       <SmFlex>
         <b>Available spaces:</b> {activity?.capacity}
       </SmFlex>
-      {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
-        <SmFlex>
-          <b>Discounts applied:</b>{" "}
-          <Box sx={{ ml: { sm: "auto" }, textAlign: { xs: "center", sm: "right" } }}>
-            {earlyDiscount?.enabled && (
-              <Typography>
-                Early birds ({earlyDiscount?.percent}%){" "}
-                {earlyDiscount?.unit === "spaces"
-                  ? `${earlyDiscount?.amount} spaces`
-                  : `applied to first ${earlyDiscount?.amount} days`}
-              </Typography>
-            )}
-            {endingDiscount?.enabled && (
-              <Typography>
-                Ending soon ({endingDiscount?.percent}%){" "}
-                {endingDiscount?.unit === "spaces"
-                  ? `${endingDiscount?.amount} spaces`
-                  : `applied to last ${endingDiscount?.amount} days`}
-              </Typography>
-            )}
-          </Box>
-        </SmFlex>
+      {!forDate && (
+        <>
+          {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
+            <SmFlex>
+              <b>Discounts applied:</b>{" "}
+              <Box sx={{ ml: { sm: "auto" }, textAlign: { xs: "center", sm: "right" } }}>
+                {earlyDiscount?.enabled && (
+                  <Typography>
+                    Early birds ({earlyDiscount?.percent}%){" "}
+                    {earlyDiscount?.unit === "spaces"
+                      ? `${earlyDiscount?.amount} spaces`
+                      : `applied to first ${earlyDiscount?.amount} days`}
+                  </Typography>
+                )}
+                {endingDiscount?.enabled && (
+                  <Typography>
+                    Ending soon ({endingDiscount?.percent}%){" "}
+                    {endingDiscount?.unit === "spaces"
+                      ? `${endingDiscount?.amount} spaces`
+                      : `applied to last ${endingDiscount?.amount} days`}
+                  </Typography>
+                )}
+              </Box>
+            </SmFlex>
+          )}
+        </>
       )}
-      <Typography sx={{ textAlign: { sm: "right" } }} variant="h5">
-        Total £{activity?.price}
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
+        <StyledMuiLink
+          onClick={() => {
+            console.log(1);
+            setTermsCoditionsOpen(true);
+          }}
+        >
+          Terms & conditions
+        </StyledMuiLink>
+        <ActivityDiscountedPrice activity={activity} />
+
+        <Dialog
+          onClose={() => setTermsCoditionsOpen(false)}
+          open={termsCoditionsOpen}
+          PaperProps={{ sx: { maxWidth: "none" } }}
+        >
+          <TermsAndConditionsView activity={activity} handleClose={() => setTermsCoditionsOpen(false)} />
+        </Dialog>
+      </Box>
     </Box>
   );
 }
@@ -260,7 +309,7 @@ function SavedSlide({ scrollNext, close }) {
   return (
     <>
       <Typography variant="h6">Saved activity details</Typography>
-      <ActivityDetails sx={{ flex: 1 }} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} />
 
       <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
@@ -284,7 +333,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   return (
     <>
       <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails sx={{ flex: 1 }} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} />
 
       <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3, rowGap: 1 }}>
@@ -652,7 +701,7 @@ function DescriptionForm() {
   );
 }
 
-export default function ActivitiesSection() {
+export default function ActivityInfoSection() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
 
@@ -683,39 +732,43 @@ export default function ActivitiesSection() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
-          gap: 3,
-          maxWidth: { xs: 540, lg: "none" },
-          mx: "auto",
-        }}
-      >
+      <ActivityInfoContainer>
         <DescriptionForm />
-        <Box
-          ref={slideRef}
-          sx={{
-            mx: "auto",
-            width: "100%",
-            maxWidth: 540,
-            minHeight: 600,
-            border: "1px solid",
-            borderColor: "grey.main",
-            borderRadius: 4,
-            px: 4,
-            pt: 2.4,
-            pb: 2,
-
-            display: "flex",
-          }}
-        >
+        <SlideContainer ref={slideRef}>
           {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
           <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
             <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
           </Box>
-        </Box>
-      </Box>
+        </SlideContainer>
+      </ActivityInfoContainer>
     </Container>
   );
 }
+
+export const ActivityInfoContainer = styled(Box)(({ theme }) =>
+  theme.unstable_sx({
+    display: "grid",
+    gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+    gap: 3,
+    maxWidth: { xs: 540, lg: "none" },
+    mx: "auto",
+  })
+);
+
+export const SlideContainer = styled(Box)(({ theme }) =>
+  theme.unstable_sx({
+    mx: "auto",
+    width: "100%",
+    maxWidth: 540,
+    minHeight: 600,
+    border: "1px solid",
+    borderColor: "grey.main",
+    borderRadius: 4,
+    px: 4,
+    pt: 2.4,
+    pb: 2.4,
+
+    display: "flex",
+    flexDirection: "column",
+  })
+);
