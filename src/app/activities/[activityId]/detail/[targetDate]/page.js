@@ -4,7 +4,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { getActivity, getActivityForDate, getActivityImagesSecondary } from "../../edit/api.mjs";
+import { getActivityForDate, getActivityImagesSecondary } from "../../edit/api.mjs";
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
@@ -48,8 +48,10 @@ function SecondaryImages() {
 }
 
 function Map() {
-  const activityId = useParams().activityId;
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { activityId, targetDate } = useParams();
+  const { data: activity } = useQuery(["activity", activityId, targetDate], () =>
+    getActivityForDate(activityId, targetDate)
+  );
 
   const londonCoordinates = { lat: 51.5074, lng: -0.1278 };
   const coordinates = { lat: parseFloat(activity?.latitude), lng: parseFloat(activity?.longitude) };
@@ -70,8 +72,10 @@ function Map() {
 }
 
 function ActivityDescription() {
-  const activityId = useParams().activityId;
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { activityId, targetDate } = useParams();
+  const { data: activity } = useQuery(["activity", activityId, targetDate], () =>
+    getActivityForDate(activityId, targetDate)
+  );
   const preRequisitesLines = activity?.preRequisites.split("\n");
 
   return (
@@ -86,15 +90,12 @@ function ActivityDescription() {
 }
 
 function ActivityInfo() {
-  const activityId = useParams().activityId;
-  const dateStr = useParams().activityId;
-  const { data: activity } = useQuery(["activity", activityId], () => getActivityForDate(activityId, dateStr));
   return (
     <Container sx={{ my: 10 }}>
       <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
         <ActivityDescription />
         <SlideContainer>
-          <ActivityDetails />
+          <ActivityDetails sx={{ flex: 1 }} />
         </SlideContainer>
       </Box>
     </Container>
