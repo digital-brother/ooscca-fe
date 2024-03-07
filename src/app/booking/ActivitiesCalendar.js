@@ -79,7 +79,8 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
   );
 }
 
-export function ActivityCard({ activity }) {
+export function ActivityCard({ activity, targetDate }) {
+  const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
@@ -144,30 +145,16 @@ export function ActivityCard({ activity }) {
             <Stack sx={{ gap: 0.5 }}>
               <ActivityClientBadges activity={activity} />
             </Stack>
-            <Box sx={{ textAlign: "right" }}>
-              {activity?.discountPercent ? (
-                <>
-                  <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
-                    {activity.discountPercent}% off
-                  </Typography>
-                  <Typography variant="h5">£{activity.discountedPrice}</Typography>
-                  <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
-                    £{activity.price}
-                  </Typography>
-                </>
-              ) : (
-                <Typography variant="h5">£{activity?.price}</Typography>
-              )}
-            </Box>
+            <ActivityDiscountedPrice activity={activity} />
           </Stack>
         </Box>
         <Box flex={1}></Box>
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
-          {/* <Link href={activityDetailUrl} passHref> */}
+          <Link href={activityDetailUrl} passHref>
           <Button variant="outlined" sx={{ flex: 1 }}>
             Learn more
           </Button>
-          {/* </Link> */}
+          </Link>
           <Button variant="contained" sx={{ flex: 1 }}>
             Add
           </Button>
@@ -190,7 +177,7 @@ function ActivitiesList({ sx, selectedDate }) {
     return (
       <Box sx={{ display: "flex", gap: 2, ...sx }}>
         {activities.map((activity) => (
-          <ActivityCard key={activity.id} activity={activity} />
+          <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
         ))}
       </Box>
     );
@@ -215,5 +202,25 @@ export function ActivityClientBadges({ activity }) {
         <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
       )}
     </>
+  );
+}
+
+export function ActivityDiscountedPrice({ activity }) {
+  return (
+    <Box sx={{ textAlign: "right" }}>
+      {activity?.discountPercent ? (
+        <>
+          <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
+            {activity.discountPercent}% off
+          </Typography>
+          <Typography variant="h5">£{activity.discountedPrice}</Typography>
+          <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
+            £{activity.price}
+          </Typography>
+        </>
+      ) : (
+        <Typography variant="h5">£{activity?.price}</Typography>
+      )}
+    </Box>
   );
 }
