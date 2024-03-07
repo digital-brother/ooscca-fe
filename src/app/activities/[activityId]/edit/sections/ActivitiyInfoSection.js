@@ -221,7 +221,7 @@ export function ActivityDetails({ sx }) {
           Terms & conditions
         </StyledMuiLink>
         <ActivityDiscountedPrice activity={activity} />
-        
+
         <Dialog
           onClose={() => setTermsCoditionsOpen(false)}
           open={termsCoditionsOpen}
@@ -766,7 +766,7 @@ export const SlideContainer = styled(Box)(({ theme }) =>
     borderRadius: 4,
     px: 4,
     pt: 2.4,
-    pb: 2,
+    pb: 2.4,
 
     display: "flex",
     flexDirection: "column",
