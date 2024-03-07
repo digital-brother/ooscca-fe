@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
+  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -54,6 +55,8 @@ import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import { SmFlex } from "../components/responsiveFlexes";
 import { styled } from "@mui/system";
 import { ActivityClientBadges, ActivityDiscountedPrice } from "@/app/booking/ActivitiesCalendar";
+import { StyledMuiLink } from "@/app/(homepage)/components/Link";
+import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -72,6 +75,17 @@ function SlideHeader({ label, close }) {
   );
 }
 
+function TermsAndConditionsView({ activity, handleClose }) {
+  return (
+    <TermsAndConditionsContainer>
+      <Box dangerouslySetInnerHTML={{ __html: activity?.termsAndConditions }} />
+      <Button variant="contained" color="green" fullWidth onClick={handleClose} sx={{ mt: 2 }}>
+        Close
+      </Button>
+    </TermsAndConditionsContainer>
+  );
+}
+
 export function ActivityDetails({ sx }) {
   const { activityId, targetDate } = useParams();
   const forDate = Boolean(targetDate);
@@ -83,6 +97,7 @@ export function ActivityDetails({ sx }) {
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
 
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
+  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
   return (
     <Box
@@ -194,12 +209,27 @@ export function ActivityDetails({ sx }) {
               </Box>
             </SmFlex>
           )}
-          <Typography sx={{ textAlign: { sm: "right" } }} variant="h5">
-            Total £{activity?.price}
-          </Typography>
         </>
       )}
-      {forDate && <ActivityDiscountedPrice activity={activity} />}
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
+        <StyledMuiLink
+          onClick={() => {
+            console.log(1);
+            setTermsCoditionsOpen(true);
+          }}
+        >
+          Terms & conditions
+        </StyledMuiLink>
+        <ActivityDiscountedPrice activity={activity} />
+        
+        <Dialog
+          onClose={() => setTermsCoditionsOpen(false)}
+          open={termsCoditionsOpen}
+          PaperProps={{ sx: { maxWidth: "none" } }}
+        >
+          <TermsAndConditionsView activity={activity} handleClose={() => setTermsCoditionsOpen(false)} />
+        </Dialog>
+      </Box>
     </Box>
   );
 }
