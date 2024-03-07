@@ -124,13 +124,16 @@ export function ActivityDetails({ sx }) {
         <Typography>
           <b>When:</b>
         </Typography>
-        <Box>
-          {activity?.dateRanges.map((dateRange, index) => (
-            <Typography key={index}>
-              {formatDateString(dateRange.start)} - {formatDateString(dateRange.end)}
-            </Typography>
-          ))}
-        </Box>
+        {!forDate && (
+          <Box>
+            {activity?.dateRanges.map((dateRange, index) => (
+              <Typography key={index}>
+                {formatDateString(dateRange.start)} - {formatDateString(dateRange.end)}
+              </Typography>
+            ))}
+          </Box>
+        )}
+        {forDate && formatDateString(targetDate)}
         <Typography sx={{ ml: { sm: "auto" } }}>
           {activity?.startTime} - {activity?.endTime}
         </Typography>
