@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
@@ -96,6 +96,9 @@ function ActivityInfo() {
         <ActivityDescription />
         <SlideContainer>
           <ActivityDetails sx={{ flex: 1 }} />
+          <Button variant="contained">
+            Add to calendar
+            </Button>
         </SlideContainer>
       </Box>
     </Container>

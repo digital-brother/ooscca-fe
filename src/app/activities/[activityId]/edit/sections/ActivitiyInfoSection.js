@@ -53,7 +53,7 @@ import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from
 import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import { SmFlex } from "../components/responsiveFlexes";
 import { styled } from "@mui/system";
-import { ActivityClientBadges } from "@/app/booking/ActivitiesCalendar";
+import { ActivityClientBadges, ActivityDiscountedPrice } from "@/app/booking/ActivitiesCalendar";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -75,8 +75,8 @@ function SlideHeader({ label, close }) {
 export function ActivityDetails({ sx }) {
   const { activityId, targetDate } = useParams();
   const forDate = Boolean(targetDate);
-  const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : getActivity(activityId);
-  
+  const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : () => getActivity(activityId);
+
   const { data: activity } = useQuery(["activity", activityId], activityGetter);
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
@@ -90,7 +90,6 @@ export function ActivityDetails({ sx }) {
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        mt: 3,
         position: "relative",
         alignItems: { xs: "center", sm: "stretch" },
         ...sx,
@@ -167,32 +166,37 @@ export function ActivityDetails({ sx }) {
       <SmFlex>
         <b>Available spaces:</b> {activity?.capacity}
       </SmFlex>
-      {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
-        <SmFlex>
-          <b>Discounts applied:</b>{" "}
-          <Box sx={{ ml: { sm: "auto" }, textAlign: { xs: "center", sm: "right" } }}>
-            {earlyDiscount?.enabled && (
-              <Typography>
-                Early birds ({earlyDiscount?.percent}%){" "}
-                {earlyDiscount?.unit === "spaces"
-                  ? `${earlyDiscount?.amount} spaces`
-                  : `applied to first ${earlyDiscount?.amount} days`}
-              </Typography>
-            )}
-            {endingDiscount?.enabled && (
-              <Typography>
-                Ending soon ({endingDiscount?.percent}%){" "}
-                {endingDiscount?.unit === "spaces"
-                  ? `${endingDiscount?.amount} spaces`
-                  : `applied to last ${endingDiscount?.amount} days`}
-              </Typography>
-            )}
-          </Box>
-        </SmFlex>
+      {!forDate && (
+        <>
+          {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
+            <SmFlex>
+              <b>Discounts applied:</b>{" "}
+              <Box sx={{ ml: { sm: "auto" }, textAlign: { xs: "center", sm: "right" } }}>
+                {earlyDiscount?.enabled && (
+                  <Typography>
+                    Early birds ({earlyDiscount?.percent}%){" "}
+                    {earlyDiscount?.unit === "spaces"
+                      ? `${earlyDiscount?.amount} spaces`
+                      : `applied to first ${earlyDiscount?.amount} days`}
+                  </Typography>
+                )}
+                {endingDiscount?.enabled && (
+                  <Typography>
+                    Ending soon ({endingDiscount?.percent}%){" "}
+                    {endingDiscount?.unit === "spaces"
+                      ? `${endingDiscount?.amount} spaces`
+                      : `applied to last ${endingDiscount?.amount} days`}
+                  </Typography>
+                )}
+              </Box>
+            </SmFlex>
+          )}
+          <Typography sx={{ textAlign: { sm: "right" } }} variant="h5">
+            Total £{activity?.price}
+          </Typography>
+        </>
       )}
-      <Typography sx={{ textAlign: { sm: "right" } }} variant="h5">
-        Total £{activity?.price}
-      </Typography>
+      {forDate && <ActivityDiscountedPrice activity={activity} />}
     </Box>
   );
 }
@@ -272,7 +276,7 @@ function SavedSlide({ scrollNext, close }) {
   return (
     <>
       <Typography variant="h6">Saved activity details</Typography>
-      <ActivityDetails sx={{ flex: 1 }} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} />
 
       <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
@@ -296,7 +300,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   return (
     <>
       <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails sx={{ flex: 1 }} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} />
 
       <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3, rowGap: 1 }}>
@@ -730,5 +734,6 @@ export const SlideContainer = styled(Box)(({ theme }) =>
     pb: 2,
 
     display: "flex",
+    flexDirection: "column",
   })
 );
