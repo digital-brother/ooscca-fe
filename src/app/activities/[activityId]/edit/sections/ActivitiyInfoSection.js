@@ -699,15 +699,7 @@ export default function ActivityInfoSection() {
 
   return (
     <Container sx={{ my: 10 }}>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
-          gap: 3,
-          maxWidth: { xs: 540, lg: "none" },
-          mx: "auto",
-        }}
-      >
+      <ActivityInfoContainer>
         <DescriptionForm />
         <SlideContainer ref={slideRef}>
           {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
@@ -715,10 +707,20 @@ export default function ActivityInfoSection() {
             <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
           </Box>
         </SlideContainer>
-      </Box>
+      </ActivityInfoContainer>
     </Container>
   );
 }
+
+export const ActivityInfoContainer = styled(Box)(({ theme }) =>
+  theme.unstable_sx({
+    display: "grid",
+    gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+    gap: 3,
+    maxWidth: { xs: 540, lg: "none" },
+    mx: "auto",
+  })
+);
 
 export const SlideContainer = styled(Box)(({ theme }) =>
   theme.unstable_sx({

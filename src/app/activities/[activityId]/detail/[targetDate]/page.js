@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { getActivityForDate, getActivityImagesSecondary } from "../../edit/api.mjs";
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
-import { ActivityDetails, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
+import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
 
 function SecondaryImages() {
   const activityId = useParams().activityId;
@@ -92,15 +92,13 @@ function ActivityDescription() {
 function ActivityInfo() {
   return (
     <Container sx={{ my: 10 }}>
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
+      <ActivityInfoContainer>
         <ActivityDescription />
         <SlideContainer>
           <ActivityDetails sx={{ flex: 1 }} />
-          <Button variant="contained">
-            Add to calendar
-            </Button>
+          <Button variant="contained">Add to calendar</Button>
         </SlideContainer>
-      </Box>
+      </ActivityInfoContainer>
     </Container>
   );
 }
