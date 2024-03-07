@@ -142,12 +142,7 @@ export function ActivityCard({ activity }) {
 
           <Stack sx={{ justifyContent: "space-between" }}>
             <Stack sx={{ gap: 0.5 }}>
-              {activity?.goingFast && (
-                <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
-              )}
-              {activity?.spacesLeft <= 5 && (
-                <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
-              )}
+              <ActivityClientBadges activity={activity} />
             </Stack>
             <Box sx={{ textAlign: "right" }}>
               {activity?.discountPercent ? (
@@ -169,9 +164,9 @@ export function ActivityCard({ activity }) {
         <Box flex={1}></Box>
         <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
           {/* <Link href={activityDetailUrl} passHref> */}
-            <Button variant="outlined" sx={{ flex: 1 }}>
-              Learn more
-            </Button>
+          <Button variant="outlined" sx={{ flex: 1 }}>
+            Learn more
+          </Button>
           {/* </Link> */}
           <Button variant="contained" sx={{ flex: 1 }}>
             Add
@@ -209,5 +204,16 @@ export default function ActivitiesCalendar() {
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
       <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
     </Container>
+  );
+}
+
+export function ActivityClientBadges({ activity }) {
+  return (
+    <>
+      {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
+      {activity?.spacesLeft <= 5 && (
+        <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
+      )}
+    </>
   );
 }

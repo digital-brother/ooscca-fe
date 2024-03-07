@@ -26,6 +26,7 @@ import {
   createDiscount,
   patchDiscount,
   getActivityDiscounts,
+  getActivityForDate,
 } from "../api.mjs";
 import "dayjs/locale/en-gb";
 import {
@@ -52,6 +53,7 @@ import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from
 import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import { SmFlex } from "../components/responsiveFlexes";
 import { styled } from "@mui/system";
+import { ActivityClientBadges } from "@/app/booking/ActivitiesCalendar";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -71,8 +73,11 @@ function SlideHeader({ label, close }) {
 }
 
 export function ActivityDetails({ sx }) {
-  const { activityId } = useParams();
-  const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
+  const { activityId, targetDate } = useParams();
+  const forDate = Boolean(targetDate);
+  const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : getActivity(activityId);
+  
+  const { data: activity } = useQuery(["activity", activityId], activityGetter);
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
   const endingDiscount = discounts?.find((discount) => discount.type === "ending");
@@ -95,8 +100,14 @@ export function ActivityDetails({ sx }) {
         spacing={1}
         sx={{ position: { xs: "static", sm: "absolute" }, right: 0, width: { xs: "50%", sm: "max-content" } }}
       >
-        <Chip label="Early birds" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
-        <Chip label="Ending soon" sx={{ bgcolor: "blue.main", color: "common.white" }} />
+        {!forDate ? (
+          <>
+            <Chip label="Early birds" sx={{ bgcolor: "magenta.main", color: "common.white" }} />
+            <Chip label="Ending soon" sx={{ bgcolor: "blue.main", color: "common.white" }} />
+          </>
+        ) : (
+          <ActivityClientBadges activity={activity} />
+        )}
       </Stack>
 
       <SmFlex>
