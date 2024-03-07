@@ -7,8 +7,7 @@ import { useQuery } from "react-query";
 import { getActivity, getActivityForDate, getActivityImagesSecondary } from "../../edit/api.mjs";
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
-import { AirlineSeatLegroomReducedOutlined } from "@mui/icons-material";
-import { ActivityCard } from "@/app/booking/ActivitiesCalendar";
+import { ActivityDetails, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
 
 function SecondaryImages() {
   const activityId = useParams().activityId;
@@ -94,7 +93,9 @@ function ActivityInfo() {
     <Container sx={{ my: 10 }}>
       <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
         <ActivityDescription />
-        <ActivityCard activity={activity} />
+        <SlideContainer>
+          <ActivityDetails />
+        </SlideContainer>
       </Box>
     </Container>
   );

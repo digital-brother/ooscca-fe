@@ -51,6 +51,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "../utils";
 import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import { SmFlex } from "../components/responsiveFlexes";
+import { styled } from "@mui/system";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -69,7 +70,7 @@ function SlideHeader({ label, close }) {
   );
 }
 
-function ActivityDetails({ sx }) {
+export function ActivityDetails({ sx }) {
   const { activityId } = useParams();
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
@@ -693,29 +694,30 @@ export default function ActivityInfoSection() {
         }}
       >
         <DescriptionForm />
-        <Box
-          ref={slideRef}
-          sx={{
-            mx: "auto",
-            width: "100%",
-            maxWidth: 540,
-            minHeight: 600,
-            border: "1px solid",
-            borderColor: "grey.main",
-            borderRadius: 4,
-            px: 4,
-            pt: 2.4,
-            pb: 2,
-
-            display: "flex",
-          }}
-        >
+        <SlideContainer ref={slideRef}>
           {/* Makes child slide take full height. Child CSS 'height: 100%' does not work (unless parent height is specified). */}
           <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
             <CurrentSlide {...{ scrollNext, scrollPrev, close }} />
           </Box>
-        </Box>
+        </SlideContainer>
       </Box>
     </Container>
   );
 }
+
+export const SlideContainer = styled(Box)(({ theme }) =>
+  theme.unstable_sx({
+    mx: "auto",
+    width: "100%",
+    maxWidth: 540,
+    minHeight: 600,
+    border: "1px solid",
+    borderColor: "grey.main",
+    borderRadius: 4,
+    px: 4,
+    pt: 2.4,
+    pb: 2,
+
+    display: "flex",
+  })
+);
