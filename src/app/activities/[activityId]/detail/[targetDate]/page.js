@@ -151,6 +151,14 @@ function ActivityInfo() {
   );
 }
 
+function FooterImage() {
+  return (
+    <Container sx={{ mt: 10 }}>
+      <Image src="/activity-detail-footer.png" alt="footer image" width={506} height={410} style={{maxWidth: "100%", height: "auto", display: "block", margin: "0 auto -12" }} />
+    </Container>
+  );
+}
+
 export default function ActivityDetailPage() {
   return (
     <>
@@ -158,6 +166,7 @@ export default function ActivityDetailPage() {
       <ActivityInfo />
       <Map />
       <SecondaryImages />
+      <FooterImage />
     </>
   );
 }
