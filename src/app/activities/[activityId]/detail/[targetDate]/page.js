@@ -43,7 +43,7 @@ function PrimaryImages() {
   const { activityId } = useParams();
   const { data: primaryImages } = useQuery("activityImagesPrimary", () => getActivityImagesPrimary(activityId));
   return (
-    <Container sx={{ my: 10 }}>
+    <Container sx={{ mt: 5, mb: 10 }}>
       <EmblaContainer emblaSx={{ borderRadius: 2 }}>
         {primaryImages?.map((image, index) => (
           <EmblaSlide key={index} emblaSlideSx={{ height: 600, position: "relative" }}>
@@ -154,14 +154,42 @@ function ActivityInfo() {
 function FooterImage() {
   return (
     <Container sx={{ mt: 10 }}>
-      <Image src="/activity-detail-footer.png" alt="footer image" width={506} height={410} style={{maxWidth: "100%", height: "auto", display: "block", margin: "0 auto -12" }} />
+      <Image
+        src="/activity-detail-footer.png"
+        alt="footer image"
+        width={506}
+        height={410}
+        style={{ maxWidth: "100%", height: "auto", display: "block", margin: "0 auto -12px" }}
+      />
     </Container>
+  );
+}
+
+function LogoImage() {
+  const { activityId, targetDate } = useParams();
+  const { data: activity } = useQuery(["activity", activityId, targetDate], () =>
+    getActivityForDate(activityId, targetDate)
+  );
+
+  return (
+    activity?.providerLogoUrl && (
+      <Container sx={{ mt: 8, mb: 5 }}>
+        <Image
+          src={activity?.providerLogoUrl}
+          alt="logo image"
+          width={300}
+          height={300}
+          style={{ maxWidth: 300, height: "auto", width: "100%" }}
+        />
+      </Container>
+    )
   );
 }
 
 export default function ActivityDetailPage() {
   return (
     <>
+      <LogoImage />
       <PrimaryImages />
       <ActivityInfo />
       <Map />
