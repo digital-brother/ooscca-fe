@@ -132,7 +132,7 @@ export default function TermsAndConditionsSection(sx) {
 export const TermsAndConditionsContainer = styled(Box)(({ theme }) =>
   theme.unstable_sx({
     minWidth: { xs: 300, md: 500 },
-    minHeight: { xs: 300, md: 200 },
+    minHeight: 150,
     px: { xs: 2.5, md: 7 },
     py: { xs: 3, md: 5 },
     overflow:"hidden"

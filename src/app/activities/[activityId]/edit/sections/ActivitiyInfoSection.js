@@ -78,7 +78,12 @@ function SlideHeader({ label, close }) {
 function TermsAndConditionsView({ activity, handleClose }) {
   return (
     <TermsAndConditionsContainer>
-      <Box dangerouslySetInnerHTML={{ __html: activity?.termsAndConditions }} />
+      {activity?.termsAndConditions ? (
+        <Box dangerouslySetInnerHTML={{ __html: activity?.termsAndConditions }} />
+      ) : (
+        <Typography sx={{fontWeight: 700}}>You must add legal disclsimers here.</Typography>
+      )}
+
       <Button variant="contained" color="green" fullWidth onClick={handleClose} sx={{ mt: 2 }}>
         Close
       </Button>
