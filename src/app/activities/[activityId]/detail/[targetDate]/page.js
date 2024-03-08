@@ -2,52 +2,55 @@
 
 import { Box, Button, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import Autoplay from "embla-carousel-autoplay";
+import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "../../edit/api.mjs";
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import Image from "next/image";
 
-export function EmblaCarousel() {
+export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
-
-  const { activityId } = useParams();
-  const { data: primaryImages } = useQuery("activityImagesPrimary", () => getActivityImagesPrimary(activityId));
 
   const emblaSx = {
     overflow: "hidden",
+    ...emblaSxOuter,
   };
   const emblaContainerSx = {
     display: "flex",
   };
-  const emblaSlideSx = {
-    flex: "0 0 100%",
-    minWidth: 0,
-  };
 
   return (
     <Box sx={emblaSx} ref={emblaRef}>
-      <Box sx={emblaContainerSx}>
-        {primaryImages?.map((image, index) => (
-          <Box key={index} sx={emblaSlideSx}>
-            <Box sx={{height: 600, position: "relative", }}>
-              <Image src={image.url} fill style={{ objectFit: "cover" }} alt={image.name} sizes="100vw" />
-            </Box>
-          </Box>
-        ))}
-      </Box>
+      <Box sx={emblaContainerSx}>{children}</Box>
     </Box>
   );
 }
 
+export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
+  const emblaSlideSx = {
+    flex: "0 0 100%",
+    minWidth: 0,
+    ...emblaSlideSxOuter,
+  };
+  return <Box sx={emblaSlideSx}>{children}</Box>;
+}
+
 function PrimaryImages() {
+  const { activityId } = useParams();
+  const { data: primaryImages } = useQuery("activityImagesPrimary", () => getActivityImagesPrimary(activityId));
   return (
     <Container sx={{ my: 10 }}>
-      <EmblaCarousel />
+      <EmblaContainer emblaSx={{ borderRadius: 2 }}>
+        {primaryImages?.map((image, index) => (
+          <EmblaSlide key={index} emblaSlideSx={{ height: 600, position: "relative" }}>
+            <Image src={image.url} fill style={{ objectFit: "cover" }} alt={image.name} sizes="100vw" />
+          </EmblaSlide>
+        ))}
+      </EmblaContainer>
     </Container>
   );
 }
