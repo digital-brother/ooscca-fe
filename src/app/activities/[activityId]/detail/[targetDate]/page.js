@@ -10,10 +10,11 @@ import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
 
 export function EmblaCarousel() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
-  
+
   const { activityId } = useParams();
   const { data: primaryImages } = useQuery("activityImagesPrimary", () => getActivityImagesPrimary(activityId));
 
@@ -33,7 +34,9 @@ export function EmblaCarousel() {
       <Box sx={emblaContainerSx}>
         {primaryImages?.map((image, index) => (
           <Box key={index} sx={emblaSlideSx}>
-            <img src={image.url} style={{ width: "100%", height: 600, objectFit: "cover" }} />
+            <Box sx={{height: 600, position: "relative", }}>
+              <Image src={image.url} fill style={{ objectFit: "cover" }} alt={image.name} sizes="100vw" />
+            </Box>
           </Box>
         ))}
       </Box>
