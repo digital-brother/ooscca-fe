@@ -47,7 +47,7 @@ function PrimaryImages() {
       <EmblaContainer emblaSx={{ borderRadius: 2 }}>
         {primaryImages?.map((image, index) => (
           <EmblaSlide key={index} emblaSlideSx={{ height: 600, position: "relative" }}>
-            <Image src={image.url} fill style={{ objectFit: "cover" }} alt={image.name} sizes="100vw" />
+            <Image src={image.url} fill style={{ objectFit: "cover" }} alt={image.name} sizes="100vw" priority={true} />
           </EmblaSlide>
         ))}
       </EmblaContainer>
