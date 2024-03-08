@@ -8,6 +8,40 @@ import { getActivityForDate, getActivityImagesSecondary } from "../../edit/api.m
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
+import useEmblaCarousel from "embla-carousel-react";
+
+export function EmblaCarousel() {
+  const [emblaRef] = useEmblaCarousel();
+
+  const emblaSx = {
+    overflow: "hidden",
+  };
+  const emblaContainerSx = {
+    display: "flex",
+  };
+  const emblaSlideSx = {
+    flex: "0 0 100%",
+    minWidth: 0,
+  };
+
+  return (
+    <Box sx={emblaSx} ref={emblaRef}>
+      <Box sx={emblaContainerSx}>
+        <Box sx={emblaSlideSx}>Slide 1</Box>
+        <Box sx={emblaSlideSx}>Slide 2</Box>
+        <Box sx={emblaSlideSx}>Slide 3</Box>
+      </Box>
+    </Box>
+  );
+}
+
+function PrimaryImages() {
+  return (
+    <Container sx={{ my: 10 }}>
+      <EmblaCarousel />
+    </Container>
+  );
+}
 
 function SecondaryImages() {
   const activityId = useParams().activityId;
@@ -94,9 +128,11 @@ function ActivityInfo() {
     <Container sx={{ my: 10 }}>
       <ActivityInfoContainer>
         <ActivityDescription />
-        <SlideContainer sx={{minHeight: 0}}>
+        <SlideContainer sx={{ minHeight: 0 }}>
           <ActivityDetails sx={{ flex: 1 }} />
-          <Button variant="contained" sx={{mt: 3}}>Add to calendar</Button>
+          <Button variant="contained" sx={{ mt: 3 }}>
+            Add to calendar
+          </Button>
         </SlideContainer>
       </ActivityInfoContainer>
     </Container>
@@ -106,6 +142,7 @@ function ActivityInfo() {
 export default function ActivityDetailPage() {
   return (
     <>
+      <PrimaryImages />
       <ActivityInfo />
       <Map />
       <SecondaryImages />
