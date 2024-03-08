@@ -9,9 +9,10 @@ import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload"
 import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 export function EmblaCarousel() {
-  const [emblaRef] = useEmblaCarousel();
+  const[emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
 
   const emblaSx = {
     overflow: "hidden",
