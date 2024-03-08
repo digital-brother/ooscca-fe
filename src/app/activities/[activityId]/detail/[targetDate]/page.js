@@ -4,7 +4,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { getActivityForDate, getActivityImagesSecondary } from "../../edit/api.mjs";
+import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "../../edit/api.mjs";
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
@@ -12,7 +12,10 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
 export function EmblaCarousel() {
-  const[emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  
+  const { activityId } = useParams();
+  const { data: primaryImages } = useQuery("activityImagesPrimary", () => getActivityImagesPrimary(activityId));
 
   const emblaSx = {
     overflow: "hidden",
@@ -28,9 +31,11 @@ export function EmblaCarousel() {
   return (
     <Box sx={emblaSx} ref={emblaRef}>
       <Box sx={emblaContainerSx}>
-        <Box sx={emblaSlideSx}>Slide 1</Box>
-        <Box sx={emblaSlideSx}>Slide 2</Box>
-        <Box sx={emblaSlideSx}>Slide 3</Box>
+        {primaryImages?.map((image, index) => (
+          <Box key={index} sx={emblaSlideSx}>
+            <img src={image.url} style={{ width: "100%", height: 600, objectFit: "cover" }} />
+          </Box>
+        ))}
       </Box>
     </Box>
   );
