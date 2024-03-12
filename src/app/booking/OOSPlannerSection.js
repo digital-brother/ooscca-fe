@@ -10,7 +10,7 @@ import {
   Button,
   Container,
   IconButton,
-    Table,
+  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -93,6 +93,27 @@ function BookingDay({ bookings = [], sx }) {
   );
 }
 
+  const StyledHeaderTableCell = styled(TableCell)(({ theme }) =>
+    theme.unstable_sx({
+      borderBottom: "none",
+      width: "18%",
+      p: 1,
+    })
+  );
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    justifyContent: "center",
+    borderBottom: "none",
+    "&:not(:last-child)": {
+      borderRight: "1px dashed",
+      borderRightColor: theme.palette.grey[300],
+    },
+    "&:first-child": {
+      borderRight: "1px solid",
+      borderRightColor: theme.palette.grey[300],
+    },
+  }));
+
 function FamilyBookings() {
   const today = dayjs();
 
@@ -108,24 +129,6 @@ function FamilyBookings() {
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
   const formatDate = (date) => date.format("ddd D");
-
-  const StyledHeaderTableCell = styled(TableCell)(({ theme }) => ({
-    borderBottom: "none",
-    width: "18%",
-  }));
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    justifyContent: "center",
-    borderBottom: "none",
-    "&:not(:last-child)": {
-      borderRight: "1px dashed",
-      borderRightColor: theme.palette.grey[300],
-    },
-    "&:first-child": {
-      borderRight: "1px solid",
-      borderRightColor: theme.palette.grey[300],
-    },
-  }));
 
   const handleNextWeek = () => setWeekFirstDayDate(weekFirstDayDate.add(7, "day"));
   const handlePreviosWeek = () => setWeekFirstDayDate(weekFirstDayDate.subtract(7, "day"));
@@ -164,7 +167,9 @@ function FamilyBookings() {
           <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
             {weekDates.map((date, index) => (
               <StyledHeaderTableCell key={index} align="center" sx={{ borderRight: 0 }}>
-                {formatDate(date)}
+                <Box sx={{ bgcolor: today.isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}>
+                  {formatDate(date)}
+                </Box>
               </StyledHeaderTableCell>
             ))}
           </TableRow>
@@ -206,12 +211,6 @@ function FamilyBookings() {
 }
 
 function Wrapper({ sx }) {
-  const booking = {
-    type: "Football",
-    time: "7:30 - 12:00 AM",
-    address: "123 Clubs, Street name, postcode",
-    price: 45,
-  };
   return (
     <Box
       sx={{
