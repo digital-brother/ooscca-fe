@@ -22,7 +22,7 @@ import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import { useQuery } from "react-query";
-import { getBookings, getChildren } from "../activities/[activityId]/api.mjs";
+import { getBookings, getChildren } from "@/app/api.mjs";
 import _ from "lodash";
 import { useState } from "react";
 

@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import React, { useEffect, useState } from "react";
-import { getActivity, patchActivity } from "../api.mjs";
+import { getActivity, patchActivity } from "../../../../api.mjs";
 import Box from "@mui/material/Box";
 import { Map } from "../components/Map";
 import { Container } from "@mui/material";

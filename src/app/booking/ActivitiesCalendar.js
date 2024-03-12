@@ -11,7 +11,7 @@ import Image from "next/image";
 
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { getActivitiesForDate } from "../activities/[activityId]/edit/api.mjs";
+import { getActivitiesForDate } from "../api.mjs";
 import Link from "next/link";
 
 dayjs.extend(utc);

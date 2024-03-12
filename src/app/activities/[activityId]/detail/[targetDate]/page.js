@@ -7,7 +7,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "../../edit/api.mjs";
+import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "../../../../api.mjs";
 import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
 import { MAP_API_KEY } from "../../edit/components/Map";
 import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";

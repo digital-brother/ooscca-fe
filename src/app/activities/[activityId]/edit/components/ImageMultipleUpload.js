@@ -22,7 +22,7 @@ import NextImage from "next/image";
 import { useParams } from "next/navigation";
 import prettyBytes from "pretty-bytes";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../api.mjs";
+import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../../../../api.mjs";
 import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
 

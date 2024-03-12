@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQuery } from "react-query";
-import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "../api.mjs";
+import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "../../../../api.mjs";
 import { Errors, getFlatErrors } from "./formikFields";
 
 const imageInputContainerSx = {

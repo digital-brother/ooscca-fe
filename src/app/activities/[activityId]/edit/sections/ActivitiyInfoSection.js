@@ -28,7 +28,7 @@ import {
   patchDiscount,
   getActivityDiscounts,
   getActivityForDate,
-} from "../api.mjs";
+} from "../../../../api.mjs";
 import "dayjs/locale/en-gb";
 import {
   FormikErrors,
