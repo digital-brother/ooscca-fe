@@ -110,6 +110,14 @@ function EmptyBooking() {
 }
 
 function BookingDay({ bookings = [], sx }) {
+  bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
+
+  if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
+  if (bookings.length === 1) {
+    if (bookings[0].activity.meridiem === "am") bookings.push(null);
+    if (bookings[0].activity.meridiem === "pm") bookings.unshift(null);
+  }
+  
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 320, ...sx }}>
       {bookings.map((booking, index) =>
@@ -212,10 +220,9 @@ function FamilyBookings() {
                   <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.name}</Typography>
                 </StyledTableCell>
                 {weekDates.map((date, index) => {
-                  let dateBookings = bookings?.filter(
+                  const dateBookings = bookings?.filter(
                     (booking) => booking.participant === child.id && dayjs(booking.date).isSame(date, "day")
                   );
-                  if (!dateBookings || _.isEmpty(dateBookings)) dateBookings = [null];
                   return (
                     <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
                       <BookingDay bookings={dateBookings} sx={{ mx: "auto" }} />
