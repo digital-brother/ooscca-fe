@@ -35,7 +35,7 @@ const BookingBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-function Booking({ booking }) {
+function FilledBooking({ booking }) {
   return (
     <BookingBox
       sx={{
@@ -44,8 +44,8 @@ function Booking({ booking }) {
         bgcolor: "green.100",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography sx={{ fontWeight: 700 }}>{booking.activity.type}</Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", gap:1 }}>
+        <Typography sx={{ fontWeight: 700 }}>{booking.activity.typeName}</Typography>
         <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
       </Box>
       <Typography>
@@ -87,7 +87,7 @@ function BookingDay({ bookings = [], sx }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 320, ...sx }}>
       {bookings.map((booking, index) =>
-        booking ? <Booking key={index} booking={booking} /> : <EmptyBooking key={index} />
+        booking ? <FilledBooking key={index} booking={booking} /> : <EmptyBooking key={index} />
       )}
     </Box>
   );
@@ -104,18 +104,18 @@ function BookingDay({ bookings = [], sx }) {
     })
   );
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    justifyContent: "center",
-    borderBottom: "none",
-    "&:not(:last-child)": {
-      borderRight: "1px dashed",
-      borderRightColor: theme.palette.grey[300],
-    },
-    "&:first-child": {
-      borderRight: "1px solid",
-      borderRightColor: theme.palette.grey[300],
-    },
-  }));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  justifyContent: "center",
+  borderBottom: "none",
+  "&:not(:last-child)": {
+    borderRight: "1px dashed",
+    borderRightColor: theme.palette.grey[300],
+  },
+  "&:first-child": {
+    borderRight: "1px solid",
+    borderRightColor: theme.palette.grey[300],
+  },
+}));
 
 function FamilyBookings() {
   const today = dayjs();
