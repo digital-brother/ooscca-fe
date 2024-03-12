@@ -147,7 +147,9 @@ function FamilyBookings() {
                   <IconButton onClick={handlePreviosWeek}>
                     <ArrowBackIosNewIcon />
                   </IconButton>
-                  <Typography sx={{ fontWeight: 700 }}>Today</Typography>
+                  <Button color="grey" sx={{ py: 0.2 }} onClick={() => setWeekFirstDayDate(currentWeekFirstDayDate)}>
+                    Today
+                  </Button>
                   <IconButton onClick={handleNextWeek}>
                     <ArrowForwardIosIcon />
                   </IconButton>
