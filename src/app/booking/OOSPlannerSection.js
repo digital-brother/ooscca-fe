@@ -10,7 +10,7 @@ import {
   Button,
   Container,
   IconButton,
-  Table,
+    Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -25,6 +25,7 @@ import { useQuery } from "react-query";
 import { getBookings, getChildren } from "@/app/api.mjs";
 import _ from "lodash";
 import { useState } from "react";
+import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 
 dayjs.extend(weekday);
 
@@ -97,9 +98,9 @@ function FamilyBookings() {
 
   let currentWeekFirstDayDate;
   if (today.weekday() === 0 || today.weekday() === 6) {
-    currentWeekFirstDayDate = today.startOf("week").add(1, "day")
+    currentWeekFirstDayDate = today.startOf("week").add(1, "day");
   } else {
-    currentWeekFirstDayDate = today.startOf("week").add(1, "day")
+    currentWeekFirstDayDate = today.startOf("week").add(1, "day");
   }
   const [weekFirstDayDate, setWeekFirstDayDate] = useState(currentWeekFirstDayDate);
   const weekDates = Array.from({ length: 5 }, (_, i) => weekFirstDayDate.add(i, "day"));
@@ -111,11 +112,6 @@ function FamilyBookings() {
   const StyledHeaderTableCell = styled(TableCell)(({ theme }) => ({
     borderBottom: "none",
     width: "18%",
-    "&:first-child": {
-      width: "auto",
-      borderRight: "1px solid",
-      borderRightColor: theme.palette.grey[300],
-    },
   }));
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -131,7 +127,7 @@ function FamilyBookings() {
     },
   }));
 
-  const handleNextWeek = () => setWeekFirstDayDate(weekFirstDayDate.add(7, "day"))
+  const handleNextWeek = () => setWeekFirstDayDate(weekFirstDayDate.add(7, "day"));
   const handlePreviosWeek = () => setWeekFirstDayDate(weekFirstDayDate.subtract(7, "day"));
 
   return (
@@ -139,15 +135,19 @@ function FamilyBookings() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <StyledTableCell></StyledTableCell>
+            <StyledTableCell rowSpan={2} sx={{ verticalAlign: "bottom", textAlign: "center" }}>
+              <FamilyRestroomIcon />
+              <Typography sx={{ fontWeight: 700 }}>Family</Typography>
+            </StyledTableCell>
+
             <StyledTableCell colSpan={5}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography>September 2023</Typography>
+                <Typography variant="h6">{weekFirstDayDate.format("MMMM YYYY")}</Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <IconButton onClick={handlePreviosWeek}>
                     <ArrowBackIosNewIcon />
                   </IconButton>
-                  <Typography>Today</Typography>
+                  <Typography sx={{ fontWeight: 700 }}>Today</Typography>
                   <IconButton onClick={handleNextWeek}>
                     <ArrowForwardIosIcon />
                   </IconButton>
@@ -158,10 +158,10 @@ function FamilyBookings() {
               </Box>
             </StyledTableCell>
           </TableRow>
+
           <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
-            <StyledHeaderTableCell></StyledHeaderTableCell>
             {weekDates.map((date, index) => (
-              <StyledHeaderTableCell key={index} align="center">
+              <StyledHeaderTableCell key={index} align="center" sx={{ borderRight: 0 }}>
                 {formatDate(date)}
               </StyledHeaderTableCell>
             ))}
