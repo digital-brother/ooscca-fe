@@ -103,7 +103,7 @@ function EmptyBooking() {
       }}
     >
       <Button color="grey" startIcon={<AddCircleOutlineIcon />}>
-        Add activity
+        Add
       </Button>
     </BookingBox>
   );
