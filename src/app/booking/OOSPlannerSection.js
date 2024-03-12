@@ -36,15 +36,41 @@ const BookingBox = styled(Box)(({ theme }) => ({
 }));
 
 function FilledBooking({ booking }) {
+  const colorMapping = {
+    tennis: "green",
+    "table-tennis": "green",
+    pedal: "green",
+    gymnastics: "purple",
+    cricket: "yellow",
+    rugby: "orange",
+    swimming: "blue",
+    football: "magenta",
+
+    squash: "purple",
+    cycling: "orange",
+    skiing: "yellow",
+    "go-karting": "magenta",
+    climbing: "green",
+    mix: "blue",
+
+    music: "purple",
+    dancing: "orange",
+    forestry: "magenta",
+    rowing: "green",
+    "soft-play": "blue",
+  };
+
+  const bgcolorBase = colorMapping[booking.activity.type?.slug] || "grey";
+  const bgcolor = `${bgcolorBase}.100`;
   return (
     <BookingBox
       sx={{
         display: "flex",
         flexDirection: "column",
-        bgcolor: "green.100",
+        bgcolor,
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", gap:1 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
         <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
         <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
       </Box>
@@ -93,16 +119,16 @@ function BookingDay({ bookings = [], sx }) {
   );
 }
 
-  const StyledHeaderTableCell = styled(TableCell)(({ theme }) =>
-    theme.unstable_sx({
-      borderBottom: "none",
-      width: "18%",
-      p: 1,
-      fontSize: "1rem",
-      fontWeight: 400,
-      color: "grey.600",
-    })
-  );
+const StyledHeaderTableCell = styled(TableCell)(({ theme }) =>
+  theme.unstable_sx({
+    borderBottom: "none",
+    width: "18%",
+    p: 1,
+    fontSize: "1rem",
+    fontWeight: 400,
+    color: "grey.600",
+  })
+);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   justifyContent: "center",
@@ -183,7 +209,7 @@ function FamilyBookings() {
             return (
               <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
                 <StyledTableCell component="th" scope="row">
-                  <Typography sx={{fontWeight: 700, textAlign: "center"}}>{child.name}</Typography>
+                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.name}</Typography>
                 </StyledTableCell>
                 {weekDates.map((date, index) => {
                   let dateBookings = bookings?.filter(
