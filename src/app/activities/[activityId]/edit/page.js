@@ -1,15 +1,15 @@
 import ImagesMultipleUpload from "./components/ImageMultipleUpload";
-import ActivitiesSection from "./sections/ActivitiesSection";
+import ActivityInfoSection from "./sections/ActivitiyInfoSection";
 import SecondaryImagesSection from "./sections/SecondaryImagesSection";
 import TermsAndConditionsSection from "./sections/TermsAndConditionsSection";
-import {MapSection} from "@/app/activities/[activityId]/sections/MapSection";
-import {SubmitSection} from "@/app/activities/[activityId]/sections/SubmitSection";
+import {MapSection} from "./sections/MapSection";
+import {SubmitSection} from "./sections/SubmitSection";
 
 export default function ActivityDetailsPage() {
   return (
     <>
       <ImagesMultipleUpload />
-      <ActivitiesSection />
+      <ActivityInfoSection />
       <MapSection />
       <SecondaryImagesSection />
       <TermsAndConditionsSection />

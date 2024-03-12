@@ -61,6 +61,11 @@ const theme = createTheme({
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },
+    subtitle1: {
+      fontFamily: montserrat.style.fontFamily,
+      fontSize: "1rem", // 16px
+      fontWeight: 700,
+    },
     subheading: {
       fontFamily: montserrat.style.fontFamily,
       fontSize: "1rem", // 16px
@@ -73,8 +78,23 @@ const theme = createTheme({
       fontSize: "1rem", // 16px
       color: colors.orange.main,
     },
+    captionBold: {
+      fontFamily: montserrat.style.fontFamily,
+      fontWeight: 700,
+      color: colors.orange.main,
+    },
+    bodyMedium: {
+      fontWeight: 500,
+    },
   },
   components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          bodyMedium: "p",
+        },
+      },
+    },
     MuiAlert: {
       styleOverrides: {
         root: ({ ownerState }) => ({
