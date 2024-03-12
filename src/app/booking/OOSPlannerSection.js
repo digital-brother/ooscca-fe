@@ -117,9 +117,9 @@ function BookingDay({ bookings = [], sx }) {
     if (bookings[0].activity.meridiem === "am") bookings.push(null);
     if (bookings[0].activity.meridiem === "pm") bookings.unshift(null);
   }
-  
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 320, ...sx }}>
+    <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 360, ...sx }}>
       {bookings.map((booking, index) =>
         booking ? <FilledBooking key={index} booking={booking} /> : <EmptyBooking key={index} />
       )}
@@ -246,21 +246,14 @@ function FamilyBookings() {
   );
 }
 
-function Wrapper({ sx }) {
-  return (
-    <Box
-      sx={{
-        borderRadius: 2,
-        border: "1px solid",
-        borderColor: "grey.300",
-        bgcolor: "white",
-        ...sx,
-      }}
-    >
-      <FamilyBookings />
-    </Box>
-  );
-}
+const Wrapper = styled(Box)(({ theme }) =>
+  theme.unstable_sx({
+    borderRadius: 2,
+    border: "1px solid",
+    borderColor: "grey.300",
+    bgcolor: "white",
+  })
+);
 
 export default function OOSPlannerSection() {
   return (
@@ -272,7 +265,9 @@ export default function OOSPlannerSection() {
             Enjoy the ease of booking activities without the text and email tennis
           </Typography>
         </Box>
-        <Wrapper sx={{ mt: 8 }} />
+        <Wrapper sx={{ mt: 8 }}>
+          <FamilyBookings />
+        </Wrapper>
       </Container>
     </Box>
   );
