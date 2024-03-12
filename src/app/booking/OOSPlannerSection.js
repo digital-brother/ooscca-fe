@@ -98,6 +98,9 @@ function BookingDay({ bookings = [], sx }) {
       borderBottom: "none",
       width: "18%",
       p: 1,
+      fontSize: "1rem",
+      fontWeight: 400,
+      color: "grey.600",
     })
   );
 
@@ -166,7 +169,7 @@ function FamilyBookings() {
 
           <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
             {weekDates.map((date, index) => (
-              <StyledHeaderTableCell key={index} align="center" sx={{ borderRight: 0 }}>
+              <StyledHeaderTableCell key={index} align="center">
                 <Box sx={{ bgcolor: today.isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}>
                   {formatDate(date)}
                 </Box>
@@ -180,7 +183,7 @@ function FamilyBookings() {
             return (
               <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
                 <StyledTableCell component="th" scope="row">
-                  {child.name}
+                  <Typography sx={{fontWeight: 700, textAlign: "center"}}>{child.name}</Typography>
                 </StyledTableCell>
                 {weekDates.map((date, index) => {
                   let dateBookings = bookings?.filter(
