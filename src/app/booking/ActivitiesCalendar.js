@@ -100,7 +100,7 @@ export function ActivityCard({ activity, targetDate }) {
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
-              {activity?.typeName}
+              {activity?.type?.name}
             </Typography>
             <Typography variant="body2" sx={{ mb: 3 }}>
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}

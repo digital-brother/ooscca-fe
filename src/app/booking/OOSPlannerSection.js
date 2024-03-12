@@ -45,7 +45,7 @@ function FilledBooking({ booking }) {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", gap:1 }}>
-        <Typography sx={{ fontWeight: 700 }}>{booking.activity.typeName}</Typography>
+        <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
         <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
       </Box>
       <Typography>

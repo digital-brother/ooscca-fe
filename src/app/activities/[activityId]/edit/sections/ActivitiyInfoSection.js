@@ -133,7 +133,7 @@ export function ActivityDetails({ sx }) {
         <b>Provider:</b> {activity?.providerName}
       </SmFlex>
       <SmFlex>
-        <b>Activity:</b> {activity?.typeName}
+        <b>Activity:</b> {activity?.type?.name}
       </SmFlex>
       {activity?.address && (
         <SmFlex>
