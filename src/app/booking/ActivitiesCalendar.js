@@ -10,7 +10,7 @@ import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import Link from "next/link";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
@@ -85,7 +85,15 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   const { data: children } = useQuery("children", getChildren);
+
+  const queryClient = useQueryClient();
   const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
+  const mutationConfig = {
+    onSuccess: () => {
+      enqueueSnackbar("Booking created", { variant: "success" })
+      queryClient.invalidateQueries("bookings");},
+    onError: () => enqueueSnackbar("Booking creation failed", { variant: "error" }),
+  };
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -162,41 +170,45 @@ export function ActivityCard({ activity, targetDate }) {
               Learn more
             </Button>
           </Link>
-          <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
-            {(popupState) => (
-              <>
-                <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
-                  Add
-                </Button>
-                <Menu
-                  {...bindMenu(popupState)}
-                  slotProps={{
-                    paper: {
-                      style: {
-                        width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
+          {children && children.length === 1 && (
+            <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)}>
+              Add
+            </Button>
+          )}
+          {children && children.length > 1 && (
+            <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
+              {(popupState) => (
+                <>
+                  <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
+                    Add
+                  </Button>
+                  <Menu
+                    {...bindMenu(popupState)}
+                    slotProps={{
+                      paper: {
+                        style: {
+                          width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
+                        },
                       },
-                    },
-                  }}
-                  sx={{ mt: 1 }}
-                >
-                  {children.map((child) => (
-                    <MenuItem
-                      key={child.id}
-                      onClick={() => {
-                        popupState.close();
-                        mutation.mutate(child.id, {
-                          onSuccess: () => enqueueSnackbar("Booking created", { variant: "success" }),
-                          onError: () => enqueueSnackbar("Booking creation failed", { variant: "error" }),
-                        });
-                      }}
-                    >
-                      {child.name}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
-            )}
-          </PopupState>
+                    }}
+                    sx={{ mt: 1 }}
+                  >
+                    {children.map((child) => (
+                      <MenuItem
+                        key={child.id}
+                        onClick={() => {
+                          popupState.close();
+                          mutation.mutate(child.id, mutationConfig);
+                        }}
+                      >
+                        {child.name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </>
+              )}
+            </PopupState>
+          )}
         </Box>
       </Stack>
     </Stack>
