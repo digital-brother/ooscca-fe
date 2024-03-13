@@ -117,6 +117,7 @@ function BookingDay({ bookings = [], sx }) {
     if (bookings[0].activity.meridiem === "am") bookings.push(null);
     if (bookings[0].activity.meridiem === "pm") bookings.unshift(null);
   }
+  if (bookings.length > 2) bookings = bookings.slice(-2);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 360, ...sx }}>

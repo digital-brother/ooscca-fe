@@ -10,8 +10,8 @@ import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
 import { useState } from "react";
-import { useQuery } from "react-query";
-import { getActivitiesForDate, getChildren } from "../api.mjs";
+import { useMutation, useQuery } from "react-query";
+import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import Link from "next/link";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -84,6 +84,7 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   const { data: children } = useQuery("children", getChildren);
+  const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
 
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
@@ -176,7 +177,17 @@ export function ActivityCard({ activity, targetDate }) {
                   }}
                   sx={{ mt: 1 }}
                 >
-                  {children.map((child) => <MenuItem key={child.id} onClick={popupState.close}>{child.name}</MenuItem> )}
+                  {children.map((child) => (
+                    <MenuItem
+                      key={child.id}
+                      onClick={() => {
+                        popupState.close();
+                        mutation.mutate(child.id);
+                      }}
+                    >
+                      {child.name}
+                    </MenuItem>
+                  ))}
                 </Menu>
               </>
             )}

@@ -165,3 +165,9 @@ export async function getBookings(dateAfter, dateBefore) {
   });
   return response.data;
 }
+
+export async function createBooking(data) {
+  const url = `${BOOKINGS_PATH}/`;
+  const response = await client.post(url, data);
+  return response.data;
+}
