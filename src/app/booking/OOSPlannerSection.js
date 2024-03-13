@@ -21,8 +21,8 @@ import {
 import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import { useQuery } from "react-query";
-import { getBookings, getChildren } from "@/app/api.mjs";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { deleteBooking, getBookings, getChildren } from "@/app/api.mjs";
 import _ from "lodash";
 import { useState } from "react";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
@@ -36,6 +36,11 @@ const BookingBox = styled(Box)(({ theme }) => ({
 }));
 
 function FilledBooking({ booking }) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation(() => deleteBooking(booking.id), {
+    onSuccess: () => queryClient.invalidateQueries("bookings"),
+  });
+
   const colorMapping = {
     tennis: "green",
     "table-tennis": "green",
@@ -83,7 +88,7 @@ function FilledBooking({ booking }) {
           <IosShareIcon />
         </IconButton>
         <IconButton>
-          <DeleteForeverIcon />
+          <DeleteForeverIcon onClick={() => mutation.mutate()} />
         </IconButton>
       </Box>
     </BookingBox>
@@ -122,7 +127,7 @@ function BookingDay({ bookings = [], sx }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 360, ...sx }}>
       {bookings.map((booking, index) =>
-        booking ? <FilledBooking key={index} booking={booking} /> : <EmptyBooking key={index} />
+        booking ? <FilledBooking key={booking.id} booking={booking} /> : <EmptyBooking key={index} />
       )}
     </Box>
   );
@@ -222,7 +227,7 @@ function FamilyBookings() {
                 </StyledTableCell>
                 {weekDates.map((date, index) => {
                   const dateBookings = bookings?.filter(
-                    (booking) => booking.participant === child.id && dayjs(booking.date).isSame(date, "day")
+                    (booking) => booking.child === child.id && dayjs(booking.date).isSame(date, "day")
                   );
                   return (
                     <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>

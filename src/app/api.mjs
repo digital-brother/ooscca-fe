@@ -151,7 +151,8 @@ export async function patchProvider(providerId, data, file) {
 }
 
 export async function getChildren() {
-  const response = await client.get(CHILDREN_PATH);
+  const url = `${CHILDREN_PATH}/`;
+  const response = await client.get(url);
   return response.data;
 }
 
@@ -169,5 +170,11 @@ export async function getBookings(dateAfter, dateBefore) {
 export async function createBooking(data) {
   const url = `${BOOKINGS_PATH}/`;
   const response = await client.post(url, data);
+  return response.data;
+}
+
+export async function deleteBooking(bookingId) {
+  const url = `${BOOKINGS_PATH}/${bookingId}/`;
+  const response = await client.delete(url);
   return response.data;
 }
