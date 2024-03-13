@@ -5,6 +5,7 @@ import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import Header from "@/app/Header";
 import Footer from "@/app/Footer";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { SnackbarProvider } from "notistack";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,9 +22,11 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeRegistry>
           <QueryClientProvider client={queryClient}>
-            <Header />
-            {children}
-            <Footer />
+            <SnackbarProvider>
+              <Header />
+              {children}
+              <Footer />
+            </SnackbarProvider>
           </QueryClientProvider>
         </ThemeRegistry>
       </body>

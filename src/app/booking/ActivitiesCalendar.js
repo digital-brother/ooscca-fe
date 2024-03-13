@@ -15,6 +15,7 @@ import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import Link from "next/link";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useSnackbar } from "notistack";
 
 dayjs.extend(utc);
 
@@ -85,6 +86,7 @@ export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   const { data: children } = useQuery("children", getChildren);
   const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
@@ -182,7 +184,10 @@ export function ActivityCard({ activity, targetDate }) {
                       key={child.id}
                       onClick={() => {
                         popupState.close();
-                        mutation.mutate(child.id);
+                        mutation.mutate(child.id, {
+                          onSuccess: () => enqueueSnackbar("Booking created", { variant: "success" }),
+                          onError: () => enqueueSnackbar("Booking creation failed", { variant: "error" }),
+                        });
                       }}
                     >
                       {child.name}
