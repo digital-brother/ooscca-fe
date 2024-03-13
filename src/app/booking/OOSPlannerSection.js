@@ -1,9 +1,11 @@
 "use client";
 
+import { deleteBooking, getBookings, getChildren } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import {
   Box,
@@ -21,13 +23,12 @@ import {
 import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteBooking, getBookings, getChildren } from "@/app/api.mjs";
 import _ from "lodash";
-import { useState } from "react";
-import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import { useSnackbar } from "notistack";
+import { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
+import { SelectedDateContext } from "./page";
 
 dayjs.extend(weekday);
 
@@ -106,7 +107,9 @@ function FilledBooking({ booking }) {
   );
 }
 
-function EmptyBooking() {
+function EmptyBooking({ targetDate }) {
+  const { setSelectedDate, ActivitiesCalendarRef } = useContext(SelectedDateContext);
+
   return (
     <BookingBox
       sx={{
@@ -118,14 +121,21 @@ function EmptyBooking() {
         borderStyle: "dashed",
       }}
     >
-      <Button color="grey" startIcon={<AddCircleOutlineIcon />}>
+      <Button
+        color="grey"
+        startIcon={<AddCircleOutlineIcon />}
+        onClick={() => {
+          setSelectedDate(targetDate);
+          ActivitiesCalendarRef.current?.scrollIntoView({ behavior: "smooth" });
+        }}
+      >
         Add
       </Button>
     </BookingBox>
   );
 }
 
-function BookingDay({ bookings = [], sx }) {
+function BookingDay({ bookings = [], targetDate, sx }) {
   bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
 
   if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
@@ -138,7 +148,11 @@ function BookingDay({ bookings = [], sx }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 360, ...sx }}>
       {bookings.map((booking, index) =>
-        booking ? <FilledBooking key={booking.id} booking={booking} /> : <EmptyBooking key={index} />
+        booking ? (
+          <FilledBooking key={booking.id} booking={booking} />
+        ) : (
+          <EmptyBooking key={index} targetDate={targetDate} />
+        )
       )}
     </Box>
   );
@@ -236,13 +250,13 @@ function FamilyBookings() {
                 <StyledTableCell component="th" scope="row">
                   <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.name}</Typography>
                 </StyledTableCell>
-                {weekDates.map((date, index) => {
+                {weekDates.map((targetDate, index) => {
                   const dateBookings = bookings?.filter(
-                    (booking) => booking.child === child.id && dayjs(booking.date).isSame(date, "day")
+                    (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
                   );
                   return (
                     <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                      <BookingDay bookings={dateBookings} sx={{ mx: "auto" }} />
+                      <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
                     </StyledTableCell>
                   );
                 })}

@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
-import { useState } from "react";
+import { forwardRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import Link from "next/link";
@@ -239,16 +239,17 @@ function ActivitiesList({ sx, selectedDate }) {
     );
 }
 
-export default function ActivitiesCalendar() {
-  const [selectedDate, setSelectedDate] = useState(dayjs.utc());
-
+function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
   return (
-    <Container sx={{ my: 10 }}>
+    <Container ref={ref} sx={{ py: 10 }}>
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
       <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
     </Container>
   );
 }
+const ActivitiesCalendar = forwardRef(ActivitiesCalendarBase);
+ActivitiesCalendar.displayName = "ActivitiesCalendar";
+export default ActivitiesCalendar;
 
 export function ActivityClientBadges({ activity }) {
   return (
