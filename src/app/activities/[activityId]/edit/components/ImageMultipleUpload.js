@@ -17,12 +17,11 @@ import { Box, Container, styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { ImageInput, ImagePreview } from "./ImageUpload";
 
-import _ from "lodash";
+import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "@/app/api.mjs";
 import NextImage from "next/image";
 import { useParams } from "next/navigation";
 import prettyBytes from "pretty-bytes";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteActivityImagePrimary, getActivityImagesPrimary, postActivityImagePrimary } from "../../../../api.mjs";
+import { useMutation, useQuery } from "react-query";
 import { useImmer } from "use-immer";
 import { Errors, getFlatErrors } from "./formikFields";
 

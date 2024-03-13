@@ -1,12 +1,12 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import React, { useEffect, useState } from "react";
-import { getActivity, patchActivity } from "../../../../api.mjs";
-import Box from "@mui/material/Box";
-import { Map } from "../components/Map";
+import { getActivity, patchActivity } from "@/app/api.mjs";
 import { Container } from "@mui/material";
+import Box from "@mui/material/Box";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Map } from "../components/Map";
 import { Errors } from "../components/formikFields";
 
 export function MapSection() {

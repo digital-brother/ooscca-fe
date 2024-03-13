@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 
 export const SelectedDateContext = createContext({});
 
-export default function Booking() {
+export default function BookingPage() {
   const [selectedDate, setSelectedDate] = useState(dayjs.utc());
   const ActivitiesCalendarRef = useRef(null);
 

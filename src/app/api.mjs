@@ -157,7 +157,6 @@ export async function getChildren() {
 }
 
 export async function getBookings(dateAfter, dateBefore) {
-
   const response = await client.get(BOOKINGS_PATH, {
     params: {
       dateAfter: dateAfter.format('YYYY-MM-DD'),

@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "@/app/api.mjs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Button, IconButton, Stack, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -8,7 +9,6 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQuery } from "react-query";
-import { deleteActivityImageSecondary, getActivityImagesSecondary, postActivityImageSecondary } from "../../../../api.mjs";
 import { Errors, getFlatErrors } from "./formikFields";
 
 const imageInputContainerSx = {

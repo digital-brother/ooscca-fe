@@ -1,17 +1,17 @@
 "use client";
 
-import { getActivity, patchProvider } from "../../../../api.mjs";
+import { getActivity, patchProvider } from "@/app/api.mjs";
 import { Button, Dialog, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/system";
 import { Editor } from "@tinymce/tinymce-react";
 import "dayjs/locale/en-gb";
 import { useParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { LgFlex, SmFlex } from "../components/responsiveFlexes";
 import { Error } from "../components/formikFields";
-import { styled } from "@mui/system";
+import { LgFlex, SmFlex } from "../components/responsiveFlexes";
 
 function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
   const activityId = useParams().activityId;

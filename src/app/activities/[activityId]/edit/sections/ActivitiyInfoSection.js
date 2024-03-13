@@ -1,8 +1,17 @@
 "use client";
 
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import React, { useEffect, useRef, useState } from "react";
+import { StyledMuiLink } from "@/app/(homepage)/components/Link";
+import {
+  createDiscount,
+  getActivity,
+  getActivityDiscounts,
+  getActivityForDate,
+  getActivityTypes,
+  patchActivity,
+  patchDiscount,
+} from "@/app/api.mjs";
+import { ActivityClientBadges, ActivityDiscountedPrice } from "@/app/booking/ActivitiesCalendar";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import {
   Button,
   Chip,
@@ -16,46 +25,37 @@ import {
   Stack,
   useMediaQuery,
 } from "@mui/material";
-import { useMutation, useQuery } from "react-query";
-import { Field, Form, Formik } from "formik";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import { styled } from "@mui/system";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {
-  getActivity,
-  getActivityTypes,
-  patchActivity,
-  createDiscount,
-  patchDiscount,
-  getActivityDiscounts,
-  getActivityForDate,
-} from "../../../../api.mjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 import "dayjs/locale/en-gb";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import { Field, Form, Formik } from "formik";
+import { useParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery } from "react-query";
+import * as Yup from "yup";
+import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import {
-  FormikErrors,
   Error,
-  FormikSelect,
   FormikCalendarField,
   FormikCheckboxField,
-  FormikNumberField,
   FormikDecimalField,
+  FormikErrors,
+  FormikNumberField,
+  FormikSelect,
   FormikTextField,
   FormikTimeField,
   createHandleSubmit,
 } from "../components/formikFields";
-import { useParams } from "next/navigation";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
-import Container from "@mui/material/Container";
-import * as Yup from "yup";
-import { useTheme } from "@mui/material/styles";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { timeschema, numericSchema, isTimeStringBefore, isTimeStringAfter } from "../utils";
-import { CancelButton, GoBackButton, NextButton } from "../components/buttons";
 import { SmFlex } from "../components/responsiveFlexes";
-import { styled } from "@mui/system";
-import { ActivityClientBadges, ActivityDiscountedPrice } from "@/app/booking/ActivitiesCalendar";
-import { StyledMuiLink } from "@/app/(homepage)/components/Link";
+import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -81,7 +81,7 @@ function TermsAndConditionsView({ activity, handleClose }) {
       {activity?.termsAndConditions ? (
         <Box dangerouslySetInnerHTML={{ __html: activity?.termsAndConditions }} />
       ) : (
-        <Typography sx={{fontWeight: 700}}>You must add legal disclsimers here.</Typography>
+        <Typography sx={{ fontWeight: 700 }}>You must add legal disclsimers here.</Typography>
       )}
 
       <Button variant="contained" color="green" fullWidth onClick={handleClose} sx={{ mt: 2 }}>
