@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { getActivitiesForDate } from "../api.mjs";
 import Link from "next/link";
+import ButtonDropdown from "./components/ButtonDropdown";
 
 dayjs.extend(utc);
 
@@ -149,15 +150,16 @@ export function ActivityCard({ activity, targetDate }) {
           </Stack>
         </Box>
         <Box flex={1}></Box>
-        <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 3, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
-          <Button variant="outlined" sx={{ flex: 1 }}>
-            Learn more
-          </Button>
+            <Button variant="outlined" fullWidth>
+              Learn more
+            </Button>
           </Link>
-          <Button variant="contained" sx={{ flex: 1 }}>
+          {/* <Button variant="contained" fullWidth>
             Add
-          </Button>
+          </Button> */}
+          <ButtonDropdown/>
         </Box>
       </Stack>
     </Stack>
