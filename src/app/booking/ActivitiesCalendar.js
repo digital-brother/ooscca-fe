@@ -88,10 +88,11 @@ export function ActivityCard({ activity, targetDate }) {
   const { data: children } = useQuery("children", getChildren);
 
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
   const mutationConfig = {
     onSuccess: () => {
-      enqueueSnackbar("Booking successfully created", { variant: "success" });
+      enqueueSnackbar("Booking created", { variant: "success" });
       queryClient.invalidateQueries("bookings");
     },
     onError: (error) => {
@@ -99,7 +100,6 @@ export function ActivityCard({ activity, targetDate }) {
       enqueueSnackbar(errorMessage, { variant: "error" });
     },
   };
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>

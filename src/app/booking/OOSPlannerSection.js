@@ -26,6 +26,8 @@ import { deleteBooking, getBookings, getChildren } from "@/app/api.mjs";
 import _ from "lodash";
 import { useState } from "react";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
+import { useSnackbar } from "notistack";
+import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 
 dayjs.extend(weekday);
 
@@ -37,8 +39,17 @@ const BookingBox = styled(Box)(({ theme }) => ({
 
 function FilledBooking({ booking }) {
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
   const mutation = useMutation(() => deleteBooking(booking.id), {
-    onSuccess: () => queryClient.invalidateQueries("bookings"),
+    onSuccess: () => {
+      queryClient.invalidateQueries("bookings");
+      enqueueSnackbar("Booking deleted", { variant: "success" });
+    },
+    onError: (error) => {
+      const errorMessage = getFlatErrors(error).join(". ");
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    },
   });
 
   const colorMapping = {
