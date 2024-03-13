@@ -16,6 +16,7 @@ import Link from "next/link";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSnackbar } from "notistack";
+import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 
 dayjs.extend(utc);
 
@@ -90,9 +91,13 @@ export function ActivityCard({ activity, targetDate }) {
   const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
   const mutationConfig = {
     onSuccess: () => {
-      enqueueSnackbar("Booking created", { variant: "success" })
-      queryClient.invalidateQueries("bookings");},
-    onError: () => enqueueSnackbar("Booking creation failed", { variant: "error" }),
+      enqueueSnackbar("Booking successfully created", { variant: "success" });
+      queryClient.invalidateQueries("bookings");
+    },
+    onError: (error) => {
+      const errorMessage = getFlatErrors(error).join(". ");
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    },
   };
   const { enqueueSnackbar } = useSnackbar();
 
