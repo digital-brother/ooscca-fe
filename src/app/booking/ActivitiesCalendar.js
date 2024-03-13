@@ -3,7 +3,7 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
+import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -13,7 +13,8 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { getActivitiesForDate } from "../api.mjs";
 import Link from "next/link";
-import ButtonDropdown from "./components/ButtonDropdown";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 dayjs.extend(utc);
 
@@ -156,10 +157,30 @@ export function ActivityCard({ activity, targetDate }) {
               Learn more
             </Button>
           </Link>
-          {/* <Button variant="contained" fullWidth>
-            Add
-          </Button> */}
-          <ButtonDropdown/>
+          <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
+            {(popupState) => (
+              <>
+                <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
+                  Add
+                </Button>
+                <Menu
+                  {...bindMenu(popupState)}
+                  slotProps={{
+                    paper: {
+                      style: {
+                        width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
+                      },
+                    },
+                  }}
+                  sx={{ mt: 1 }}
+                >
+                  <MenuItem onClick={popupState.close}>Child 1</MenuItem>
+                  <MenuItem onClick={popupState.close}>Child 2</MenuItem>
+                  <MenuItem onClick={popupState.close}>Child 3</MenuItem>
+                </Menu>
+              </>
+            )}
+          </PopupState>
         </Box>
       </Stack>
     </Stack>
