@@ -11,6 +11,9 @@ const DISCOUNTS_SUBPATH = "discounts";
 const IMAGES_PRIMARY_SUBPATH = "primary-images";
 const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
+const CHILDREN_PATH = "/children";
+const BOOKINGS_PATH = "/bookings";
+
 const client = axios.create({
   baseURL: API_HOST,
   timeout: 1000,
@@ -144,5 +147,33 @@ export async function patchProvider(providerId, data, file) {
   }
 
   const response = await client.patch(`${PROVIDERS_PATH}/${providerId}/`, formData);
+  return response.data;
+}
+
+export async function getChildren() {
+  const url = `${CHILDREN_PATH}/`;
+  const response = await client.get(url);
+  return response.data;
+}
+
+export async function getBookings(dateAfter, dateBefore) {
+  const response = await client.get(BOOKINGS_PATH, {
+    params: {
+      dateAfter: dateAfter.format('YYYY-MM-DD'),
+      dateBefore: dateBefore.format('YYYY-MM-DD'),
+    }
+  });
+  return response.data;
+}
+
+export async function createBooking(data) {
+  const url = `${BOOKINGS_PATH}/`;
+  const response = await client.post(url, data);
+  return response.data;
+}
+
+export async function deleteBooking(bookingId) {
+  const url = `${BOOKINGS_PATH}/${bookingId}/`;
+  const response = await client.delete(url);
   return response.data;
 }

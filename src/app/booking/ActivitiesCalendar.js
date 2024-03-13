@@ -3,16 +3,20 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
+import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { getActivitiesForDate } from "../activities/[activityId]/edit/api.mjs";
+import { forwardRef } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import Link from "next/link";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useSnackbar } from "notistack";
+import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 
 dayjs.extend(utc);
 
@@ -81,6 +85,22 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
+  const { data: children } = useQuery("children", getChildren);
+
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+  const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
+  const mutationConfig = {
+    onSuccess: () => {
+      enqueueSnackbar("Booking created", { variant: "success" });
+      queryClient.invalidateQueries("bookings");
+    },
+    onError: (error) => {
+      const errorMessage = getFlatErrors(error).join(". ");
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    },
+  };
+
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
@@ -100,7 +120,7 @@ export function ActivityCard({ activity, targetDate }) {
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
-              {activity?.typeName}
+              {activity?.type?.name}
             </Typography>
             <Typography variant="body2" sx={{ mb: 3 }}>
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
@@ -149,15 +169,51 @@ export function ActivityCard({ activity, targetDate }) {
           </Stack>
         </Box>
         <Box flex={1}></Box>
-        <Box sx={{ display: "flex", mt: 3, gap: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 3, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
-          <Button variant="outlined" sx={{ flex: 1 }}>
-            Learn more
-          </Button>
+            <Button variant="outlined" fullWidth>
+              Learn more
+            </Button>
           </Link>
-          <Button variant="contained" sx={{ flex: 1 }}>
-            Add
-          </Button>
+          {children && children.length === 1 && (
+            <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)}>
+              Add
+            </Button>
+          )}
+          {children && children.length > 1 && (
+            <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
+              {(popupState) => (
+                <>
+                  <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
+                    Add
+                  </Button>
+                  <Menu
+                    {...bindMenu(popupState)}
+                    slotProps={{
+                      paper: {
+                        style: {
+                          width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
+                        },
+                      },
+                    }}
+                    sx={{ mt: 1 }}
+                  >
+                    {children.map((child) => (
+                      <MenuItem
+                        key={child.id}
+                        onClick={() => {
+                          popupState.close();
+                          mutation.mutate(child.id, mutationConfig);
+                        }}
+                      >
+                        {child.name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </>
+              )}
+            </PopupState>
+          )}
         </Box>
       </Stack>
     </Stack>
@@ -183,16 +239,17 @@ function ActivitiesList({ sx, selectedDate }) {
     );
 }
 
-export default function ActivitiesCalendar() {
-  const [selectedDate, setSelectedDate] = useState(dayjs.utc());
-
+function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
   return (
-    <Container sx={{ my: 10 }}>
+    <Container ref={ref} sx={{ py: 10 }}>
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
       <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
     </Container>
   );
 }
+const ActivitiesCalendar = forwardRef(ActivitiesCalendarBase);
+ActivitiesCalendar.displayName = "ActivitiesCalendar";
+export default ActivitiesCalendar;
 
 export function ActivityClientBadges({ activity }) {
   return (

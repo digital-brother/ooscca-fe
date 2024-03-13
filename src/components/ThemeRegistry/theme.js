@@ -1,4 +1,4 @@
-import { alpha, createTheme, darken } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
 import { Manrope, Montserrat } from "next/font/google";
 import { colors } from "./colors";
 
@@ -72,6 +72,12 @@ const theme = createTheme({
       fontWeight: 700,
       color: colors.orange.main,
     },
+    overlineBold: {
+      fontFamily: montserrat.style.fontFamily,
+      fontWeight: 700,
+      fontSize: "1rem", // 16px
+      color: colors.orange.main,
+    },
     captionBold: {
       fontFamily: montserrat.style.fontFamily,
       fontWeight: 700,
@@ -111,7 +117,7 @@ const theme = createTheme({
     MuiButton: {
       defaultProps: {
         disableElevation: true,
-        disableRipple: true,
+
       },
       styleOverrides: {
         root: {
@@ -138,6 +144,13 @@ const theme = createTheme({
             },
             "&:active": {
               backgroundColor: alpha(theme.palette[ownerState.color].main, 0.18),
+            },
+          };
+        },
+        text: ({ ownerState, theme }) => {
+          return {
+            "&:hover": {
+              backgroundColor: theme.palette[ownerState.color][100],
             },
           };
         },

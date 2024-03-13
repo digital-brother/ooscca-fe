@@ -1,5 +1,13 @@
 "use client";
 
+import { ImageContainer, ImagePreview } from "@/app/activities/[activityId]/edit/components/ImageUpload";
+import { MAP_API_KEY } from "@/app/activities/[activityId]/edit/components/Map";
+import {
+  ActivityDetails,
+  ActivityInfoContainer,
+  SlideContainer,
+} from "@/app/activities/[activityId]/edit/sections/ActivitiyInfoSection";
+import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "@/app/api.mjs";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Autoplay from "embla-carousel-autoplay";
@@ -7,10 +15,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "../../edit/api.mjs";
-import { ImageContainer, ImagePreview } from "../../edit/components/ImageUpload";
-import { MAP_API_KEY } from "../../edit/components/Map";
-import { ActivityDetails, ActivityInfoContainer, SlideContainer } from "../../edit/sections/ActivitiyInfoSection";
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);

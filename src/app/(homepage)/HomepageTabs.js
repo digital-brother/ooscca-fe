@@ -114,10 +114,26 @@ function ContentPanel({ type }) {
   );
 }
 
-function Tabs(props) {
-  const [value, setValue] = React.useState("oosCalendar");
+function CustomTabList({children, handleChange}) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  return (
+    <TabList
+      onChange={handleChange}
+      aria-label="lab API tabs example"
+      variant="fullWidth"
+      TabIndicatorProps={{ sx: { display: "none" } }}
+      sx={{ border: "1px #CED4DA solid", borderRadius: 2 }}
+      orientation={isSmallScreen ? "vertical" : "horizontal"}
+    >
+      {children}
+    </TabList>
+  );
+}
+
+function Tabs(props) {
+  const [value, setValue] = React.useState("oosCalendar");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -127,18 +143,11 @@ function Tabs(props) {
     <Box {...props}>
       <TabContext value={value}>
         <Box>
-          <TabList
-            onChange={handleChange}
-            aria-label="lab API tabs example"
-            variant="fullWidth"
-            TabIndicatorProps={{ sx: { display: "none" } }}
-            sx={{ border: "1px #CED4DA solid", borderRadius: 2 }}
-            orientation={isSmallScreen ? "vertical" : "horizontal"}
-          >
+          <CustomTabList handleChange={handleChange}>
             <CustomTab label="OOS calendar" value="oosCalendar" />
             <CustomTab label="Class birthday calendar" value="classBirthdayCalendar" />
             <CustomTab label="Whose who" value="whoseWho" />
-          </TabList>
+          </CustomTabList>
         </Box>
         <Box sx={{ p: 0, pt: 5 }}>
           <TabPanel sx={{ p: 0 }} value="oosCalendar">

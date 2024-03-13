@@ -65,7 +65,7 @@ function SchoolPicker() {
   const SchoolSelect = ({ name, label }) => (
     <FormControl fullWidth>
       <InputLabel id={name}>{label}l</InputLabel>
-      <Select labelId={name} label={label}>
+      <Select labelId={name} label={label} defaultValue="">
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
