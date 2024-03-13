@@ -11,7 +11,7 @@ import Image from "next/image";
 
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { getActivitiesForDate } from "../api.mjs";
+import { getActivitiesForDate, getChildren } from "../api.mjs";
 import Link from "next/link";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -83,6 +83,8 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
+  const { data: children } = useQuery("children", getChildren);
+
   return (
     <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
@@ -174,9 +176,7 @@ export function ActivityCard({ activity, targetDate }) {
                   }}
                   sx={{ mt: 1 }}
                 >
-                  <MenuItem onClick={popupState.close}>Child 1</MenuItem>
-                  <MenuItem onClick={popupState.close}>Child 2</MenuItem>
-                  <MenuItem onClick={popupState.close}>Child 3</MenuItem>
+                  {children.map((child) => <MenuItem key={child.id} onClick={popupState.close}>{child.name}</MenuItem> )}
                 </Menu>
               </>
             )}
