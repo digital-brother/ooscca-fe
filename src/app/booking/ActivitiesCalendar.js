@@ -4,20 +4,20 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { Box, Container } from "@mui/system";
+import { Box, Container, styled } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
-import { forwardRef } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
-import Link from "next/link";
-import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import _ from "lodash";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
+import Link from "next/link";
 import { useSnackbar } from "notistack";
+import { forwardRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
-
+import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -221,6 +221,7 @@ export function ActivityCard({ activity, targetDate }) {
 }
 
 function ActivitiesList({ sx, selectedDate }) {
+  const [meridiem, setMeridiem] = useState("fullDay");
   const formatDate = (date) => date.format("YYYY-MM-DD");
 
   const { status, data: activities } = useQuery(
@@ -238,11 +239,24 @@ function ActivitiesList({ sx, selectedDate }) {
   const matchingActivities = activities?.filter((activity) => children?.some((child) => isAgeMatch(activity, child)));
 
   return (
-    status === "success" && (
-      <Box sx={{ display: "flex", gap: 2, ...sx }}>
-        {matchingActivities.map((activity) => (
-          <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
-        ))}
+    status === "success" &&
+    matchingActivities &&
+    !_.isEmpty(matchingActivities) && (
+      <Box sx={sx}>
+        <Box sx={{ mt: 4, display: "flex", gap: 1 }}>
+          <Chip label="AM" variant={meridiem === "am" ? "filled" : "outlined"} onClick={() => setMeridiem("am")} />
+          <Chip label="PM" variant={meridiem === "pm" ? "filled" : "outlined"} onClick={() => setMeridiem("pm")} />
+          <Chip
+            label="Full Day"
+            variant={meridiem === "fullDay" ? "filled" : "outlined"}
+            onClick={() => setMeridiem("fullDay")}
+          />
+        </Box>
+        <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+          {matchingActivities.map((activity) => (
+            <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
+          ))}
+        </Box>
       </Box>
     )
   );
@@ -252,7 +266,7 @@ function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
   return (
     <Container ref={ref} sx={{ py: 10 }}>
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
-      <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
+      <ActivitiesList sx={{ mt: 2, justifyContent: "center" }} {...{ selectedDate }} />
     </Container>
   );
 }
