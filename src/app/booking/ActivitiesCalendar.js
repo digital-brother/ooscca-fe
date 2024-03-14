@@ -220,8 +220,7 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
-function ActivitiesList({ sx, selectedDate }) {
-  const [meridiem, setMeridiem] = useState("fullDay");
+function ActivitiesList({ sx, selectedDate, meridiem }) {
   const formatDate = (date) => date.format("YYYY-MM-DD");
 
   const { status, data: activities } = useQuery(
@@ -236,37 +235,51 @@ function ActivitiesList({ sx, selectedDate }) {
     else return activity.ageFrom <= child.age && activity.ageTo >= child.age;
   };
   const { data: children } = useQuery("children", getChildren);
-  const matchingActivities = activities?.filter((activity) => children?.some((child) => isAgeMatch(activity, child)));
+  const ageMatchingActivities = activities?.filter((activity) =>
+    children?.some((child) => isAgeMatch(activity, child))
+  );
+
+  let matchingActivities = [];
+  if (["am", "pm", "full_day"].includes(meridiem))
+    matchingActivities = ageMatchingActivities?.filter((activity) => activity.meridiem === meridiem);
+  else matchingActivities = ageMatchingActivities;
 
   return (
-    status === "success" &&
-    matchingActivities &&
-    !_.isEmpty(matchingActivities) && (
-      <Box sx={sx}>
-        <Box sx={{ mt: 4, display: "flex", gap: 1 }}>
-          <Chip label="AM" variant={meridiem === "am" ? "filled" : "outlined"} onClick={() => setMeridiem("am")} />
-          <Chip label="PM" variant={meridiem === "pm" ? "filled" : "outlined"} onClick={() => setMeridiem("pm")} />
-          <Chip
-            label="Full Day"
-            variant={meridiem === "fullDay" ? "filled" : "outlined"}
-            onClick={() => setMeridiem("fullDay")}
-          />
-        </Box>
-        <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+    <>
+      {status === "success" && matchingActivities && !_.isEmpty(matchingActivities) && (
+        <Box sx={{ display: "flex", gap: 2, ...sx }}>
           {matchingActivities.map((activity) => (
             <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
           ))}
         </Box>
-      </Box>
-    )
+      )}
+    </>
+  );
+}
+
+function MeridiemPicker({ sx, meridiem, setMeridiem}) {
+  return (
+    <Box sx={{ display: "flex", gap: 1, ...sx }}>
+      <Chip label="All" variant={meridiem === "all" ? "filled" : "outlined"} onClick={() => setMeridiem("all")} />
+      <Chip label="AM" variant={meridiem === "am" ? "filled" : "outlined"} onClick={() => setMeridiem("am")} />
+      <Chip label="PM" variant={meridiem === "pm" ? "filled" : "outlined"} onClick={() => setMeridiem("pm")} />
+      <Chip
+        label="Full Day"
+        variant={meridiem === "full_day" ? "filled" : "outlined"}
+        onClick={() => setMeridiem("full_day")}
+      />
+    </Box>
   );
 }
 
 function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
+  const [meridiem, setMeridiem] = useState("all");
+
   return (
     <Container ref={ref} sx={{ py: 10 }}>
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
-      <ActivitiesList sx={{ mt: 2, justifyContent: "center" }} {...{ selectedDate }} />
+      <MeridiemPicker {...{ meridiem, setMeridiem, sx: { mt: 4 } }} />
+      <ActivitiesList sx={{ mt: 2, justifyContent: "center" }} {...{ selectedDate, meridiem }} />
     </Container>
   );
 }
