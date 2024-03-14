@@ -229,14 +229,23 @@ function ActivitiesList({ sx, selectedDate }) {
     { staleTime: 1000 * 60 * 2 }
   );
 
-  if (status === "success")
-    return (
+  const isAgeMatch = (activity, child) => {
+    const isSingleAge = !activity.ageTo;
+    if (isSingleAge) return activity.ageFrom === child.age;
+    else return activity.ageFrom <= child.age && activity.ageTo >= child.age;
+  };
+  const { data: children } = useQuery("children", getChildren);
+  const matchingActivities = activities?.filter((activity) => children?.some((child) => isAgeMatch(activity, child)));
+
+  return (
+    status === "success" && (
       <Box sx={{ display: "flex", gap: 2, ...sx }}>
-        {activities.map((activity) => (
+        {matchingActivities.map((activity) => (
           <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
         ))}
       </Box>
-    );
+    )
+  );
 }
 
 function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
