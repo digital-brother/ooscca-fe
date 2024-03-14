@@ -257,23 +257,26 @@ function ActivitiesList({ sx, selectedDate, meridiem }) {
   );
 }
 
-function MeridiemPicker({ sx, meridiem, setMeridiem}) {
+function MeridiemPicker({ sx, meridiem, setMeridiem }) {
+  function handleClick(clickedMeridiem) {
+    if (meridiem === clickedMeridiem) return setMeridiem(null);
+    setMeridiem(clickedMeridiem);
+  }
   return (
     <Box sx={{ display: "flex", gap: 1, ...sx }}>
-      <Chip label="All" variant={meridiem === "all" ? "filled" : "outlined"} onClick={() => setMeridiem("all")} />
-      <Chip label="AM" variant={meridiem === "am" ? "filled" : "outlined"} onClick={() => setMeridiem("am")} />
-      <Chip label="PM" variant={meridiem === "pm" ? "filled" : "outlined"} onClick={() => setMeridiem("pm")} />
+      <Chip label="AM" variant={meridiem === "am" ? "filled" : "outlined"} onClick={() => handleClick("am")} />
+      <Chip label="PM" variant={meridiem === "pm" ? "filled" : "outlined"} onClick={() => handleClick("pm")} />
       <Chip
         label="Full Day"
         variant={meridiem === "full_day" ? "filled" : "outlined"}
-        onClick={() => setMeridiem("full_day")}
+        onClick={() => handleClick("full_day")}
       />
     </Box>
   );
 }
 
 function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
-  const [meridiem, setMeridiem] = useState("all");
+  const [meridiem, setMeridiem] = useState(null);
 
   return (
     <Container ref={ref} sx={{ py: 10 }}>
