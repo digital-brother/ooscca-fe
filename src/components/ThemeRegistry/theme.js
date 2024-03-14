@@ -107,17 +107,43 @@ const theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 4,
+          borderRadius: 6,
           fontSize: 13,
           fontWeight: 700,
           fontFamily: manrope.style.fontFamily,
+        },
+        outlined: ({ ownerState, palette }) => {
+          const color = ownerState.color === "default" ? "grey" : ownerState.color;
+          return {
+            borderColor: colors[color].main,
+            color: colors[color].main,
+            "&:hover": {
+              backgroundColor: alpha(colors[color].main, 0.09),
+            },
+            "&:active": {
+              backgroundColor: alpha(colors[color].main, 0.18),
+            },
+          };
+        },
+        filled: ({ ownerState, theme }) => {
+          const color = ownerState.color === "default" ? "grey" : ownerState.color;
+          return {
+            backgroundColor: colors[color].main,
+            borderColor: colors[color].main,
+            color: theme.palette.common.white,
+            "&:hover": {
+              backgroundColor: colors[color].light,
+            },
+            "&:active": {
+              backgroundColor: colors[color].dark,
+            },
+          };
         },
       },
     },
     MuiButton: {
       defaultProps: {
         disableElevation: true,
-
       },
       styleOverrides: {
         root: {

@@ -621,7 +621,7 @@ function DatesSlide({ scrollNext, close }) {
     <>
       <SlideHeader label="Keep editing" close={close} />
       <Formik
-        initialValues={{ type: (activityTypes && activity?.type) || "", dateRanges: activity?.dateRanges || [] }}
+        initialValues={{ type: (activityTypes && activity?.type?.id) || null, dateRanges: activity?.dateRanges || [] }}
         enableReinitialize
         onSubmit={createHandleSubmit({ mutation, onSuccess: scrollNext })}
         validationSchema={Yup.object({

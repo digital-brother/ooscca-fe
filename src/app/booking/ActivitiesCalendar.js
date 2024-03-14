@@ -4,20 +4,20 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { Box, Container } from "@mui/system";
+import { Box, Container, styled } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
-import { forwardRef } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
-import Link from "next/link";
-import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import _ from "lodash";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
+import Link from "next/link";
 import { useSnackbar } from "notistack";
+import { forwardRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
-
+import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -220,7 +220,7 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
-function ActivitiesList({ sx, selectedDate }) {
+function ActivitiesList({ sx, selectedDate, meridiem }) {
   const formatDate = (date) => date.format("YYYY-MM-DD");
 
   const { status, data: activities } = useQuery(
@@ -229,21 +229,57 @@ function ActivitiesList({ sx, selectedDate }) {
     { staleTime: 1000 * 60 * 2 }
   );
 
-  if (status === "success")
-    return (
-      <Box sx={{ display: "flex", gap: 2, ...sx }}>
-        {activities.map((activity) => (
-          <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
-        ))}
-      </Box>
-    );
+  const isAgeMatch = (activity, child) => {
+    const isSingleAge = !activity.ageTo;
+    if (isSingleAge) return activity.ageFrom === child.age;
+    else return activity.ageFrom <= child.age && activity.ageTo >= child.age;
+  };
+  const { data: children } = useQuery("children", getChildren);
+  const ageMatchingActivities = activities?.filter((activity) =>
+    children?.some((child) => isAgeMatch(activity, child))
+  );
+
+  let matchingActivities = [];
+  if (["am", "pm", "full_day"].includes(meridiem))
+    matchingActivities = ageMatchingActivities?.filter((activity) => activity.meridiem === meridiem);
+  else matchingActivities = ageMatchingActivities;
+
+  return (
+    <>
+      {status === "success" && matchingActivities && !_.isEmpty(matchingActivities) && (
+        <Box sx={{ display: "flex", gap: 2, ...sx }}>
+          {matchingActivities.map((activity) => (
+            <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
+          ))}
+        </Box>
+      )}
+    </>
+  );
+}
+
+function MeridiemPicker({ sx, meridiem, setMeridiem}) {
+  return (
+    <Box sx={{ display: "flex", gap: 1, ...sx }}>
+      <Chip label="All" variant={meridiem === "all" ? "filled" : "outlined"} onClick={() => setMeridiem("all")} />
+      <Chip label="AM" variant={meridiem === "am" ? "filled" : "outlined"} onClick={() => setMeridiem("am")} />
+      <Chip label="PM" variant={meridiem === "pm" ? "filled" : "outlined"} onClick={() => setMeridiem("pm")} />
+      <Chip
+        label="Full Day"
+        variant={meridiem === "full_day" ? "filled" : "outlined"}
+        onClick={() => setMeridiem("full_day")}
+      />
+    </Box>
+  );
 }
 
 function ActivitiesCalendarBase({ selectedDate, setSelectedDate }, ref) {
+  const [meridiem, setMeridiem] = useState("all");
+
   return (
     <Container ref={ref} sx={{ py: 10 }}>
       <DateSwitcher {...{ selectedDate, setSelectedDate }} />
-      <ActivitiesList sx={{ mt: 4, justifyContent: "center" }} {...{ selectedDate }} />
+      <MeridiemPicker {...{ meridiem, setMeridiem, sx: { mt: 4 } }} />
+      <ActivitiesList sx={{ mt: 2, justifyContent: "center" }} {...{ selectedDate, meridiem }} />
     </Container>
   );
 }
