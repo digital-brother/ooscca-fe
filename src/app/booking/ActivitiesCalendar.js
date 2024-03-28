@@ -5,6 +5,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
@@ -55,26 +56,41 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
   }
   const weekDates = Array.from({ length: 5 }, (_, i) => monday.add(i, "day"));
 
+  const isSameMonth = weekDates[0].month() === weekDates[weekDates.length - 1].month();
+  const startMonthName = weekDates[0].format('MMMM');
+  const endMonthName = isSameMonth ? '' : ` - ${weekDates[weekDates.length - 1].format('MMMM')}`;
+
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderBottom: "1px solid",
-        borderColor: "grey.500",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottom: '1px solid',
+        borderColor: 'grey.500',
       }}
     >
-      <IconButton onClick={() => setSelectedDate(selectedDate.subtract(1, "week"))}>
-        <ArrowBackIosNewIcon />
-      </IconButton>
-      {weekDates.map((date, index) => {
-        const isSelectedDate = date.isSame(selectedDate, "day");
-        return <PickerDate key={index} {...{ date, setSelectedDate, isSelectedDate }} />;
-      })}
-      <IconButton onClick={() => setSelectedDate(selectedDate.add(1, "week"))}>
-        <ArrowForwardIosIcon />
-      </IconButton>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>{`${startMonthName}${endMonthName}`}</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+        <IconButton onClick={() => setSelectedDate(selectedDate.subtract(1, 'week'))}>
+          <ArrowBackIosNewIcon />
+        </IconButton>
+        {weekDates.map((date, index) => {
+          const isSelectedDate = date.isSame(selectedDate, 'day');
+          return <PickerDate key={index} date={date} setSelectedDate={setSelectedDate} isSelectedDate={isSelectedDate} />;
+        })}
+        <IconButton onClick={() => setSelectedDate(selectedDate.add(1, 'week'))}>
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </Box>
     </Box>
   );
 }
