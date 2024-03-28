@@ -61,33 +61,28 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
   const endMonthName = isSameMonth ? '' : ` - ${weekDates[weekDates.length - 1].format('MMMM')}`;
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderBottom: '1px solid',
-        borderColor: 'grey.500',
-      }}
-    >
-      <Typography variant="h6" sx={{ alignSelf: 'center' }}>{`${startMonthName}${endMonthName}`}</Typography>
+    <Box>
+      <Typography variant="h6" sx={{ textAlign: "center" }}>{`${startMonthName}${endMonthName}`}</Typography>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "1px solid",
+          borderColor: "grey.500",
+          mt: 1,
         }}
       >
-        <IconButton onClick={() => setSelectedDate(selectedDate.subtract(1, 'week'))}>
+        <IconButton onClick={() => setSelectedDate(selectedDate.subtract(1, "week"))}>
           <ArrowBackIosNewIcon />
         </IconButton>
         {weekDates.map((date, index) => {
-          const isSelectedDate = date.isSame(selectedDate, 'day');
-          return <PickerDate key={index} date={date} setSelectedDate={setSelectedDate} isSelectedDate={isSelectedDate} />;
+          const isSelectedDate = date.isSame(selectedDate, "day");
+          return (
+            <PickerDate key={index} date={date} setSelectedDate={setSelectedDate} isSelectedDate={isSelectedDate} />
+          );
         })}
-        <IconButton onClick={() => setSelectedDate(selectedDate.add(1, 'week'))}>
+        <IconButton onClick={() => setSelectedDate(selectedDate.add(1, "week"))}>
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
