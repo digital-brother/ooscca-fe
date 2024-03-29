@@ -14,10 +14,12 @@ import _ from "lodash";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import Link from "next/link";
 import { useSnackbar } from "notistack";
-import { forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -230,6 +232,33 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
+export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+
+  const emblaSx = {
+    overflow: "hidden",
+    ...emblaSxOuter,
+  };
+  const emblaContainerSx = {
+    display: "flex",
+  };
+
+  return (
+    <Box sx={emblaSx} ref={emblaRef}>
+      <Box sx={emblaContainerSx}>{children}</Box>
+    </Box>
+  );
+}
+
+export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
+  const emblaSlideSx = {
+    flex: "0 0 100%",
+    minWidth: 0,
+    ...emblaSlideSxOuter,
+  };
+  return <Box sx={emblaSlideSx}>{children}</Box>;
+}
+
 function ActivitiesList({ sx, selectedDate, meridiem }) {
   const formatDate = (date) => date.format("YYYY-MM-DD");
 
@@ -254,14 +283,19 @@ function ActivitiesList({ sx, selectedDate, meridiem }) {
     matchingActivities = ageMatchingActivities?.filter((activity) => activity.meridiem === meridiem);
   else matchingActivities = ageMatchingActivities;
 
+  const slidesToShow = 3;
+  const slidePercentage = 100 / slidesToShow;
+
   return (
     <>
-      {status === "success" && matchingActivities && !_.isEmpty(matchingActivities) && (
-        <Box sx={{ display: "flex", gap: 2, ...sx }}>
+      {status === "success" && matchingActivities && matchingActivities.length > 0 && (
+        <EmblaContainer emblaSx={{ width: '100%', margin: '0 auto' }}>
           {matchingActivities.map((activity) => (
-            <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
+            <EmblaSlide key={activity.id} emblaSlideSx={{ flex: `0 0 ${slidePercentage}%` }}>
+              <ActivityCard activity={activity} targetDate={formatDate(selectedDate)} />
+            </EmblaSlide>
           ))}
-        </Box>
+        </EmblaContainer>
       )}
     </>
   );
