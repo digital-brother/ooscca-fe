@@ -14,12 +14,14 @@ import _ from "lodash";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import Link from "next/link";
 import { useSnackbar } from "notistack";
-import React, { forwardRef, useState } from "react";
+import React, {forwardRef, useCallback, useEffect, useState} from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import {useTheme} from "@mui/material/styles";
+import {useDotButton} from "@/app/booking/useDotButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -233,10 +235,45 @@ export function ActivityCard({ activity, targetDate }) {
 }
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  const theme = useTheme();
+
+  const [viewportRef, embla] = useEmblaCarousel();
+  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
+  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
+
+  const scrollPrev = useCallback(() => {
+    if (embla) embla.scrollPrev();
+  }, [embla]);
+
+  const scrollNext = useCallback(() => {
+    if (embla) embla.scrollNext();
+  }, [embla]);
+
+  const updateButtons = useCallback(() => {
+    if (!embla) return;
+    setPrevBtnEnabled(embla.canScrollPrev());
+    setNextBtnEnabled(embla.canScrollNext());
+  }, [embla]);
+
+  useEffect(() => {
+    if (!embla) return;
+    embla.on('select', updateButtons);
+    embla.on('init', updateButtons);
+    updateButtons();
+    return () => {
+      embla.off('select', updateButtons);
+      embla.off('init', updateButtons);
+    };
+  }, [embla, updateButtons]);
 
   const emblaSx = {
     overflow: "hidden",
+    alignContent: 'space-between', // Centers the slides container within the Embla viewport
+
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'center',
+    },
     ...emblaSxOuter,
   };
   const emblaContainerSx = {
@@ -244,18 +281,57 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   };
 
   return (
-    <Box sx={emblaSx} ref={emblaRef}>
-      <Box sx={emblaContainerSx}>{children}</Box>
+    <Box>
+      <Box sx={emblaSx} ref={viewportRef}>
+        <Box sx={emblaContainerSx}>{children}</Box>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <IconButton onClick={scrollPrev} disabled={!prevBtnEnabled}>
+          <ArrowBackIosNewIcon />
+        </IconButton>
+
+        {/* Dot Buttons */}
+        {scrollSnaps.map((_, index) => (
+          <IconButton
+            key={index}
+            size="small"
+            onClick={() => onDotButtonClick(index)}
+            sx={{
+              mx: 0.5,
+              color: selectedIndex === index ? theme.palette.primary.main : theme.palette.action.disabled,
+            }}
+          >
+            {/* You can use a dot icon or just style it to look like a dot */}
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: selectedIndex === index ? 'primary.main' : 'grey.400' }} />
+          </IconButton>
+        ))}
+
+        <IconButton onClick={scrollNext} disabled={!nextBtnEnabled}>
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </Box>
     </Box>
   );
 }
 
 export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
+  const theme = useTheme(); // Use the useTheme hook to access the theme object
+
   const emblaSlideSx = {
-    flex: "0 0 100%",
+    flex: '0 0 100%',
     minWidth: 0,
+    [theme.breakpoints.up('sm')]: {
+      flex: '0 0 100%',
+    },
+    [theme.breakpoints.up('md')]: {
+      flex: '0 0 50%', // Adjust for 'md' screens to show 2 slides
+    },
+    [theme.breakpoints.up('lg')]: {
+      flex: '0 0 33.3333%', // Adjust for 'lg' screens to show 3 slides
+    },
     ...emblaSlideSxOuter,
   };
+
   return <Box sx={emblaSlideSx}>{children}</Box>;
 }
 
@@ -283,15 +359,12 @@ function ActivitiesList({ sx, selectedDate, meridiem }) {
     matchingActivities = ageMatchingActivities?.filter((activity) => activity.meridiem === meridiem);
   else matchingActivities = ageMatchingActivities;
 
-  const slidesToShow = 3;
-  const slidePercentage = 100 / slidesToShow;
-
   return (
     <>
       {status === "success" && matchingActivities && matchingActivities.length > 0 && (
-        <EmblaContainer emblaSx={{ width: '100%', margin: '0 auto' }}>
+        <EmblaContainer emblaSx={{ width: '100%', mt: 2 }}>
           {matchingActivities.map((activity) => (
-            <EmblaSlide key={activity.id} emblaSlideSx={{ flex: `0 0 ${slidePercentage}%` }}>
+            <EmblaSlide key={activity.id} >
               <ActivityCard activity={activity} targetDate={formatDate(selectedDate)} />
             </EmblaSlide>
           ))}
