@@ -1,40 +1,58 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react'
+import {IconButton} from "@mui/material";
+import {Box} from "@mui/system";
+import {useTheme} from "@mui/material/styles";
 
 export const useDotButton = (emblaApi) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [scrollSnaps, setScrollSnaps] = useState([])
 
   const onDotButtonClick = useCallback(
     (index) => {
-      if (!emblaApi) return;
-      emblaApi.scrollTo(index);
+      if (!emblaApi) return
+      emblaApi.scrollTo(index)
     },
     [emblaApi]
-  );
+  )
+
+  const onInit = useCallback((emblaApi) => {
+    setScrollSnaps(emblaApi.scrollSnapList())
+  }, [])
+
+  const onSelect = useCallback((emblaApi) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+  }, [])
 
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) return
 
-    const onSelect = () => {
-      setSelectedIndex(emblaApi.selectedScrollSnap());
-    };
+    onInit(emblaApi)
+    onSelect(emblaApi)
+    emblaApi.on('reInit', onInit)
+    emblaApi.on('reInit', onSelect)
+    emblaApi.on('select', onSelect)
+  }, [emblaApi, onInit, onSelect])
 
-    const onInit = () => {
-      setScrollSnaps(emblaApi.scrollSnapList());
-      onSelect(); // Update selected index on init
-    };
+  return {
+    selectedIndex,
+    scrollSnaps,
+    onDotButtonClick
+  }
+}
 
-    onInit();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('init', onInit);
+export const DotButton = ({ index, isSelected, onClick }) => {
+  const theme = useTheme();
 
-    return () => {
-      if (emblaApi) {
-        emblaApi.off('select', onSelect);
-        emblaApi.off('init', onInit);
-      }
-    };
-  }, [emblaApi]);
-
-  return { selectedIndex, scrollSnaps, onDotButtonClick };
+  return (
+    <IconButton onClick={onClick} size="small" sx={{ padding: '5px', margin: '0 5px' }}>
+      <Box
+        sx={{
+          width: 8,
+          height: 8,
+          borderRadius: '50%',
+          bgcolor: isSelected ? theme.palette.primary.main : theme.palette.grey[400],
+        }}
+      />
+    </IconButton>
+  );
 };

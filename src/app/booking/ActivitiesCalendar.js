@@ -4,7 +4,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { Box, Container, styled } from "@mui/system";
+import { Box, Container} from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
@@ -19,9 +19,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import {useTheme} from "@mui/material/styles";
-import {useDotButton} from "@/app/booking/useDotButton";
+import {DotButton, useDotButton } from "@/app/booking/useDotButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -116,7 +115,7 @@ export function ActivityCard({ activity, targetDate }) {
   };
 
   return (
-    <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
+    <Stack sx={{ maxWidth: 353, height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, width: 351, position: "relative" }}>
         {activity?.imageUrl ? (
           <Image alt="Activity image" src={activity?.imageUrl} fill sizes="351px" style={{ objectFit: "cover" }} />
@@ -237,7 +236,7 @@ export function ActivityCard({ activity, targetDate }) {
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const theme = useTheme();
 
-  const [viewportRef, embla] = useEmblaCarousel();
+  const [viewportRef, embla] = useEmblaCarousel({ containScroll: 'trimSnaps' });
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
@@ -269,15 +268,11 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
 
   const emblaSx = {
     overflow: "hidden",
-    alignContent: 'space-between', // Centers the slides container within the Embla viewport
-
-    [theme.breakpoints.up('sm')]: {
-      justifyContent: 'center',
-    },
     ...emblaSxOuter,
   };
   const emblaContainerSx = {
     display: "flex",
+    width: "100%",
   };
 
   return (
@@ -290,21 +285,16 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
           <ArrowBackIosNewIcon />
         </IconButton>
 
-        {/* Dot Buttons */}
         {scrollSnaps.map((_, index) => (
-          <IconButton
-            key={index}
-            size="small"
-            onClick={() => onDotButtonClick(index)}
-            sx={{
-              mx: 0.5,
-              color: selectedIndex === index ? theme.palette.primary.main : theme.palette.action.disabled,
-            }}
-          >
-            {/* You can use a dot icon or just style it to look like a dot */}
-            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: selectedIndex === index ? 'primary.main' : 'grey.400' }} />
-          </IconButton>
-        ))}
+            <DotButton
+              key={index}
+              isSelected={index === selectedIndex}
+              onClick={() => onDotButtonClick(index)}
+              className={'embla__dot'.concat(
+                index === selectedIndex ? ' embla__dot--selected' : ''
+              )}
+            />
+          ))}
 
         <IconButton onClick={scrollNext} disabled={!nextBtnEnabled}>
           <ArrowForwardIosIcon />
@@ -315,7 +305,7 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
 }
 
 export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
-  const theme = useTheme(); // Use the useTheme hook to access the theme object
+  const theme = useTheme();
 
   const emblaSlideSx = {
     flex: '0 0 100%',
@@ -324,10 +314,10 @@ export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
       flex: '0 0 100%',
     },
     [theme.breakpoints.up('md')]: {
-      flex: '0 0 50%', // Adjust for 'md' screens to show 2 slides
+      flex: '0 0 50%',
     },
     [theme.breakpoints.up('lg')]: {
-      flex: '0 0 33.3333%', // Adjust for 'lg' screens to show 3 slides
+      flex: `0 0 ${100/3}%`,
     },
     ...emblaSlideSxOuter,
   };
@@ -361,8 +351,8 @@ function ActivitiesList({ sx, selectedDate, meridiem }) {
 
   return (
     <>
-      {status === "success" && matchingActivities && matchingActivities.length > 0 && (
-        <EmblaContainer emblaSx={{ width: '100%', mt: 2 }}>
+      {status === "success" && matchingActivities && !_.isEmpty(matchingActivities) && (
+        <EmblaContainer emblaSx={{ mt: 2 }}>
           {matchingActivities.map((activity) => (
             <EmblaSlide key={activity.id} >
               <ActivityCard activity={activity} targetDate={formatDate(selectedDate)} />
