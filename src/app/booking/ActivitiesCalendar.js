@@ -234,7 +234,7 @@ export function ActivityCard({ activity, targetDate }) {
 }
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
-  const [viewportRef, embla] = useEmblaCarousel({ loop: true });
+  const [viewportRef, embla] = useEmblaCarousel({ align: "start", loop: true });
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
 
   const scrollPrev = useCallback(() => {
