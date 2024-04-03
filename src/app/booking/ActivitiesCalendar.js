@@ -234,12 +234,8 @@ export function ActivityCard({ activity, targetDate }) {
 }
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
-  const theme = useTheme();
-
-  const [viewportRef, embla] = useEmblaCarousel({ containScroll: 'trimSnaps' });
+  const [viewportRef, embla] = useEmblaCarousel({ loop: true });
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
-  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
-  const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
 
   const scrollPrev = useCallback(() => {
     if (embla) embla.scrollPrev();
@@ -248,23 +244,6 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const scrollNext = useCallback(() => {
     if (embla) embla.scrollNext();
   }, [embla]);
-
-  const updateButtons = useCallback(() => {
-    if (!embla) return;
-    setPrevBtnEnabled(embla.canScrollPrev());
-    setNextBtnEnabled(embla.canScrollNext());
-  }, [embla]);
-
-  useEffect(() => {
-    if (!embla) return;
-    embla.on('select', updateButtons);
-    embla.on('init', updateButtons);
-    updateButtons();
-    return () => {
-      embla.off('select', updateButtons);
-      embla.off('init', updateButtons);
-    };
-  }, [embla, updateButtons]);
 
   const emblaSx = {
     overflow: "hidden",
@@ -281,7 +260,7 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
         <Box sx={emblaContainerSx}>{children}</Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <IconButton onClick={scrollPrev} disabled={!prevBtnEnabled}>
+        <IconButton onClick={scrollPrev}>
           <ArrowBackIosNewIcon />
         </IconButton>
 
@@ -296,7 +275,7 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
             />
           ))}
 
-        <IconButton onClick={scrollNext} disabled={!nextBtnEnabled}>
+        <IconButton onClick={scrollNext} >
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
