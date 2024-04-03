@@ -269,9 +269,6 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
               key={index}
               isSelected={index === selectedIndex}
               onClick={() => onDotButtonClick(index)}
-              className={'embla__dot'.concat(
-                index === selectedIndex ? ' embla__dot--selected' : ''
-              )}
             />
           ))}
 
