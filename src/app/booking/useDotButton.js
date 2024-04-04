@@ -40,18 +40,13 @@ export const useDotButton = (emblaApi) => {
   }
 }
 
-export const DotButton = ({ index, isSelected, onClick }) => {
+export const DotButton = ({ isSelected, onClick, dotIconButtonSx, dotBoxSx }) => {
   const theme = useTheme();
 
   return (
-    <IconButton onClick={onClick} size="small" sx={{ padding: '5px', margin: '0 5px' }}>
+    <IconButton onClick={onClick} size="small" sx={dotIconButtonSx}>
       <Box
-        sx={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          bgcolor: isSelected ? theme.palette.primary.main : theme.palette.grey[400],
-        }}
+        sx={{ bgcolor: isSelected ? theme.palette.primary.main : theme.palette.grey[400], ...dotBoxSx}}
       />
     </IconButton>
   );
