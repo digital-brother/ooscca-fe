@@ -254,17 +254,6 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
     width: "100%",
   };
 
-  const dotIconButtonSx = {
-    padding: '5px',
-    margin: '0 5px'
-  }
-
-  const dotBoxSx = {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-  }
-
   return (
     <Box>
       <Box sx={emblaSx} ref={viewportRef}>
@@ -280,8 +269,6 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
               key={index}
               isSelected={index === selectedIndex}
               onClick={() => onDotButtonClick(index)}
-              dotIconButtonSx={dotIconButtonSx}
-              dotBoxSx={dotBoxSx}
             />
           ))}
 
@@ -294,10 +281,9 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
 }
 
 export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
-  const theme = useTheme();
 
   const emblaSlideSx = {
-    flex: {sm: '0 0 100%', md: '0 0 50%', lg: `0 0 ${100/3}%`},
+    flex: {xs: '0 0 100%', sm: '0 0 100%', md: '0 0 50%', lg: `0 0 ${100/3}%`},
     minWidth: 0,
     ...emblaSlideSxOuter,
   };

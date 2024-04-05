@@ -40,8 +40,19 @@ export const useDotButton = (emblaApi) => {
   }
 }
 
-export const DotButton = ({ isSelected, onClick, dotIconButtonSx, dotBoxSx }) => {
+export const DotButton = ({ isSelected, onClick }) => {
   const theme = useTheme();
+
+  const dotIconButtonSx = {
+    padding: '15px',
+    margin: '0 2px'
+  }
+
+  const dotBoxSx = {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+  }
 
   return (
     <IconButton onClick={onClick} size="small" sx={dotIconButtonSx}>
