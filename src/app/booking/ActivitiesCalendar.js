@@ -115,8 +115,8 @@ export function ActivityCard({ activity, targetDate }) {
   };
 
   return (
-    <Stack sx={{ maxWidth: 353, height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
-      <Box sx={{ height: 200, width: 351, position: "relative" }}>
+    <Stack sx={{ height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
+      <Box sx={{ height: 200, position: "relative", mt: 1, mx: 1 }}>
         {activity?.imageUrl ? (
           <Image alt="Activity image" src={activity?.imageUrl} fill sizes="351px" style={{ objectFit: "cover" }} />
         ) : (
@@ -283,8 +283,9 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
 export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
 
   const emblaSlideSx = {
-    flex: {xs: '0 0 100%', sm: '0 0 100%', md: '0 0 50%', lg: `0 0 ${100/3}%`},
+    flex: {xs: '0 0 100%', sm: '0 0 50%', md: `0 0 ${100/3}%`},
     minWidth: 0,
+    pr: 2,
     ...emblaSlideSxOuter,
   };
 
