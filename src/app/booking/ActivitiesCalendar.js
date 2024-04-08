@@ -4,7 +4,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { Box, Container, styled } from "@mui/system";
+import { Box, Container} from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
@@ -14,10 +14,13 @@ import _ from "lodash";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import Link from "next/link";
 import { useSnackbar } from "notistack";
-import { forwardRef, useState } from "react";
+import React, {forwardRef, useCallback, useEffect, useState} from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
+import useEmblaCarousel from "embla-carousel-react";
+import {useTheme} from "@mui/material/styles";
+import {DotButton, useDotButton } from "@/app/booking/useDotButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -112,8 +115,8 @@ export function ActivityCard({ activity, targetDate }) {
   };
 
   return (
-    <Stack sx={{ maxWidth: 353, border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
-      <Box sx={{ height: 200, width: 351, position: "relative" }}>
+    <Stack sx={{ height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
+      <Box sx={{ height: 200, position: "relative", mt: 1, mx: 1 }}>
         {activity?.imageUrl ? (
           <Image alt="Activity image" src={activity?.imageUrl} fill sizes="351px" style={{ objectFit: "cover" }} />
         ) : (
@@ -230,6 +233,65 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
+export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
+  const [viewportRef, embla] = useEmblaCarousel({ align: "start", loop: true });
+  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
+
+  const scrollPrev = useCallback(() => {
+    if (embla) embla.scrollPrev();
+  }, [embla]);
+
+  const scrollNext = useCallback(() => {
+    if (embla) embla.scrollNext();
+  }, [embla]);
+
+  const emblaSx = {
+    overflow: "hidden",
+    ...emblaSxOuter,
+  };
+  const emblaContainerSx = {
+    display: "flex",
+    width: "100%",
+  };
+
+  return (
+    <Box>
+      <Box sx={emblaSx} ref={viewportRef}>
+        <Box sx={emblaContainerSx}>{children}</Box>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <IconButton onClick={scrollPrev}>
+          <ArrowBackIosNewIcon />
+        </IconButton>
+
+        {scrollSnaps.map((_, index) => (
+            <DotButton
+              key={index}
+              isSelected={index === selectedIndex}
+              onClick={() => onDotButtonClick(index)}
+            />
+          ))}
+
+        <IconButton onClick={scrollNext} >
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </Box>
+    </Box>
+  );
+}
+
+export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
+
+  const emblaSlideSx = {
+    flex: {xs: '0 0 100%', sm: '0 0 50%', md: `0 0 ${100/3}%`},
+    minWidth: 0,
+    pr: 2,
+    ...emblaSlideSxOuter,
+  };
+
+  return <Box sx={emblaSlideSx}>{children}</Box>;
+}
+
 function ActivitiesList({ sx, selectedDate, meridiem }) {
   const formatDate = (date) => date.format("YYYY-MM-DD");
 
@@ -257,11 +319,13 @@ function ActivitiesList({ sx, selectedDate, meridiem }) {
   return (
     <>
       {status === "success" && matchingActivities && !_.isEmpty(matchingActivities) && (
-        <Box sx={{ display: "flex", gap: 2, ...sx }}>
+        <EmblaContainer emblaSx={{ mt: 2 }}>
           {matchingActivities.map((activity) => (
-            <ActivityCard key={activity.id} activity={activity} targetDate={formatDate(selectedDate)} />
+            <EmblaSlide key={activity.id} >
+              <ActivityCard activity={activity} targetDate={formatDate(selectedDate)} />
+            </EmblaSlide>
           ))}
-        </Box>
+        </EmblaContainer>
       )}
     </>
   );
