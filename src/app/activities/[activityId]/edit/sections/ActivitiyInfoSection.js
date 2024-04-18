@@ -91,7 +91,7 @@ function TermsAndConditionsView({ activity, handleClose }) {
   );
 }
 
-export function ActivityDetails({ sx }) {
+export function ActivityDetails({ sx, edit: editMode=false }) {
   const { activityId, targetDate } = useParams();
   const forDate = Boolean(targetDate);
   const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : () => getActivity(activityId);
@@ -186,9 +186,11 @@ export function ActivityDetails({ sx }) {
       <SmFlex>
         <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
       </SmFlex>
-      <SmFlex>
-        <b>Available spaces:</b> {activity?.capacity}
-      </SmFlex>
+      {editMode && (
+        <SmFlex>
+          <b>Available spaces:</b> {activity?.capacity}
+        </SmFlex>
+      )}
       {!forDate && (
         <>
           {(earlyDiscount?.enabled || endingDiscount?.enabled) && (
@@ -314,7 +316,7 @@ function SavedSlide({ scrollNext, close }) {
   return (
     <>
       <Typography variant="h6">Saved activity details</Typography>
-      <ActivityDetails sx={{ flex: 1, mt: 3 }} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} editMode={true} />
 
       <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
@@ -338,7 +340,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   return (
     <>
       <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails sx={{ flex: 1, mt: 3 }} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} editMode={true} />
 
       <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3, rowGap: 1 }}>
