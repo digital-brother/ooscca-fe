@@ -1,13 +1,12 @@
 'use client'
 
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import {Button, Checkbox, Container, TextField} from "@mui/material";
-import Divider from "@mui/material/Divider";
-import {useTheme} from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
 import Link from "@/app/(homepage)/components/Link";
-import React from "react";
+import { Button, Checkbox, Container, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 
 
 function SignUpForm() {

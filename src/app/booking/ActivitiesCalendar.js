@@ -4,23 +4,22 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { Box, Container} from "@mui/system";
+import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
+import { DotButton, useDotButton } from "@/app/booking/useDotButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import useEmblaCarousel from "embla-carousel-react";
 import _ from "lodash";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import Link from "next/link";
 import { useSnackbar } from "notistack";
-import React, {forwardRef, useCallback, useEffect, useState} from "react";
+import { forwardRef, useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
-import useEmblaCarousel from "embla-carousel-react";
-import {useTheme} from "@mui/material/styles";
-import {DotButton, useDotButton } from "@/app/booking/useDotButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {

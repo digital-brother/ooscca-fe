@@ -1,3 +1,5 @@
+"use client"
+
 import Intro from "@/app/(homepage)/Intro";
 import ClientSchools from "@/app/(homepage)/ClientSchools";
 import HomepageTabs from "@/app/(homepage)/HomepageTabs";
