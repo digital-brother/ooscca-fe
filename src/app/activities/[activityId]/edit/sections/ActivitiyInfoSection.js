@@ -99,7 +99,7 @@ export function ActivityDetails({ sx, editMode=false }) {
   const { data: activity } = useQuery(["activity", activityId], activityGetter);
   const { data: discounts } = useQuery(["activityDiscounts", activityId], () => getActivityDiscounts(activityId));
   const earlyDiscount = discounts?.find((discount) => discount.type === "early");
-  const endingDiscount = discounts?.find((discount) => discount.type === "ending");
+  const endingDiscount = discounts?.find((discount) => discount.type === "ending"); 
 
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
   const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
