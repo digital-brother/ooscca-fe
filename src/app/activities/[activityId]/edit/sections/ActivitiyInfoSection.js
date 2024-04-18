@@ -91,7 +91,7 @@ function TermsAndConditionsView({ activity, handleClose }) {
   );
 }
 
-export function ActivityDetails({ sx, edit: editMode=false }) {
+export function ActivityDetails({ sx, editMode=false }) {
   const { activityId, targetDate } = useParams();
   const forDate = Boolean(targetDate);
   const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : () => getActivity(activityId);
