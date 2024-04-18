@@ -183,9 +183,9 @@ function LogoImage() {
         <Image
           src={activity?.providerLogoUrl}
           alt="logo image"
-          width={300}
-          height={300}
-          style={{ maxWidth: 300, height: "auto", width: "100%" }}
+          width={150}
+          height={150}
+          style={{ maxWidth: 150, height: "auto", width: "100%" }}
         />
       </Container>
     )
