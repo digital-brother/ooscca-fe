@@ -12,11 +12,11 @@ function SignUpForm({ subheading, heading1, heading2, bodyText }) {
       <Typography variant="subheading">{subheading}</Typography>
       <Typography mt={3} variant="h2">{heading1}</Typography>
       <Typography variant="h2">{heading2}</Typography>
-      <Typography mt={4} variant="h7"
-      >
+      <Box sx={{ mt: 4 }}>
+      <Typography variant="h7">
         {bodyText}
       </Typography>
-
+      </Box>
       <SignUpField />
 
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", md: "left" } }}>
