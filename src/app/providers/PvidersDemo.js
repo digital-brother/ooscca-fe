@@ -9,7 +9,7 @@ const ProvidersDemo = () => (
         "All activities for all siblings can be booked at the same time",
         "One seamless payment system and experience ",
       ],
-      imageUrl: "",
+      imageUrl: "/demoProviders.png",
     }} />
   );
 

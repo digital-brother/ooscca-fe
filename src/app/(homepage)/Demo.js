@@ -2,7 +2,7 @@ import OosStepper from "@/components/OosStepper";
 import { Box, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-function DemoHeader({ sx, subheading1, heading1 }) {
+function DemoHeader({ sx, subheading1, heading1, heading2}) {
   return (
     <Box sx={{ textAlign: "center", maxWidth: 735, ...sx }}>
       {subheading1 && <Typography variant="subheading">{subheading1}</Typography>}
