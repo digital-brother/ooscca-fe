@@ -1,4 +1,5 @@
 import SignUp from "@/app/(homepage)/SignUp";
+
 const HomePageSignUp = () => (
   <SignUp config={{
     subheading: "",
