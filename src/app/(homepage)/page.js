@@ -4,7 +4,7 @@ import Intro from "@/app/(homepage)/Intro";
 import ClientSchools from "@/app/(homepage)/ClientSchools";
 import HomepageTabs from "@/app/(homepage)/HomepageTabs";
 import Benefits from "@/app/(homepage)/Benefits";
-import SignUp from "@/app/(homepage)/SignUp";
+import HomePageSignUp from "@/app/(homepage)/HomePageSigUp";
 import Demo from "@/app/(homepage)/Demo";
 import Security from "@/app/(homepage)/Security";
 
@@ -18,7 +18,7 @@ export default function Homepage() {
       <Security/>
       <Benefits/>
       <HomepageTabs/>
-      <SignUp/>
+      <HomePageSignUp/>
     </>
   )
 }

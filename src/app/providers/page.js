@@ -1,11 +1,13 @@
-"use client"
-import SignUp from "@/app/providers/SignUp";
+import ProvidersSignUp from "@/app/providers/ProvidersSignUp";
+import ClientSchools from "@/app/(homepage)/ClientSchools";
+import ProviderDemoHeader from "@/app/providers/DemoProviders";
 
-
-export default function Homepage() {
+export default function ProviderPage  () {
   return (
     <>
-      <SignUp/>
+      <ProvidersSignUp/>
+      <ClientSchools/>
+      <ProviderDemoHeader/>
     </>
   )
 }
