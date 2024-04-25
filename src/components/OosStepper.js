@@ -59,12 +59,13 @@ function StepIcon({ icon }) {
   );
 }
 
-export default function OosStepper({ sx, steps }) {
+export default function OosStepper(props) {
+  console.log(props)
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
-    <Box {...sx}>
+    <Box {...props.sx}>
       <MUIStepper
         alternativeLabel
         connector={<StepConnector />}
@@ -74,7 +75,7 @@ export default function OosStepper({ sx, steps }) {
           alignItems: "center",
         }}
       >
-        {steps.map((label, index) => {
+        {props.steps.map((label, index) => {
           return (
             <Step key={index}>
               <StepLabel
