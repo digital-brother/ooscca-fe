@@ -2,6 +2,7 @@ import OosStepper from "@/components/OosStepper";
 import { Box, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
+
 function DemoHeader({ sx, subheading1, heading1, heading2}) {
   return (
     <Box sx={{ textAlign: "center", maxWidth: 735, ...sx }}>
@@ -21,3 +22,18 @@ export default function Demo({ config }) {
     </Container>
   );
 }
+
+const HomepageDemo = () => (
+  <Demo config={{
+    subheading: "Directly from the calendar",
+    heading1: "Discover the ease of booking activities without the text and email tennis",
+    steps: [
+      "Find the activities your child will love",
+      "Add them to child’s calendar",
+      "Review and then pay for all in one click",
+    ],
+    imageUrl: "/demo.png",
+  }} />
+);
+
+export {HomepageDemo};

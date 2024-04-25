@@ -7,6 +7,7 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
+import Image from 'next/image';
 
 
 function SignUpField() {
@@ -64,10 +65,22 @@ export default function SignUp({ config }) {
         </Grid>
         <Grid item xs={12} md={6}>
           <Box sx={{ maxWidth: { xs: 370, md: 520 }, mx: 'auto', mb: -1 }}>
-            <img src={config.imageUrl} style={{width: "100%"}}/>
+            <Image src={config.imageUrl} width={500} height={300}/>
           </Box>
         </Grid>
       </Grid>
     </Container>
   );
 }
+
+const HomePageSignUp = () => (
+  <SignUp config={{
+    subheading: "",
+    heading1: "Easy to get started. And it's free.",
+    heading2: "",
+    bodyText: "",
+    imageUrl: "/signup.svg"
+  }} />
+);
+
+export {HomePageSignUp};
