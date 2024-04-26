@@ -26,10 +26,16 @@ function SignUpField() {
   );
 }
 
-function AgreementSection() {
+function SignUpForm({ subheading, heading1, heading2, bodyText }) {
   const theme = useTheme();
   return (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", md: "left" } }}>
+    <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
+      {subheading && <Typography variant="subheading">{subheading}</Typography>}
+      {heading1 && <Typography mt={3} variant="h2">{heading1}</Typography>}
+      {heading2 && <Typography variant="h2">{heading2}</Typography>}
+      {bodyText && <Typography mt={4} variant="h7">{bodyText}</Typography>}
+      <SignUpField />
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", md: "left" } }}>
       <Checkbox size="small" sx={{ ml: -1 }} />
       <Typography variant="body2" color="text.secondary">
         I accept the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>
@@ -39,33 +45,21 @@ function AgreementSection() {
         Already using OOSCCA? &nbsp;
         <span style={{ color: theme.palette.orange.main }}>Sign in</span>
       </Typography>
+      </Box>
     </Box>
   );
 }
 
-function SignUpForm({ subheading, heading1, heading2, bodyText }) {
-  return (
-    <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
-      {subheading && <Typography variant="subheading">{subheading}</Typography>}
-      {heading1 && <Typography mt={3} variant="h2">{heading1}</Typography>}
-      {heading2 && <Typography variant="h2">{heading2}</Typography>}
-      {bodyText && <Typography mt={4} variant="h7">{bodyText}</Typography>}
-      <SignUpField />
-      <AgreementSection />
-    </Box>
-  );
-}
-
-function SignUp({ config }) {
+function SignUp({ subheading, heading1, heading2, bodyText, image }) {
   return (
     <Container sx={{ pt: { xs: 5, md: 10 } }}>
       <Grid container spacing={{ xs: 10, md: 5 }} sx={{ textAlign: 'center' }}>
         <Grid item xs={12} md={6}>
-          <SignUpForm {...config} />
+        <SignUpForm subheading={subheading} heading1={heading1} heading2={heading2} bodyText={bodyText} />
         </Grid>
         <Grid item xs={12} md={6}>
           <Box sx={{ maxWidth: { xs: 370, md: 520 }, mx: 'auto', mb: -1 }}>
-            <Image src={config.imageUrl} width={500} height={300}/>
+            <Image src={image} width={500} height={300}/>
           </Box>
         </Grid>
       </Grid>
@@ -73,15 +67,4 @@ function SignUp({ config }) {
   );
 }
 
-const HomePageSignUp = () => (
-  <SignUp config={{
-    subheading: "",
-    heading1: "Easy to get started. And it's free.",
-    heading2: "",
-    bodyText: "",
-    imageUrl: "/signup.svg"
-  }} />
-);
-
 export default SignUp;
-export {HomePageSignUp};
