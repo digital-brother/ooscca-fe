@@ -1,13 +1,13 @@
-import ProvidersSignUp from "@/app/providers/ProvidersSignUp";
+import ProvidersIntro from "@/app/providers/ProvidersIntro";
 import ClientSchools from "@/app/(homepage)/ClientSchools";
-import ProvidersDemo from "@/app/providers/PvidersDemo";
+import ProvidersSteps from "@/app/providers/ProvidersSteps";
 
 export default function ProviderPage  () {
   return (
     <>
-      <ProvidersSignUp/>
+      <ProvidersIntro/>
       <ClientSchools/>
-      <ProvidersDemo/>
+      <ProvidersSteps/>
     </>
   )
 }

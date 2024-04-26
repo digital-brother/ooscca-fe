@@ -60,7 +60,6 @@ function StepIcon({ icon }) {
 }
 
 export default function OosStepper(props) {
-  console.log(props)
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"));
 

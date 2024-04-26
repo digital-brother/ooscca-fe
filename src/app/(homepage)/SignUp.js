@@ -56,7 +56,7 @@ function SignUpForm({ subheading, heading1, heading2, bodyText }) {
   );
 }
 
-export default function SignUp({ config }) {
+function SignUp({ config }) {
   return (
     <Container sx={{ pt: { xs: 5, md: 10 } }}>
       <Grid container spacing={{ xs: 10, md: 5 }} sx={{ textAlign: 'center' }}>
@@ -83,4 +83,5 @@ const HomePageSignUp = () => (
   }} />
 );
 
+export default SignUp;
 export {HomePageSignUp};

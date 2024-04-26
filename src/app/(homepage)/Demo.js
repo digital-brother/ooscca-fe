@@ -13,7 +13,6 @@ function DemoHeader({ sx, subheading1, heading1, heading2}) {
 }
 
 function Demo(props) {
-  console.log(props)
   return (
     <Container sx={{ py: { xs: 6, md: 10 } }}>
       <DemoHeader sx={{ mx: "auto" }} subheading1={props.subheading} heading1={props.heading1}/>
@@ -33,7 +32,6 @@ const HomepageDemo = () => (
       "Review and then pay for all in one click",
     ]}
     imageUrl= "/demo.png"
-    name='Homepage'
    />
 );
 

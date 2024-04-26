@@ -1,6 +1,6 @@
 import SignUp from "@/app/(homepage)/SignUp";
 
-const ProvidersSignUp = () => (
+const ProvidersIntro = () => (
   <SignUp config={{
     subheading: "New parents joining daily",
     heading1: "Reaching parents.",
@@ -10,4 +10,4 @@ const ProvidersSignUp = () => (
   }} />
 );
 
-export default ProvidersSignUp;
+export default ProvidersIntro;
