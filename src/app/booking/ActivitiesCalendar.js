@@ -382,13 +382,13 @@ export function ActivityDiscountedPrice({ activity }) {
           <Typography variant="body1" sx={{ fontWeight: 700, color: "green.500" }}>
             {activity.discountPercent}% off
           </Typography>
-          <Typography variant="h5">Total £{activity.discountedPrice}</Typography>
+          <Typography variant="h5"> £{activity.discountedPrice}</Typography>
           <Typography variant="body1" sx={{ color: "grey.500", textDecoration: "line-through" }}>
             £{activity.price}
           </Typography>
         </>
       ) : (
-        <Typography variant="h5">Total £{activity?.price}</Typography>
+        <Typography variant="h5"> £{activity?.price}</Typography>
       )}
     </Box>
   );
