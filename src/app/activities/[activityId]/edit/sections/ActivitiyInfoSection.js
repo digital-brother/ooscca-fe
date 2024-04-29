@@ -766,8 +766,7 @@ export const SlideContainer = styled(Box)(({ theme }) =>
   theme.unstable_sx({
     mx: "auto",
     width: "100%",
-    maxWidth: 540,
-    minHeight: 600,
+    maxWidth: { xs: 540, lg: "540px" },
     border: "1px solid",
     borderColor: "grey.main",
     borderRadius: 4,
