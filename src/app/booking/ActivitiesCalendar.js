@@ -183,13 +183,13 @@ export function ActivityCard({ activity, targetDate }) {
         <Box flex={1}></Box>
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 3, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
-            <Button variant="outlined" fullWidth>
+            <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
               Learn more
             </Button>
           </Link>
           {children && children.length === 1 && (
-            <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)}>
-              Add
+            <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)} sx={{ height: "100%" }}>
+              Add to calendar
             </Button>
           )}
           {children && children.length > 1 && (
