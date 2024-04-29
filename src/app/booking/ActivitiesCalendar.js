@@ -115,7 +115,7 @@ export function ActivityCard({ activity, targetDate }) {
 
   return (
     <Stack sx={{ height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
-      <Box sx={{ height: 200, position: "relative", mt: 1, mx: 1 }}>
+      <Box sx={{ height: 200, position: "relative"}}>
         {activity?.imageUrl ? (
           <Image alt="Activity image" src={activity?.imageUrl} fill sizes="351px" style={{ objectFit: "cover" }} />
         ) : (
