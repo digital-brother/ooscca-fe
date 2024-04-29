@@ -146,12 +146,14 @@ function ActivityInfo() {
     <Container sx={{ my: 10 }}>
       <ActivityInfoContainer>
         <ActivityDescription />
+        <Box>
         <SlideContainer sx={{ minHeight: 0 }}>
-          <ActivityDetails sx={{ flex: 1 }} />
+          <ActivityDetails/>
           <Button variant="contained" sx={{ mt: 3 }}>
             Add to calendar
           </Button>
         </SlideContainer>
+        </Box>
       </ActivityInfoContainer>
     </Container>
   );
