@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useSnackbar } from "notistack";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { SelectedDateContext } from "./page";
@@ -183,23 +183,21 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 function FamilyBookings() {
-  const today = dayjs();
+  const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
+  const [weekFirstDayDate, setWeekFirstDayDate] = useState(selectedDate.startOf('week').add(1, 'day'));
 
-  let currentWeekFirstDayDate;
-  if (today.weekday() === 0 || today.weekday() === 6) {
-    currentWeekFirstDayDate = today.startOf("week").add(1, "day");
-  } else {
-    currentWeekFirstDayDate = today.startOf("week").add(1, "day");
-  }
-  const [weekFirstDayDate, setWeekFirstDayDate] = useState(currentWeekFirstDayDate);
-  const weekDates = Array.from({ length: 5 }, (_, i) => weekFirstDayDate.add(i, "day"));
+  useEffect(() => {
+    setWeekFirstDayDate(selectedDate.startOf('week').add(1, 'day'));
+  }, [selectedDate]);
+
+  const weekDates = Array.from({ length: 5 }, (_, i) => weekFirstDayDate.add(i, 'day'));
   const { data: children } = useQuery("children", getChildren);
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
   const formatDate = (date) => date.format("ddd D");
 
-  const handleNextWeek = () => setWeekFirstDayDate(weekFirstDayDate.add(7, "day"));
-  const handlePreviosWeek = () => setWeekFirstDayDate(weekFirstDayDate.subtract(7, "day"));
+  const handleNextWeek = () => setSelectedDate(weekFirstDayDate.add(7, "day"));
+  const handlePreviosWeek = () => setSelectedDate(weekFirstDayDate.subtract(7, "day"));
 
   return (
     <TableContainer component={Box}>
@@ -218,7 +216,7 @@ function FamilyBookings() {
                   <IconButton onClick={handlePreviosWeek}>
                     <ArrowBackIosNewIcon />
                   </IconButton>
-                  <Button color="grey" sx={{ py: 0.2 }} onClick={() => setWeekFirstDayDate(currentWeekFirstDayDate)}>
+                  <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
                     Today
                   </Button>
                   <IconButton onClick={handleNextWeek}>
@@ -235,7 +233,7 @@ function FamilyBookings() {
           <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
             {weekDates.map((date, index) => (
               <StyledHeaderTableCell key={index} align="center">
-                <Box sx={{ bgcolor: today.isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}>
+                <Box sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}>
                   {formatDate(date)}
                 </Box>
               </StyledHeaderTableCell>
