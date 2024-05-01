@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useSnackbar } from "notistack";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { SelectedDateContext } from "./page";
@@ -185,25 +185,23 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 function FamilyBookings() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
 
-  const getStartOfWeek = date => {
-    let day = date.startOf('week').add(1, 'day');
-    if (date.weekday() === 6) {
-      day = date.add(2, 'days').startOf('week').add(1, 'day');
-    } else if (date.weekday() === 0) {
-      day = date.add(1, 'day').startOf('week').add(1, 'day');
+  const getDisplayedWeekModayDate = date => {
+    let currentDay = date.startOf('week').add(1, 'day');
+    if (date.weekday() === 6 || date.weekday() === 0) {
+      currentDay = date.add(7, 'days').startOf('week').add(1, 'day');
     }
-    return day;
+
+    return currentDay;
   };
 
-  const weekFirstDayDate = getStartOfWeek(selectedDate);
-  const weekDates = Array.from({ length: 5 }, (_, i) => weekFirstDayDate.add(i, 'day'));
+  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, 'day'));
   const { data: children } = useQuery("children", getChildren);
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
   const formatDate = (date) => date.format("ddd D");
 
-  const handleNextWeek = () => setSelectedDate(weekFirstDayDate.add(7, "days"));
-  const handlePreviosWeek = () => setSelectedDate(weekFirstDayDate.subtract(7, "days"));
+  const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
+  const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
     <TableContainer component={Box}>
@@ -217,7 +215,7 @@ function FamilyBookings() {
 
             <StyledTableCell colSpan={5}>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h6">{weekFirstDayDate.format("MMMM YYYY")}</Typography>
+                <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <IconButton onClick={handlePreviosWeek}>
                     <ArrowBackIosNewIcon />
