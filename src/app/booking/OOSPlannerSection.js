@@ -186,12 +186,12 @@ function FamilyBookings() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
 
   const getDisplayedWeekModayDate = date => {
-    let currentDay = date.startOf('week').add(1, 'day');
+    let displayedWeekModayDate = date.startOf('week').add(1, 'day');
     if (date.weekday() === 6 || date.weekday() === 0) {
-      currentDay = date.add(7, 'days').startOf('week').add(1, 'day');
+      displayedWeekModayDate = date.add(7, 'days').startOf('week').add(1, 'day');
     }
 
-    return currentDay;
+    return displayedWeekModayDate;
   };
 
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, 'day'));
