@@ -188,7 +188,7 @@ export function ActivityCard({ activity, targetDate }) {
             </Button>
           </Link>
           {children && children.length === 1 && (
-            <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)} sx={{ height: "100%" }}>
+             <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)} fullWidth sx={{ height: "50px", padding: "0 15px" }}>
               Add to calendar
             </Button>
           )}
@@ -196,8 +196,8 @@ export function ActivityCard({ activity, targetDate }) {
             <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
               {(popupState) => (
                 <>
-                  <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
-                    Add
+                  <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />} fullWidth sx={{ height: "50px", padding: "0 15px" }}>
+                    Add to calendar
                   </Button>
                   <Menu
                     {...bindMenu(popupState)}
