@@ -7,14 +7,15 @@ import {
   ActivityInfoContainer,
   SlideContainer,
 } from "@/app/activities/[activityId]/edit/sections/ActivitiyInfoSection";
-import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "@/app/api.mjs";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary} from "@/app/api.mjs";
+import { Box, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
+import { CalendarButton } from "@/app/booking/ActivitiesCalendar";
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
@@ -142,21 +143,19 @@ function ActivityDescription() {
 }
 
 function ActivityInfo() {
+  const { activityId, targetDate } = useParams();
   return (
     <Container sx={{ my: 10 }}>
       <ActivityInfoContainer>
         <ActivityDescription />
         <SlideContainer sx={{ minHeight: 0 }}>
           <ActivityDetails sx={{ flex: 1 }} />
-          <Button variant="contained" sx={{ mt: 3 }}>
-            Add to calendar
-          </Button>
+          <CalendarButton activityId={activityId} targetDate={targetDate}/>
         </SlideContainer>
       </ActivityInfoContainer>
     </Container>
   );
 }
-
 function FooterImage() {
   return (
     <Container sx={{ mt: 10 }}>

@@ -232,6 +232,72 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
+export const CalendarButton = ({ activityId, targetDate }) => {
+  const { data: children } = useQuery("children", getChildren);
+  const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate }));
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const mutationConfig = {
+    onSuccess: () => {
+      enqueueSnackbar("Booking created", { variant: "success" });
+      queryClient.invalidateQueries("bookings");
+    },
+    onError: (error) => {
+      const errorMessage = error.response?.data || "Error occurred";
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    },
+  };
+
+  return (
+    <>
+      {children && children.length === 1 ? (
+        <Button
+          variant="contained"
+          onClick={() => mutation.mutate(children[0].id, mutationConfig)}
+        >
+          Add to calendar
+        </Button>
+      ) : (
+        <PopupState variant="popover" popupId="children-popup-menu">
+          {(popupState) => (
+            <>
+              <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
+                Add to calendar
+              </Button>
+              <Menu
+        {...bindMenu(popupState)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        PaperProps={{
+          style: {
+            width: popupState.anchorEl ? popupState.anchorEl.clientWidth : undefined, // Ширина меню точно як у кнопки
+          }
+        }}
+      >
+                {children?.map((child) => (
+                  <MenuItem key={child.id} onClick={() => {
+                    popupState.close();
+                    mutation.mutate(child.id, mutationConfig);
+                  }}>
+                    {child.name}
+                  </MenuItem> 
+                ))}
+              </Menu>
+            </>
+          )}
+        </PopupState>
+      )}
+    </>
+  );
+};
+
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [viewportRef, embla] = useEmblaCarousel({ align: "start", loop: true });
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
