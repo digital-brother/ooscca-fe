@@ -7,7 +7,7 @@ import {
   ActivityInfoContainer,
   SlideContainer,
 } from "@/app/activities/[activityId]/edit/sections/ActivitiyInfoSection";
-import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary} from "@/app/api.mjs";
+import { getActivityForDate, getActivityImagesPrimary, getActivityImagesSecondary } from "@/app/api.mjs";
 import { Box, Container, Typography } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Autoplay from "embla-carousel-autoplay";
