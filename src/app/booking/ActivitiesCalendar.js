@@ -18,7 +18,6 @@ import Link from "next/link";
 import { useSnackbar } from "notistack";
 import { forwardRef, useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
 dayjs.extend(utc);
 
@@ -97,22 +96,6 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
-  const { data: children } = useQuery("children", getChildren);
-
-  const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-  const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
-  const mutationConfig = {
-    onSuccess: () => {
-      enqueueSnackbar("Booking created", { variant: "success" });
-      queryClient.invalidateQueries("bookings");
-    },
-    onError: (error) => {
-      const errorMessage = getFlatErrors(error).join(". ");
-      enqueueSnackbar(errorMessage, { variant: "error" });
-    },
-  };
-
   return (
     <Stack sx={{ height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, position: "relative"}}>
@@ -187,52 +170,14 @@ export function ActivityCard({ activity, targetDate }) {
               Learn more
             </Button>
           </Link>
-          {children && children.length === 1 && (
-             <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)} fullWidth sx={{ height: "50px", padding: "0 15px" }}>
-              Add to calendar
-            </Button>
-          )}
-          {children && children.length > 1 && (
-            <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
-              {(popupState) => (
-                <>
-                  <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />} fullWidth sx={{ height: "50px", padding: "0 15px" }}>
-                    Add to calendar
-                  </Button>
-                  <Menu
-                    {...bindMenu(popupState)}
-                    slotProps={{
-                      paper: {
-                        style: {
-                          width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
-                        },
-                      },
-                    }}
-                    sx={{ mt: 1 }}
-                  >
-                    {children.map((child) => (
-                      <MenuItem
-                        key={child.id}
-                        onClick={() => {
-                          popupState.close();
-                          mutation.mutate(child.id, mutationConfig);
-                        }}
-                      >
-                        {child.name}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </>
-              )}
-            </PopupState>
-          )}
+          <BookNowButton activityId={activity.id} targetDate={targetDate} />
         </Box>
       </Stack>
     </Stack>
   );
 }
 
-export const CalendarButton = ({ activityId, targetDate }) => {
+export const BookNowButton = ({ activityId, targetDate }) => {
   const { data: children } = useQuery("children", getChildren);
   const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate }));
   const queryClient = useQueryClient();
@@ -256,14 +201,14 @@ export const CalendarButton = ({ activityId, targetDate }) => {
           variant="contained"
           onClick={() => mutation.mutate(children[0].id, mutationConfig)}
         >
-          Add to calendar
+          Book now
         </Button>
       ) : (
         <PopupState variant="popover" popupId="children-popup-menu">
           {(popupState) => (
             <>
               <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
-                Add to calendar
+              Book now
               </Button>
               <Menu
         {...bindMenu(popupState)}
@@ -277,7 +222,7 @@ export const CalendarButton = ({ activityId, targetDate }) => {
         }}
         PaperProps={{
           style: {
-            width: popupState.anchorEl ? popupState.anchorEl.clientWidth : undefined, // Ширина меню точно як у кнопки
+            width: popupState.anchorEl ? popupState.anchorEl.clientWidth : undefined,
           }
         }}
       >

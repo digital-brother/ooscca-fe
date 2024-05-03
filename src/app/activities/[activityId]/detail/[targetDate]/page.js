@@ -15,7 +15,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { CalendarButton } from "@/app/booking/ActivitiesCalendar";
+import { BookNowButton } from "@/app/booking/ActivitiesCalendar";
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
@@ -150,7 +150,7 @@ function ActivityInfo() {
         <ActivityDescription />
         <SlideContainer sx={{ minHeight: 0 }}>
           <ActivityDetails sx={{ flex: 1 }} />
-          <CalendarButton activityId={activityId} targetDate={targetDate}/>
+          <BookNowButton activityId={activityId} targetDate={targetDate}/>
         </SlideContainer>
       </ActivityInfoContainer>
     </Container>
