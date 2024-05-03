@@ -19,6 +19,7 @@ import { useSnackbar } from "notistack";
 import { forwardRef, useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
+import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -189,8 +190,8 @@ export const BookNowButton = ({ activityId, targetDate }) => {
       queryClient.invalidateQueries("bookings");
     },
     onError: (error) => {
-      const errorMessage = error.response?.data || "Error occurred";
-      enqueueSnackbar(errorMessage, { variant: "error" });
+        const errorMessage = getFlatErrors(error).join(". ");
+        enqueueSnackbar(errorMessage, { variant: "error" });
     },
   };
 
@@ -212,20 +213,14 @@ export const BookNowButton = ({ activityId, targetDate }) => {
               </Button>
               <Menu
         {...bindMenu(popupState)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        PaperProps={{
-          style: {
-            width: popupState.anchorEl ? popupState.anchorEl.clientWidth : undefined,
-          }
-        }}
-      >
+        slotProps={{
+          paper: {
+            style: {
+              width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
+              },
+            },
+              }}
+                >
                 {children?.map((child) => (
                   <MenuItem key={child.id} onClick={() => {
                     popupState.close();
