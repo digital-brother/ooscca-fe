@@ -3,23 +3,20 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
+import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
 import { DotButton, useDotButton } from "@/app/booking/useDotButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useEmblaCarousel from "embla-carousel-react";
 import _ from "lodash";
-import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import Link from "next/link";
-import { useSnackbar } from "notistack";
 import { forwardRef, useCallback, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
-import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
+import { useQuery } from "react-query";
+import { getActivitiesForDate, getChildren } from "../api.mjs";
+import { BookNowButton } from "./BookNowButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -178,65 +175,6 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
-export const BookNowButton = ({ activityId, targetDate }) => {
-  const { data: children } = useQuery("children", getChildren);
-  const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate }));
-  const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const mutationConfig = {
-    onSuccess: () => {
-      enqueueSnackbar("Booking created", { variant: "success" });
-      queryClient.invalidateQueries("bookings");
-    },
-    onError: (error) => {
-        const errorMessage = getFlatErrors(error).join(". ");
-        enqueueSnackbar(errorMessage, { variant: "error" });
-    },
-  };
-
-  return (
-    <>
-      {children && children.length === 1 ? (
-        <Button
-          variant="contained"
-          onClick={() => mutation.mutate(children[0].id, mutationConfig)}
-        >
-          Book now
-        </Button>
-      ) : (
-        <PopupState variant="popover" popupId="children-popup-menu">
-          {(popupState) => (
-            <>
-              <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
-              Book now
-              </Button>
-              <Menu
-        {...bindMenu(popupState)}
-        slotProps={{
-          paper: {
-            style: {
-              width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
-              },
-            },
-              }}
-                >
-                {children?.map((child) => (
-                  <MenuItem key={child.id} onClick={() => {
-                    popupState.close();
-                    mutation.mutate(child.id, mutationConfig);
-                  }}>
-                    {child.name}
-                  </MenuItem> 
-                ))}
-              </Menu>
-            </>
-          )}
-        </PopupState>
-      )}
-    </>
-  );
-};
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [viewportRef, embla] = useEmblaCarousel({ align: "start", loop: true });
