@@ -15,7 +15,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { BookNowButton } from "@/app/booking/ActivitiesCalendar";
+import { BookNowButton } from "@/app/booking/BookNowButton";
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
