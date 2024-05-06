@@ -3,23 +3,20 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Button, Chip, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
+import { Button, Chip, IconButton, Stack, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Image from "next/image";
 
 import { DotButton, useDotButton } from "@/app/booking/useDotButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useEmblaCarousel from "embla-carousel-react";
 import _ from "lodash";
-import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import Link from "next/link";
-import { useSnackbar } from "notistack";
 import { forwardRef, useCallback, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
-import { createBooking, getActivitiesForDate, getChildren } from "../api.mjs";
+import { useQuery } from "react-query";
+import { getActivitiesForDate, getChildren } from "../api.mjs";
+import { BookNowButton } from "./BookNowButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -97,22 +94,6 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
-  const { data: children } = useQuery("children", getChildren);
-
-  const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-  const mutation = useMutation((childId) => createBooking({ activity: activity.id, child: childId, date: targetDate }));
-  const mutationConfig = {
-    onSuccess: () => {
-      enqueueSnackbar("Booking created", { variant: "success" });
-      queryClient.invalidateQueries("bookings");
-    },
-    onError: (error) => {
-      const errorMessage = getFlatErrors(error).join(". ");
-      enqueueSnackbar(errorMessage, { variant: "error" });
-    },
-  };
-
   return (
     <Stack sx={{ height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
       <Box sx={{ height: 200, position: "relative"}}>
@@ -183,54 +164,17 @@ export function ActivityCard({ activity, targetDate }) {
         <Box flex={1}></Box>
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 3, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
-            <Button variant="outlined" fullWidth>
+            <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
               Learn more
             </Button>
           </Link>
-          {children && children.length === 1 && (
-            <Button variant="contained" onClick={() => mutation.mutate(children[0].id, mutationConfig)}>
-              Add
-            </Button>
-          )}
-          {children && children.length > 1 && (
-            <PopupState variant="popover" popupId="children-popup-menu" fullWidth>
-              {(popupState) => (
-                <>
-                  <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
-                    Add
-                  </Button>
-                  <Menu
-                    {...bindMenu(popupState)}
-                    slotProps={{
-                      paper: {
-                        style: {
-                          width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
-                        },
-                      },
-                    }}
-                    sx={{ mt: 1 }}
-                  >
-                    {children.map((child) => (
-                      <MenuItem
-                        key={child.id}
-                        onClick={() => {
-                          popupState.close();
-                          mutation.mutate(child.id, mutationConfig);
-                        }}
-                      >
-                        {child.name}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </>
-              )}
-            </PopupState>
-          )}
+          <BookNowButton activityId={activity.id} targetDate={targetDate} />
         </Box>
       </Stack>
     </Stack>
   );
 }
+
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [viewportRef, embla] = useEmblaCarousel({ align: "start", loop: true });
