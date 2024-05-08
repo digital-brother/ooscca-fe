@@ -24,9 +24,9 @@ export default function RootLayout({ children }) {
         <ThemeRegistry>
           <QueryClientProvider client={queryClient}>
             <SnackbarProvider>
-              <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+              <Box sx={{ minHeight: "100vh", display: "grid", gridTemplateRows: "auto 1fr auto" }}>
                 <Header />
-                <Box sx={{ flex: 1 }}>{children}</Box>
+                <Box>{children}</Box>
                 <Footer />
               </Box>
             </SnackbarProvider>
