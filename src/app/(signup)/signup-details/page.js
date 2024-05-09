@@ -28,8 +28,8 @@ export default function SignUpDetails() {
           initialValues={{ firstName: "", lastName: "", mobile: "" }}
           onSubmit={(values) => console.log(values)}
           validationSchema={Yup.object({
-            firstName: Yup.string().label("First name").required(),
-            lastName: Yup.string().label("Last name").required(),
+            firstName: Yup.string().label("First name").min(2).required(),
+            lastName: Yup.string().label("Last name").min(2).required(),
             mobile: Yup.string().label("Mobile number").required(),
           })}
         >
