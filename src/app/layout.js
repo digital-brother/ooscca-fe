@@ -6,6 +6,7 @@ import Header from "@/app/Header";
 import Footer from "@/app/Footer";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SnackbarProvider } from "notistack";
+import { Box } from "@mui/material";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,9 +24,11 @@ export default function RootLayout({ children }) {
         <ThemeRegistry>
           <QueryClientProvider client={queryClient}>
             <SnackbarProvider>
-              <Header />
-              {children}
-              <Footer />
+              <Box sx={{ minHeight: "100vh", display: "grid", gridTemplateRows: "auto 1fr auto" }}>
+                <Header />
+                <Box>{children}</Box>
+                <Footer />
+              </Box>
             </SnackbarProvider>
           </QueryClientProvider>
         </ThemeRegistry>
