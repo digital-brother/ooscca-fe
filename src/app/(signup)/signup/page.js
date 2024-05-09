@@ -5,8 +5,8 @@ import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import Image from "next/image";
 import * as Yup from "yup";
-import Link from "../(homepage)/components/Link";
-import { FormikCheckboxField, FormikTextField } from "../activities/[activityId]/edit/components/formikFields";
+import Link from "@/app/(homepage)/components/Link";
+import { FormikCheckboxField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
 
 export default function SignUp() {
   return (
