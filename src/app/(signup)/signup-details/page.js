@@ -28,9 +28,30 @@ export default function SignUpDetails() {
           initialValues={{ firstName: "", lastName: "", mobile: "" }}
           onSubmit={(values) => console.log(values)}
           validationSchema={Yup.object({
-            firstName: Yup.string().label("First name").min(2).required(),
-            lastName: Yup.string().label("Last name").min(2).required(),
-            mobile: Yup.string().label("Mobile number").required(),
+            firstName: Yup.string()
+              .label("First name")
+              .required()
+              .matches(
+                /^[A-Za-zÀ-ÖØ-öø-ÿ'’\- ]+$/,
+                // eslint-disable-next-line no-template-curly-in-string
+                "${label} must contain only letters, hyphens, apostrophes, and spaces"
+              )
+              .min(2)
+              .max(50),
+            lastName: Yup.string()
+              .label("Last name")
+              .required()
+              .matches(
+                /^[A-Za-zÀ-ÖØ-öø-ÿ'’\- ]+$/,
+                // eslint-disable-next-line no-template-curly-in-string
+                "${label} must contain only letters, hyphens, apostrophes, and spaces"
+              )
+              .min(2)
+              .max(50),
+            mobile: Yup.string()
+              .label("Mobile number")
+              .required()
+              .matches(/^(07\d{9}|\+447\d{9})$/, "Mobile number must be a valid London mobile number"),
           })}
         >
           <Form>
