@@ -110,9 +110,15 @@ export function FormikDecimalField(props) {
 
 // Handles initial value is undefined case
 export function FormikCheckboxField({ label, sx, ...props }) {
-  const [field] = useField({ ...props, type: "checkbox" });
+  const [field, meta] = useField({ ...props, type: "checkbox" });
   const fieldValue = field.value ?? false;
-  return <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} sx={sx} />;
+  const showError = meta.touched && Boolean(meta.error);
+  return (
+    <FormControl error={showError} sx={sx}>
+      <FormControlLabel control={<Checkbox {...field} value={fieldValue} {...props} />} label={label} />
+      {showError && <FormHelperText sx={{ mt: -1 }}>{meta.error}</FormHelperText>}
+    </FormControl>
+  );
 }
 
 // Passes data from formik value to input:
