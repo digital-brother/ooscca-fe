@@ -5,6 +5,7 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import Image from "next/image";
+import * as Yup from "yup";
 
 export default function SignUpChildren() {
   return (
@@ -26,6 +27,38 @@ export default function SignUpChildren() {
         <Formik
           initialValues={{ firstName: "", lastName: "", displayName: "" }}
           onSubmit={(values) => console.log(values)}
+          validationSchema={Yup.object({
+            firstName: Yup.string()
+              .label("First name")
+              .required()
+              .matches(
+                /^[A-Za-zÀ-ÖØ-öø-ÿ'’\- ]+$/,
+                // eslint-disable-next-line no-template-curly-in-string
+                "${label} must contain only letters, hyphens, apostrophes, and spaces"
+              )
+              .min(2)
+              .max(50),
+            lastName: Yup.string()
+              .label("Last name")
+              .required()
+              .matches(
+                /^[A-Za-zÀ-ÖØ-öø-ÿ'’\- ]+$/,
+                // eslint-disable-next-line no-template-curly-in-string
+                "${label} must contain only letters, hyphens, apostrophes, and spaces"
+              )
+              .min(2)
+              .max(50),
+            displayName: Yup.string()
+              .label("Display/nick name")
+              .required()
+              .matches(
+                /^[A-Za-zÀ-ÖØ-öø-ÿ'’\- ]+$/,
+                // eslint-disable-next-line no-template-curly-in-string
+                "${label} must contain only letters, hyphens, apostrophes, and spaces"
+              )
+              .min(2)
+              .max(50),
+          })}
         >
           <Form>
             <FormikTextField name="firstName" label="First name" fullWidth sx={{ mt: 1.5 }} />
