@@ -18,11 +18,13 @@ export default function SignUpDetails() {
           Please verify your email
         </Typography>
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
-          For security, we've sent you an email to the address you provided. Please click the link in the email to
+          For security, we&apos;ve sent you an email to the address you provided. Please click the link in the email to
           verify, and then log in.
         </Typography>
 
-        <Typography sx={{ mt: 16, textAlign: "center" }}>If you can't find it, you can resend the email.</Typography>
+        <Typography sx={{ mt: 16, textAlign: "center" }}>
+          If you can&apos;t find it, you can resend the email.
+        </Typography>
         <Button
           type="submit"
           variant="contained"
