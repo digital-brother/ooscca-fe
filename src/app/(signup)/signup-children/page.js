@@ -1,6 +1,6 @@
 "use client";
 
-import { FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { FormikDateField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -25,7 +25,7 @@ export default function SignUpChildren() {
         </Typography>
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Child 1</Typography>
         <Formik
-          initialValues={{ firstName: "", lastName: "", displayName: "" }}
+          initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null }}
           onSubmit={(values) => console.log(values)}
           validationSchema={Yup.object({
             firstName: Yup.string()
@@ -64,6 +64,7 @@ export default function SignUpChildren() {
             <FormikTextField name="firstName" label="First name" fullWidth sx={{ mt: 1.5 }} />
             <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
             <FormikTextField name="displayName" label="Display/nick name" fullWidth sx={{ mt: 1.5 }} />
+            <FormikDateField name="birthDate" label="D.O.B." fullWidth sx={{ mt: 1.5 }} />
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
               Continue
             </Button>
