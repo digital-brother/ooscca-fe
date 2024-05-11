@@ -5,14 +5,15 @@ import {
   FormikSelect,
   FormikTextField,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { getSchools } from "@/app/api.mjs";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, MenuItem, Typography } from "@mui/material";
+import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import Image from "next/image";
-import * as Yup from "yup";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useQuery } from "react-query";
-import { getSchools } from "@/app/api.mjs";   
+import * as Yup from "yup";
 
 export default function SignUpChildren() {
   const { data: schools } = useQuery("schools", getSchools);
@@ -67,7 +68,12 @@ export default function SignUpChildren() {
               )
               .min(2)
               .max(50),
-            birthDate: Yup.string().label("Date of birth").required(),
+            birthDate: Yup.date()
+              .label("Date of birth")
+              .required()
+              .typeError("Invalid date")
+              .min(1990)
+              .max(dayjs(), `Date of birth must be before ${dayjs().format("MM/DD/YYYY")}`),
             school: Yup.number().label("School name").required(),
           })}
         >

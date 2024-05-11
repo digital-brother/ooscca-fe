@@ -155,7 +155,7 @@ export function FormikTimeField(props) {
 }
 
 export function FormikDateField({ label, ...props }) {
-  const [field, , helpers] = useField(props);
+  const [field, meta, helpers] = useField(props);
 
   function onChange(newValue) {
     const isValidDayjs = dayjs.isDayjs(newValue) && newValue.isValid();
@@ -168,7 +168,15 @@ export function FormikDateField({ label, ...props }) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-      <DateField label={label} value={displayValue} onChange={onChange} {...props} />
+      <DateField
+        label={label}
+        value={displayValue}
+        onChange={onChange}
+        onBlur={field.onBlur}
+        error={meta.touched && Boolean(meta.error)}
+        helperText={meta.touched && meta.error}
+        {...props}
+      />
     </LocalizationProvider>
   );
 }
