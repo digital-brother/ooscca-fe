@@ -6,6 +6,7 @@ import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import Image from "next/image";
 import * as Yup from "yup";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function SignUpChildren() {
   return (
@@ -65,7 +66,17 @@ export default function SignUpChildren() {
             <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
             <FormikTextField name="displayName" label="Display/nick name" fullWidth sx={{ mt: 1.5 }} />
             <FormikDateField name="birthDate" label="D.O.B." fullWidth sx={{ mt: 1.5 }} />
-            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
+            <Button
+              type="submit"
+              variant="outlined"
+              startIcon={<AddCircleOutlineIcon />}
+              color="grey"
+              fullWidth
+              sx={{ mx: "auto", mt: 6 }}
+            >
+              Add another child
+            </Button>
+            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 1.5 }}>
               Continue
             </Button>
           </Form>
