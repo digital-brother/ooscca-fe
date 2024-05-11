@@ -9,7 +9,7 @@ import {
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DateField, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from "dayjs";
@@ -146,6 +146,33 @@ export function FormikTimeField(props) {
         {...field}
         value={displayValue}
         onChange={onChange}
+        error={meta.touched && Boolean(meta.error)}
+        helperText={meta.touched && meta.error}
+        {...props}
+      />
+    </LocalizationProvider>
+  );
+}
+
+export function FormikDateField({ label, ...props }) {
+  const [field, meta, helpers] = useField(props);
+
+  function onChange(newValue) {
+    const isValidDayjs = dayjs.isDayjs(newValue) && newValue.isValid();
+    if (isValidDayjs) helpers.setValue(newValue.format("YYYY-MM-DD"));
+    else helpers.setValue(newValue);
+  }
+
+  const isValidDayjs = typeof field.value === "string";
+  const displayValue = isValidDayjs ? dayjs(field.value, "YYYY-MM-DD") : field.value;
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+      <DateField
+        label={label}
+        value={displayValue}
+        onChange={onChange}
+        onBlur={field.onBlur}
         error={meta.touched && Boolean(meta.error)}
         helperText={meta.touched && meta.error}
         {...props}

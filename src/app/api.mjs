@@ -13,6 +13,7 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
+const SCHOOLS_PATH = "/schools";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -175,5 +176,11 @@ export async function createBooking(data) {
 export async function deleteBooking(bookingId) {
   const url = `${BOOKINGS_PATH}/${bookingId}/`;
   const response = await client.delete(url);
+  return response.data;
+}
+
+// SCHOOLS
+export async function getSchools() {
+  const response = await client.get(`${SCHOOLS_PATH}/`);
   return response.data;
 }

@@ -59,7 +59,7 @@ export default function SignUpDetails() {
             <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
             <FormikTextField name="mobile" label="Mobile number" fullWidth sx={{ mt: 1.5 }} />
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
-              Sign up with email
+              Continue
             </Button>
           </Form>
         </Formik>
