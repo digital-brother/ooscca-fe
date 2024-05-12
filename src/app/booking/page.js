@@ -9,8 +9,15 @@ import dayjs from "dayjs";
 
 export const SelectedDateContext = createContext({});
 
+function getSelectedDayDefault() {
+  const today = dayjs.utc();
+  if (today.day() === 6) return today.add(2, "day");
+  else if (today.day() === 0) return today.add(1, "day");
+  else return today;
+}
+
 export default function BookingPage() {
-  const [selectedDate, setSelectedDate] = useState(dayjs.utc());
+  const [selectedDate, setSelectedDate] = useState(getSelectedDayDefault());
   const ActivitiesCalendarRef = useRef(null);
 
   return (

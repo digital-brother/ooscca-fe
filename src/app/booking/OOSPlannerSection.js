@@ -29,6 +29,7 @@ import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { SelectedDateContext } from "./page";
+import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
 
 dayjs.extend(weekday);
 
@@ -184,17 +185,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 function FamilyBookings() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-
-  const getDisplayedWeekModayDate = date => {
-    let displayedWeekModayDate = date.startOf('week').add(1, 'day');
-    if (date.weekday() === 6 || date.weekday() === 0) {
-      displayedWeekModayDate = date.add(7, 'days').startOf('week').add(1, 'day');
-    }
-
-    return displayedWeekModayDate;
-  };
-
-  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, 'day'));
+  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
   const { data: children } = useQuery("children", getChildren);
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
@@ -237,7 +228,9 @@ function FamilyBookings() {
           <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
             {weekDates.map((date, index) => (
               <StyledHeaderTableCell key={index} align="center">
-                <Box sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}>
+                <Box
+                  sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}
+                >
                   {formatDate(date)}
                 </Box>
               </StyledHeaderTableCell>

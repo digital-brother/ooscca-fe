@@ -47,16 +47,24 @@ function PickerDate({ date, setSelectedDate, isSelectedDate }) {
   );
 }
 
-function DateSwitcher({ selectedDate, setSelectedDate }) {
-  const dayOfWeek = selectedDate.day();
+export function getDisplayedWeekModayDate(date) {
+  const dayOfWeek = date.day();
 
-  let monday;
-  if (dayOfWeek === 0 || dayOfWeek === 6) {
-    monday = selectedDate.startOf("week").add(1, "day").add(1, "week");
+  let displayedWeekModayDate;
+  if (dayOfWeek === 6) {
+    displayedWeekModayDate = date.add(2, "day");
+  } else if (dayOfWeek === 0) {
+    displayedWeekModayDate = date.add(1, "day");
   } else {
-    monday = selectedDate.startOf("week").add(1, "day");
+    displayedWeekModayDate = date.startOf("week").add(1, "day");
   }
-  const weekDates = Array.from({ length: 5 }, (_, i) => monday.add(i, "day"));
+
+  return displayedWeekModayDate;
+}
+
+function DateSwitcher({ selectedDate, setSelectedDate }) {
+  const displayedWeekModayDate = getDisplayedWeekModayDate(selectedDate);
+  const weekDates = Array.from({ length: 5 }, (_, i) => displayedWeekModayDate.add(i, "day"));
 
   const isSameMonth = weekDates[0].month() === weekDates[weekDates.length - 1].month();
   const startMonthName = weekDates[0].format("MMMM");
@@ -95,8 +103,8 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 export function ActivityCard({ activity, targetDate }) {
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   return (
-    <Stack sx={{ height: '100%', border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
-      <Box sx={{ height: 200, position: "relative"}}>
+    <Stack sx={{ height: "100%", border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
+      <Box sx={{ height: 200, position: "relative" }}>
         {activity?.imageUrl ? (
           <Image alt="Activity image" src={activity?.imageUrl} fill sizes="351px" style={{ objectFit: "cover" }} />
         ) : (
@@ -175,7 +183,6 @@ export function ActivityCard({ activity, targetDate }) {
   );
 }
 
-
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [viewportRef, embla] = useEmblaCarousel({ align: "start", loop: true });
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(embla);
@@ -208,14 +215,10 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
         </IconButton>
 
         {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              isSelected={index === selectedIndex}
-              onClick={() => onDotButtonClick(index)}
-            />
-          ))}
+          <DotButton key={index} isSelected={index === selectedIndex} onClick={() => onDotButtonClick(index)} />
+        ))}
 
-        <IconButton onClick={scrollNext} >
+        <IconButton onClick={scrollNext}>
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
@@ -224,9 +227,8 @@ export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
 }
 
 export function EmblaSlide({ emblaSlideSx: emblaSlideSxOuter, children }) {
-
   const emblaSlideSx = {
-    flex: {xs: '0 0 100%', sm: '0 0 50%', md: `0 0 ${100/3}%`},
+    flex: { xs: "0 0 100%", sm: "0 0 50%", md: `0 0 ${100 / 3}%` },
     minWidth: 0,
     pr: 2,
     ...emblaSlideSxOuter,
@@ -264,7 +266,7 @@ function ActivitiesList({ sx, selectedDate, meridiem }) {
       {status === "success" && matchingActivities && !_.isEmpty(matchingActivities) && (
         <EmblaContainer emblaSx={{ mt: 2 }}>
           {matchingActivities.map((activity) => (
-            <EmblaSlide key={activity.id} >
+            <EmblaSlide key={activity.id}>
               <ActivityCard activity={activity} targetDate={formatDate(selectedDate)} />
             </EmblaSlide>
           ))}
