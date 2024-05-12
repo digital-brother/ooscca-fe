@@ -7,54 +7,64 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
+import Image from 'next/image';
 
 
-function SignUpForm() {
-  const theme = useTheme();
-
+function SignUpField() {
   return (
-    <Box sx={{flex: 1, textAlign: {xs: "center", md: "left"}}}>
-      <Typography variant="h2">Easy to get started. And it’s free.</Typography>
-      <Box sx={{mt: 3, mb: 1}}>
-        <TextField label="Email address" variant="outlined" size="small" sx={{mr: 2, mb: 1}}/>
-        <Button variant="contained" color="orange" size="large">Sign up</Button>
-      </Box>
-
-      <Box sx={{display: "flex", alignItems: "center", justifyContent: {xs: "center", md: "left"}}}>
-        <Checkbox size="small" sx={{ml: -1}}/>
-        <Typography variant="body2" color="text.secondary">
-          I accept the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>
-        </Typography>
-      </Box>
-
-      <Divider sx={{mt: 2}}/>
-      <Typography variant="h6" fontWeight="bold" mt={2}>
-        Already using OOSCCA? &nbsp;
-        <span style={{color: theme.palette.orange.main}}>Sign in</span>
-      </Typography>
+    <Box sx={{ mt: 3, mb: 1, display: 'flex', alignItems: 'center' }}>
+      <TextField
+        label="Email address"
+        variant="outlined"
+        size="small"
+        sx={{ width: '70%', mr: 2 }}
+      />
+      <Button variant="contained" color="orange" size="large" sx={{ height: '100%', minWidth: 'auto' }}>
+        Sign up
+      </Button>
     </Box>
-  )
+  );
 }
 
-export default function SignUp() {
+function SignUpForm({ subheading, heading1, heading2, bodyText }) {
+  const theme = useTheme();
   return (
-    <Container sx={{pt: {xs: 5, md: 10}}}>
-      <Grid container spacing={{xs: 10, md: 5}} sx={{
-        textAlign: "center",
-      }}>
+    <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
+      {subheading && <Typography variant="subheading">{subheading}</Typography>}
+      {heading1 && <Typography mt={3} variant="h2">{heading1}</Typography>}
+      {heading2 && <Typography variant="h2">{heading2}</Typography>}
+      {bodyText && <Typography mt={4} variant="h7">{bodyText}</Typography>}
+      <SignUpField />
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", md: "left" } }}>
+      <Checkbox size="small" sx={{ ml: -1 }} />
+      <Typography variant="body2" color="text.secondary">
+        I accept the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>
+      </Typography>
+      <Divider sx={{ mt: 2 }} />
+      <Typography variant="h6" fontWeight="bold" mt={2}>
+        Already using OOSCCA? &nbsp;
+        <span style={{ color: theme.palette.orange.main }}>Sign in</span>
+      </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+function SignUp({ subheading, heading1, heading2, bodyText, image }) {
+  return (
+    <Container sx={{ pt: { xs: 5, md: 10 } }}>
+      <Grid container spacing={{ xs: 10, md: 5 }} sx={{ textAlign: 'center' }}>
         <Grid item xs={12} md={6}>
-          <SignUpForm/>
+        <SignUpForm subheading={subheading} heading1={heading1} heading2={heading2} bodyText={bodyText} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Box sx={{
-            maxWidth: {xs: 370, md: 520},
-            mx: "auto",
-            mb: -1,
-          }}>
-            <img src="/signup.svg" style={{width: "100%"}}/>
+          <Box sx={{ maxWidth: { xs: 370, md: 520 }, mx: 'auto', mb: -1 }}>
+            <Image src={image} width={500} height={300}/>
           </Box>
         </Grid>
       </Grid>
     </Container>
-  )
+  );
 }
+
+export default SignUp;

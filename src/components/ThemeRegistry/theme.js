@@ -61,6 +61,14 @@ const theme = createTheme({
       fontWeight: 700,
       fontFamily: montserrat.style.fontFamily,
     },
+    h7: {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: 400,
+      lineHeight: "32px",
+      textAlign: "left",
+      color: "#6C757D",
+    },
     subtitle1: {
       fontFamily: montserrat.style.fontFamily,
       fontSize: "1rem", // 16px

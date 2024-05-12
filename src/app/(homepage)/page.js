@@ -14,11 +14,26 @@ export default function Homepage() {
     <>
       <Intro/>
       <ClientSchools/>
-      <Demo/>
+      <Demo
+        subheading= "Directly from the calendar"
+        heading= "Discover the ease of booking activities without the text and email tennis"
+        steps= {[
+          "Find the activities your child will love",
+          "Add them to child's calendar",
+          "Review and then pay for all in one click",
+        ]}
+        image= "/demo.png"
+      />
       <Security/>
       <Benefits/>
       <HomepageTabs/>
-      <SignUp/>
+      <SignUp
+        subheading=""
+        heading1="Easy to get started. And it's free."
+        heading2=""
+        bodyText=""
+        image="/signup.svg"
+      />
     </>
   )
 }
