@@ -7,19 +7,21 @@ import Image from "next/image";
 import * as Yup from "yup";
 import Link from "@/app/(homepage)/components/Link";
 import { FormikCheckboxField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { useRouter } from "next/navigation";
 
 export function SignUpContainer({ children }) {
+  const router = useRouter();
   return (
     <Box
       sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, textAlign: "center" }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Image src="/logo.png" alt="Logo" width={160} height={36} />
-        <IconButton size="small">
+        <IconButton size="small" onClick={() => router.back()}>
           <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
         </IconButton>
       </Box>
-      { children }
+      {children}
     </Box>
   );
 }

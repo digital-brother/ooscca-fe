@@ -25,7 +25,7 @@ export default function SignUpChildren({ goToNextStep }) {
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
       <SignUpContainer>
         <Typography variant="h5" sx={{ mt: 6, textAlign: "center" }}>
-          Children’s details
+          Children&apos;s details
         </Typography>
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
           Add your child(ren)&apos;s details here and we&apos;ll do the rest
