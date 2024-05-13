@@ -8,7 +8,7 @@ import SignUpChildren from "./components/SignUpChildren";
 
 export default function SignUp() {
   const [currentStep, setCurrentStep] = useState(0);
-  const steps = [SignUpAccount, SignUpChildren, SignUpDetails, SignUpEmailConfirmation];
+  const steps = [SignUpAccount, SignUpDetails, SignUpChildren, SignUpEmailConfirmation];
   const CurrentStep = steps[currentStep];
   return <CurrentStep goToNextStep={() => setCurrentStep((currentStep) => currentStep + 1)} />;
 }

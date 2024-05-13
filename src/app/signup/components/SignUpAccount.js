@@ -1,19 +1,19 @@
 "use client";
 
+import Link from "@/app/(homepage)/components/Link";
+import { FormikCheckboxField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import Image from "next/image";
-import * as Yup from "yup";
-import Link from "@/app/(homepage)/components/Link";
-import { FormikCheckboxField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { useRouter } from "next/navigation";
+import * as Yup from "yup";
 
-export function SignUpContainer({ children }) {
+export function SignUpContainer({ children, sx }) {
   const router = useRouter();
   return (
     <Box
-      sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, textAlign: "center" }}
+      sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, ...sx }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Image src="/logo.png" alt="Logo" width={160} height={36} />
@@ -29,7 +29,7 @@ export function SignUpContainer({ children }) {
 export default function SignUpAccount({ goToNextStep }) {
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer>
+      <SignUpContainer sx={{textAlign: "center"}}>
         <Typography variant="h5" sx={{ mt: 6 }}>
           Sign in or create an account
         </Typography>

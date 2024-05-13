@@ -35,7 +35,6 @@ export default function SignUpChildren({ goToNextStep }) {
           initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
           onSubmit={(values) => {
             console.log(values);
-            goToNextStep();
           }}
           validationSchema={Yup.object({
             firstName: Yup.string()
@@ -78,42 +77,56 @@ export default function SignUpChildren({ goToNextStep }) {
             classYear: Yup.string().label("Class/year").required(),
           })}
         >
-          <Form>
-            <FormikTextField name="firstName" label="First name" fullWidth sx={{ mt: 1.5 }} />
-            <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
-            <FormikTextField name="displayName" label="Display/nick name" fullWidth sx={{ mt: 1.5 }} />
-            <SmFlex sx={{ gap: 1.5, mt: 1.5 }}>
-              <FormikDateField name="birthDate" label="Date of birth" fullWidth disableFuture />
-              <FormikSelect name="school" label="School" fullwidth>
-                {(schools || []).map((school) => (
-                  <MenuItem key={school.id} value={school.id}>
-                    {school.name}
+          {(formik) => (
+            <Form>
+              <FormikTextField name="firstName" label="First name" fullWidth sx={{ mt: 1.5 }} />
+              <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
+              <FormikTextField name="displayName" label="Display/nick name" fullWidth sx={{ mt: 1.5 }} />
+              <SmFlex sx={{ gap: 1.5, mt: 1.5 }}>
+                <FormikDateField name="birthDate" label="Date of birth" fullWidth disableFuture />
+                <FormikSelect name="school" label="School" fullwidth>
+                  {(schools || []).map((school) => (
+                    <MenuItem key={school.id} value={school.id}>
+                      {school.name}
+                    </MenuItem>
+                  ))}
+                </FormikSelect>
+              </SmFlex>
+              <FormikSelect name="classYear" label="Class/year" fullwidth sx={{ mt: 1.5 }}>
+                {classesYears.map((classYear, index) => (
+                  <MenuItem key={index} value={classYear}>
+                    {classYear}
                   </MenuItem>
                 ))}
               </FormikSelect>
-            </SmFlex>
-            <FormikSelect name="classYear" label="Class/year" fullwidth sx={{ mt: 1.5 }}>
-              {classesYears.map((classYear, index) => (
-                <MenuItem key={index} value={classYear}>
-                  {classYear}
-                </MenuItem>
-              ))}
-            </FormikSelect>
 
-            <Button
-              type="submit"
-              variant="outlined"
-              startIcon={<AddCircleOutlineIcon />}
-              color="grey"
-              fullWidth
-              sx={{ mx: "auto", mt: 6 }}
-            >
-              Add another child
-            </Button>
-            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 1.5 }}>
-              Continue
-            </Button>
-          </Form>
+              <Button
+                onClick={() => {
+                  formik.submitForm();
+                  if (formik.isValid) formik.resetForm();
+                }}
+                variant="outlined"
+                startIcon={<AddCircleOutlineIcon />}
+                color="grey"
+                fullWidth
+                sx={{ mx: "auto", mt: 6 }}
+              >
+                Add another child
+              </Button>
+              <Button
+                onClick={() => {
+                  formik.submitForm();
+                  if (formik.isValid) goToNextStep();
+                }}
+                variant="contained"
+                color="green"
+                fullWidth
+                sx={{ mt: 1.5 }}
+              >
+                Continue
+              </Button>
+            </Form>
+          )}
         </Formik>
       </SignUpContainer>
     </Container>
