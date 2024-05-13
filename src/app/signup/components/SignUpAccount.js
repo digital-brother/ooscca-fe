@@ -8,18 +8,26 @@ import * as Yup from "yup";
 import Link from "@/app/(homepage)/components/Link";
 import { FormikCheckboxField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
 
-export default function SignUp() {
+export function SignUpContainer({ children }) {
+  return (
+    <Box
+      sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, textAlign: "center" }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Image src="/logo.png" alt="Logo" width={160} height={36} />
+        <IconButton size="small">
+          <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
+        </IconButton>
+      </Box>
+      { children }
+    </Box>
+  );
+}
+
+export default function SignUpAccount({ goToNextStep }) {
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <Box
-        sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, textAlign: "center" }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Image src="/logo.png" alt="Logo" width={160} height={36} />
-          <IconButton size="small">
-            <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
-          </IconButton>
-        </Box>
+      <SignUpContainer>
         <Typography variant="h5" sx={{ mt: 6 }}>
           Sign in or create an account
         </Typography>
@@ -27,7 +35,10 @@ export default function SignUp() {
           Enjoy smoother planning, minimises personal and work scheduling conflicts, and maximises healthy family time.
         </Typography>
         <Formik
-          onSubmit={(values) => console.log(values)}
+          onSubmit={(values) => {
+            console.log(values);
+            goToNextStep();
+          }}
           initialValues={{ email: "", password1: "", password2: "", termsConditionsAccepted: false }}
           validationSchema={Yup.object({
             email: Yup.string().email("Invalid email address").required("Required"),
@@ -44,8 +55,7 @@ export default function SignUp() {
               .label("Re-enter password")
               .oneOf([Yup.ref("password1")], "Passwords must match")
               .required(),
-            termsConditionsAccepted: Yup.boolean()
-              .oneOf([true], "You must accept the Terms and Conditions")
+            termsConditionsAccepted: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions"),
           })}
         >
           <Form>
@@ -67,7 +77,7 @@ export default function SignUp() {
             </Button>
           </Form>
         </Formik>
-      </Box>
+      </SignUpContainer>
     </Container>
   );
 }
