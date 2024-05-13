@@ -1,22 +1,15 @@
 "use client";
 
 import { FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
-import { Box, Button, Container, IconButton, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import Image from "next/image";
 import * as Yup from "yup";
+import { SignUpContainer } from "./SignUpAccount";
 
-export default function SignUpDetails() {
+export default function SignUpDetails({ goToNextStep }) {
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <Box sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Image src="/logo.png" alt="Logo" width={160} height={36} />
-          <IconButton size="small">
-            <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
-          </IconButton>
-        </Box>
+      <SignUpContainer>
         <Typography variant="h5" sx={{ mt: 6, textAlign: "center" }}>
           Welcome to OOSCCA
         </Typography>
@@ -26,7 +19,10 @@ export default function SignUpDetails() {
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Your details</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", mobile: "" }}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={(values) => {
+            console.log(values);
+            goToNextStep();
+          }}
           validationSchema={Yup.object({
             firstName: Yup.string()
               .label("First name")
@@ -63,7 +59,7 @@ export default function SignUpDetails() {
             </Button>
           </Form>
         </Formik>
-      </Box>
+      </SignUpContainer>
     </Container>
   );
 }
