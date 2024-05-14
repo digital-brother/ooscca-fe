@@ -55,8 +55,8 @@ export function createHandleSubmit({ mutation, onSuccess = () => {}, throwError 
   return async function handleSubmit(values, { setErrors, setStatus }) {
     setStatus(null);
     try {
-      await mutation.mutateAsync(values);
-      onSuccess();
+      const data = await mutation.mutateAsync(values);
+      onSuccess(data);
     } catch (error) {
       const { fieldErrors, formErrors } = getFormAndFieldErrors(error);
       setErrors(fieldErrors);
