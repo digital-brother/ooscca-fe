@@ -1,8 +1,6 @@
 import axios from "axios";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
-// TODO: Remove once auth is set
-const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 
 const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
@@ -14,13 +12,12 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
 const SCHOOLS_PATH = "/schools";
+const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
 
 const client = axios.create({
   baseURL: API_HOST,
+  withCredentials: true, 
   timeout: 1000,
-  headers: {
-    Authorization: `Token ${AUTH_TOKEN}`,
-  },
 });
 
 
@@ -182,5 +179,13 @@ export async function deleteBooking(bookingId) {
 // SCHOOLS
 export async function getSchools() {
   const response = await client.get(`${SCHOOLS_PATH}/`);
+  return response.data;
+}
+
+
+// SIGNUP
+export async function signupAccount(data) {
+  const url = `${SIGNUP_ACCOUNT_PATH}/`;
+  const response = await client.post(url, data);
   return response.data;
 }

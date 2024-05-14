@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "@/app/(homepage)/components/Link";
-import { FormikCheckboxField, FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { FormikCheckboxField, FormikTextField, FormikErrors, createHandleSubmit } from "@/app/activities/[activityId]/edit/components/formikFields";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { useMutation } from "react-query";
+import { signupAccount } from "@/app/api.mjs";
 
 export function SignUpContainer({ children, sx }) {
   const router = useRouter();
@@ -27,6 +29,14 @@ export function SignUpContainer({ children, sx }) {
 }
 
 export default function SignUpAccount({ goToNextStep }) {
+
+  const mutation = useMutation(signupAccount);
+
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
+    handle(values, formikHelpers);
+  }
+  
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
       <SignUpContainer sx={{textAlign: "center"}}>
@@ -37,10 +47,7 @@ export default function SignUpAccount({ goToNextStep }) {
           Enjoy smoother planning, minimises personal and work scheduling conflicts, and maximises healthy family time.
         </Typography>
         <Formik
-          onSubmit={(values) => {
-            console.log(values);
-            goToNextStep();
-          }}
+          onSubmit={handleSubmit}
           initialValues={{ email: "", password1: "", password2: "", termsConditionsAccepted: false }}
           validationSchema={Yup.object({
             email: Yup.string().email("Invalid email address").required("Required"),
@@ -77,6 +84,7 @@ export default function SignUpAccount({ goToNextStep }) {
             <Button type="submit" variant="contained" color="grey" fullWidth sx={{ mt: 1 }}>
               Sign up with email
             </Button>
+            <FormikErrors />
           </Form>
         </Formik>
       </SignUpContainer>
