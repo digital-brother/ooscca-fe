@@ -19,10 +19,14 @@ export const AUTH_TOKEN_NAME = "authToken";
 
 const client = axios.create({
   baseURL: API_HOST,
-  // withCredentials: true, 
   timeout: 1000,
 });
 
+client.interceptors.request.use((config) => {
+  const authToken = localStorage.getItem(AUTH_TOKEN_NAME);
+  if (authToken) config.headers.Authorization = `Token ${authToken}`;
+  return config;
+});
 
 // TODO: Rationalize mutation and api layer (duplicate function code)
 // IMAGES
@@ -100,7 +104,7 @@ export async function patchDiscount(activityId, discountId, data) {
 
 // ACTIVITIES FOR DATE
 export async function getActivitiesForDate(date) {
-  const dateStr = date.format("YYYY-MM-DD")
+  const dateStr = date.format("YYYY-MM-DD");
   const url = `${ACTIVITIES_PATH}/${dateStr}/`;
   const response = await client.get(url);
   return response.data;
@@ -160,9 +164,9 @@ export async function getChildren() {
 export async function getBookings(dateAfter, dateBefore) {
   const response = await client.get(BOOKINGS_PATH, {
     params: {
-      dateAfter: dateAfter.format('YYYY-MM-DD'),
-      dateBefore: dateBefore.format('YYYY-MM-DD'),
-    }
+      dateAfter: dateAfter.format("YYYY-MM-DD"),
+      dateBefore: dateBefore.format("YYYY-MM-DD"),
+    },
   });
   return response.data;
 }
@@ -184,7 +188,6 @@ export async function getSchools() {
   const response = await client.get(`${SCHOOLS_PATH}/`);
   return response.data;
 }
-
 
 // AUTH
 export async function signupAccount(data) {
