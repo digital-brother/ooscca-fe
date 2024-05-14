@@ -14,13 +14,12 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
 const SCHOOLS_PATH = "/schools";
+const SIGNUP_PATH = "/dj-rest-auth/registration";
 
 const client = axios.create({
   baseURL: API_HOST,
+  withCredentials: true, 
   timeout: 1000,
-  headers: {
-    Authorization: `Token ${AUTH_TOKEN}`,
-  },
 });
 
 
@@ -182,5 +181,13 @@ export async function deleteBooking(bookingId) {
 // SCHOOLS
 export async function getSchools() {
   const response = await client.get(`${SCHOOLS_PATH}/`);
+  return response.data;
+}
+
+
+// SIGNUP
+export async function signupStep1(data) {
+  const url = `${SIGNUP_PATH}/`;
+  const response = await client.post(url, data);
   return response.data;
 }
