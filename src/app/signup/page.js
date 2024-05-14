@@ -6,9 +6,18 @@ import { Form, Formik } from "formik";
 import Image from "next/image";
 import * as Yup from "yup";
 import Link from "../(homepage)/components/Link";
-import { FormikCheckboxField, FormikTextField } from "../activities/[activityId]/edit/components/formikFields";
+import { FormikCheckboxField, FormikTextField, FormikErrors, createHandleSubmit} from "../activities/[activityId]/edit/components/formikFields";
+import { useMutation } from "react-query";
+import { signupStep1 } from "../api.mjs";
 
 export default function SignUp() {
+  const mutation = useMutation((value) => signupStep1({ email: value.email, password1: value.password1, password2: value.password2 }));
+  
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, throwError: true });
+    handle(values, formikHelpers);
+  }
+
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
       <Box
@@ -21,7 +30,7 @@ export default function SignUp() {
           </IconButton>
         </Box>
         <Formik
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleSubmit}
           initialValues={{ email: "", password1: "", password2: "", termsConditionsAccepted: false }}
           validationSchema={Yup.object({
             email: Yup.string().email("Invalid email address").required("Required"),
@@ -65,6 +74,7 @@ export default function SignUp() {
             <Button type="submit" variant="contained" color="grey" fullWidth sx={{ mt: 1 }}>
               Sign up with email
             </Button>
+            <FormikErrors />
           </Form>
         </Formik>
       </Box>
