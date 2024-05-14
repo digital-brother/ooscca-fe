@@ -1,8 +1,6 @@
 import axios from "axios";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
-// TODO: Remove once auth is set
-const AUTH_TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
 
 const PROVIDERS_PATH = "/providers";
 const ACTIVITY_TYPES_PATH = "/activity-types";
