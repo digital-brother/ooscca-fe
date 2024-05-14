@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { useMutation } from "react-query";
-import { signupStep1 } from "../../api.mjs";
+import { signupAccount } from "@/app/api.mjs";
 
 export function SignUpContainer({ children, sx }) {
   const router = useRouter();
@@ -30,10 +30,10 @@ export function SignUpContainer({ children, sx }) {
 
 export default function SignUpAccount({ goToNextStep }) {
 
-  const mutation = useMutation((value) => signupStep1({ email: value.email, password1: value.password1, password2: value.password2 }));
+  const mutation = useMutation(signupAccount);
 
   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep, throwError: true });
+    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
     handle(values, formikHelpers);
   }
   
