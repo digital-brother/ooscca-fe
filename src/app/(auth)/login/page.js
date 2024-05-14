@@ -8,21 +8,21 @@ import {
 import { AUTH_TOKEN_NAME, login } from "@/app/api.mjs";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useSnackbar } from "notistack";
+import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import * as Yup from "yup";
 import { SignUpContainer } from "../signup/components/SignUpAccount";
 
 export default function Login() {
   const mutation = useMutation(login);
-  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   async function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({
       mutation,
       onSuccess: ({ key: token }) => {
         localStorage.setItem(AUTH_TOKEN_NAME, token);
-        enqueueSnackbar("Login successful", { variant: "success" });
+        router.push("/bookings");
       },
     });
     handle(values, formikHelpers);
