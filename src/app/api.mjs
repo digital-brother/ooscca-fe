@@ -15,6 +15,8 @@ const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
 
+export const AUTH_TOKEN_NAME = "authToken";
+
 const client = axios.create({
   baseURL: API_HOST,
   // withCredentials: true, 

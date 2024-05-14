@@ -5,23 +5,23 @@ import {
   FormikTextField,
   createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
-import { login } from "@/app/api.mjs";
+import { AUTH_TOKEN_NAME, login } from "@/app/api.mjs";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
+import { useSnackbar } from "notistack";
 import { useMutation } from "react-query";
 import * as Yup from "yup";
 import { SignUpContainer } from "../signup/components/SignUpAccount";
-import { useSnackbar } from "notistack";
 
 export default function Login() {
   const mutation = useMutation(login);
-    const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   async function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({
       mutation,
       onSuccess: ({ key: token }) => {
-        localStorage.setItem("authToken", token);
+        localStorage.setItem(AUTH_TOKEN_NAME, token);
         enqueueSnackbar("Login successful", { variant: "success" });
       },
     });
