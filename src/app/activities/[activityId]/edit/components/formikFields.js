@@ -232,11 +232,11 @@ export function FormikSelect({ name, items, label, sx, variant, fullwidth, child
   );
 }
 
-export function FormikErrors() {
+export function FormikErrors({ sx }) {
   const { status } = useFormikContext();
   if (status?.formErrors)
     return (
-      <Box>
+      <Box sx={sx}>
         {status.formErrors.map((error, index) => (
           <Error key={index}>{error}</Error>
         ))}

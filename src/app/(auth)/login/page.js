@@ -48,10 +48,10 @@ export default function Login() {
           <Form>
             <FormikTextField name="email" label="Email Address" fullWidth sx={{ mt: 3 }} />
             <FormikTextField name="password" label="Password" type="password" fullWidth sx={{ mt: 1.5 }} />
+            <FormikErrors sx={{ mt: 1.5 }} />
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
               Login
             </Button>
-            <FormikErrors />
           </Form>
         </Formik>
       </SignUpContainer>
