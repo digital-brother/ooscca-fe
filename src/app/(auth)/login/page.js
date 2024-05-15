@@ -22,7 +22,7 @@ export default function Login() {
       mutation,
       onSuccess: ({ key: token }) => {
         localStorage.setItem(AUTH_TOKEN_NAME, token);
-        router.push("/bookings");
+        router.push("/booking");
       },
     });
     handle(values, formikHelpers);
