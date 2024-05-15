@@ -20,7 +20,8 @@ export const AUTH_TOKEN_NAME = "authToken";
 
 const client = axios.create({
   baseURL: API_HOST,
-  withCredentials: true, 
+  withCredentials: true,
+  timeout: 1000,
 });
 
 client.interceptors.request.use((config) => {
