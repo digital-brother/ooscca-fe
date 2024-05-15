@@ -1,12 +1,22 @@
 "use client";
 
-import { FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { FormikTextField, createHandleSubmit, FormikErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
+import { useMutation } from "react-query";
+import { signupDetails } from "@/app/api.mjs";
 
 export default function SignUpDetails({ goToNextStep }) {
+
+  const mutation = useMutation(signupDetails);
+
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
+    handle(values, formikHelpers);
+  }
+
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
       <SignUpContainer>
@@ -18,11 +28,8 @@ export default function SignUpDetails({ goToNextStep }) {
         </Typography>
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Your details</Typography>
         <Formik
-          initialValues={{ firstName: "", lastName: "", mobile: "" }}
-          onSubmit={(values) => {
-            console.log(values);
-            goToNextStep();
-          }}
+          initialValues={{ firstName: "", lastName: "", phoneNumber: "" }}
+          onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
               .label("First name")
@@ -44,7 +51,7 @@ export default function SignUpDetails({ goToNextStep }) {
               )
               .min(2)
               .max(50),
-            mobile: Yup.string()
+            phoneNumber: Yup.string()
               .label("Mobile number")
               .required()
               .matches(/^(07\d{9}|\+447\d{9})$/, "Mobile number must be a valid London mobile number"),
@@ -53,10 +60,11 @@ export default function SignUpDetails({ goToNextStep }) {
           <Form>
             <FormikTextField name="firstName" label="First name" fullWidth sx={{ mt: 1.5 }} />
             <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
-            <FormikTextField name="mobile" label="Mobile number" fullWidth sx={{ mt: 1.5 }} />
+            <FormikTextField name="phoneNumber" label="Mobile number" fullWidth sx={{ mt: 1.5 }} />
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
               Continue
             </Button>
+            <FormikErrors />
           </Form>
         </Formik>
       </SignUpContainer>
