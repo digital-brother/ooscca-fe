@@ -28,7 +28,7 @@ export default function SignUpDetails({ goToNextStep }) {
         </Typography>
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Your details</Typography>
         <Formik
-          initialValues={{ firstName: "", lastName: "", phoneNumber: "" }}
+          initialValues={{ firstName: "", lastName: "", mobile: "" }}
           onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
@@ -51,7 +51,7 @@ export default function SignUpDetails({ goToNextStep }) {
               )
               .min(2)
               .max(50),
-            phoneNumber: Yup.string()
+            mobile: Yup.string()
               .label("Mobile number")
               .required()
               .matches(/^(07\d{9}|\+447\d{9})$/, "Mobile number must be a valid London mobile number"),
@@ -60,7 +60,7 @@ export default function SignUpDetails({ goToNextStep }) {
           <Form>
             <FormikTextField name="firstName" label="First name" fullWidth sx={{ mt: 1.5 }} />
             <FormikTextField name="lastName" label="Last name" fullWidth sx={{ mt: 1.5 }} />
-            <FormikTextField name="phoneNumber" label="Mobile number" fullWidth sx={{ mt: 1.5 }} />
+            <FormikTextField name="mobile" label="Mobile number" fullWidth sx={{ mt: 1.5 }} />
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
               Continue
             </Button>
