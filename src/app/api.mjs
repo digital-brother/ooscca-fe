@@ -14,12 +14,16 @@ const BOOKINGS_PATH = "/bookings";
 const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
+const SIGNUP_DATAILS_PATH = "/signup-details";
 
 export const AUTH_TOKEN_NAME = "authToken";
+export const USER_ID = "userId";
 
 const client = axios.create({
   baseURL: API_HOST,
   timeout: 1000,
+  withCredentials: true,
+  // timeout: 1000,
 });
 
 client.interceptors.request.use((config) => {
@@ -199,5 +203,12 @@ export async function signupAccount(data) {
 export async function login(data) {
   const url = `${LOGIN_PATH}/`;
   const response = await client.post(url, data);
+  return response.data;
+}
+
+export async function signupDetails(data) {
+  const userId = localStorage.getItem(USER_ID);
+  const url = `${SIGNUP_DATAILS_PATH}/${userId}/`;
+  const response = await client.put(url, data);
   return response.data;
 }

@@ -19,10 +19,7 @@ export default function SignUpDetails({ goToNextStep }) {
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Your details</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", mobile: "" }}
-          onSubmit={(values) => {
-            console.log(values);
-            goToNextStep();
-          }}
+          onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
               .label("First name")
