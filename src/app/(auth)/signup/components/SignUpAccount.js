@@ -33,11 +33,9 @@ export default function SignUpAccount({ goToNextStep }) {
   const mutation = useMutation(signupAccount);
 
   async function handleSubmit(values, formikHelpers) {
-    console.log('data');
     const handle = createHandleSubmit({ mutation,
       onSuccess: (data) => {
       localStorage.setItem(USER_ID, data.userId);
-      console.log(data);
       goToNextStep();
     },
   });
