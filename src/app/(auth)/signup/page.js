@@ -19,7 +19,7 @@ export default function SignUp() {
     }
     const savedStep = localStorage.getItem('signup_current_step');
     setCurrentStep(savedStep ? parseInt(savedStep) : 0);
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (currentStep !== 0)
