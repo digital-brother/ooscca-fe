@@ -21,8 +21,7 @@ export const USER_ID = "userId";
 
 const client = axios.create({
   baseURL: API_HOST,
-  withCredentials: true,
-  // timeout: 1000,
+  timeout: 1000,
 });
 
 client.interceptors.request.use((config) => {
