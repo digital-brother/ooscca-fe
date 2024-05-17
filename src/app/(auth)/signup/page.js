@@ -10,25 +10,24 @@ import { AUTH_TOKEN_NAME } from "@/app/api.mjs";
 
 export default function SignUp() {
   const router = useRouter();
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     const authToken = localStorage.getItem(AUTH_TOKEN_NAME);
     if (authToken) {
       router.push('/');
     }
+    const savedStep = localStorage.getItem('signup_current_step');
+    setCurrentStep(savedStep ? parseInt(savedStep) : 0);
   }, [])
 
-  const [currentStep, setCurrentStep] = useState(() => {
-    const savedStep = localStorage.getItem('signup_current_step');
-    return savedStep ? parseInt(savedStep) : 0;
-  });
+  useEffect(() => {
+    if (currentStep !== 0)
+      localStorage.setItem('signup_current_step', currentStep);
+  }, [currentStep]);
 
   const steps = [SignUpAccount, SignUpDetails, SignUpChildren, SignUpEmailConfirmation];
   const CurrentStep = steps[currentStep];
-
-  useEffect(() => {
-    localStorage.setItem('signup_current_step', currentStep);
-  }, [currentStep]);
   
   return <CurrentStep goToNextStep={() => setCurrentStep((currentStep) => currentStep + 1)} />;
 }
