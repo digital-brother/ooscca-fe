@@ -15,6 +15,7 @@ const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
 const SIGNUP_DATAILS_PATH = "/signup-details";
+const SIGNUP_CHILDREN_PATH = "/signup-children";
 
 export const AUTH_TOKEN_NAME = "authToken";
 export const USER_ID = "userId";
@@ -208,5 +209,12 @@ export async function signupDetails(data) {
   const userId = localStorage.getItem(USER_ID);
   const url = `${SIGNUP_DATAILS_PATH}?userId=${userId}`;
   const response = await client.put(url, data);
+  return response.data;
+}
+
+export async function signupChildren(data) {
+  const userId = localStorage.getItem(USER_ID);
+  const url = `${SIGNUP_CHILDREN_PATH}?userId=${userId}`;
+  const response = await client.post(url, data);
   return response.data;
 }

@@ -4,6 +4,8 @@ import {
   FormikDateField,
   FormikSelect,
   FormikTextField,
+  FormikErrors,
+  createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { SmFlex } from "@/app/activities/[activityId]/edit/components/responsiveFlexes";
 import { getSchools } from "@/app/api.mjs";
@@ -14,12 +16,21 @@ import { Form, Formik } from "formik";
 import { useQuery } from "react-query";
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
+import { signupChildren } from "@/app/api.mjs";
+import { useMutation } from "react-query";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
 
   const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
   classesYears.unshift("Reception");
+
+  const mutation = useMutation(signupChildren);
+
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
+    handle(values, formikHelpers);
+  }
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
@@ -33,9 +44,7 @@ export default function SignUpChildren({ goToNextStep }) {
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Child 1</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
               .label("First name")
@@ -94,7 +103,7 @@ export default function SignUpChildren({ goToNextStep }) {
               </SmFlex>
               <FormikSelect name="classYear" label="Class/year" fullwidth sx={{ mt: 1.5 }}>
                 {classesYears.map((classYear, index) => (
-                  <MenuItem key={index} value={classYear}>
+                  <MenuItem key={index} value={index}>
                     {classYear}
                   </MenuItem>
                 ))}
@@ -116,7 +125,6 @@ export default function SignUpChildren({ goToNextStep }) {
               <Button
                 onClick={() => {
                   formik.submitForm();
-                  if (formik.isValid) goToNextStep();
                 }}
                 variant="contained"
                 color="green"
@@ -125,6 +133,7 @@ export default function SignUpChildren({ goToNextStep }) {
               >
                 Continue
               </Button>
+              <FormikErrors />
             </Form>
           )}
         </Formik>
