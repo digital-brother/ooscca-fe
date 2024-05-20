@@ -17,8 +17,8 @@ const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
 const SIGNUP_DATAILS_PATH = "/signup-details";
 const SIGNUP_CHILDREN_PATH = "/signup-children";
 
-export const AUTH_TOKEN_NAME = "authToken";
-export const USER_ID = "userId";
+export const AUTH_TOKEN_KEY = "authToken";
+export const USER_ID_KEY = "userId";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -26,7 +26,7 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
-  const authToken = localStorage.getItem(AUTH_TOKEN_NAME);
+  const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
   if (authToken) config.headers.Authorization = `Token ${authToken}`;
   return config;
 });
@@ -205,8 +205,7 @@ export async function login(data) {
   return response.data;
 }
 
-export async function signupDetails(data) {
-  const userId = localStorage.getItem(USER_ID);
+export async function signupDetails(userId, data) {
   const url = `${SIGNUP_DATAILS_PATH}?userId=${userId}`;
   const response = await client.put(url, data);
   return response.data;
