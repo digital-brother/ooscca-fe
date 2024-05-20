@@ -8,7 +8,7 @@ import SignUpEmailConfirmation from "./components/SignUpEmailConfirmation";
 import SignUpChildren from "./components/SignUpChildren";
 import { AUTH_TOKEN_NAME } from "@/app/api.mjs";
 
-const SIGNUP_CURRENT_STEP_KEY = 'signup_current_step';
+const signupCurrentStepKey = 'signup_current_step';
 
 export default function SignUp() {
   const router = useRouter();
@@ -19,17 +19,14 @@ export default function SignUp() {
     if (authToken) {
       router.push('/');
     }
-    const savedStep = localStorage.getItem(SIGNUP_CURRENT_STEP_KEY);
-    setCurrentStep(savedStep ? parseInt(savedStep) : 0);
+    const signupCurrentStep = localStorage.getItem(signupCurrentStepKey);
+    setCurrentStep(signupCurrentStep ? parseInt(signupCurrentStep) : 0);
   }, []);
 
   const goToNextStep = () => {
-    setCurrentStep((prevStep) => {
-      const nextStep = prevStep + 1;
-      localStorage.setItem(SIGNUP_CURRENT_STEP_KEY, nextStep);
-      return nextStep;
-    });
-  };
+    localStorage.setItem(signupCurrentStepKey, currentStep + 1);
+    setCurrentStep((prevStep) => prevStep + 1)
+    };
 
   const steps = [SignUpAccount, SignUpDetails, SignUpChildren, SignUpEmailConfirmation];
   const CurrentStep = steps[currentStep];
