@@ -6,11 +6,15 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
 import { useMutation } from "react-query";
-import { signupDetails } from "@/app/api.mjs";
+import { signupDetails, USER_ID_KEY } from "@/app/api.mjs";
+
+function getUserIdFromLocalStorage() {
+  return localStorage.getItem(USER_ID_KEY);
+}
 
 export default function SignUpDetails({ goToNextStep }) {
-
-  const mutation = useMutation(signupDetails);
+  const userId = getUserIdFromLocalStorage();
+  const mutation = useMutation((data) => signupDetails(userId, data));
 
   async function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});

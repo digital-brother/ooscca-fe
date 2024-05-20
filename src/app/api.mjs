@@ -204,8 +204,7 @@ export async function login(data) {
   return response.data;
 }
 
-export async function signupDetails(data) {
-  const userId = localStorage.getItem(USER_ID_KEY);
+export async function signupDetails(userId, data) {
   const url = `${SIGNUP_DATAILS_PATH}?userId=${userId}`;
   const response = await client.put(url, data);
   return response.data;
