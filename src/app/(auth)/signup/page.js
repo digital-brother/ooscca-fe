@@ -20,7 +20,8 @@ export default function SignUp() {
       router.push('/');
     }
     const signupCurrentStep = localStorage.getItem(SIGNUP_CURRENT_STEP_KEY);
-    setCurrentStep(signupCurrentStep ? parseInt(signupCurrentStep) : 0);
+    const step = signupCurrentStep ? parseInt(signupCurrentStep) : 0;
+    setCurrentStep(step);
   }, []);
 
   const goToNextStep = () => {
