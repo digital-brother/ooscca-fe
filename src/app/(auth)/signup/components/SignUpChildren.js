@@ -13,22 +13,34 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button, Container, MenuItem, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { Form, Formik } from "formik";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { useState } from "react"
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
-import { signupChildren } from "@/app/api.mjs";
-import { useMutation } from "react-query";
+import { signupChildren, USER_ID_KEY } from "@/app/api.mjs";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
+  const [stayOnPage, setStayOnPage] = useState(false);
+  const [childNumber, setChildNumber] = useState(1);
+  const userId = localStorage.getItem(USER_ID_KEY);
 
   const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
   classesYears.unshift("Reception");
 
-  const mutation = useMutation(signupChildren);
+  const mutation = useMutation((data) => signupChildren(userId, data));
 
   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
+    const handle = createHandleSubmit({ mutation,
+       onSuccess: () => {
+          if (!stayOnPage) {
+            goToNextStep();
+          } else {
+            setChildNumber((number) => number + 1);
+            formikHelpers.resetForm();
+          }
+        },
+    });
     handle(values, formikHelpers);
   }
 
@@ -41,7 +53,7 @@ export default function SignUpChildren({ goToNextStep }) {
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
           Add your child(ren)&apos;s details here and we&apos;ll do the rest
         </Typography>
-        <Typography sx={{ fontWeight: 700, mt: 6 }}>Child 1</Typography>
+        <Typography sx={{ fontWeight: 700, mt: 6 }}>Child {childNumber}</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
           onSubmit={handleSubmit}
@@ -111,8 +123,8 @@ export default function SignUpChildren({ goToNextStep }) {
 
               <Button
                 onClick={() => {
+                  setStayOnPage(true);
                   formik.submitForm();
-                  if (formik.isValid) formik.resetForm();
                 }}
                 variant="outlined"
                 startIcon={<AddCircleOutlineIcon />}
@@ -124,6 +136,7 @@ export default function SignUpChildren({ goToNextStep }) {
               </Button>
               <Button
                 onClick={() => {
+                  setStayOnPage(false);
                   formik.submitForm();
                 }}
                 variant="contained"

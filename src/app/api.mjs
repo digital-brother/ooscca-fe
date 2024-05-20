@@ -211,8 +211,7 @@ export async function signupDetails(userId, data) {
   return response.data;
 }
 
-export async function signupChildren(data) {
-  const userId = localStorage.getItem(USER_ID);
+export async function signupChildren(userId, data) {
   const url = `${SIGNUP_CHILDREN_PATH}?userId=${userId}`;
   const response = await client.post(url, data);
   return response.data;
