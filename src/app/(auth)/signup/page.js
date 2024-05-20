@@ -25,7 +25,7 @@ export default function SignUp() {
 
   const goToNextStep = () => {
     localStorage.setItem(SIGNUP_CURRENT_STEP_KEY, currentStep + 1);
-    setCurrentStep((currentStep) => currentStep + 1)
+    setCurrentStep((currentStep) => currentStep + 1);
     };
 
   const steps = [SignUpAccount, SignUpDetails, SignUpChildren, SignUpEmailConfirmation];
