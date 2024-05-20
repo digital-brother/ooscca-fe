@@ -1,12 +1,22 @@
 "use client";
 
-import { FormikTextField } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { FormikTextField, createHandleSubmit, FormikErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
+import { useMutation } from "react-query";
+import { signupDetails, USER_ID_KEY } from "@/app/api.mjs";
 
 export default function SignUpDetails({ goToNextStep }) {
+  const userId = localStorage.getItem(USER_ID_KEY);
+  const mutation = useMutation((data) => signupDetails(userId, data));
+
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
+    handle(values, formikHelpers);
+  }
+
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
       <SignUpContainer>
@@ -19,10 +29,7 @@ export default function SignUpDetails({ goToNextStep }) {
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Your details</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", mobile: "" }}
-          onSubmit={(values) => {
-            console.log(values);
-            goToNextStep();
-          }}
+          onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
               .label("First name")
@@ -57,6 +64,7 @@ export default function SignUpDetails({ goToNextStep }) {
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
               Continue
             </Button>
+            <FormikErrors />
           </Form>
         </Formik>
       </SignUpContainer>

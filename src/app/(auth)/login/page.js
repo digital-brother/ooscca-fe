@@ -5,7 +5,7 @@ import {
   FormikTextField,
   createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
-import { AUTH_TOKEN_NAME, login } from "@/app/api.mjs";
+import { AUTH_TOKEN_KEY, login } from "@/app/api.mjs";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ export default function Login() {
     const handle = createHandleSubmit({
       mutation,
       onSuccess: ({ key: token }) => {
-        localStorage.setItem(AUTH_TOKEN_NAME, token);
+        localStorage.setItem(AUTH_TOKEN_KEY, token);
         router.push("/booking");
       },
     });
