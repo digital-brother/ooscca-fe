@@ -8,12 +8,8 @@ import { SignUpContainer } from "./SignUpAccount";
 import { useMutation } from "react-query";
 import { signupDetails, USER_ID_KEY } from "@/app/api.mjs";
 
-function getUserIdFromLocalStorage() {
-  return localStorage.getItem(USER_ID_KEY);
-}
-
 export default function SignUpDetails({ goToNextStep }) {
-  const userId = getUserIdFromLocalStorage();
+  const userId = localStorage.getItem(USER_ID_KEY);
   const mutation = useMutation((data) => signupDetails(userId, data));
 
   async function handleSubmit(values, formikHelpers) {
