@@ -22,7 +22,6 @@ import { signupChildren, USER_ID_KEY } from "@/app/api.mjs";
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
   const [stayOnPage, setStayOnPage] = useState(false);
-  const [childNumber, setChildNumber] = useState(1);
   const userId = localStorage.getItem(USER_ID_KEY);
 
   const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
@@ -36,7 +35,6 @@ export default function SignUpChildren({ goToNextStep }) {
           if (!stayOnPage) {
             goToNextStep();
           } else {
-            setChildNumber((number) => number + 1);
             formikHelpers.resetForm();
           }
         },
@@ -53,7 +51,7 @@ export default function SignUpChildren({ goToNextStep }) {
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
           Add your child(ren)&apos;s details here and we&apos;ll do the rest
         </Typography>
-        <Typography sx={{ fontWeight: 700, mt: 6 }}>Child {childNumber}</Typography>
+        <Typography sx={{ fontWeight: 700, mt: 6 }}>Child</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
           onSubmit={handleSubmit}
