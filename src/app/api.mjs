@@ -16,6 +16,7 @@ const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
 const SIGNUP_DATAILS_PATH = "/signup-details";
 const SIGNUP_RESEND_EMAIL = "/resend-email";
+const CONFIRMATION_EMAIL = "/email-confirmation"
 
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
@@ -213,6 +214,12 @@ export async function signupDetails(userId, data) {
 
 export async function signupEmailConfirmation(data) {
   const url = `${SIGNUP_RESEND_EMAIL}/`;
+  const response = await client.post(url, data);
+  return response.data;
+}
+
+export async function emailConfirmation(data) {
+  const url = `${CONFIRMATION_EMAIL}/`;
   const response = await client.post(url, data);
   return response.data;
 }
