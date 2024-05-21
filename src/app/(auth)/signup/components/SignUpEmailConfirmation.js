@@ -1,9 +1,21 @@
 "use client";
 
+import { useMutation } from "react-query";
 import { Button, Container, Typography } from "@mui/material";
 import { SignUpContainer } from "./SignUpAccount";
+import { signupEmailConfirmation, USER_ID_KEY } from "@/app/api.mjs";
+import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
 
 export default function SignUpEmailConfirmation() {
+
+  const mutation = useMutation(signupEmailConfirmation);
+
+  const userId = localStorage.getItem(USER_ID_KEY);
+  const handleResendEmail = () => {
+      mutation.mutate({ userId: userId },
+      );
+  };
+
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
       <SignUpContainer>
@@ -24,10 +36,11 @@ export default function SignUpEmailConfirmation() {
           color="grey"
           fullWidth
           sx={{ mt: 1 }}
-          onClick={() => console.log("Email confirmation")}
+          onClick={handleResendEmail}
         >
           Resend confirmation email
         </Button>
+        <Error>{mutation.isError && mutation.error.message}</Error>
       </SignUpContainer>
     </Container>
   );
