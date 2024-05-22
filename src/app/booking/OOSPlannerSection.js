@@ -20,7 +20,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { borderColor, styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
@@ -80,12 +80,16 @@ function FilledBooking({ booking }) {
 
   const bgcolorBase = colorMapping[booking.activity.type?.slug] || "grey";
   const bgcolor = `${bgcolorBase}.100`;
+  const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
+  const border = statusBorderSxMap[booking.status]
+
   return (
     <BookingBox
       sx={{
         display: "flex",
         flexDirection: "column",
         bgcolor,
+        border,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
@@ -243,7 +247,7 @@ function FamilyBookings() {
             return (
               <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
                 <StyledTableCell component="th" scope="row">
-                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.name}</Typography>
+                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
                 </StyledTableCell>
                 {weekDates.map((targetDate, index) => {
                   const dateBookings = bookings?.filter(
