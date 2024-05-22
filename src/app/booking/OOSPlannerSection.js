@@ -197,9 +197,14 @@ function FamilyBookings() {
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const mutation = useMutation(() => payNow({ bookings: unpaidBookingsIds }), {
     onSuccess: (data) => {
       data?.stripeCheckoutSessionUrl && router.push(data.stripeCheckoutSessionUrl);
+    },
+    onError: (error) => {
+      const errorMsg = getFlatErrors(error).join('; ');
+      enqueueSnackbar(errorMsg, { variant: "error" });
     },
   });
 
