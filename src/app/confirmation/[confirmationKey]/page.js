@@ -14,18 +14,19 @@ export default function EmailConfirmation({params}) {
   const { confirmationKey } = params;
   const decodedKey = decodeURIComponent(confirmationKey);
 
-  useEffect(() => {
-    const confirmEmail = () => {
-      mutation.mutate({ key: decodedKey }, {
-        onSuccess: () => {
-          router.push("/login");
-        },
-        onError: () => {
-          setLoading(false)
-        }
+  const confirmEmail = () => {
+    mutation.mutate({ key: decodedKey }, {
+      onSuccess: () => {
+        router.push("/login");
+      },
+      onError: () => {
+        setLoading(false)
       }
-      );
+    }
+    );
   };
+
+  useEffect(() => {
     confirmEmail();
   }, []);
 

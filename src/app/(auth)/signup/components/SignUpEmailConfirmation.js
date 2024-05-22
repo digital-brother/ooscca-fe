@@ -8,13 +8,8 @@ import { Error } from "@/app/activities/[activityId]/edit/components/formikField
 
 export default function SignUpEmailConfirmation() {
 
-  const mutation = useMutation(signupEmailConfirmation);
-
   const userId = localStorage.getItem(USER_ID_KEY);
-  const handleResendEmail = () => {
-      mutation.mutate({ userId: userId },
-      );
-  };
+  const mutation = useMutation(() => signupEmailConfirmation({userId}));
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
@@ -36,7 +31,7 @@ export default function SignUpEmailConfirmation() {
           color="grey"
           fullWidth
           sx={{ mt: 1 }}
-          onClick={handleResendEmail}
+          onClick={mutation.mutate}
         >
           Resend confirmation email
         </Button>
