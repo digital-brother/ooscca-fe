@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -24,12 +24,13 @@ import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
-import { SelectedDateContext } from "./page";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
+import { SelectedDateContext } from "./page";
 
 dayjs.extend(weekday);
 
@@ -45,7 +46,7 @@ function FilledBooking({ booking }) {
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
-      queryClient.invalidateQueries("bookings");
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
       enqueueSnackbar("Booking deleted", { variant: "success" });
     },
     onError: (error) => {
@@ -80,12 +81,16 @@ function FilledBooking({ booking }) {
 
   const bgcolorBase = colorMapping[booking.activity.type?.slug] || "grey";
   const bgcolor = `${bgcolorBase}.100`;
+  const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
+  const border = statusBorderSxMap[booking.status];
+
   return (
     <BookingBox
       sx={{
         display: "flex",
         flexDirection: "column",
         bgcolor,
+        border,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
@@ -183,14 +188,49 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+function useWaitBillRedirectStripe(billIdInitial = null) {
+  const router = useRouter();
+  const [billId, setBillId] = useState(billIdInitial);
+
+  const { data: bill } = useQuery(["bill", billId], () => getBill(billId), {
+    enabled: !!billId,
+    refetchInterval: 2000,
+  });
+
+  useEffect(() => {
+    bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
+  }, [bill]);
+  return [billId, setBillId];
+}
+
 function FamilyBookings() {
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
   const { data: children } = useQuery("children", getChildren);
+
+  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
-  const formatDate = (date) => date.format("ddd D");
+  const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
+  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
+  const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
+    onSuccess: (bill) => {
+      if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
+      else {
+        enqueueSnackbar("Preparing a checkout session...", { variant: "success" });
+        setAwaitingPaymentBillId(bill.id);
+      }
+    },
+    onError: (error) => {
+      const errorMsg = getFlatErrors(error).join("; ");
+      enqueueSnackbar(errorMsg, { variant: "error" });
+    },
+  });
 
+  const [, setAwaitingPaymentBillId] = useWaitBillRedirectStripe();
+
+  const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
@@ -243,7 +283,7 @@ function FamilyBookings() {
             return (
               <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
                 <StyledTableCell component="th" scope="row">
-                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.name}</Typography>
+                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
                 </StyledTableCell>
                 {weekDates.map((targetDate, index) => {
                   const dateBookings = bookings?.filter(
@@ -261,8 +301,8 @@ function FamilyBookings() {
           <TableRow>
             <StyledTableCell></StyledTableCell>
             <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-              <Button variant="contained" color="yellow">
-                Proceed to checkout
+              <Button variant="contained" color="yellow" onClick={mutation.mutate}>
+                Pay now
               </Button>
             </StyledTableCell>
           </TableRow>
