@@ -2,13 +2,13 @@
 
 import {
   FormikDateField,
+  FormikErrors,
   FormikSelect,
   FormikTextField,
-  FormikErrors,
   createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { SmFlex } from "@/app/activities/[activityId]/edit/components/responsiveFlexes";
-import { getSchools } from "@/app/api.mjs";
+import { USER_ID_KEY, getSchools, signupChildren } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button, Container, MenuItem, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -16,7 +16,6 @@ import { Form, Formik } from "formik";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
-import { signupChildren, USER_ID_KEY } from "@/app/api.mjs";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
