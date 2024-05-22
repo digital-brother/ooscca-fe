@@ -188,7 +188,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const useWaitBillRedirectStripe = (billIdInitial = null) => {
+function useWaitBillRedirectStripe(billIdInitial = null) {
   const router = useRouter();
   const [billId, setBillId] = useState(billIdInitial);
 
@@ -197,9 +197,11 @@ const useWaitBillRedirectStripe = (billIdInitial = null) => {
     refetchInterval: 2000,
   });
 
-  useEffect(() => bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl), [bill]);
+  useEffect(() => {
+    bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
+  }, [bill]);
   return [billId, setBillId];
-};
+}
 
 function FamilyBookings() {
   const router = useRouter();
@@ -215,7 +217,10 @@ function FamilyBookings() {
   const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
     onSuccess: (bill) => {
       if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
-      else setAwaitingPaymentBillId(bill.id);
+      else {
+        enqueueSnackbar("Preparing a checkout session...", { variant: "success" });
+        setAwaitingPaymentBillId(bill.id);
+      }
     },
     onError: (error) => {
       const errorMsg = getFlatErrors(error).join("; ");

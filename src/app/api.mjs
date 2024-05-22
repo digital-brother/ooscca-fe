@@ -11,7 +11,7 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
-const BILLS_PATH = "/pay-now";
+const BILLS_PATH = "/bills";
 const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
