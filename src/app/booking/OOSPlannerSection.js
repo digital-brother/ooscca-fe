@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, payNow } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -20,7 +20,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { borderColor, styled } from "@mui/system";
+import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
@@ -28,8 +28,8 @@ import { useSnackbar } from "notistack";
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
-import { SelectedDateContext } from "./page";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
+import { SelectedDateContext } from "./page";
 
 dayjs.extend(weekday);
 
@@ -81,7 +81,7 @@ function FilledBooking({ booking }) {
   const bgcolorBase = colorMapping[booking.activity.type?.slug] || "grey";
   const bgcolor = `${bgcolorBase}.100`;
   const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
-  const border = statusBorderSxMap[booking.status]
+  const border = statusBorderSxMap[booking.status];
 
   return (
     <BookingBox
@@ -193,6 +193,13 @@ function FamilyBookings() {
   const { data: children } = useQuery("children", getChildren);
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
+  const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
+  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(() => payNow({ bookings: unpaidBookingsIds }), {
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: "bookings" }),
+  });
+
   const formatDate = (date) => date.format("ddd D");
 
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
@@ -265,8 +272,8 @@ function FamilyBookings() {
           <TableRow>
             <StyledTableCell></StyledTableCell>
             <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-              <Button variant="contained" color="yellow">
-                Proceed to checkout
+              <Button variant="contained" color="yellow" onClick={mutation.mutate}>
+                Pay now
               </Button>
             </StyledTableCell>
           </TableRow>
