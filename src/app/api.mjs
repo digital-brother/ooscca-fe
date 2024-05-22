@@ -218,7 +218,13 @@ export async function signupChildren(userId, data) {
   return response.data;
 }
 
+// BILLS
 export async function createBill(data) {
   const response = await client.post(`${BILLS_PATH}/`, data);
   return response.data;
+}
+
+export async function getBill(billId) {
+    const response = await client.get(`${BILLS_PATH}/${billId}/`);
+    return response.data;
 }

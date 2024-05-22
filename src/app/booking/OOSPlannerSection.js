@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -26,7 +26,7 @@ import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
@@ -188,6 +188,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+const useWaitBillRedirectStripe = (billIdInitial = null) => {
+  const router = useRouter();
+  const [billId, setBillId] = useState(billIdInitial);
+
+  const { data: bill } = useQuery(["bill", billId], () => getBill(billId), {
+    enabled: !!billId,
+    refetchInterval: 2000,
+  });
+
+  useEffect(() => bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl), [bill]);
+  return [billId, setBillId];
+};
+
 function FamilyBookings() {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -196,23 +209,21 @@ function FamilyBookings() {
 
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
-  
 
-  const waitBillRedirectStripe = (billId) => {
-
-  }
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
   const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
-    onSuccess: (data) => {
-      if (data?.stripeCheckoutSessionUrl) router.push(data.stripeCheckoutSessionUrl)
-      else waitBillRedirectStripe();
+    onSuccess: (bill) => {
+      if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
+      else setAwaitingPaymentBillId(bill.id);
     },
     onError: (error) => {
       const errorMsg = getFlatErrors(error).join("; ");
       enqueueSnackbar(errorMsg, { variant: "error" });
     },
   });
+
+  const [, setAwaitingPaymentBillId] = useWaitBillRedirectStripe();
 
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
