@@ -4,6 +4,8 @@ import {
   FormikDateField,
   FormikSelect,
   FormikTextField,
+  FormikErrors,
+  createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { SmFlex } from "@/app/activities/[activityId]/edit/components/responsiveFlexes";
 import { getSchools } from "@/app/api.mjs";
@@ -11,15 +13,24 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Button, Container, MenuItem, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { Form, Formik } from "formik";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
 import { SignUpContainer } from "./SignUpAccount";
+import { signupChildren, USER_ID_KEY } from "@/app/api.mjs";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
+  const userId = localStorage.getItem(USER_ID_KEY);
 
   const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
   classesYears.unshift("Reception");
+
+  const mutation = useMutation((data) => signupChildren(userId, data));
+
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation });
+    handle(values, formikHelpers);
+  }
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
@@ -30,12 +41,10 @@ export default function SignUpChildren({ goToNextStep }) {
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
           Add your child(ren)&apos;s details here and we&apos;ll do the rest
         </Typography>
-        <Typography sx={{ fontWeight: 700, mt: 6 }}>Child 1</Typography>
+        <Typography sx={{ fontWeight: 700, mt: 6 }}>Child</Typography>
         <Formik
           initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
               .label("First name")
@@ -94,15 +103,15 @@ export default function SignUpChildren({ goToNextStep }) {
               </SmFlex>
               <FormikSelect name="classYear" label="Class/year" fullwidth sx={{ mt: 1.5 }}>
                 {classesYears.map((classYear, index) => (
-                  <MenuItem key={index} value={classYear}>
+                  <MenuItem key={index} value={index}>
                     {classYear}
                   </MenuItem>
                 ))}
               </FormikSelect>
 
               <Button
-                onClick={() => {
-                  formik.submitForm();
+                onClick={async () => {
+                  await formik.submitForm();
                   if (formik.isValid) formik.resetForm();
                 }}
                 variant="outlined"
@@ -114,8 +123,8 @@ export default function SignUpChildren({ goToNextStep }) {
                 Add another child
               </Button>
               <Button
-                onClick={() => {
-                  formik.submitForm();
+                onClick={async () => {
+                  await formik.submitForm();
                   if (formik.isValid) goToNextStep();
                 }}
                 variant="contained"
@@ -125,6 +134,7 @@ export default function SignUpChildren({ goToNextStep }) {
               >
                 Continue
               </Button>
+              <FormikErrors />
             </Form>
           )}
         </Formik>
