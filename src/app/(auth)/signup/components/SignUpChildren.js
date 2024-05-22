@@ -21,7 +21,6 @@ import { signupChildren, USER_ID_KEY } from "@/app/api.mjs";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
-  const [stayOnPage, setStayOnPage] = useState(false);
   const userId = localStorage.getItem(USER_ID_KEY);
 
   const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
@@ -30,15 +29,7 @@ export default function SignUpChildren({ goToNextStep }) {
   const mutation = useMutation((data) => signupChildren(userId, data));
 
   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation,
-       onSuccess: () => {
-          if (!stayOnPage) {
-            goToNextStep();
-          } else {
-            formikHelpers.resetForm();
-          }
-        },
-    });
+    const handle = createHandleSubmit({ mutation });
     handle(values, formikHelpers);
   }
 
@@ -120,9 +111,9 @@ export default function SignUpChildren({ goToNextStep }) {
               </FormikSelect>
 
               <Button
-                onClick={() => {
-                  setStayOnPage(true);
-                  formik.submitForm();
+                onClick={async () => {
+                  await formik.submitForm();
+                  if (formik.isValid) formik.resetForm();
                 }}
                 variant="outlined"
                 startIcon={<AddCircleOutlineIcon />}
@@ -133,9 +124,9 @@ export default function SignUpChildren({ goToNextStep }) {
                 Add another child
               </Button>
               <Button
-                onClick={() => {
-                  setStayOnPage(false);
-                  formik.submitForm();
+                onClick={async () => {
+                  await formik.submitForm();
+                  if (formik.isValid) goToNextStep();
                 }}
                 variant="contained"
                 color="green"
