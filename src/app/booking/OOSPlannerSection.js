@@ -24,6 +24,7 @@ import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -45,7 +46,7 @@ function FilledBooking({ booking }) {
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
-      queryClient.invalidateQueries("bookings");
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
       enqueueSnackbar("Booking deleted", { variant: "success" });
     },
     onError: (error) => {
@@ -195,9 +196,11 @@ function FamilyBookings() {
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
-  const queryClient = useQueryClient();
+  const router = useRouter();
   const mutation = useMutation(() => payNow({ bookings: unpaidBookingsIds }), {
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: "bookings" }),
+    onSuccess: (data) => {
+      data?.stripeCheckoutSessionUrl && router.push(data.stripeCheckoutSessionUrl);
+    },
   });
 
   const formatDate = (date) => date.format("ddd D");
