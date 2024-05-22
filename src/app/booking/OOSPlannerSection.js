@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, payNow } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -189,27 +189,32 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 function FamilyBookings() {
-  const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
-  const { data: children } = useQuery("children", getChildren);
-  const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
-
-  const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
-  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const mutation = useMutation(() => payNow({ bookings: unpaidBookingsIds }), {
+  const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
+  const { data: children } = useQuery("children", getChildren);
+
+  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
+  const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
+  
+
+  const waitBillRedirectStripe = (billId) => {
+
+  }
+  const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
+  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
+  const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
     onSuccess: (data) => {
-      data?.stripeCheckoutSessionUrl && router.push(data.stripeCheckoutSessionUrl);
+      if (data?.stripeCheckoutSessionUrl) router.push(data.stripeCheckoutSessionUrl)
+      else waitBillRedirectStripe();
     },
     onError: (error) => {
-      const errorMsg = getFlatErrors(error).join('; ');
+      const errorMsg = getFlatErrors(error).join("; ");
       enqueueSnackbar(errorMsg, { variant: "error" });
     },
   });
 
   const formatDate = (date) => date.format("ddd D");
-
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 

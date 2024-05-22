@@ -11,7 +11,7 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
-const PAY_NOW_PATH = "/pay-now";
+const BILLS_PATH = "/pay-now";
 const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
@@ -218,7 +218,7 @@ export async function signupChildren(userId, data) {
   return response.data;
 }
 
-export async function payNow(data) {
-  const response = await client.post(`${PAY_NOW_PATH}/`, data);
+export async function createBill(data) {
+  const response = await client.post(`${BILLS_PATH}/`, data);
   return response.data;
 }
