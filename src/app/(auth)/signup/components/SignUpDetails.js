@@ -1,6 +1,10 @@
 "use client";
 
-import { FormikTextField, createHandleSubmit, FormikErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
+import {
+  FormikTextField,
+  createHandleSubmit,
+  FormikErrors,
+} from "@/app/activities/[activityId]/edit/components/formikFields";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -13,7 +17,7 @@ export default function SignUpDetails({ goToNextStep }) {
   const mutation = useMutation((data) => signupDetails(userId, data));
 
   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep});
+    const handle = createHandleSubmit({ mutation, onSuccess: goToNextStep });
     handle(values, formikHelpers);
   }
 
