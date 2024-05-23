@@ -11,10 +11,12 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
+const BILLS_PATH = "/bills";
 const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
 const SIGNUP_ACCOUNT_PATH = "/dj-rest-auth/registration";
 const SIGNUP_DATAILS_PATH = "/signup-details";
+const SIGNUP_CHILDREN_PATH = "/signup-children";
 const SIGNUP_RESEND_EMAIL = "/resend-email";
 const CONFIRMATION_EMAIL = "/verify-email"
 
@@ -212,6 +214,12 @@ export async function signupDetails(userId, data) {
   return response.data;
 }
 
+export async function signupChildren(userId, data) {
+  const url = `${SIGNUP_CHILDREN_PATH}?userId=${userId}`;
+  const response = await client.post(url, data);
+  return response.data;
+}
+
 export async function signupEmailConfirmation(data) {
   const url = `${SIGNUP_RESEND_EMAIL}/`;
   const response = await client.post(url, data);
@@ -222,4 +230,15 @@ export async function emailConfirmation(data) {
   const url = `${CONFIRMATION_EMAIL}/`;
   const response = await client.post(url, data);
   return response.data;
+}
+
+// BILLS
+export async function createBill(data) {
+  const response = await client.post(`${BILLS_PATH}/`, data);
+  return response.data;
+}
+
+export async function getBill(billId) {
+    const response = await client.get(`${BILLS_PATH}/${billId}/`);
+    return response.data;
 }

@@ -6,7 +6,7 @@ import SignUpAccount from "./components/SignUpAccount";
 import SignUpDetails from "./components/SignUpDetails";
 import SignUpEmailConfirmation from "./components/SignUpEmailConfirmation";
 import SignUpChildren from "./components/SignUpChildren";
-import { AUTH_TOKEN_NAME } from "@/app/api.mjs";
+import { AUTH_TOKEN_KEY } from "@/app/api.mjs";
 
 const SIGNUP_CURRENT_STEP_KEY = 'signupCurrentStep';
 
@@ -15,7 +15,7 @@ export default function SignUp() {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const authToken = localStorage.getItem(AUTH_TOKEN_NAME);
+    const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       router.push('/');
     }
