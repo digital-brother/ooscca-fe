@@ -26,7 +26,7 @@ import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
@@ -357,7 +357,9 @@ export default function OOSPlannerSection() {
           </Typography>
         </Box>
         <Wrapper sx={{ mt: 8 }}>
-          <FamilyBookings />
+          <Suspense>
+            <FamilyBookings />
+          </Suspense>
         </Wrapper>
       </Container>
     </Box>
