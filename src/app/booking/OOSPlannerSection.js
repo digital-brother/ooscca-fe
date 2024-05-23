@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill, getBill } from "@/app/api.mjs";
+import { createBill, deleteBooking, getBill, getBookings, getChildren } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -26,7 +26,7 @@ import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";

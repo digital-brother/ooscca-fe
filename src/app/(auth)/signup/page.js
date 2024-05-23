@@ -22,7 +22,7 @@ export default function SignUp() {
     const signupCurrentStepStr = localStorage.getItem(SIGNUP_CURRENT_STEP_KEY);
     const signupCurrentStep = signupCurrentStepStr ? parseInt(signupCurrentStepStr) : 0;
     setCurrentStep(signupCurrentStep);
-  }, []);
+  }, [router]);
 
   const goToNextStep = () => {
     localStorage.setItem(SIGNUP_CURRENT_STEP_KEY, currentStep + 1);
