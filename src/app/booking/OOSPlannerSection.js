@@ -188,38 +188,37 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-function useBillPolling(billId) {
-  return useQuery(["bill", billId], () => getBill(billId), {
+function useBillPolling({ billIdInitial = null, onSuccess = () => {} }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [billId, setBillId] = useState(billIdInitial);
+  const queryResult = useQuery(["bill", billId], () => getBill(billId), {
     enabled: !!billId,
     refetchInterval: 2000,
+    onError: (error) => {
+      enqueueSnackbar(`Error fetching bill: ${error.message}`, { variant: "error" });
+      setBillId(null);
+    },
+    onSuccess,
   });
+  return { billId, setBillId, ...queryResult };
 }
 
 function useAwaitingStripeRedirectBill(billIdInitial = null) {
   const router = useRouter();
-  const [billId, setBillId] = useState(billIdInitial);
-  const { data: bill } = useBillPolling(billId);
-
-  useEffect(() => {
-    bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
-  }, [bill, router]);
-
-  return [billId, setBillId];
+  const onSuccess = (bill) => bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
+  const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
+  return { setBillId };
 }
 
 function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { enqueueSnackbar } = useSnackbar();
-  const [billId, setBillId] = useState(billIdInitial);
-  const { data: bill } = useBillPolling(billId);
-
-  useEffect(() => {
+  const onSuccess = (bill) => {
     if (bill?.status === "paid") {
       enqueueSnackbar("Payment successful!", { variant: "success" });
       setBillId(null);
     }
-  }, [bill, setBillId, enqueueSnackbar]);
-
-  return [billId, setBillId];
+  };
+  const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
 function FamilyBookings() {
@@ -248,7 +247,7 @@ function FamilyBookings() {
     },
   });
 
-  const [, setAwaitingStripeRedirectBill] = useAwaitingStripeRedirectBill();
+  const { setBillId: setAwaitingStripeRedirectBill } = useAwaitingStripeRedirectBill();
   const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
   useAwaitingPaidStatusBill(awaitingPaidStatusBill);
 
