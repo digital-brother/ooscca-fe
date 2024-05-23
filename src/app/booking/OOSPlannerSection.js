@@ -207,7 +207,7 @@ function useAwaitingStripeRedirectBill(billIdInitial = null) {
   return [billId, setBillId];
 }
 
-function useAwaitingPaidBStatusBill(billIdInitial = null) {
+function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { enqueueSnackbar } = useSnackbar();
   const [billId, setBillId] = useState(billIdInitial);
   const { data: bill } = useBillPolling(billId);
@@ -249,8 +249,8 @@ function FamilyBookings() {
   });
 
   const [, setAwaitingStripeRedirectBill] = useAwaitingStripeRedirectBill();
-  const awaitingPaidBStatusBill = searchParams.get("awaitingPaidBStatusBill");
-  useAwaitingPaidBStatusBill(awaitingPaidBStatusBill);
+  const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
+  useAwaitingPaidStatusBill(awaitingPaidStatusBill);
 
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
