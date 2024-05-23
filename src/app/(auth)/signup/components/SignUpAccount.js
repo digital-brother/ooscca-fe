@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "@/app/(homepage)/components/Link";
-import { FormikCheckboxField, FormikTextField, FormikErrors, createHandleSubmit } from "@/app/activities/[activityId]/edit/components/formikFields";
+import {
+  FormikCheckboxField,
+  FormikTextField,
+  FormikErrors,
+  createHandleSubmit,
+} from "@/app/activities/[activityId]/edit/components/formikFields";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -14,9 +19,7 @@ import { signupAccount, USER_ID_KEY } from "@/app/api.mjs";
 export function SignUpContainer({ children, sx }) {
   const router = useRouter();
   return (
-    <Box
-      sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, ...sx }}
-    >
+    <Box sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, ...sx }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Image src="/logo.png" alt="Logo" width={160} height={36} />
         <IconButton size="small" onClick={() => router.back()}>
@@ -29,23 +32,22 @@ export function SignUpContainer({ children, sx }) {
 }
 
 export default function SignUpAccount({ goToNextStep }) {
-
   const mutation = useMutation(signupAccount);
 
   async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation,
+    const handle = createHandleSubmit({
+      mutation,
       onSuccess: (data) => {
-      localStorage.setItem(USER_ID_KEY, data.userId);
-      goToNextStep();
-    },
-  });
-
+        localStorage.setItem(USER_ID_KEY, data.userId);
+        goToNextStep();
+      },
+    });
     handle(values, formikHelpers);
   }
-  
+
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer sx={{textAlign: "center"}}>
+      <SignUpContainer sx={{ textAlign: "center" }}>
         <Typography variant="h5" sx={{ mt: 6 }}>
           Sign in or create an account
         </Typography>
