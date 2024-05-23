@@ -195,7 +195,8 @@ function useBillPolling({ billIdInitial = null, onSuccess = () => {} }) {
     enabled: !!billId,
     refetchInterval: 2000,
     onError: (error) => {
-      enqueueSnackbar(`Error fetching bill: ${error.message}`, { variant: "error" });
+      const errorMsg = getFlatErrors(error).join("; ");
+      enqueueSnackbar(errorMsg, { variant: "error" });
       setBillId(null);
     },
     onSuccess,
@@ -213,8 +214,11 @@ function useAwaitingStripeRedirectBill(billIdInitial = null) {
 function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { enqueueSnackbar } = useSnackbar();
   const onSuccess = (bill) => {
-    if (bill?.status === "paid") {
+    if (bill.status === "paid") {
       enqueueSnackbar("Payment successful!", { variant: "success" });
+      setBillId(null);
+    } else if (bill.status !== "open") {
+      enqueueSnackbar(`Payment unsuccessfull: ${bill.status} status!`, { variant: "error" });
       setBillId(null);
     }
   };
