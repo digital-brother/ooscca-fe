@@ -24,7 +24,7 @@ import { styled } from "@mui/system";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -188,18 +188,37 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-function useWaitBillRedirectStripe(billIdInitial = null) {
-  const router = useRouter();
-  const [billId, setBillId] = useState(billIdInitial);
-
-  const { data: bill } = useQuery(["bill", billId], () => getBill(billId), {
+function useBillPolling(billId) {
+  return useQuery(["bill", billId], () => getBill(billId), {
     enabled: !!billId,
     refetchInterval: 2000,
   });
+}
+
+function useAwaitingStripeRedirectBill(billIdInitial = null) {
+  const router = useRouter();
+  const [billId, setBillId] = useState(billIdInitial);
+  const { data: bill } = useBillPolling(billId);
 
   useEffect(() => {
     bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
-  }, [bill]);
+  }, [bill, router]);
+
+  return [billId, setBillId];
+}
+
+function useAwaitingPaidBStatusBill(billIdInitial = null) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [billId, setBillId] = useState(billIdInitial);
+  const { data: bill } = useBillPolling(billId);
+
+  useEffect(() => {
+    if (bill?.status === "paid") {
+      enqueueSnackbar("Payment successful!", { variant: "success" });
+      setBillId(null);
+    }
+  }, [bill, setBillId, enqueueSnackbar]);
+
   return [billId, setBillId];
 }
 
@@ -207,8 +226,9 @@ function FamilyBookings() {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-  const { data: children } = useQuery("children", getChildren);
+  const searchParams = useSearchParams();
 
+  const { data: children } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
   const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
@@ -219,7 +239,7 @@ function FamilyBookings() {
       if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
       else {
         enqueueSnackbar("Preparing a checkout session...", { variant: "success" });
-        setAwaitingPaymentBillId(bill.id);
+        setAwaitingStripeRedirectBill(bill.id);
       }
     },
     onError: (error) => {
@@ -228,7 +248,9 @@ function FamilyBookings() {
     },
   });
 
-  const [, setAwaitingPaymentBillId] = useWaitBillRedirectStripe();
+  const [, setAwaitingStripeRedirectBill] = useAwaitingStripeRedirectBill();
+  const awaitingPaidBStatusBill = searchParams.get("awaitingPaidBStatusBill");
+  useAwaitingPaidBStatusBill(awaitingPaidBStatusBill);
 
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
