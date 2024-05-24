@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { Container, CircularProgress } from '@mui/material';
-import { emailConfirmation } from "@/app/api.mjs";
+import { verifyEmail } from "@/app/api.mjs";
 
-export default function EmailConfirmation({params}) {
+export default function EmailConfirmation({ params }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const mutation = useMutation(emailConfirmation);
+  const mutation = useMutation(verifyEmail);
   const { confirmationKey } = params;
   const decodedKey = decodeURIComponent(confirmationKey);
 

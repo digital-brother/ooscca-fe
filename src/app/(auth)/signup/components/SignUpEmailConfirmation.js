@@ -3,13 +3,13 @@
 import { useMutation } from "react-query";
 import { Button, Container, Typography } from "@mui/material";
 import { SignUpContainer } from "./SignUpAccount";
-import { signupEmailConfirmation, USER_ID_KEY } from "@/app/api.mjs";
+import { resendEmail, USER_ID_KEY } from "@/app/api.mjs";
 import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
 
 export default function SignUpEmailConfirmation() {
 
   const userId = localStorage.getItem(USER_ID_KEY);
-  const mutation = useMutation(() => signupEmailConfirmation({userId}));
+  const mutation = useMutation(() => resendEmail({userId}));
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
