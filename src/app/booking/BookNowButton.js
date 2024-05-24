@@ -57,7 +57,7 @@ export const BookNowButton = ({ activityId, targetDate }) => {
                       popupState.close();
                       mutation.mutate(child.id, mutationConfig);
                     }}>
-                      {child.name}
+                      {child.displayName}
                     </MenuItem> 
                   ))}
                 </Menu>
