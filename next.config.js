@@ -20,7 +20,7 @@ module.exports = (phase, { defaultConfig }) => {
         remotePatterns: [
           {
             protocol: "http",
-            hostname: "127.0.0.1",
+            hostname: "localhost",
             pathname: "/media/**",
           },
         ],
