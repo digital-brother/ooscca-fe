@@ -7,14 +7,14 @@ import { Error } from "@/app/activities/[activityId]/edit/components/formikField
 import { Container, CircularProgress } from '@mui/material';
 import { verifyEmail } from "@/app/api.mjs";
 
-export default function EmailConfirmation({ params }) {
+export default function VerifyEmail({ params }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const mutation = useMutation(verifyEmail);
   const { confirmationKey } = params;
   const decodedKey = decodeURIComponent(confirmationKey);
 
-  const confirmEmail = () => {
+  useEffect(() => {
     mutation.mutate({ key: decodedKey }, {
       onSuccess: () => {
         router.push("/login");
@@ -24,10 +24,6 @@ export default function EmailConfirmation({ params }) {
       }
     }
     );
-  };
-
-  useEffect(() => {
-    confirmEmail();
   }, []);
 
   return (
