@@ -115,8 +115,8 @@ export function ActivityCard({ activity, targetDate }) {
           </Stack>
         )}
       </Box>
-      <Stack sx={{ p: 2, flex: 1 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+      <Stack sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column"}}>
+        <Box sx={{ display: "flex", justifyContent: "space-between",flex: 1, gap: 1 }}>
           <Box>
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
@@ -169,8 +169,7 @@ export function ActivityCard({ activity, targetDate }) {
             <ActivityDiscountedPrice activity={activity} />
           </Stack>
         </Box>
-        <Box flex={1}></Box>
-        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 3, gap: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 1, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
             <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
               Learn more
