@@ -19,17 +19,17 @@ import { SignUpContainer } from "./SignUpAccount";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
+
   const userId = localStorage.getItem(USER_ID_KEY);
-
-  const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
-  classesYears.unshift("Reception");
-
   const mutation = useMutation((data) => signupChildren(userId, data));
 
   async function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({ mutation });
     handle(values, formikHelpers);
   }
+
+  const classesYears = Array.from({ length: 8 }, (v, i) => `Year ${i + 1}`);
+  classesYears.unshift("Reception");
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>

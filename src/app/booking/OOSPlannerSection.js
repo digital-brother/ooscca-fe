@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill, getBill } from "@/app/api.mjs";
+import { createBill, deleteBooking, getBill, getBookings, getChildren } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -27,7 +27,7 @@ import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
@@ -236,38 +236,41 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-function useBillPolling(billId) {
-  return useQuery(["bill", billId], () => getBill(billId), {
+function useBillPolling({ billIdInitial = null, onSuccess = () => {} }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [billId, setBillId] = useState(billIdInitial);
+  const queryResult = useQuery(["bill", billId], () => getBill(billId), {
     enabled: !!billId,
     refetchInterval: 2000,
+    onError: (error) => {
+      const errorMsg = getFlatErrors(error).join("; ");
+      enqueueSnackbar(errorMsg, { variant: "error" });
+      setBillId(null);
+    },
+    onSuccess,
   });
+  return { billId, setBillId, ...queryResult };
 }
 
 function useAwaitingStripeRedirectBill(billIdInitial = null) {
   const router = useRouter();
-  const [billId, setBillId] = useState(billIdInitial);
-  const { data: bill } = useBillPolling(billId);
-
-  useEffect(() => {
-    bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
-  }, [bill, router]);
-
-  return [billId, setBillId];
+  const onSuccess = (bill) => bill?.stripeCheckoutSessionUrl && router.push(bill.stripeCheckoutSessionUrl);
+  const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
+  return { setBillId };
 }
 
-function useAwaitingPaidBStatusBill(billIdInitial = null) {
+function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { enqueueSnackbar } = useSnackbar();
-  const [billId, setBillId] = useState(billIdInitial);
-  const { data: bill } = useBillPolling(billId);
-
-  useEffect(() => {
-    if (bill?.status === "paid") {
+  const onSuccess = (bill) => {
+    if (bill.status === "paid") {
       enqueueSnackbar("Payment successful!", { variant: "success" });
       setBillId(null);
+    } else if (bill.status !== "open") {
+      enqueueSnackbar(`Payment unsuccessfull: ${bill.status} status!`, { variant: "error" });
+      setBillId(null);
     }
-  }, [bill, setBillId, enqueueSnackbar]);
-
-  return [billId, setBillId];
+  };
+  const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
 function FriendsBookings( {children, weekDates, bookings} ) {
@@ -341,9 +344,9 @@ function FamilyBookings() {
     },
   });
 
-  const [, setAwaitingStripeRedirectBill] = useAwaitingStripeRedirectBill();
-  const awaitingPaidBStatusBill = searchParams.get("awaitingPaidBStatusBill");
-  useAwaitingPaidBStatusBill(awaitingPaidBStatusBill);
+  const { setBillId: setAwaitingStripeRedirectBill } = useAwaitingStripeRedirectBill();
+  const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
+  useAwaitingPaidStatusBill(awaitingPaidStatusBill);
 
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
@@ -450,7 +453,9 @@ export default function OOSPlannerSection() {
           </Typography>
         </Box>
         <Wrapper sx={{ mt: 8 }}>
-          <FamilyBookings />
+          <Suspense>
+            <FamilyBookings />
+          </Suspense>
         </Wrapper>
       </Container>
     </Box>
