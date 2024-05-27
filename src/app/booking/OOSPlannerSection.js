@@ -1,6 +1,6 @@
 "use client";
 
-import { createBill, deleteBooking, getBill, getBookings, getChildren } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -125,9 +125,8 @@ function FilledBookingFriends({ booking }) {
         bgcolor: "grey.100"
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+      <Box sx={{ display: "flex"}}>
         <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
-        <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
       </Box>
       <Typography>
         {booking.activity.startTime} - {booking.activity.endTime}
@@ -207,7 +206,7 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
         ))
-      )};
+      )}
     </Box>
   );
 }
@@ -273,48 +272,80 @@ function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
-function FriendsBookings( {children, weekDates, bookings} ) {
-  const [selectedChild, setSelectedChild] = useState(children[0]);
+function FriendsBookings({ dataChildren, weekDates }) {
+  const [selectedChild, setSelectedChild] = useState(dataChildren[0]);
+  const { data: friendsBookings } = useQuery("friendsBookings", () => getFriendsBookings(weekDates[0], weekDates[4]));
+
   return (
     <>
       <TableRow>
-        <StyledTableCell rowSpan={2} sx={{ verticalAlign: "bottom", textAlign: "center" }}>
+        <StyledTableCell sx={{ textAlign: "center" }}>
           <PersonAddAltIcon />
           <Typography sx={{ fontWeight: 700 }}>Friends</Typography>
         </StyledTableCell>
-      </TableRow>
-      <TableRow>
       <StyledTableCell colSpan={5}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {children.map((child) => (
+        {dataChildren.map((child) => (
           <Button key={child.id} variant={ selectedChild === child ? "contained" : "outlined"} color="grey" onClick={() => setSelectedChild(child)}>
-            {child.displayName}'s friends
+            {child.displayName}&apos;s friends
           </Button>
         ))}
       </Box>
       </StyledTableCell>
     </TableRow>
-    {selectedChild?.friends?.map((friend, index) => {
-      const isLastChild = index + 1 === selectedChild.friends.length;
-      return (
-        <TableRow key={friend.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
-          <StyledTableCell component="th" scope="row">
-            <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
-          </StyledTableCell>
-          {weekDates.map((targetDate, index) => {
-            const dateBookings = bookings?.filter(
-              (booking) => booking.child === friend.id && dayjs(booking.date).isSame(targetDate, "day")
-            );
-            return (
-              <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 2}}>
-                <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} bookingForFriendsTable={true}/>
-              </StyledTableCell>
-            );
-          })}
-        </TableRow>
-      );
-    })}
-  </>
+    {selectedChild?.friends?.length === 0 ? (
+      <TableRow>
+        <StyledTableCell colSpan={6} align="center" sx={{ pb: 6, pt: 4 }}>
+          <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
+        </StyledTableCell>
+      </TableRow>
+    ) : (
+      selectedChild.friends.map((friend, index) => {
+        const isLastChild = index + 1 === selectedChild.friends.length;
+        const friendBookings = friendsBookings?.filter(
+          (booking) => booking.child === friend.id
+        );
+        return (
+          <TableRow
+            key={friend.id}
+            sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}
+          >
+            <StyledTableCell component="th" scope="row">
+              <Typography sx={{ fontWeight: 700, textAlign: "center" }}>
+                {friend.displayName}
+              </Typography>
+            </StyledTableCell>
+            {friendBookings && friendBookings.length === 0 ? (
+                <StyledTableCell colSpan={6} align="center" sx={{ pb: 4, pt: 4 }}>
+                  <Typography sx={{ fontWeight: 700 }}>no bookings</Typography>
+                </StyledTableCell>
+              ) : (
+              weekDates.map((targetDate, idx) => {
+                const dateBookings = friendsBookings?.filter(
+                  (booking) =>
+                    booking.child === friend.id && dayjs(booking.date).isSame(targetDate, "day")
+                );
+                return (
+                  <StyledTableCell
+                    key={idx}
+                    align="left"
+                    sx={isLastChild ? { pb: 2 } : {}}
+                  >
+                    <BookingDay
+                      bookings={dateBookings}
+                      targetDate={targetDate}
+                      sx={{ mx: "auto" }}
+                      bookingForFriendsTable={true}
+                    />
+                  </StyledTableCell>
+                  );
+                })
+              )}
+            </TableRow>
+          );
+        })
+      )}
+    </>
   );
 }
 
@@ -425,7 +456,7 @@ function FamilyBookings() {
             </StyledTableCell>
           </TableRow>
           {children && (
-            <FriendsBookings children={children} weekDates={weekDates} bookings={bookings}/>
+            <FriendsBookings dataChildren={children} weekDates={weekDates} />
           )}
         </TableBody>
       </Table>
