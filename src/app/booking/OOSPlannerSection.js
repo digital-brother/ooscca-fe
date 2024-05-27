@@ -294,6 +294,7 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
           </Box>
         </StyledTableCell>
       </TableRow>
+
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
           <StyledTableCell colSpan={6} align="center" sx={{ pb: 6, pt: 4 }}>
@@ -309,6 +310,7 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
               <StyledTableCell component="th" scope="row">
                 <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
               </StyledTableCell>
+              
               {friendBookings && friendBookings.length === 0 ? (
                 <StyledTableCell colSpan={6} align="center" sx={{ pb: 4, pt: 4 }}>
                   <Typography sx={{ fontWeight: 700 }}>no bookings</Typography>
