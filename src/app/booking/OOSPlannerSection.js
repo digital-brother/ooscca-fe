@@ -6,7 +6,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import {
   Box,
@@ -115,17 +115,16 @@ function FilledBooking({ booking }) {
 }
 
 function FilledBookingFriends({ booking }) {
-
   return (
     <BookingBox
       sx={{
         display: "flex",
         flexDirection: "column",
         borderColor: "grey.main",
-        bgcolor: "grey.100"
+        bgcolor: "grey.100",
       }}
     >
-      <Box sx={{ display: "flex"}}>
+      <Box sx={{ display: "flex" }}>
         <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
       </Box>
       <Typography>
@@ -165,7 +164,6 @@ function EmptyBooking({ targetDate }) {
 }
 
 function EmptyBookingFriends() {
-
   return (
     <BookingBox
       sx={{
@@ -176,8 +174,7 @@ function EmptyBookingFriends() {
         borderColor: "grey.main",
         borderStyle: "dashed",
       }}
-    >
-    </BookingBox>
+    ></BookingBox>
   );
 }
 
@@ -194,18 +191,17 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 360, ...sx }}>
       {bookings.map((booking, index) =>
-      bookingForFriendsTable ? (
-        booking ? (
-          <FilledBookingFriends key={booking.id} booking={booking} />
-        ) : (
-          <EmptyBookingFriends key={index} />
-        )
-      ) : (
-        booking ? (
+        bookingForFriendsTable ? (
+          booking ? (
+            <FilledBookingFriends key={booking.id} booking={booking} />
+          ) : (
+            <EmptyBookingFriends key={index} />
+          )
+        ) : booking ? (
           <FilledBooking key={booking.id} booking={booking} />
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
-        ))
+        )
       )}
     </Box>
   );
@@ -283,61 +279,54 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
           <PersonAddAltIcon />
           <Typography sx={{ fontWeight: 700 }}>Friends</Typography>
         </StyledTableCell>
-      <StyledTableCell colSpan={5}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {dataChildren.map((child) => (
-          <Button key={child.id} variant={ selectedChild === child ? "contained" : "outlined"} color="grey" onClick={() => setSelectedChild(child)}>
-            {child.displayName}&apos;s friends
-          </Button>
-        ))}
-      </Box>
-      </StyledTableCell>
-    </TableRow>
-    {selectedChild?.friends?.length === 0 ? (
-      <TableRow>
-        <StyledTableCell colSpan={6} align="center" sx={{ pb: 6, pt: 4 }}>
-          <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
+        <StyledTableCell colSpan={5}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {dataChildren.map((child) => (
+              <Button
+                key={child.id}
+                variant={selectedChild === child ? "contained" : "outlined"}
+                color="grey"
+                onClick={() => setSelectedChild(child)}
+              >
+                {child.displayName}&apos;s friends
+              </Button>
+            ))}
+          </Box>
         </StyledTableCell>
       </TableRow>
-    ) : (
-      selectedChild.friends.map((friend, index) => {
-        const isLastChild = index + 1 === selectedChild.friends.length;
-        const friendBookings = friendsBookings?.filter(
-          (booking) => booking.child === friend.id
-        );
-        return (
-          <TableRow
-            key={friend.id}
-            sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}
-          >
-            <StyledTableCell component="th" scope="row">
-              <Typography sx={{ fontWeight: 700, textAlign: "center" }}>
-                {friend.displayName}
-              </Typography>
-            </StyledTableCell>
-            {friendBookings && friendBookings.length === 0 ? (
+      {selectedChild?.friends?.length === 0 ? (
+        <TableRow>
+          <StyledTableCell colSpan={6} align="center" sx={{ pb: 6, pt: 4 }}>
+            <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
+          </StyledTableCell>
+        </TableRow>
+      ) : (
+        selectedChild.friends.map((friend, index) => {
+          const isLastChild = index + 1 === selectedChild.friends.length;
+          const friendBookings = friendsBookings?.filter((booking) => booking.child === friend.id);
+          return (
+            <TableRow key={friend.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
+              <StyledTableCell component="th" scope="row">
+                <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
+              </StyledTableCell>
+              {friendBookings && friendBookings.length === 0 ? (
                 <StyledTableCell colSpan={6} align="center" sx={{ pb: 4, pt: 4 }}>
                   <Typography sx={{ fontWeight: 700 }}>no bookings</Typography>
                 </StyledTableCell>
               ) : (
-              weekDates.map((targetDate, idx) => {
-                const dateBookings = friendsBookings?.filter(
-                  (booking) =>
-                    booking.child === friend.id && dayjs(booking.date).isSame(targetDate, "day")
-                );
-                return (
-                  <StyledTableCell
-                    key={idx}
-                    align="left"
-                    sx={isLastChild ? { pb: 2 } : {}}
-                  >
-                    <BookingDay
-                      bookings={dateBookings}
-                      targetDate={targetDate}
-                      sx={{ mx: "auto" }}
-                      bookingForFriendsTable={true}
-                    />
-                  </StyledTableCell>
+                weekDates.map((targetDate, idx) => {
+                  const dateBookings = friendsBookings?.filter(
+                    (booking) => booking.child === friend.id && dayjs(booking.date).isSame(targetDate, "day")
+                  );
+                  return (
+                    <StyledTableCell key={idx} align="left" sx={isLastChild ? { pb: 2 } : {}}>
+                      <BookingDay
+                        bookings={dateBookings}
+                        targetDate={targetDate}
+                        sx={{ mx: "auto" }}
+                        bookingForFriendsTable={true}
+                      />
+                    </StyledTableCell>
                   );
                 })
               )}
@@ -357,7 +346,9 @@ function FamilyBookings() {
 
   const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
-  const { data: bookings, isLoading: isLoadingBookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
+  const { data: bookings, isLoading: isLoadingBookings } = useQuery("bookings", () =>
+    getBookings(weekDates[0], weekDates[4])
+  );
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
@@ -385,83 +376,81 @@ function FamilyBookings() {
 
   return (
     !(isLoadingChildren || isLoadingBookings) && (
-    <TableContainer component={Box}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell rowSpan={2} sx={{ verticalAlign: "bottom", textAlign: "center" }}>
-              <FamilyRestroomIcon />
-              <Typography sx={{ fontWeight: 700 }}>Family</Typography>
-            </StyledTableCell>
+      <TableContainer component={Box}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell rowSpan={2} sx={{ verticalAlign: "bottom", textAlign: "center" }}>
+                <FamilyRestroomIcon />
+                <Typography sx={{ fontWeight: 700 }}>Family</Typography>
+              </StyledTableCell>
 
-            <StyledTableCell colSpan={5}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <IconButton onClick={handlePreviosWeek}>
-                    <ArrowBackIosNewIcon />
-                  </IconButton>
-                  <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
-                    Today
+              <StyledTableCell colSpan={5}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <IconButton onClick={handlePreviosWeek}>
+                      <ArrowBackIosNewIcon />
+                    </IconButton>
+                    <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
+                      Today
+                    </Button>
+                    <IconButton onClick={handleNextWeek}>
+                      <ArrowForwardIosIcon />
+                    </IconButton>
+                  </Box>
+                  <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
+                    Share Calendar
                   </Button>
-                  <IconButton onClick={handleNextWeek}>
-                    <ArrowForwardIosIcon />
-                  </IconButton>
                 </Box>
-                <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
-                  Share Calendar
-                </Button>
-              </Box>
-            </StyledTableCell>
-          </TableRow>
+              </StyledTableCell>
+            </TableRow>
 
-          <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
-            {weekDates.map((date, index) => (
-              <StyledHeaderTableCell key={index} align="center">
-                <Box
-                  sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}
-                >
-                  {formatDate(date)}
-                </Box>
-              </StyledHeaderTableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {children?.map((child, index) => {
-            const isLastChild = index + 1 === children.length;
-            return (
-              <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
-                <StyledTableCell component="th" scope="row">
-                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
-                </StyledTableCell>
-                {weekDates.map((targetDate, index) => {
-                  const dateBookings = bookings?.filter(
-                    (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
-                  );
-                  return (
-                    <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                      <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
-                    </StyledTableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <StyledTableCell></StyledTableCell>
-            <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-              <Button variant="contained" color="yellow" onClick={mutation.mutate}>
-                Pay now
-              </Button>
-            </StyledTableCell>
-          </TableRow>
-          {children && (
-            <FriendsBookings dataChildren={children} weekDates={weekDates} />
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
+              {weekDates.map((date, index) => (
+                <StyledHeaderTableCell key={index} align="center">
+                  <Box
+                    sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}
+                  >
+                    {formatDate(date)}
+                  </Box>
+                </StyledHeaderTableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {children?.map((child, index) => {
+              const isLastChild = index + 1 === children.length;
+              return (
+                <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
+                  <StyledTableCell component="th" scope="row">
+                    <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
+                  </StyledTableCell>
+                  {weekDates.map((targetDate, index) => {
+                    const dateBookings = bookings?.filter(
+                      (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
+                    );
+                    return (
+                      <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
+                        <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+                      </StyledTableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+            <TableRow>
+              <StyledTableCell></StyledTableCell>
+              <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
+                <Button variant="contained" color="yellow" onClick={mutation.mutate}>
+                  Pay now
+                </Button>
+              </StyledTableCell>
+            </TableRow>
+            {children && <FriendsBookings dataChildren={children} weekDates={weekDates} />}
+          </TableBody>
+        </Table>
+      </TableContainer>
     )
   );
 }
