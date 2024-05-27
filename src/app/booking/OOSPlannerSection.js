@@ -272,7 +272,7 @@ function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
-function FriendsBookings({ dataChildren, weekDates }) {
+function FriendsBookings({ dataChildren = [], weekDates }) {
   const [selectedChild, setSelectedChild] = useState(dataChildren[0]);
   const { data: friendsBookings } = useQuery("friendsBookings", () => getFriendsBookings(weekDates[0], weekDates[4]));
 
@@ -355,9 +355,9 @@ function FamilyBookings() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
   const searchParams = useSearchParams();
 
-  const { data: children } = useQuery("children", getChildren);
+  const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
-  const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
+  const { data: bookings, isLoading: isLoadingBookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
@@ -384,6 +384,7 @@ function FamilyBookings() {
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
+    !(isLoadingChildren || isLoadingBookings) && (
     <TableContainer component={Box}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -461,6 +462,7 @@ function FamilyBookings() {
         </TableBody>
       </Table>
     </TableContainer>
+    )
   );
 }
 
@@ -484,7 +486,7 @@ export default function OOSPlannerSection() {
           </Typography>
         </Box>
         <Wrapper sx={{ mt: 8 }}>
-          <Suspense>
+          <Suspense fallback="loading...">
             <FamilyBookings />
           </Suspense>
         </Wrapper>
