@@ -362,6 +362,7 @@ function FriendsBookings({ childrenData = [], weekDates }) {
 
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
+          <StyledTableCell></StyledTableCell>
           <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
             <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
           </StyledTableCell>
