@@ -268,7 +268,35 @@ function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
-function FamilyBookings({ childrenData = [], bookings, weekDates }) {
+function FamilyBookings({ childrenData = [], weekDates }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { data: bookings } = useQuery("bookings", () =>
+    getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
+  );
+
+  const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
+  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
+  const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
+    onSuccess: (bill) => {
+      if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
+      else {
+        enqueueSnackbar("Preparing a checkout session...", { variant: "success" });
+        setAwaitingStripeRedirectBill(bill.id);
+      }
+    },
+    onError: (error) => {
+      const errorMsg = getFlatErrors(error).join("; ");
+      enqueueSnackbar(errorMsg, { variant: "error" });
+    },
+  });
+
+  const { setBillId: setAwaitingStripeRedirectBill } = useAwaitingStripeRedirectBill();
+  const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
+  useAwaitingPaidStatusBill(awaitingPaidStatusBill);
+
   return (
     <>
     {childrenData?.map((child, index) => {
@@ -291,6 +319,14 @@ function FamilyBookings({ childrenData = [], bookings, weekDates }) {
         </TableRow>
       );
       })}
+      <TableRow>
+        <StyledTableCell></StyledTableCell>
+        <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
+          <Button variant="contained" color="yellow" onClick={mutation.mutate}>
+            Pay now
+          </Button>
+        </StyledTableCell>
+      </TableRow>
     </>
   );
 }
@@ -370,43 +406,17 @@ function FriendsBookings({ childrenData = [], weekDates }) {
 }
 
 function BookingsTable() {
-  const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-  const searchParams = useSearchParams();
 
   const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
-  const { data: bookings, isLoading: isLoadingBookings } = useQuery("bookings", () =>
-    getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
-  );
-
-  const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
-  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
-  const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
-    onSuccess: (bill) => {
-      if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
-      else {
-        enqueueSnackbar("Preparing a checkout session...", { variant: "success" });
-        setAwaitingStripeRedirectBill(bill.id);
-      }
-    },
-    onError: (error) => {
-      const errorMsg = getFlatErrors(error).join("; ");
-      enqueueSnackbar(errorMsg, { variant: "error" });
-    },
-  });
-
-  const { setBillId: setAwaitingStripeRedirectBill } = useAwaitingStripeRedirectBill();
-  const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
-  useAwaitingPaidStatusBill(awaitingPaidStatusBill);
-
+  
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
-    !isLoadingChildren && !isLoadingBookings &&
+    !isLoadingChildren &&
       <TableContainer component={Box}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -450,15 +460,7 @@ function BookingsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <FamilyBookings childrenData={children} bookings={bookings} weekDates={weekDates} />
-            <TableRow>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-                <Button variant="contained" color="yellow" onClick={mutation.mutate}>
-                  Pay now
-                </Button>
-              </StyledTableCell>
-            </TableRow>
+            <FamilyBookings childrenData={children} weekDates={weekDates} />
             {children && <FriendsBookings childrenData={children} weekDates={weekDates} />}
           </TableBody>
         </Table>
