@@ -116,29 +116,49 @@ export function ActivityCard({ activity, targetDate }) {
         )}
       </Box>
       <Stack sx={{ p: 2, flex: 1, display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column"}}>
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Typography variant="subtitle1">{activity?.providerName}</Typography>
-          <Typography variant="body2">{activity?.address}</Typography>  
-          <Typography variant="subtitle1" sx={{ mt: 2 }}>{activity?.type?.name}</Typography>
-          <Typography variant="body2">{activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}</Typography>
+          <Typography variant="body2">{activity?.address}</Typography>
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            {activity?.type?.name}
+          </Typography>
+          <Typography variant="body2">
+            {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
+          </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "end", gap: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <AccessTimeIcon fontSize="15" />
-              <Typography variant="body2">{activity?.startTime} - {activity?.endTime}</Typography>
+              <Typography variant="body2">
+                {activity?.startTime} - {activity?.endTime}
+              </Typography>
             </Box>
             {activity?.earlyDropOff && (
               <Typography variant="body2">
-                <b>{parseFloat(activity?.earlyDropOffPrice) ? `£${activity?.earlyDropOffPrice}` : 
-                <Box component="span" sx={{ color: "green.main" }}>FREE</Box>}</b>
+                <b>
+                  {parseFloat(activity?.earlyDropOffPrice) ? (
+                    `£${activity?.earlyDropOffPrice}`
+                  ) : (
+                    <Box component="span" sx={{ color: "green.main" }}>
+                      FREE
+                    </Box>
+                  )}
+                </b>
                 &nbsp; Early drop off {activity?.earlyDropOffTime}
               </Typography>
             )}
             {activity?.latePickUp && (
               <Typography variant="body2">
-                <b>{parseFloat(activity?.latePickUpPrice) ? `£${activity?.latePickUpPrice}` : 
-                <Box component="span" sx={{ color: "green.main" }}>FREE</Box>}</b>
+                <b>
+                  {parseFloat(activity?.latePickUpPrice) ? (
+                    `£${activity?.latePickUpPrice}`
+                  ) : (
+                    <Box component="span" sx={{ color: "green.main" }}>
+                      FREE
+                    </Box>
+                  )}
+                </b>
                 &nbsp; Late pick up {activity?.latePickUpTime}
               </Typography>
             )}
@@ -148,14 +168,14 @@ export function ActivityCard({ activity, targetDate }) {
             <ActivityDiscountedPrice activity={activity} />
           </Box>
         </Box>
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 1, gap: 2 }}>
-            <Link href={activityDetailUrl} passHref>  
-              <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
-                Learn more
-              </Button>
-            </Link>
-            <BookNowButton activityId={activity.id} targetDate={targetDate} />
-          </Box>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 1, gap: 2 }}>
+          <Link href={activityDetailUrl} passHref>
+            <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
+              Learn more
+            </Button>
+          </Link>
+          <BookNowButton activityId={activity.id} targetDate={targetDate} />
+        </Box>
       </Stack>
     </Stack>
   );
