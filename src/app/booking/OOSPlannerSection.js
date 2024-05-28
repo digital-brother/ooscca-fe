@@ -114,7 +114,7 @@ function FilledBooking({ booking }) {
   );
 }
 
-function FilledBookingFriends({ booking }) {
+function FriendFilledBooking({ booking }) {
   return (
     <BookingBox
       sx={{
@@ -163,7 +163,7 @@ function EmptyBooking({ targetDate }) {
   );
 }
 
-function EmptyBookingFriends() {
+function FriendEmptyBooking() {
   return (
     <BookingBox
       sx={{
@@ -193,9 +193,9 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
       {bookings.map((booking, index) =>
         bookingForFriendsTable ? (
           booking ? (
-            <FilledBookingFriends key={booking.id} booking={booking} />
+            <FriendFilledBooking key={booking.id} booking={booking} />
           ) : (
-            <EmptyBookingFriends key={index} />
+            <FriendEmptyBooking key={index} />
           )
         ) : booking ? (
           <FilledBooking key={booking.id} booking={booking} />
@@ -268,9 +268,38 @@ function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
-function FriendsBookings({ dataChildren = [], weekDates }) {
-  const [selectedChild, setSelectedChild] = useState(dataChildren[0]);
-  const { data: friendsBookings } = useQuery("friendsBookings", () => getFriendsBookings(weekDates[0], weekDates[4]));
+function FamilyBookings({ childrenData = [], bookings, weekDates }) {
+  return (
+    <>
+    {childrenData?.map((child, index) => {
+      const isLastChild = index + 1 === childrenData.length;
+      return (
+        <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
+          <StyledTableCell component="th" scope="row">
+            <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
+          </StyledTableCell>
+          {weekDates.map((targetDate, index) => {
+            const dateBookings = bookings?.filter(
+              (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
+            );
+            return (
+              <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
+                <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+              </StyledTableCell>
+            );
+          })}
+        </TableRow>
+      );
+      })}
+    </>
+  );
+}
+
+function FriendsBookings({ childrenData = [], weekDates }) {
+  const [selectedChild, setSelectedChild] = useState(childrenData[0]);
+  const { data: friendsBookings } = useQuery("friendsBookings", () =>
+    getFriendsBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
+  );
 
   return (
     <>
@@ -281,7 +310,7 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
         </StyledTableCell>
         <StyledTableCell colSpan={5}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {dataChildren.map((child) => (
+            {childrenData.map((child) => (
               <Button
                 key={child.id}
                 variant={selectedChild === child ? "contained" : "outlined"}
@@ -297,7 +326,7 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
 
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
-          <StyledTableCell colSpan={6} align="center" sx={{ pb: 6, pt: 4 }}>
+          <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
             <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
           </StyledTableCell>
         </TableRow>
@@ -306,14 +335,14 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
           const isLastChild = index + 1 === selectedChild.friends.length;
           const friendBookings = friendsBookings?.filter((booking) => booking.child === friend.id);
           return (
-            <TableRow key={friend.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
+            <TableRow key={friend.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderTop: index === 0 ? "1px solid" : {}, borderColor: "grey.300" }}>
               <StyledTableCell component="th" scope="row">
                 <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
               </StyledTableCell>
               
-              {friendBookings && friendBookings.length === 0 ? (
-                <StyledTableCell colSpan={6} align="center" sx={{ pb: 4, pt: 4 }}>
-                  <Typography sx={{ fontWeight: 700 }}>no bookings</Typography>
+              {friendBookings?.length === 0 ? (
+                <StyledTableCell colSpan={6} align="center">
+                  <Typography sx={{ fontWeight: 700 }}>No bookings</Typography>
                 </StyledTableCell>
               ) : (
                 weekDates.map((targetDate, idx) => {
@@ -340,7 +369,7 @@ function FriendsBookings({ dataChildren = [], weekDates }) {
   );
 }
 
-function FamilyBookings() {
+function BookingsTable() {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
@@ -349,7 +378,7 @@ function FamilyBookings() {
   const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
   const { data: bookings, isLoading: isLoadingBookings } = useQuery("bookings", () =>
-    getBookings(weekDates[0], weekDates[4])
+    getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
@@ -377,7 +406,7 @@ function FamilyBookings() {
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
-    !(isLoadingChildren || isLoadingBookings) && (
+    !isLoadingChildren && !isLoadingBookings &&
       <TableContainer component={Box}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -421,26 +450,7 @@ function FamilyBookings() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {children?.map((child, index) => {
-              const isLastChild = index + 1 === children.length;
-              return (
-                <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
-                  <StyledTableCell component="th" scope="row">
-                    <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
-                  </StyledTableCell>
-                  {weekDates.map((targetDate, index) => {
-                    const dateBookings = bookings?.filter(
-                      (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
-                    );
-                    return (
-                      <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                        <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
-                      </StyledTableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+            <FamilyBookings childrenData={children} bookings={bookings} weekDates={weekDates} />
             <TableRow>
               <StyledTableCell></StyledTableCell>
               <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
@@ -449,11 +459,10 @@ function FamilyBookings() {
                 </Button>
               </StyledTableCell>
             </TableRow>
-            {children && <FriendsBookings dataChildren={children} weekDates={weekDates} />}
+            {children && <FriendsBookings childrenData={children} weekDates={weekDates} />}
           </TableBody>
         </Table>
       </TableContainer>
-    )
   );
 }
 
@@ -478,7 +487,7 @@ export default function OOSPlannerSection() {
         </Box>
         <Wrapper sx={{ mt: 8 }}>
           <Suspense fallback="loading...">
-            <FamilyBookings />
+            <BookingsTable />
           </Suspense>
         </Wrapper>
       </Container>

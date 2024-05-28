@@ -166,7 +166,7 @@ export async function getChildren() {
   return response.data;
 }
 
-export async function getBookings(dateAfter, dateBefore) {
+export async function getBookings({ dateAfter, dateBefore }) {
   const url = `${BOOKINGS_PATH}/`;
   const response = await client.get(url, {
     params: {
@@ -177,7 +177,7 @@ export async function getBookings(dateAfter, dateBefore) {
   return response.data;
 }
 
-export async function getFriendsBookings(dateAfter, dateBefore) {
+export async function getFriendsBookings({ dateAfter, dateBefore }) {
   const url = `${FRIENDS_BOOKINGS_PATH}/`;
   const response = await client.get(url, {
     params: {
