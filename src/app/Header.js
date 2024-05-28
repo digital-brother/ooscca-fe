@@ -10,6 +10,9 @@ import NextLink from "next/link";
 import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {Logo} from "@/app/(homepage)/components/Logo";
+import { useState, useEffect } from "react";
+import { useMutation } from "react-query";
+import { logout, AUTH_TOKEN_KEY, SIGNUP_CURRENT_STEP_KEY, USER_ID_KEY } from "@/app/api.mjs";
 
 export const HEADER_NAV_LINKS = [
   {name: "about", text: 'About', path: '/'},
@@ -19,12 +22,28 @@ export const HEADER_NAV_LINKS = [
 ];
 
 function NavLink({link}) {
+  const [authToken, setAuthToken] = useState(null);
+  const mutation = useMutation(logout, {
+    onSuccess: () => {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem(USER_ID_KEY);
+      localStorage.removeItem(SIGNUP_CURRENT_STEP_KEY);
+    },
+    onError: (error) => {
+      console.error("Logout failed");
+    }
+  });
+
   const theme = useTheme()
   const linkElement = (
     <Link href="#" sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
       {link.text}
     </Link>
   )
+
+  useEffect(() => {
+    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
+  }, []);
 
   if (!link.border) return linkElement
 
@@ -43,11 +62,11 @@ function NavLink({link}) {
     //   {linkElement}
     // </Box>
     <NextLink href="/" passHref>
-      <Button variant="outlined" color="orange" sx={{
+      <Button variant="outlined" color="orange" onClick={authToken ? mutation.mutate : null} sx={{
         textTransform: 'none',
         fontSize: theme.typography.htmlFontSize,
       }}>
-        {link.text}
+        {authToken ? 'Log out': link.text}
       </Button>
     </NextLink>
   )

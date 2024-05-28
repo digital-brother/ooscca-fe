@@ -6,9 +6,7 @@ import SignUpAccount from "./components/SignUpAccount";
 import SignUpDetails from "./components/SignUpDetails";
 import SignUpEmailConfirmation from "./components/SignUpEmailConfirmation";
 import SignUpChildren from "./components/SignUpChildren";
-import { AUTH_TOKEN_KEY } from "@/app/api.mjs";
-
-const SIGNUP_CURRENT_STEP_KEY = "signupCurrentStep";
+import { AUTH_TOKEN_KEY, SIGNUP_CURRENT_STEP_KEY } from "@/app/api.mjs";
 
 export default function SignUp() {
   const router = useRouter();

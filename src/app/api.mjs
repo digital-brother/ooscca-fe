@@ -19,9 +19,11 @@ const SIGNUP_DATAILS_PATH = "/signup-details";
 const SIGNUP_CHILDREN_PATH = "/signup-children";
 const RESEND_EMAIL_PATH = "/resend-email";
 const VERIFY_EMAIL_PATH = "/verify-email";
+const LOGOUT_PATH = "/dj-rest-auth/logout";
 
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
+export const SIGNUP_CURRENT_STEP_KEY = "signupCurrentStep";
 
 const client = axios.create({
   baseURL: API_HOST,
@@ -229,6 +231,12 @@ export async function resendEmail(data) {
 export async function verifyEmail(data) {
   const url = `${VERIFY_EMAIL_PATH}/`;
   const response = await client.post(url, data);
+  return response.data;
+}
+
+export async function logout() {
+  const url = `${LOGOUT_PATH}/`;
+  const response = await client.post(url);
   return response.data;
 }
 
