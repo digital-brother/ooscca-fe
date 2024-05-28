@@ -1,11 +1,12 @@
 "use client";
 
-import { createBill, deleteBooking, getBill, getBookings, getChildren } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import {
   Box,
@@ -113,6 +114,27 @@ function FilledBooking({ booking }) {
   );
 }
 
+function FriendFilledBooking({ booking }) {
+  return (
+    <BookingBox
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        borderColor: "grey.main",
+        bgcolor: "grey.100",
+      }}
+    >
+      <Box sx={{ display: "flex" }}>
+        <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
+      </Box>
+      <Typography>
+        {booking.activity.startTime} - {booking.activity.endTime}
+      </Typography>
+      <Typography>{booking.activity.address}</Typography>
+    </BookingBox>
+  );
+}
+
 function EmptyBooking({ targetDate }) {
   const { setSelectedDate, ActivitiesCalendarRef } = useContext(SelectedDateContext);
 
@@ -141,7 +163,22 @@ function EmptyBooking({ targetDate }) {
   );
 }
 
-function BookingDay({ bookings = [], targetDate, sx }) {
+function FriendEmptyBooking() {
+  return (
+    <BookingBox
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "1px solid",
+        borderColor: "grey.main",
+        borderStyle: "dashed",
+      }}
+    ></BookingBox>
+  );
+}
+
+function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
   bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
 
   if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
@@ -154,7 +191,13 @@ function BookingDay({ bookings = [], targetDate, sx }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", rowGap: 1, height: 360, ...sx }}>
       {bookings.map((booking, index) =>
-        booking ? (
+        bookingForFriendsTable ? (
+          booking ? (
+            <FriendFilledBooking key={booking.id} booking={booking} />
+          ) : (
+            <FriendEmptyBooking key={index} />
+          )
+        ) : booking ? (
           <FilledBooking key={booking.id} booking={booking} />
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
@@ -225,15 +268,14 @@ function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
-function FamilyBookings() {
+function FamilyBookings({ childrenData = [], weekDates }) {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-  const searchParams = useSearchParams();
 
-  const { data: children } = useQuery("children", getChildren);
-  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
-  const { data: bookings } = useQuery("bookings", () => getBookings(weekDates[0], weekDates[4]));
+  const { data: bookings } = useQuery("bookings", () =>
+    getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
+  );
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
@@ -255,85 +297,175 @@ function FamilyBookings() {
   const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
   useAwaitingPaidStatusBill(awaitingPaidStatusBill);
 
+  return (
+    <>
+    {childrenData?.map((child, index) => {
+      const isLastChild = index + 1 === childrenData.length;
+      return (
+        <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
+          <StyledTableCell component="th" scope="row">
+            <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
+          </StyledTableCell>
+          {weekDates.map((targetDate, index) => {
+            const dateBookings = bookings?.filter(
+              (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
+            );
+            return (
+              <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
+                <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+              </StyledTableCell>
+            );
+          })}
+        </TableRow>
+      );
+      })}
+      <TableRow>
+        <StyledTableCell></StyledTableCell>
+        <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
+          <Button variant="contained" color="yellow" onClick={mutation.mutate}>
+            Pay now
+          </Button>
+        </StyledTableCell>
+      </TableRow>
+    </>
+  );
+}
+
+function FriendsBookings({ childrenData = [], weekDates }) {
+  const [selectedChild, setSelectedChild] = useState(childrenData[0]);
+  const { data: friendsBookings } = useQuery("friendsBookings", () =>
+    getFriendsBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
+  );
+
+  return (
+    <>
+      <TableRow>
+        <StyledTableCell sx={{ textAlign: "center" }}>
+          <PersonAddAltIcon />
+          <Typography sx={{ fontWeight: 700 }}>Friends</Typography>
+        </StyledTableCell>
+        <StyledTableCell colSpan={5}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {childrenData.map((child) => (
+              <Button
+                key={child.id}
+                variant={selectedChild === child ? "contained" : "outlined"}
+                color="grey"
+                onClick={() => setSelectedChild(child)}
+              >
+                {child.displayName}&apos;s friends
+              </Button>
+            ))}
+          </Box>
+        </StyledTableCell>
+      </TableRow>
+
+      {selectedChild?.friends?.length === 0 ? (
+        <TableRow>
+          <StyledTableCell></StyledTableCell>
+          <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+            <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
+          </StyledTableCell>
+        </TableRow>
+      ) : (
+        selectedChild.friends.map((friend, index) => {
+          const isLastChild = index + 1 === selectedChild.friends.length;
+          const friendBookings = friendsBookings?.filter((booking) => booking.child === friend.id);
+          return (
+            <TableRow key={friend.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderTop: index === 0 ? "1px solid" : {}, borderColor: "grey.300" }}>
+              <StyledTableCell component="th" scope="row">
+                <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
+              </StyledTableCell>
+              
+              {friendBookings?.length === 0 ? (
+                <StyledTableCell colSpan={6} align="center">
+                  <Typography sx={{ fontWeight: 700 }}>No bookings</Typography>
+                </StyledTableCell>
+              ) : (
+                weekDates.map((targetDate, idx) => {
+                  const dateBookings = friendsBookings?.filter(
+                    (booking) => booking.child === friend.id && dayjs(booking.date).isSame(targetDate, "day")
+                  );
+                  return (
+                    <StyledTableCell key={idx} align="left" sx={isLastChild ? { pb: 2 } : {}}>
+                      <BookingDay
+                        bookings={dateBookings}
+                        targetDate={targetDate}
+                        sx={{ mx: "auto" }}
+                        bookingForFriendsTable={true}
+                      />
+                    </StyledTableCell>
+                  );
+                })
+              )}
+            </TableRow>
+          );
+        })
+      )}
+    </>
+  );
+}
+
+function BookingsTable() {
+  const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
+
+  const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
+  const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
+  
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
-    <TableContainer component={Box}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell rowSpan={2} sx={{ verticalAlign: "bottom", textAlign: "center" }}>
-              <FamilyRestroomIcon />
-              <Typography sx={{ fontWeight: 700 }}>Family</Typography>
-            </StyledTableCell>
+    !isLoadingChildren &&
+      <TableContainer component={Box}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell rowSpan={2} sx={{ verticalAlign: "bottom", textAlign: "center" }}>
+                <FamilyRestroomIcon />
+                <Typography sx={{ fontWeight: 700 }}>Family</Typography>
+              </StyledTableCell>
 
-            <StyledTableCell colSpan={5}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <IconButton onClick={handlePreviosWeek}>
-                    <ArrowBackIosNewIcon />
-                  </IconButton>
-                  <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
-                    Today
+              <StyledTableCell colSpan={5}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <IconButton onClick={handlePreviosWeek}>
+                      <ArrowBackIosNewIcon />
+                    </IconButton>
+                    <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
+                      Today
+                    </Button>
+                    <IconButton onClick={handleNextWeek}>
+                      <ArrowForwardIosIcon />
+                    </IconButton>
+                  </Box>
+                  <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
+                    Share Calendar
                   </Button>
-                  <IconButton onClick={handleNextWeek}>
-                    <ArrowForwardIosIcon />
-                  </IconButton>
                 </Box>
-                <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
-                  Share Calendar
-                </Button>
-              </Box>
-            </StyledTableCell>
-          </TableRow>
+              </StyledTableCell>
+            </TableRow>
 
-          <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
-            {weekDates.map((date, index) => (
-              <StyledHeaderTableCell key={index} align="center">
-                <Box
-                  sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}
-                >
-                  {formatDate(date)}
-                </Box>
-              </StyledHeaderTableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {children?.map((child, index) => {
-            const isLastChild = index + 1 === children.length;
-            return (
-              <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
-                <StyledTableCell component="th" scope="row">
-                  <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
-                </StyledTableCell>
-                {weekDates.map((targetDate, index) => {
-                  const dateBookings = bookings?.filter(
-                    (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
-                  );
-                  return (
-                    <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                      <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
-                    </StyledTableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <StyledTableCell></StyledTableCell>
-            <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-              <Button variant="contained" color="yellow" onClick={mutation.mutate}>
-                Pay now
-              </Button>
-            </StyledTableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+            <TableRow sx={{ borderBottom: "1px solid", borderColor: "grey.300" }}>
+              {weekDates.map((date, index) => (
+                <StyledHeaderTableCell key={index} align="center">
+                  <Box
+                    sx={{ bgcolor: dayjs().isSame(date, "day") ? "grey.100" : "transparent", borderRadius: 1.5, py: 1 }}
+                  >
+                    {formatDate(date)}
+                  </Box>
+                </StyledHeaderTableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <FamilyBookings childrenData={children} weekDates={weekDates} />
+            {children && <FriendsBookings childrenData={children} weekDates={weekDates} />}
+          </TableBody>
+        </Table>
+      </TableContainer>
   );
 }
 
@@ -357,8 +489,8 @@ export default function OOSPlannerSection() {
           </Typography>
         </Box>
         <Wrapper sx={{ mt: 8 }}>
-          <Suspense>
-            <FamilyBookings />
+          <Suspense fallback="loading...">
+            <BookingsTable />
           </Suspense>
         </Wrapper>
       </Container>
