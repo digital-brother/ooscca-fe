@@ -461,8 +461,20 @@ function BookingsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
+          {children.length !== 0 ? (
+          <>
             <FamilyBookings childrenData={children} weekDates={weekDates} />
-            {children && <FriendsBookings childrenData={children} weekDates={weekDates} />}
+            <FriendsBookings childrenData={children} weekDates={weekDates} />
+          </>
+          ) : (
+            <TableRow>
+              <StyledTableCell></StyledTableCell>
+              <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+                <Typography sx={{ fontWeight: 700 }}>No children</Typography>
+              </StyledTableCell>
+          </TableRow>
+          )
+        }
           </TableBody>
         </Table>
       </TableContainer>
