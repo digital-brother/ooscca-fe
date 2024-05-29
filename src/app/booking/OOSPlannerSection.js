@@ -299,34 +299,36 @@ function FamilyBookings({ childrenData = [], weekDates }) {
 
   return (
     <>
-    {childrenData?.map((child, index) => {
-      const isLastChild = index + 1 === childrenData.length;
-      return (
-        <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
-          <StyledTableCell component="th" scope="row">
-            <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
-          </StyledTableCell>
-          {weekDates.map((targetDate, index) => {
-            const dateBookings = bookings?.filter(
-              (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
-            );
-            return (
-              <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
-              </StyledTableCell>
-            );
-          })}
-        </TableRow>
-      );
+      {childrenData?.map((child, index) => {
+        const isLastChild = index + 1 === childrenData.length;
+        return (
+          <TableRow key={child.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderColor: "grey.300" }}>
+            <StyledTableCell component="th" scope="row">
+              <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{child.displayName}</Typography>
+            </StyledTableCell>
+            {weekDates.map((targetDate, index) => {
+              const dateBookings = bookings?.filter(
+                (booking) => booking.child === child.id && dayjs(booking.date).isSame(targetDate, "day")
+              );
+              return (
+                <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+                </StyledTableCell>
+              );
+            })}
+          </TableRow>
+        );
       })}
-      <TableRow>
-        <StyledTableCell></StyledTableCell>
-        <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-          <Button variant="contained" color="yellow" onClick={mutation.mutate}>
-            Pay now
-          </Button>
-        </StyledTableCell>
-      </TableRow>
+      {childrenData && childrenData.length !== 0 && (
+        <TableRow>
+          <StyledTableCell></StyledTableCell>
+          <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
+            <Button variant="contained" color="yellow" onClick={mutation.mutate}>
+              Pay now
+            </Button>
+          </StyledTableCell>
+        </TableRow>
+      )}
     </>
   );
 }
@@ -372,11 +374,18 @@ function FriendsBookings({ childrenData = [], weekDates }) {
           const isLastChild = index + 1 === selectedChild.friends.length;
           const friendBookings = friendsBookings?.filter((booking) => booking.child === friend.id);
           return (
-            <TableRow key={friend.id} sx={{borderBottom: isLastChild ? 'none' :  "1px solid", borderTop: index === 0 ? "1px solid" : 'none', borderColor: "grey.300" }}>
+            <TableRow
+             key={friend.id}
+              sx={{
+                borderBottom: isLastChild ? 'none' : "1px solid",
+                borderTop: index === 0 ? "1px solid" : 'none',
+                borderColor: "grey.300",
+              }}
+            >
               <StyledTableCell component="th" scope="row">
                 <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
               </StyledTableCell>
-              
+
               {friendBookings?.length === 0 ? (
                 <StyledTableCell colSpan={6} align="center">
                   <Typography sx={{ fontWeight: 700 }}>No bookings</Typography>
@@ -411,13 +420,13 @@ function BookingsTable() {
 
   const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
-  
+
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
-    !isLoadingChildren &&
+    !isLoadingChildren && (
       <TableContainer component={Box}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -478,6 +487,7 @@ function BookingsTable() {
           </TableBody>
         </Table>
       </TableContainer>
+    )
   );
 }
 
