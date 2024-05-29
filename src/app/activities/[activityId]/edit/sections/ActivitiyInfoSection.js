@@ -1,6 +1,5 @@
 "use client";
 
-import { StyledMuiLink } from "@/app/(homepage)/components/Link";
 import {
   createDiscount,
   getActivity,
@@ -15,7 +14,6 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import {
   Button,
   Chip,
-  Dialog,
   FormControl,
   IconButton,
   InputAdornment,
@@ -56,7 +54,7 @@ import {
 } from "../components/formikFields";
 import { SmFlex } from "../components/responsiveFlexes";
 import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
-import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
+import LegalContentDialog from "@/components/LegalTemplates/LegalContentDialog";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -75,21 +73,6 @@ function SlideHeader({ label, close }) {
   );
 }
 
-function TermsAndConditionsView({ activity, handleClose }) {
-  return (
-    <TermsAndConditionsContainer>
-      {activity?.termsAndConditions ? (
-        <Box dangerouslySetInnerHTML={{ __html: activity?.termsAndConditions }} />
-      ) : (
-        <Typography sx={{ fontWeight: 700 }}>You must add legal disclsimers here.</Typography>
-      )}
-
-      <Button variant="contained" color="green" fullWidth onClick={handleClose} sx={{ mt: 2 }}>
-        Close
-      </Button>
-    </TermsAndConditionsContainer>
-  );
-}
 
 export function ActivityDetails({ sx, editMode=false }) {
   const { activityId, targetDate } = useParams();
@@ -102,7 +85,10 @@ export function ActivityDetails({ sx, editMode=false }) {
   const endingDiscount = discounts?.find((discount) => discount.type === "ending"); 
 
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
-  const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
+  const privacyPolicyHtml = `
+  <h1>Privacy Policy</h1>
+  <p>Your privacy policy content goes here.</p>
+`;
 
   return (
     <Box
@@ -219,23 +205,8 @@ export function ActivityDetails({ sx, editMode=false }) {
         </>
       )}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
-        <StyledMuiLink
-          onClick={() => {
-            console.log(1);
-            setTermsCoditionsOpen(true);
-          }}
-        >
-          Terms & conditions
-        </StyledMuiLink>
+        <LegalContentDialog linkText="Privacy policy" htmlContent={privacyPolicyHtml} />;
         <ActivityDiscountedPrice activity={activity} />
-
-        <Dialog
-          onClose={() => setTermsCoditionsOpen(false)}
-          open={termsCoditionsOpen}
-          PaperProps={{ sx: { maxWidth: "none" } }}
-        >
-          <TermsAndConditionsView activity={activity} handleClose={() => setTermsCoditionsOpen(false)} />
-        </Dialog>
       </Box>
     </Box>
   );
