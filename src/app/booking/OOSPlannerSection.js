@@ -363,16 +363,16 @@ function FriendsBookings({ childrenData = [], weekDates }) {
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
           <StyledTableCell></StyledTableCell>
-          <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+          <StyledTableCell colSpan={6} align="left" >
             <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
           </StyledTableCell>
         </TableRow>
       ) : (
-        selectedChild.friends.map((friend, index) => {
+        selectedChild.friends?.map((friend, index) => {
           const isLastChild = index + 1 === selectedChild.friends.length;
           const friendBookings = friendsBookings?.filter((booking) => booking.child === friend.id);
           return (
-            <TableRow key={friend.id} sx={isLastChild ? {} : { borderBottom: "1px solid", borderTop: index === 0 ? "1px solid" : {}, borderColor: "grey.300" }}>
+            <TableRow key={friend.id} sx={{borderBottom: isLastChild ? 'none' :  "1px solid", borderTop: index === 0 ? "1px solid" : 'none', borderColor: "grey.300" }}>
               <StyledTableCell component="th" scope="row">
                 <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
               </StyledTableCell>
