@@ -18,32 +18,15 @@ export const HEADER_NAV_LINKS = [
   {name: "about", text: 'About', path: '/'},
   {name: "providers", text: 'Providers', path: '#'},
   {name: "contact", text: 'Contact', path: '#'},
-  {name: "signIn", text: 'Sign in', path: '#', icon: AccountChildIcon, border: true},
 ];
 
 function NavLink({link}) {
-  const [authToken, setAuthToken] = useState(null);
-  const mutation = useMutation(logout, {
-    onSuccess: () => {
-      localStorage.removeItem(AUTH_TOKEN_KEY);
-      localStorage.removeItem(USER_ID_KEY);
-      localStorage.removeItem(SIGNUP_CURRENT_STEP_KEY);
-    },
-    onError: (error) => {
-      console.error("Logout failed");
-    }
-  });
-
   const theme = useTheme()
   const linkElement = (
     <Link href="#" sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
       {link.text}
     </Link>
   )
-
-  useEffect(() => {
-    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
-  }, []);
 
   if (!link.border) return linkElement
 
@@ -62,14 +45,45 @@ function NavLink({link}) {
     //   {linkElement}
     // </Box>
     <NextLink href="/" passHref>
+      <Button variant="outlined" color="orange" sx={{
+        textTransform: 'none',
+        fontSize: theme.typography.htmlFontSize,
+      }}>
+        {link.text}
+      </Button>
+    </NextLink>
+  )
+}
+
+function NavLinkAuth() {
+  const [authToken, setAuthToken] = useState(null);
+  const mutation = useMutation(logout, {
+    onSuccess: () => {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem(USER_ID_KEY);
+      localStorage.removeItem(SIGNUP_CURRENT_STEP_KEY);
+    },
+    onError: () => {
+      console.error("Logout failed");
+    }
+  });
+
+  const theme = useTheme()
+
+  useEffect(() => {
+    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
+  }, []);
+
+  return (
+    <NextLink href="/" passHref>
       <Button variant="outlined" color="orange" onClick={authToken ? mutation.mutate : null} sx={{
         textTransform: 'none',
         fontSize: theme.typography.htmlFontSize,
       }}>
-        {authToken ? 'Log out': link.text}
-      </Button>
-    </NextLink>
-  )
+      {authToken ? 'Log out': 'Sign in'}
+    </Button>
+  </NextLink>
+  );
 }
 
 export function NavLinks() {
@@ -78,6 +92,7 @@ export function NavLinks() {
       {HEADER_NAV_LINKS.map((link, index) => (
         <NavLink key={index} link={link}/>
       ))}
+      <NavLinkAuth />
     </>
   )
 }
