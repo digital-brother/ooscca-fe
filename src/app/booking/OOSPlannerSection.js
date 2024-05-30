@@ -365,7 +365,7 @@ function FriendsBookings({ childrenData = [], weekDates }) {
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
           <StyledTableCell></StyledTableCell>
-          <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+          <StyledTableCell colSpan={6} align="left">
             <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
           </StyledTableCell>
         </TableRow>
@@ -376,11 +376,11 @@ function FriendsBookings({ childrenData = [], weekDates }) {
           return (
             <TableRow
               key={friend.id}
-              sx={
-                isLastChild
-                  ? {}
-                  : { borderBottom: "1px solid", borderTop: index === 0 ? "1px solid" : {}, borderColor: "grey.300" }
-              }
+              sx={{
+                borderBottom: isLastChild ? "none" : "1px solid",
+                borderTop: index === 0 ? "1px solid" : "none",
+                borderColor: "grey.300",
+              }}
             >
               <StyledTableCell component="th" scope="row">
                 <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
@@ -470,8 +470,19 @@ function BookingsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <FamilyBookings childrenData={children} weekDates={weekDates} />
-            {children && <FriendsBookings childrenData={children} weekDates={weekDates} />}
+            {children.length !== 0 ? (
+              <>
+                <FamilyBookings childrenData={children} weekDates={weekDates} />
+                <FriendsBookings childrenData={children} weekDates={weekDates} />
+              </>
+            ) : (
+              <TableRow>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+                  <Typography sx={{ fontWeight: 700 }}>No children</Typography>
+                </StyledTableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
