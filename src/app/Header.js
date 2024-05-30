@@ -5,17 +5,20 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import Link from "@/app/(homepage)/components/Link";
-import AccountChildIcon from "@/assets/AccountChildIcon";
 import NextLink from "next/link";
 import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {Logo} from "@/app/(homepage)/components/Logo";
+import { useState, useEffect } from "react";
+import { useMutation } from "react-query";
+import { useSnackbar } from 'notistack';
+import { getFlatErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { logout, AUTH_TOKEN_KEY } from "@/app/api.mjs";
 
 export const HEADER_NAV_LINKS = [
   {name: "about", text: 'About', path: '/'},
   {name: "providers", text: 'Providers', path: '#'},
   {name: "contact", text: 'Contact', path: '#'},
-  {name: "signIn", text: 'Sign in', path: '#', icon: AccountChildIcon, border: true},
 ];
 
 function NavLink({link}) {
@@ -53,12 +56,60 @@ function NavLink({link}) {
   )
 }
 
+function LogOutLink() {
+  const theme = useTheme()
+  const { enqueueSnackbar } = useSnackbar();
+  const mutation = useMutation(logout, {
+    onSuccess: () => {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      enqueueSnackbar("Logout success", { variant: "success" });
+    },
+    onError: (error) => {
+      const errorMsg = getFlatErrors(error).join("; ");
+      enqueueSnackbar(errorMsg, { variant: "error" });
+    }
+  });
+
+  return (
+    <NextLink href="/" passHref>
+      <Button variant="outlined" color="orange" onClick={mutation.mutate} sx={{
+        textTransform: 'none',
+        fontSize: theme.typography.htmlFontSize,
+      }}>
+        Log out
+    </Button>
+  </NextLink>
+  );
+}
+
+function SignInLink() {
+  const theme = useTheme()
+
+  return (
+    <NextLink href="/login" passHref>
+      <Button variant="outlined" color="orange" sx={{
+        textTransform: 'none',
+        fontSize: theme.typography.htmlFontSize,
+      }}>
+        Sign in
+    </Button>
+  </NextLink>
+  );
+}
+
 export function NavLinks() {
+  const [authToken, setAuthToken] = useState(null);
+
+  useEffect(() => {
+    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
+  }, []);
+
   return (
     <>
       {HEADER_NAV_LINKS.map((link, index) => (
         <NavLink key={index} link={link}/>
       ))}
+      {authToken ? <LogOutLink /> : <SignInLink />}
     </>
   )
 }
