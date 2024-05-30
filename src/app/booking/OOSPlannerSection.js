@@ -365,20 +365,20 @@ function FriendsBookings({ childrenData = [], weekDates }) {
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
           <StyledTableCell></StyledTableCell>
-          <StyledTableCell colSpan={6} align="left" >
+          <StyledTableCell colSpan={6} align="left">
             <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
           </StyledTableCell>
         </TableRow>
       ) : (
-        selectedChild.friends?.map((friend, index) => {
+        selectedChild?.friends?.map((friend, index) => {
           const isLastChild = index + 1 === selectedChild.friends.length;
           const friendBookings = friendsBookings?.filter((booking) => booking.child === friend.id);
           return (
             <TableRow
-             key={friend.id}
+              key={friend.id}
               sx={{
-                borderBottom: isLastChild ? 'none' : "1px solid",
-                borderTop: index === 0 ? "1px solid" : 'none',
+                borderBottom: isLastChild ? "none" : "1px solid",
+                borderTop: index === 0 ? "1px solid" : "none",
                 borderColor: "grey.300",
               }}
             >
@@ -470,20 +470,19 @@ function BookingsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-          {children.length !== 0 ? (
-          <>
-            <FamilyBookings childrenData={children} weekDates={weekDates} />
-            <FriendsBookings childrenData={children} weekDates={weekDates} />
-          </>
-          ) : (
-            <TableRow>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
-                <Typography sx={{ fontWeight: 700 }}>No children</Typography>
-              </StyledTableCell>
-          </TableRow>
-          )
-        }
+            {children.length !== 0 ? (
+              <>
+                <FamilyBookings childrenData={children} weekDates={weekDates} />
+                <FriendsBookings childrenData={children} weekDates={weekDates} />
+              </>
+            ) : (
+              <TableRow>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+                  <Typography sx={{ fontWeight: 700 }}>No children</Typography>
+                </StyledTableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
