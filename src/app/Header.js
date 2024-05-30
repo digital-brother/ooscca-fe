@@ -55,44 +55,58 @@ function NavLink({link}) {
   )
 }
 
-function NavLinkAuth() {
-  const [authToken, setAuthToken] = useState(null);
+function LogOutLink() {
+  const theme = useTheme()
   const mutation = useMutation(logout, {
     onSuccess: () => {
       localStorage.removeItem(AUTH_TOKEN_KEY);
-      localStorage.removeItem(USER_ID_KEY);
-      localStorage.removeItem(SIGNUP_CURRENT_STEP_KEY);
+      console.log("Logout success");
     },
     onError: () => {
       console.error("Logout failed");
     }
   });
 
-  const theme = useTheme()
-
-  useEffect(() => {
-    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
-  }, []);
-
   return (
     <NextLink href="/" passHref>
-      <Button variant="outlined" color="orange" onClick={authToken ? mutation.mutate : null} sx={{
+      <Button variant="outlined" color="orange" onClick={mutation.mutate} sx={{
         textTransform: 'none',
         fontSize: theme.typography.htmlFontSize,
       }}>
-      {authToken ? 'Log out': 'Sign in'}
+        Log out
+    </Button>
+  </NextLink>
+  );
+}
+
+function SignInLink() {
+  const theme = useTheme()
+
+  return (
+    <NextLink href="/" passHref>
+      <Button variant="outlined" color="orange" sx={{
+        textTransform: 'none',
+        fontSize: theme.typography.htmlFontSize,
+      }}>
+        Sign in
     </Button>
   </NextLink>
   );
 }
 
 export function NavLinks() {
+  const [authToken, setAuthToken] = useState(null);
+
+  useEffect(() => {
+    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
+  }, []);
+
   return (
     <>
       {HEADER_NAV_LINKS.map((link, index) => (
         <NavLink key={index} link={link}/>
       ))}
-      <NavLinkAuth />
+      {authToken ? <LogOutLink /> : <SignInLink />}
     </>
   )
 }
