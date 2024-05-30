@@ -115,9 +115,10 @@ export function ActivityCard({ activity, targetDate }) {
           </Stack>
         )}
       </Box>
-      <Stack sx={{ p: 2, flex: 1 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
-          <Box>
+
+      <Stack sx={{ p: 2, flex: 1, justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Stack>
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
@@ -126,7 +127,13 @@ export function ActivityCard({ activity, targetDate }) {
             <Typography variant="body2" sx={{ mb: 3 }}>
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
             </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          </Stack>
+          <ActivityClientBadges activity={activity} />
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 1, flex: 1 }}>
+          <Stack sx={{ gap: 1 }}>
+            <Box sx={{ display: "flex", gap: 1 }}>
               <AccessTimeIcon fontSize="15" />
               <Typography variant="body2">
                 {activity?.startTime} - {activity?.endTime}
@@ -160,17 +167,10 @@ export function ActivityCard({ activity, targetDate }) {
                 &nbsp; Late pick up {activity?.latePickUpTime}
               </Typography>
             )}
-          </Box>
-
-          <Stack sx={{ justifyContent: "space-between" }}>
-            <Stack sx={{ gap: 0.5 }}>
-              <ActivityClientBadges activity={activity} />
-            </Stack>
-            <ActivityDiscountedPrice activity={activity} />
           </Stack>
+          <ActivityDiscountedPrice activity={activity} />
         </Box>
-        <Box flex={1}></Box>
-        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 3, gap: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 2, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
             <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
               Learn more
@@ -311,12 +311,12 @@ export default ActivitiesCalendar;
 
 export function ActivityClientBadges({ activity }) {
   return (
-    <>
+    <Stack sx={{ gap: 1 }}>
       {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
       {activity?.spacesLeft <= 5 && (
         <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
       )}
-    </>
+    </Stack>
   );
 }
 
