@@ -5,14 +5,15 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import Link from "@/app/(homepage)/components/Link";
-import AccountChildIcon from "@/assets/AccountChildIcon";
 import NextLink from "next/link";
 import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {Logo} from "@/app/(homepage)/components/Logo";
 import { useState, useEffect } from "react";
 import { useMutation } from "react-query";
-import { logout, AUTH_TOKEN_KEY, SIGNUP_CURRENT_STEP_KEY, USER_ID_KEY } from "@/app/api.mjs";
+import { useSnackbar } from 'notistack';
+import { getFlatErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
+import { logout, AUTH_TOKEN_KEY } from "@/app/api.mjs";
 
 export const HEADER_NAV_LINKS = [
   {name: "about", text: 'About', path: '/'},
@@ -57,13 +58,15 @@ function NavLink({link}) {
 
 function LogOutLink() {
   const theme = useTheme()
+  const { enqueueSnackbar } = useSnackbar();
   const mutation = useMutation(logout, {
     onSuccess: () => {
       localStorage.removeItem(AUTH_TOKEN_KEY);
-      console.log("Logout success");
+      enqueueSnackbar("Logout success", { variant: "success" });
     },
-    onError: () => {
-      console.error("Logout failed");
+    onError: (error) => {
+      const errorMsg = getFlatErrors(error).join("; ");
+      enqueueSnackbar(errorMsg, { variant: "error" });
     }
   });
 
@@ -83,7 +86,7 @@ function SignInLink() {
   const theme = useTheme()
 
   return (
-    <NextLink href="/" passHref>
+    <NextLink href="/login" passHref>
       <Button variant="outlined" color="orange" sx={{
         textTransform: 'none',
         fontSize: theme.typography.htmlFontSize,
