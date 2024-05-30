@@ -118,7 +118,7 @@ export function ActivityCard({ activity, targetDate }) {
 
       <Stack sx={{ p: 2, flex: 1, justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Stack sx={{ flex: 1 }}>
+          <Stack>
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
@@ -128,9 +128,7 @@ export function ActivityCard({ activity, targetDate }) {
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
             </Typography>
           </Stack>
-          <Stack sx={{ gap: 1 }}>
-            <ActivityClientBadges activity={activity} />
-          </Stack>
+          <ActivityClientBadges activity={activity} />
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 1, flex: 1 }}>
@@ -170,7 +168,7 @@ export function ActivityCard({ activity, targetDate }) {
               </Typography>
             )}
           </Stack>
-            <ActivityDiscountedPrice activity={activity} />
+          <ActivityDiscountedPrice activity={activity} />
         </Box>
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 1, gap: 2 }}>
           <Link href={activityDetailUrl} passHref>
@@ -313,12 +311,12 @@ export default ActivitiesCalendar;
 
 export function ActivityClientBadges({ activity }) {
   return (
-    <>
-      {<Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
-      {(
+    <Stack sx={{ gap: 1 }}>
+      {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
+      {activity?.spacesLeft <= 5 && (
         <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
       )}
-    </>
+    </Stack>
   );
 }
 
