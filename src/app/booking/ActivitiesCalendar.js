@@ -117,8 +117,8 @@ export function ActivityCard({ activity, targetDate }) {
       </Box>
 
       <Stack sx={{ p: 2, flex: 1, justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Stack sx={{ flex: 1, gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Stack sx={{ flex: 1 }}>
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
@@ -314,8 +314,8 @@ export default ActivitiesCalendar;
 export function ActivityClientBadges({ activity }) {
   return (
     <>
-      {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
-      {activity?.spacesLeft <= 5 && (
+      {<Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
+      {(
         <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
       )}
     </>
