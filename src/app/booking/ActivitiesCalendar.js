@@ -116,9 +116,9 @@ export function ActivityCard({ activity, targetDate }) {
         )}
       </Box>
 
-      <Stack sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <Stack sx={{ p: 2, flex: 1, justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", mr: 2 }}>
+          <Stack sx={{ flex: 1, gap: 2 }}>
             <Typography variant="subtitle1">{activity?.providerName}</Typography>
             <Typography variant="body2">{activity?.address}</Typography>
             <Typography variant="subtitle1" sx={{ mt: 2 }}>
@@ -127,14 +127,14 @@ export function ActivityCard({ activity, targetDate }) {
             <Typography variant="body2" sx={{ mb: 3 }}>
               {activity?.ageTo ? `(ages ${activity?.ageFrom}-${activity?.ageTo})` : `(age ${activity?.ageFrom})`}
             </Typography>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          </Stack>
+          <Stack sx={{ gap: 1 }}>
             <ActivityClientBadges activity={activity} />
-          </Box>
+          </Stack>
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 1, flex: 1 }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Stack sx={{ gap: 1 }}>
             <Box sx={{ display: "flex", gap: 1 }}>
               <AccessTimeIcon fontSize="15" />
               <Typography variant="body2">
@@ -169,7 +169,7 @@ export function ActivityCard({ activity, targetDate }) {
                 &nbsp; Late pick up {activity?.latePickUpTime}
               </Typography>
             )}
-          </Box>
+          </Stack>
             <ActivityDiscountedPrice activity={activity} />
         </Box>
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 1, gap: 2 }}>
