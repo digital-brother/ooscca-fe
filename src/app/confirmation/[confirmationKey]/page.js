@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { Container, CircularProgress } from '@mui/material';
-import { verifyEmail } from "@/app/api.mjs";
+import { verifyEmail, SIGNUP_CURRENT_STEP_KEY, USER_ID_KEY } from "@/app/api.mjs";
 
 export default function VerifyEmail({ params }) {
   const router = useRouter();
@@ -17,6 +17,8 @@ export default function VerifyEmail({ params }) {
   useEffect(() => {
     mutation.mutate({ key: decodedKey }, {
       onSuccess: () => {
+        localStorage.removeItem(USER_ID_KEY);
+        localStorage.removeItem(SIGNUP_CURRENT_STEP_KEY);
         router.push("/login");
       },
       onError: () => {
