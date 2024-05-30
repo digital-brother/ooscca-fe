@@ -11,6 +11,7 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
+const FRIENDS_BOOKINGS_PATH = "/friends-bookings";
 const BILLS_PATH = "/bills";
 const SCHOOLS_PATH = "/schools";
 const LOGIN_PATH = "/dj-rest-auth/login";
@@ -169,11 +170,23 @@ export async function getChildren() {
   return response.data;
 }
 
-export async function getBookings(dateAfter, dateBefore) {
-  const response = await client.get(BOOKINGS_PATH, {
+export async function getBookings({ dateAfter, dateBefore }) {
+  const url = `${BOOKINGS_PATH}/`;
+  const response = await client.get(url, {
     params: {
-      dateAfter: dateAfter.format("YYYY-MM-DD"),
-      dateBefore: dateBefore.format("YYYY-MM-DD"),
+      date_after: dateAfter.format("YYYY-MM-DD"),
+      date_before: dateBefore.format("YYYY-MM-DD"),
+    },
+  });
+  return response.data;
+}
+
+export async function getFriendsBookings({ dateAfter, dateBefore }) {
+  const url = `${FRIENDS_BOOKINGS_PATH}/`;
+  const response = await client.get(url, {
+    params: {
+      date_after: dateAfter.format("YYYY-MM-DD"),
+      date_before: dateBefore.format("YYYY-MM-DD"),
     },
   });
   return response.data;
