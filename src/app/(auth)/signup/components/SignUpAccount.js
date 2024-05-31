@@ -11,7 +11,7 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, Button, Container, IconButton, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as Yup from "yup";
 import { useMutation } from "react-query";
 import { signupAccount, USER_ID_KEY } from "@/app/api.mjs";
@@ -33,6 +33,9 @@ export function SignUpContainer({ children, sx }) {
 
 export default function SignUpAccount({ goToNextStep }) {
   const mutation = useMutation(signupAccount);
+  const searchParams = useSearchParams();
+  const emailParams = searchParams.get('email') ? decodeURIComponent(searchParams.get('email')) : "";
+  const acceptPolicyParams = searchParams.get('acceptPolicy') === 'true';
 
   async function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({
@@ -56,7 +59,7 @@ export default function SignUpAccount({ goToNextStep }) {
         </Typography>
         <Formik
           onSubmit={handleSubmit}
-          initialValues={{ email: "", password1: "", password2: "", termsConditionsAccepted: false }}
+          initialValues={{ email: emailParams, password1: "", password2: "", termsConditionsAccepted: acceptPolicyParams }}
           validationSchema={Yup.object({
             email: Yup.string().email("Invalid email address").required("Required"),
             password1: Yup.string()
