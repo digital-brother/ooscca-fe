@@ -470,7 +470,7 @@ function BookingsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {children.length !== 0 ? (
+            {children?.length !== 0 ? (
               <>
                 <FamilyBookings childrenData={children} weekDates={weekDates} />
                 <FriendsBookings childrenData={children} weekDates={weekDates} />
