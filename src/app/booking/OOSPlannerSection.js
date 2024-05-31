@@ -46,10 +46,10 @@ function FilledBooking({ booking }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleDelete = () => {
-    if (["unpaid", "pending"].includes(booking.status)) {
+    if (booking.status !== 'paid') {
       mutation.mutate();
     } else {
-      enqueueSnackbar("Only unpaid or pending bookings can be deleted", { variant: "error" });
+      enqueueSnackbar("Paid bookings cannot be deleted", { variant: "error" });
     }
   };
 
