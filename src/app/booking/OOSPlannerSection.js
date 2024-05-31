@@ -45,6 +45,14 @@ function FilledBooking({ booking }) {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
+  const handleDelete = () => {
+    if (["unpaid", "pending"].includes(booking.status)) {
+      mutation.mutate();
+    } else {
+      enqueueSnackbar("Only unpaid or pending bookings can be deleted", { variant: "error" });
+    }
+  };
+
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
@@ -107,7 +115,7 @@ function FilledBooking({ booking }) {
           <IosShareIcon />
         </IconButton>
         <IconButton>
-          <DeleteForeverIcon onClick={() => mutation.mutate()} />
+          <DeleteForeverIcon onClick={() => handleDelete()} />
         </IconButton>
       </Box>
     </BookingBox>
