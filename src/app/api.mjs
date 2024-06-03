@@ -29,7 +29,7 @@ export const SIGNUP_CURRENT_STEP_KEY = "signupCurrentStep";
 
 const client = axios.create({
   baseURL: API_HOST,
-  timeout: 5000,
+  timeout: 1000,
 });
 
 client.interceptors.request.use((config) => {
