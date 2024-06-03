@@ -32,6 +32,10 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
 import { SelectedDateContext } from "./page";
+import ShareInvitePopup from './ShareInvitePopup';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 dayjs.extend(weekday);
 
@@ -41,7 +45,7 @@ const BookingBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-function FilledBooking({ booking }) {
+function FilledBooking({ booking, handleShareClick, handleChildId }) {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -104,7 +108,11 @@ function FilledBooking({ booking }) {
       <Typography>{booking.activity.address}</Typography>
       <Box sx={{ mt: "auto", mb: -1.5, mx: -1.5, display: "flex", justifyContent: "space-between" }}>
         <IconButton>
-          <IosShareIcon />
+          <IosShareIcon onClick={() => {
+            handleChildId(booking.child);
+            handleShareClick();
+            }}
+          />
         </IconButton>
         <IconButton>
           <DeleteForeverIcon onClick={() => mutation.mutate()} />
@@ -178,7 +186,7 @@ function FriendEmptyBooking() {
   );
 }
 
-function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
+function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable, handleChildId = {}, handleShareClick = {} }) {
   bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
 
   if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
@@ -198,7 +206,7 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
             <FriendEmptyBooking key={index} />
           )
         ) : booking ? (
-          <FilledBooking key={booking.id} booking={booking} />
+          <FilledBooking key={booking.id} booking={booking} handleChildId={handleChildId} handleShareClick={handleShareClick}/>
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
         )
@@ -268,7 +276,7 @@ function useAwaitingPaidStatusBill(billIdInitial = null) {
   const { setBillId } = useBillPolling({ billIdInitial, onSuccess });
 }
 
-function FamilyBookings({ childrenData = [], weekDates }) {
+function FamilyBookings({ childrenData = [], weekDates, handleChildId, handleShareClick }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -312,7 +320,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
               );
               return (
                 <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} handleChildId={handleChildId} handleShareClick={handleShareClick}/>
                 </StyledTableCell>
               );
             })}
@@ -415,8 +423,68 @@ function FriendsBookings({ childrenData = [], weekDates }) {
   );
 }
 
+export const ShareCalendar = ({ childrenData, handleChildId, handleShareClick }) => {
+
+  return (
+    <>
+      {childrenData?.length === 1 ? (
+        <Button startIcon={<IosShareIcon />} variant="outlined" color="grey" onClick={() => {
+          handleChildId(childrenData[0].id);
+          handleShareClick();
+        }}>
+          Share Calendar
+        </Button>
+      ) : (
+        <PopupState variant="popover" popupId="children-popup-menu">
+          {(popupState) => (
+            <>
+              <Button startIcon={<IosShareIcon />} {...bindTrigger(popupState)} variant="outlined" color="grey">
+                  Share Calendar
+              </Button>
+              <Menu
+        {...bindMenu(popupState)}
+        slotProps={{
+          paper: {
+            style: {
+              width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
+              },
+            },
+              }}
+                >
+                {childrenData?.map((child) => (
+                  <MenuItem key={child.id} onClick={() => {
+                    popupState.close();
+                    handleChildId(child.id);
+                    handleShareClick();
+                  }}>
+                    {child.displayName}
+                  </MenuItem> 
+                ))}
+              </Menu>
+            </>
+          )}
+        </PopupState>
+      )}
+    </>
+  );
+};
+
 function BookingsTable() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
+  const [open, setOpen] = useState(false);
+  const [childId, setChildId] = useState();
+
+  const handleShareClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChildId = (childId) => {
+    setChildId(childId)
+  };
 
   const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
   const weekDates = Array.from({ length: 5 }, (_, i) => getDisplayedWeekModayDate(selectedDate).add(i, "day"));
@@ -450,9 +518,8 @@ function BookingsTable() {
                       <ArrowForwardIosIcon />
                     </IconButton>
                   </Box>
-                  <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
-                    Share Calendar
-                  </Button>
+                  <ShareCalendar childrenData={children} handleChildId={handleChildId} handleShareClick={handleShareClick} />
+                  <ShareInvitePopup open={open} onClose={handleClose} childId={childId} />
                 </Box>
               </StyledTableCell>
             </TableRow>
@@ -472,7 +539,7 @@ function BookingsTable() {
           <TableBody>
             {children?.length !== 0 ? (
               <>
-                <FamilyBookings childrenData={children} weekDates={weekDates} />
+                <FamilyBookings childrenData={children} weekDates={weekDates} handleChildId={handleChildId} handleShareClick={handleShareClick} />
                 <FriendsBookings childrenData={children} weekDates={weekDates} />
               </>
             ) : (

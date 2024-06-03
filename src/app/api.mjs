@@ -21,6 +21,7 @@ const SIGNUP_CHILDREN_PATH = "/signup-children";
 const RESEND_EMAIL_PATH = "/resend-email";
 const VERIFY_EMAIL_PATH = "/verify-email";
 const LOGOUT_PATH = "/dj-rest-auth/logout";
+const SEND_INVITE_PATH = "/send-invite";
 
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
@@ -28,7 +29,7 @@ export const SIGNUP_CURRENT_STEP_KEY = "signupCurrentStep";
 
 const client = axios.create({
   baseURL: API_HOST,
-  timeout: 1000,
+  timeout: 5000,
 });
 
 client.interceptors.request.use((config) => {
@@ -262,4 +263,10 @@ export async function createBill(data) {
 export async function getBill(billId) {
     const response = await client.get(`${BILLS_PATH}/${billId}/`);
     return response.data;
+}
+
+export async function sendInvite(childId, data) {
+  data.child = childId;
+  const response = await client.post(`${SEND_INVITE_PATH}/`, data);
+  return response.data;
 }
