@@ -5,7 +5,7 @@ import {
   FormikTextField,
   createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
-import { sendInvite } from "@/app/api.mjs";
+import { shareCalendar } from "@/app/api.mjs";
 import { Form, Formik } from "formik";
 import { useSnackbar } from 'notistack';
 import { Dialog, Box, Container, IconButton, styled, Button, Typography, InputAdornment } from '@mui/material';
@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useMutation } from "react-query";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import LinkIcon from '@mui/icons-material/Link';
+import {useTheme} from "@mui/material/styles";
 import * as Yup from "yup";
 
 const CustomTab = styled(Tab)(({ theme }) => ({
@@ -30,21 +31,16 @@ const CustomTab = styled(Tab)(({ theme }) => ({
     fontSize: 16,
   }));
 
-  const CustomDialog = styled(Dialog)({
-    '& .MuiPaper-root': {
-      border: 'none',
-    },
-  });
-
-  export default function ShareInvitePopup ({ open, onClose, childId }) {
-    const [value, setValue] = useState("invite");
+  export default function ShareCalendarPopup ({ open, onClose, childId }) {
+    const palette = useTheme().palette;
+    const [selectedTab, setSelectedTab] = useState("invite");
     const { enqueueSnackbar } = useSnackbar();
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+      setSelectedTab(newValue);
     };
 
-    const mutation = useMutation((data) => sendInvite(childId, data));
+    const mutation = useMutation((data) => shareCalendar(childId, data));
     
     async function handleSubmit(values, formikHelpers) {
         const handle = createHandleSubmit({
@@ -66,8 +62,8 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                   <HighlightOffRoundedIcon sx={{ color: 'common.black', fontSize: 28 }} />
                 </IconButton>
               </Box>
-              <TabContext value={value}>
-                <Box sx={{ width: '100%', borderBottom: '2px solid lightgray' }}>
+              <TabContext value={selectedTab}>
+                <Box sx={{ width: '100%', borderBottom: `2px solid ${palette.grey[300]}` }}>
                   <TabList  variant="fullWidth"
                             textColor="primary"
                             indicatorColor="primary"
@@ -84,7 +80,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                       onSubmit={handleSubmit}
                       initialValues={{ toEmail: "" }}
                       validationSchema={Yup.object({
-                        toEmail: Yup.string().label("Email address").email("Invalid email address").required(),
+                        toEmail: Yup.string().label("Email address").email().required(),
                       })}
                     >
                       <Form>
@@ -96,13 +92,13 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                             label="Add email to share with more friends"
                             InputProps={{
                               startAdornment: (
-                                <InputAdornment sx={{color: '#23A6C9'}} position="start">
+                                <InputAdornment sx={{color: palette.info.light}} position="start">
                                   <LinkIcon />
                                 </InputAdornment>
                               ),
                               endAdornment: (
                                 <InputAdornment position="end">
-                                  <Button variant="contained" sx={{backgroundColor: '#23A161'}} type="submit">
+                                  <Button variant="contained" sx={{backgroundColor: palette.success.light }} type="submit">
                                     Send invite
                                   </Button>
                                 </InputAdornment>
@@ -110,9 +106,9 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                             }}
                             InputLabelProps={{
                               sx: {
-                                color: '#23A6C9',
+                                color: palette.info.light,
                                 '&.Mui-focused': {
-                                  color: '#23A6C9',
+                                  color: palette.info.light,
                                 },
                               },
                             }}
