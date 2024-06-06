@@ -18,12 +18,10 @@ import { useState } from "react";
 import { useMutation } from "react-query";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import LinkIcon from '@mui/icons-material/Link';
-import {useTheme} from "@mui/material/styles";
 import * as Yup from "yup";
 
 const CustomTab = styled(Tab)(({ theme }) => ({
     textTransform: "none",
-    bottom: "none",
     "&.Mui-selected": {
       color: "black",
     },
@@ -32,7 +30,6 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   }));
 
   export default function ShareCalendarPopup ({ open, onClose, childId }) {
-    const palette = useTheme().palette;
     const [selectedTab, setSelectedTab] = useState("invite");
     const { enqueueSnackbar } = useSnackbar();
 
@@ -54,8 +51,8 @@ const CustomTab = styled(Tab)(({ theme }) => ({
     
     return (
         <Dialog open={open} onClose={onClose}>
-          <Container sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>
-            <Box sx={{ border: 'none', width: { xs: '100%', sm: 545 }, maxWidth: 545, p: 4 }}>
+          <Container sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', pb: 2}}>
+            <Box sx={{ width: { xs: '100%', sm: 545 }, maxWidth: 545, p: 4 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Image src="/logo.png" alt="Logo" width={160} height={36} />
                 <IconButton size="small" onClick={onClose}>
@@ -63,17 +60,17 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                 </IconButton>
               </Box>
               <TabContext value={selectedTab}>
-                <Box sx={{ width: '100%', borderBottom: `2px solid ${palette.grey[300]}` }}>
+                <Box sx={{ borderBottom: "2px solid", borderColor: "grey.300", pt: 2 }}>
                   <TabList  variant="fullWidth"
                             textColor="primary"
-                            indicatorColor="primary"
+                            indicatorColor="none"
                             aria-label="full width tabs" onChange={handleChange}>
                     <CustomTab label="Invite" value="invite" />
                     <CustomTab label="Sharing" value="sharing" disabled={true}/>
                     <CustomTab label="Privacy" value="privacy" disabled={true}/>
                   </TabList>
                 </Box>
-                <Box sx={{ p: 0, pt: 2}}>
+                <Box sx={{ pt: 2}}>
                   <TabPanel sx={{ p: 0 }} value="invite">
                     <Typography sx={{ py: 2 }} >Sharing with friends</Typography>
                     <Formik
@@ -92,13 +89,13 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                             label="Add email to share with more friends"
                             InputProps={{
                               startAdornment: (
-                                <InputAdornment sx={{color: palette.info.light}} position="start">
+                                <InputAdornment sx={{color: "info.light"}} position="start">
                                   <LinkIcon />
                                 </InputAdornment>
                               ),
                               endAdornment: (
                                 <InputAdornment position="end">
-                                  <Button variant="contained" sx={{backgroundColor: palette.success.light }} type="submit">
+                                  <Button variant="contained" sx={{backgroundColor: "success.light" }} type="submit">
                                     Send invite
                                   </Button>
                                 </InputAdornment>
@@ -106,9 +103,9 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                             }}
                             InputLabelProps={{
                               sx: {
-                                color: palette.info.light,
+                                color: "info.light",
                                 '&.Mui-focused': {
-                                  color: palette.info.light,
+                                  color: "info.light",
                                 },
                               },
                             }}

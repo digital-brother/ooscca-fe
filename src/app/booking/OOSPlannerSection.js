@@ -465,12 +465,12 @@ export const ShareCalendar = ({ childrenData, showSharePopup }) => {
 
 function BookingsTable() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
-  const [open, setOpen] = useState(false);
-  const [childId, setChildId] = useState();
+  const [shareCalendarPopupOpen, setShareCalendarPopupOpen] = useState(false);
+  const [shareCalendarChildId, setShareCalendarChildId] = useState();
 
-  const showSharePopup = (childId) => {
-    setChildId(childId);
-    setOpen(true);
+  const showSharePopup = (shareCalendarChildId) => {
+    setShareCalendarChildId(shareCalendarChildId);
+    setShareCalendarPopupOpen(true);
   };
 
   const { data: children, isLoading: isLoadingChildren } = useQuery("children", getChildren);
@@ -506,7 +506,7 @@ function BookingsTable() {
                     </IconButton>
                   </Box>
                   <ShareCalendar childrenData={children} showSharePopup={showSharePopup} />
-                  <ShareCalendarPopup open={open} onClose={() => setOpen(false)} childId={childId} />
+                  <ShareCalendarPopup open={shareCalendarPopupOpen} onClose={() => setShareCalendarPopupOpen(false)} childId={shareCalendarChildId} />
                 </Box>
               </StyledTableCell>
             </TableRow>
