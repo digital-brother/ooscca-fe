@@ -16,8 +16,13 @@ export default function TermsAndConditionsPage() {
         mt: theme.spacing(5),
         mb: theme.spacing(5),
       }}>
-        <Box sx={{ textAlign: 'center', mb: theme.spacing(2) }}>
-          <Typography variant="h4">
+        <Box sx={{ backgroundColor: theme.palette.grey[200],
+          textAlign: 'center',
+          mb: theme.spacing(4),
+          p: theme.spacing(14),
+          borderRadius: theme.shape.borderRadius
+         }}>
+          <Typography variant="h3">
             Terms and conditions
           </Typography>
           <Typography variant="body1">
