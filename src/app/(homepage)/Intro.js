@@ -4,16 +4,20 @@ import { Box, Button, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 import Grid from "@mui/material/Grid";
+import { AUTH_TOKEN_KEY } from "@/app/api.mjs";
 
 function IntroText(props) {
+  const router = useRouter();
+  
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
       <Typography variant="subheading">
-        OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
+        OOSCCA /&apos;os.ka/ — Out Of School Clubs, Classes & Activities
       </Typography>
       <Typography mt={3} variant="h1">
-        All-in-one platform that brings kids’ activity providers and parents
+        All-in-one platform that brings kids&apos; activity providers and parents
         under one roof
       </Typography>
       <Typography mt={3} variant="h5" color="text.secondary">
@@ -22,6 +26,7 @@ function IntroText(props) {
       </Typography>
       <Button
         sx={{ mt: 5, textTransform: "none", fontSize: 24, fontWieght: 700 }}
+        onClick={() => localStorage.getItem(AUTH_TOKEN_KEY) ? router.push("/booking") : router.push("/login")}
         variant="contained"
         color="orange"
         size="large"

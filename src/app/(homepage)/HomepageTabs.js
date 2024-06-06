@@ -9,9 +9,11 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Tab from "@mui/material/Tab";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SchoolStats from "@/app/(homepage)/SchoolStats";
 import Image from "next/image";
+import { AUTH_TOKEN_KEY } from "@/app/api.mjs";
 
 const TABS_CONTENT = {
   classBirthdayCalendar: {
@@ -62,7 +64,7 @@ function HomepageTabsHeader({ sx }) {
         Your central hub for key school details
       </Typography>
       <Typography mt={2} variant="body1" color="text.secondary">
-        You shouldn’t have your work cut out finding and syncing holidays, birthdays and contacts. Once you&apos;re on
+        You shouldn&apos;t have your work cut out finding and syncing holidays, birthdays and contacts. Once you&apos;re on
         board, you&apos;ll have access to crucial information like school holiday schedules, classmates&apos; birthdays,
         and parents&apos; contact details at your fingertips.
       </Typography>
@@ -72,6 +74,7 @@ function HomepageTabsHeader({ sx }) {
 
 function ContentPanel({ type }) {
   const data = TABS_CONTENT[type];
+  const router = useRouter()
 
   return (
     <Box
@@ -96,7 +99,12 @@ function ContentPanel({ type }) {
         <Typography mb={3} variant="body1" color="text.secondary">
           {data.description}
         </Typography>
-        <Button variant="outlined" color="orange" size="large">
+        <Button
+          variant="outlined"
+          color="orange"
+          size="large"
+          onClick={() => localStorage.getItem(AUTH_TOKEN_KEY) ? router.push("/booking") : router.push("/login")}
+         >
           {data.button}
         </Button>
       </Box>
