@@ -84,7 +84,8 @@ function FilledBooking({ booking }) {
   const bgcolor = `${bgcolorBase}.100`;
   const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
   const border = statusBorderSxMap[booking.status];
-  const showDeleteIcon = booking.status === 'unpaid' || booking.status === 'pending';
+  const deleteStatusesIcon = ['unpaid', 'pending'];
+  const showDeleteIcon = deleteStatusesIcon.includes(booking.status);
 
   return (
     <BookingBox
