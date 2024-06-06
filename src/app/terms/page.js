@@ -8,23 +8,22 @@ export default function TermsAndConditionsPage() {
   const theme = useTheme();
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Box sx={{
         backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.shape.borderRadius,
-        p: theme.spacing(5),
+        fontFamily: theme.typography.fontFamily,
+        p: theme.spacing(4),
         mt: theme.spacing(5),
         mb: theme.spacing(5),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
       }}>
-        <Typography variant="h4">
-          Terms and conditions
-        </Typography>
-        <Typography variant="body1">
-          Last updated: 21 September 2023
-        </Typography>
+        <Box sx={{ textAlign: 'center', mb: theme.spacing(2) }}>
+          <Typography variant="h4">
+            Terms and conditions
+          </Typography>
+          <Typography variant="body1">
+            Last updated: 21 September 2023
+          </Typography>
+        </Box>
         <Typography variant="body1" paragraph>
           These Terms and Conditions (the "Terms") describe the terms and conditions on which OOSCCA Ltd., a United Kingdom company (“OOSCCA,” “we,” “us,” or “our”) makes its website (“Site”) and application (collectively the “Services”) available to you. By using or accessing our Services, you confirm your agreement to be bound by these Terms and our Privacy Policy, which are incorporated herein by reference. If you do not agree to these Terms and the Privacy Policy, please do not use or access the Services. The Terms expressly supersede any prior terms of use between you and us or any of our affiliates or predecessors.
         </Typography>
