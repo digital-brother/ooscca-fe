@@ -84,6 +84,7 @@ function FilledBooking({ booking }) {
   const bgcolor = `${bgcolorBase}.100`;
   const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
   const border = statusBorderSxMap[booking.status];
+  const showDeleteIcon = ['unpaid', 'pending'].includes(booking.status);
 
   return (
     <BookingBox
@@ -106,9 +107,11 @@ function FilledBooking({ booking }) {
         <IconButton>
           <IosShareIcon />
         </IconButton>
+        {showDeleteIcon && (
         <IconButton>
           <DeleteForeverIcon onClick={() => mutation.mutate()} />
         </IconButton>
+        )}
       </Box>
     </BookingBox>
   );
