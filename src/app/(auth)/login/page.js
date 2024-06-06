@@ -11,7 +11,7 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import * as Yup from "yup";
-import { SignUpContainer } from "../signup/components/SignUpAccount";
+import { OssContainer } from "@/components/OosContainer";
 
 export default function Login() {
   const mutation = useMutation(login);
@@ -30,7 +30,7 @@ export default function Login() {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer sx={{ textAlign: "center" }}>
+      <OssContainer sx={{ textAlign: "center", border: 1, borderRadius: 1.5 }}>
         <Typography variant="h5" sx={{ mt: 6 }}>
           Log in
         </Typography>
@@ -54,7 +54,7 @@ export default function Login() {
             </Button>
           </Form>
         </Formik>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }

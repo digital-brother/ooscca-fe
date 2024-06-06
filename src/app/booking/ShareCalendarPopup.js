@@ -8,16 +8,15 @@ import {
 import { shareCalendar } from "@/app/api.mjs";
 import { Form, Formik } from "formik";
 import { useSnackbar } from 'notistack';
-import { Dialog, Box, Container, IconButton, styled, Button, Typography, InputAdornment } from '@mui/material';
+import { Dialog, Box, styled, Button, Typography, InputAdornment } from '@mui/material';
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Tab from "@mui/material/Tab";
-import Image from "next/image";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import LinkIcon from '@mui/icons-material/Link';
+import { OssContainer } from "@/components/OosContainer";
 import * as Yup from "yup";
 
 const CustomTab = styled(Tab)(({ theme }) => ({
@@ -51,14 +50,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
     
     return (
         <Dialog open={open} onClose={onClose}>
-          <Container sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', pb: 2}}>
-            <Box sx={{ width: { xs: '100%', sm: 545 }, maxWidth: 545, p: 4 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Image src="/logo.png" alt="Logo" width={160} height={36} />
-                <IconButton size="small" onClick={onClose}>
-                  <HighlightOffRoundedIcon sx={{ color: 'common.black', fontSize: 28 }} />
-                </IconButton>
-              </Box>
+          <OssContainer sx={{pb: 6, border: "none"}} handleClick={onClose}>
               <TabContext value={selectedTab}>
                 <Box sx={{ borderBottom: "2px solid", borderColor: "grey.300", pt: 2 }}>
                   <TabList  variant="fullWidth"
@@ -121,8 +113,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                   </TabPanel>
                 </Box>
               </TabContext>
-            </Box>
-          </Container>
+          </OssContainer>
         </Dialog>
     );
 };

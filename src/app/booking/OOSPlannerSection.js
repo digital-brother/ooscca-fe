@@ -32,10 +32,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
 import { SelectedDateContext } from "./page";
+import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import ShareCalendarPopup from './ShareCalendarPopup';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import MenuChildPopup from "./MenuChildPopup";
 
 dayjs.extend(weekday);
 
@@ -436,25 +435,7 @@ export const ShareCalendar = ({ childrenData, showSharePopup }) => {
               <Button startIcon={<IosShareIcon />} {...bindTrigger(popupState)} variant="outlined" color="grey">
                   Share Calendar
               </Button>
-              <Menu
-        {...bindMenu(popupState)}
-        slotProps={{
-          paper: {
-            style: {
-              width: popupState.anchorEl ? popupState.anchorEl.clientWidth + "px" : undefined,
-              },
-            },
-              }}
-                >
-                {childrenData?.map((child) => (
-                  <MenuItem key={child.id} onClick={() => {
-                    popupState.close();
-                    showSharePopup(child.id);
-                  }}>
-                    {child.displayName}
-                  </MenuItem> 
-                ))}
-              </Menu>
+            <MenuChildPopup childrenData={childrenData} popupState={popupState} handleClick={showSharePopup} />
             </>
           )}
         </PopupState>
