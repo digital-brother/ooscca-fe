@@ -1,45 +1,34 @@
 "use client";
 /* eslint-disable react/no-unescaped-entities */
 
-import { Box, Typography } from '@mui/material';
-
-
+import React from 'react';
+import { Box, Container, Typography, useTheme } from '@mui/material';
 
 export default function TermsAndConditionsPage() {
+  const theme = useTheme();
+
   return (
-    <Box sx={{
-      fontFamily: 'Manrope, sans-serif',
-      backgroundColor: '#F2F2F2',
-      p: '40px 20px',
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      }}>
+    <Container>
       <Box sx={{
-        width: '1117.73px',
-        height: '413.25px',
-        backgroundColor: '#E9ECEF',
-        borderRadius: '8.65849px',
-        p: '20px',
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: theme.shape.borderRadius,
+        p: theme.spacing(5),
+        mt: theme.spacing(5),
+        mb: theme.spacing(5),
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        marginTop: '100px', // Adjust this value to reduce the space
-        }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+      }}>
+        <Typography variant="h4">
           Terms and conditions
         </Typography>
         <Typography variant="body1">
           Last updated: 21 September 2023
         </Typography>
-      </Box>
-      <Box sx={{ width: 1116.16, p: '20px',fontSize: '16px', lineHeight: '24px' }}>
         <Typography variant="body1" paragraph>
           These Terms and Conditions (the "Terms") describe the terms and conditions on which OOSCCA Ltd., a United Kingdom company (“OOSCCA,” “we,” “us,” or “our”) makes its website (“Site”) and application (collectively the “Services”) available to you. By using or accessing our Services, you confirm your agreement to be bound by these Terms and our Privacy Policy, which are incorporated herein by reference. If you do not agree to these Terms and the Privacy Policy, please do not use or access the Services. The Terms expressly supersede any prior terms of use between you and us or any of our affiliates or predecessors.
         </Typography>
-        <Typography variant="h6" gutterBottom component="div" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h6">
           Acceptance of the Terms
         </Typography>
         <Typography variant="body1" paragraph>
@@ -55,7 +44,7 @@ export default function TermsAndConditionsPage() {
         <Typography variant="body1" paragraph>
         These Terms and the other documents referenced in them comprise OOSCCA's "Terms." These Terms are a legally binding agreement between you and OOSCCA governing your access to and use of the Services and setting out your rights and responsibilities when you use the Services. By using any of our Services (including browsing a Site), you are agreeing to these Terms. If you do not agree to these Terms, please do not use or access the Services. If you will be using the Services on behalf of an entity (such as on behalf of your employer), you agree to these Terms on behalf of that entity and its affiliates and you represent that you have the authority to do so. In such case, "you" and "your" will refer to that entity as well as yourself.
         </Typography>
-        <Typography variant="h6" gutterBottom component="div" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h6">
           OOSCCA's Services and Role
         </Typography>
         <Typography variant="body1" paragraph>
@@ -73,7 +62,7 @@ export default function TermsAndConditionsPage() {
         <Typography variant="body1" paragraph>
         We know your personal information is important to you and it is important to OOSCCA too. Information provided to OOSCCA by Users or collected by OOSCCA through OOSCCA Properties, is governed by our Privacy Policy. If you are an Organiser, you represent, warrant and agree that (a) you will at all times comply with all applicable local, state, provincial, national and other laws, rules and regulations with respect to information you collect from (or receive about) consumers, and (b) you will at all times comply with any applicable policies posted on the Services with respect to information you collect from (or receive about) consumers.
         </Typography>
-        <Typography variant="h6" gutterBottom component="div" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h6">
         Term; Termination
         </Typography>
         <Typography variant="body1" paragraph>  
@@ -89,6 +78,6 @@ export default function TermsAndConditionsPage() {
         If you are a Consumer using the Services without a registered account, your only option for these Terms to no longer apply is to stop accessing the Services indefinitely. So long as you continue to access the Services, even without an account, these Terms remain in effect. If there is a separate agreement between you and OOSCCA governing your use of the Services and that agreement terminates or expires, these Terms (as unmodified by such agreement) will govern your use of the Services after such termination or expiration. All provisions of these Terms that by their nature should survive termination of these Terms will survive (including, without limitation, all limitations on liability, releases, indemnification obligations, disclaimers of warranties, agreements to arbitrate, choices of law and judicial forum and intellectual property protections and licences).
         </Typography> 
       </Box>
-    </Box>
+    </Container>
   );
 }
