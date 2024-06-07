@@ -54,7 +54,7 @@ export default function Login() {
               Login
             </Button>
             <Typography sx={{ mt: 2, textAlign: 'center' }}>
-              <Link href="/signup" style={{ marginLeft: '5px', fontWeight: 'bold', color: 'green' }}>
+              <Link href="/signup" sx={{fontWeight: 'bold', color: 'primary.main' }}>
                 Create an account
               </Link>
             </Typography>
