@@ -276,7 +276,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: bookings } = useQuery("bookings", () =>
+  const { data: bookings } = useQuery(["bookings", weekDates], () =>
     getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
@@ -338,7 +338,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
 
 function FriendsBookings({ childrenData = [], weekDates }) {
   const [selectedChild, setSelectedChild] = useState(childrenData[0]);
-  const { data: friendsBookings } = useQuery("friendsBookings", () =>
+  const { data: friendsBookings } = useQuery(["friendsBookings", weekDates], () =>
     getFriendsBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
