@@ -62,7 +62,7 @@ function LogOutLink() {
   const mutation = useMutation(logout, {
     onSuccess: () => {
       localStorage.removeItem(AUTH_TOKEN_KEY);
-      enqueueSnackbar("Logout success", { variant: "success" });
+      enqueueSnackbar("Logout successful", { variant: "success" });
     },
     onError: (error) => {
       const errorMsg = getFlatErrors(error).join("; ");
