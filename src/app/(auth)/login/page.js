@@ -50,14 +50,12 @@ export default function Login() {
             <FormikTextField name="email" label="Email Address" fullWidth sx={{ mt: 3 }} />
             <FormikTextField name="password" label="Password" type="password" fullWidth sx={{ mt: 1.5 }} />
             <FormikErrors sx={{ mt: 1.5 }} />
-            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
+            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6, mb: 2 }}>
               Login
             </Button>
-            <Typography sx={{ mt: 2, textAlign: 'center' }}>
-              <Link href="/signup" sx={{fontWeight: 'bold', color: 'primary.main' }}>
+              <Link href="/signup" sx={{ textAlign: 'center', fontWeight: 'bold', color: 'primary.main' }}>
                 Create an account
               </Link>
-            </Typography>
           </Form>
         </Formik>
       </SignUpContainer>
