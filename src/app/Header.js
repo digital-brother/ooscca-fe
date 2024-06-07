@@ -9,11 +9,12 @@ import NextLink from "next/link";
 import {Button, Toolbar} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {Logo} from "@/app/(homepage)/components/Logo";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import { useMutation } from "react-query";
 import { useSnackbar } from 'notistack';
 import { getFlatErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { logout, AUTH_TOKEN_KEY } from "@/app/api.mjs";
+import { AuthTokenContext } from "@/app/layout";
 
 export const HEADER_NAV_LINKS = [
   {name: "about", text: 'About', path: '/'},
@@ -59,9 +60,11 @@ function NavLink({link}) {
 function LogOutLink() {
   const theme = useTheme()
   const { enqueueSnackbar } = useSnackbar();
+  const { setAuthToken } = useContext(AuthTokenContext);
   const mutation = useMutation(logout, {
     onSuccess: () => {
       localStorage.removeItem(AUTH_TOKEN_KEY);
+      setAuthToken(null)
       enqueueSnackbar("Logout successful", { variant: "success" });
     },
     onError: (error) => {
@@ -98,12 +101,7 @@ function SignInLink() {
 }
 
 export function NavLinks() {
-  const [authToken, setAuthToken] = useState(null);
-
-  useEffect(() => {
-    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
-  }, []);
-
+  const { authToken } = useContext(AuthTokenContext);
   return (
     <>
       {HEADER_NAV_LINKS.map((link, index) => (
@@ -142,7 +140,7 @@ export default function Header() {
             maxWidth: 500,
             mr: 5,
           }}>
-            <NavLinks/>
+          <NavLinks />
           </Box>
 
           <HamburgerMenu sx={{display: {xs: "inherit", sm: "none"}}}/>
