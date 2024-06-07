@@ -10,6 +10,7 @@ import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
+import Link from "@/app/(homepage)/components/Link";
 import * as Yup from "yup";
 import { SignUpContainer } from "../signup/components/SignUpAccount";
 
@@ -52,6 +53,11 @@ export default function Login() {
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
               Login
             </Button>
+            <Typography sx={{ mt: 2, textAlign: 'center' }}>
+              <Link href="/signup" style={{ marginLeft: '5px', fontWeight: 'bold', color: 'green' }}>
+                Create an account
+              </Link>
+            </Typography>
           </Form>
         </Formik>
       </SignUpContainer>
