@@ -13,3 +13,9 @@ plugins:
   - react
 rules:
   no-unused-vars: warn
+
+overrides:
+  - files: ['/home/yura/ooscca-fe/src/app/terms/page.js']
+    rules:
+      quotes: ["error", "single", {"avoidEscape": true, "allowTemplateLiterals": true}]
+      jsx-quotes: ["error", "prefer-double"]

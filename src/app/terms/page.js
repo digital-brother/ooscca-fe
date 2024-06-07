@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable react/no-unescaped-entities */
 
 import React from 'react';
 import { Box, Container, Typography, useTheme } from '@mui/material';
