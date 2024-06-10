@@ -61,7 +61,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(34),
             lastName: Yup.string()
               .label("Last name")
               .required()
@@ -71,7 +71,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(34),
             displayName: Yup.string()
               .label("Display/nick name")
               .required()
@@ -81,7 +81,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(64),
             birthDate: Yup.date()
               .label("Date of birth")
               .required()
@@ -90,6 +90,7 @@ export default function SignUpChildren({ goToNextStep }) {
               .max(dayjs(), `Date of birth must be before ${dayjs().format("MM/DD/YYYY")}`),
             school: Yup.number().label("School").required(),
             classYear: Yup.string().label("Class/year").required(),
+            allergiesMedical: Yup.string().label("Allergies/Medical").max(350),
           })}
         >
           {(formik) => (
@@ -114,6 +115,7 @@ export default function SignUpChildren({ goToNextStep }) {
                   </MenuItem>
                 ))}
               </FormikSelect>
+              <FormikTextField name="allergiesMedical" label="Allergies/Medical" multiline rows={4} fullWidth sx={{ mt: 1.5 }} />
 
               <Button
                 onClick={() => {

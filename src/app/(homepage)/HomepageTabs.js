@@ -133,10 +133,10 @@ function CustomTabList({children, handleChange}) {
 }
 
 function Tabs(props) {
-  const [selectedTab, setSelectedTab] = React.useState("oosCalendar");
+  const [selectedTab, setSelectedTab] = React.useState("classBirthdayCalendar");
 
-  const handleChange = (event, newValue) => {
-    setSelectedTab(newValue);
+  const handleChange = (event, newSelectedTab) => {
+    setSelectedTab(newSelectedTab);
   };
 
   return (
@@ -144,15 +144,16 @@ function Tabs(props) {
       <TabContext value={selectedTab}>
         <Box>
           <CustomTabList handleChange={handleChange}>
-            <CustomTab label="OOS calendar" value="oosCalendar" />
+            {/* TODO: Make OOS Calendar functional */}
+            {/* <CustomTab label="OOS calendar" value="oosCalendar" /> */}
             <CustomTab label="Class birthday calendar" value="classBirthdayCalendar" />
             <CustomTab label="Whose who" value="whoseWho" />
           </CustomTabList>
         </Box>
         <Box sx={{ p: 0, pt: 5 }}>
-          <TabPanel sx={{ p: 0 }} value="oosCalendar">
+          {/* <TabPanel sx={{ p: 0 }} value="oosCalendar">
             <SchoolStats />
-          </TabPanel>
+          </TabPanel> */}
           <TabPanel sx={{ p: 0 }} value="classBirthdayCalendar">
             <ContentPanel type={selectedTab} />
           </TabPanel>

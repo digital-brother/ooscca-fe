@@ -10,10 +10,13 @@ import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
+import { useContext } from "react";
 import * as Yup from "yup";
 import { OssContainer } from "@/components/OosContainer";
+import { AuthTokenContext } from "@/app/layout";
 
 export default function Login() {
+  const { setAuthToken } = useContext(AuthTokenContext);
   const mutation = useMutation(login);
   const router = useRouter();
 
@@ -22,6 +25,7 @@ export default function Login() {
       mutation,
       onSuccess: ({ key: token }) => {
         localStorage.setItem(AUTH_TOKEN_KEY, token);
+        setAuthToken(token);
         router.push("/booking");
       },
     });
