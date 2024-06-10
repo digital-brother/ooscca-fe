@@ -61,7 +61,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(34),
             lastName: Yup.string()
               .label("Last name")
               .required()
@@ -71,7 +71,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(34),
             displayName: Yup.string()
               .label("Display/nick name")
               .required()
@@ -81,7 +81,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(64),
             birthDate: Yup.date()
               .label("Date of birth")
               .required()
