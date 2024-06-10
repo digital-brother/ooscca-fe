@@ -32,6 +32,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
 import { SelectedDateContext } from "./page";
+import PopupState, { bindTrigger } from 'material-ui-popup-state';
+import ShareCalendarPopup from './ShareCalendarPopup';
+import MenuChildPopup from "./MenuChildPopup";
 
 dayjs.extend(weekday);
 
@@ -84,6 +87,14 @@ function FilledBooking({ booking }) {
   const bgcolor = `${bgcolorBase}.100`;
   const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
   const border = statusBorderSxMap[booking.status];
+  const showDeleteIcon = ['unpaid', 'pending'].includes(booking.status);
+  const [shareCalendarPopupOpen, setShareCalendarPopupOpen] = useState(false);
+  const [shareCalendarChildId, setShareCalendarChildId] = useState();
+
+  const showSharePopup = (shareCalendarChildId) => {
+    setShareCalendarChildId(shareCalendarChildId);
+    setShareCalendarPopupOpen(true);
+  };
 
   return (
     <BookingBox
@@ -104,12 +115,15 @@ function FilledBooking({ booking }) {
       <Typography>{booking.activity.address}</Typography>
       <Box sx={{ mt: "auto", mb: -1.5, mx: -1.5, display: "flex", justifyContent: "space-between" }}>
         <IconButton>
-          <IosShareIcon />
+          <IosShareIcon onClick={() => showSharePopup(booking.child)} />
         </IconButton>
+        {showDeleteIcon && (
         <IconButton>
           <DeleteForeverIcon onClick={() => mutation.mutate()} />
         </IconButton>
+        )}
       </Box>
+      <ShareCalendarPopup open={shareCalendarPopupOpen} onClose={() => setShareCalendarPopupOpen(false)} childId={shareCalendarChildId} />
     </BookingBox>
   );
 }
@@ -273,7 +287,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: bookings } = useQuery("bookings", () =>
+  const { data: bookings } = useQuery(["bookings", weekDates], () =>
     getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
@@ -312,7 +326,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
               );
               return (
                 <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }}/>
                 </StyledTableCell>
               );
             })}
@@ -335,7 +349,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
 
 function FriendsBookings({ childrenData = [], weekDates }) {
   const [selectedChild, setSelectedChild] = useState(childrenData[0]);
-  const { data: friendsBookings } = useQuery("friendsBookings", () =>
+  const { data: friendsBookings } = useQuery(["friendsBookings", weekDates], () =>
     getFriendsBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
@@ -365,7 +379,7 @@ function FriendsBookings({ childrenData = [], weekDates }) {
       {selectedChild?.friends?.length === 0 ? (
         <TableRow>
           <StyledTableCell></StyledTableCell>
-          <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+          <StyledTableCell colSpan={6} align="left">
             <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
           </StyledTableCell>
         </TableRow>
@@ -376,11 +390,11 @@ function FriendsBookings({ childrenData = [], weekDates }) {
           return (
             <TableRow
               key={friend.id}
-              sx={
-                isLastChild
-                  ? {}
-                  : { borderBottom: "1px solid", borderTop: index === 0 ? "1px solid" : {}, borderColor: "grey.300" }
-              }
+              sx={{
+                borderBottom: isLastChild ? "none" : "1px solid",
+                borderTop: index === 0 ? "1px solid" : "none",
+                borderColor: "grey.300",
+              }}
             >
               <StyledTableCell component="th" scope="row">
                 <Typography sx={{ fontWeight: 700, textAlign: "center" }}>{friend.displayName}</Typography>
@@ -414,6 +428,40 @@ function FriendsBookings({ childrenData = [], weekDates }) {
     </>
   );
 }
+
+export const ShareCalendar = ({ childrenData }) => {
+  const [shareCalendarPopupOpen, setShareCalendarPopupOpen] = useState(false);
+  const [shareCalendarChildId, setShareCalendarChildId] = useState();
+
+  const showSharePopup = (shareCalendarChildId) => {
+    setShareCalendarChildId(shareCalendarChildId);
+    setShareCalendarPopupOpen(true);
+  };
+
+  return (
+    <>
+      {childrenData?.length === 1 ? (
+        <Button startIcon={<IosShareIcon />} variant="outlined" color="grey" onClick={() => {
+          showSharePopup(childrenData[0].id);
+        }}>
+          Share Calendar
+        </Button>
+      ) : (
+        <PopupState variant="popover" popupId="children-popup-menu">
+          {(popupState) => (
+            <>
+              <Button startIcon={<IosShareIcon />} {...bindTrigger(popupState)} variant="outlined" color="grey">
+                  Share Calendar
+              </Button>
+            <MenuChildPopup childrenData={childrenData} popupState={popupState} handleClick={showSharePopup} />
+            </>
+          )}
+        </PopupState>
+      )}
+      <ShareCalendarPopup open={shareCalendarPopupOpen} onClose={() => setShareCalendarPopupOpen(false)} childId={shareCalendarChildId} />
+    </>
+  );
+};
 
 function BookingsTable() {
   const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
@@ -450,9 +498,7 @@ function BookingsTable() {
                       <ArrowForwardIosIcon />
                     </IconButton>
                   </Box>
-                  <Button startIcon={<IosShareIcon />} variant="outlined" color="grey">
-                    Share Calendar
-                  </Button>
+                  <ShareCalendar childrenData={children} />
                 </Box>
               </StyledTableCell>
             </TableRow>
@@ -470,8 +516,19 @@ function BookingsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <FamilyBookings childrenData={children} weekDates={weekDates} />
-            {children && <FriendsBookings childrenData={children} weekDates={weekDates} />}
+            {children?.length !== 0 ? (
+              <>
+                <FamilyBookings childrenData={children} weekDates={weekDates} />
+                <FriendsBookings childrenData={children} weekDates={weekDates} />
+              </>
+            ) : (
+              <TableRow>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell colSpan={6} align="left" sx={{ pb: 4, pt: 2 }}>
+                  <Typography sx={{ fontWeight: 700 }}>No children</Typography>
+                </StyledTableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

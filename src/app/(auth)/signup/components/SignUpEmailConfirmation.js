@@ -2,7 +2,7 @@
 
 import { useMutation } from "react-query";
 import { Button, Container, Typography } from "@mui/material";
-import { SignUpContainer } from "./SignUpAccount";
+import { OssContainer } from "@/components/OosContainer";
 import { resendEmail, USER_ID_KEY } from "@/app/api.mjs";
 import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
 
@@ -13,7 +13,7 @@ export default function SignUpEmailConfirmation() {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer>
+      <OssContainer sx={{ border: 1, borderRadius: 1.5 }}>
         <Typography variant="h5" sx={{ mt: 16, textAlign: "center" }}>
           Please verify your email
         </Typography>
@@ -36,7 +36,7 @@ export default function SignUpEmailConfirmation() {
           Resend confirmation email
         </Button>
         <Error>{mutation.isError && mutation.error.message}</Error>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }

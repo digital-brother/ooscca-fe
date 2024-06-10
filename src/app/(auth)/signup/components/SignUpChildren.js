@@ -15,16 +15,23 @@ import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
-import { SignUpContainer } from "./SignUpAccount";
+import { OssContainer } from "@/components/OosContainer";
+import { useState } from "react";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
+  const [stayOnPage, setStayOnPage] = useState(false);
 
   const userId = localStorage.getItem(USER_ID_KEY);
   const mutation = useMutation((data) => signupChildren(userId, data));
 
-  async function handleSubmit(values, formikHelpers) {
-    const handle = createHandleSubmit({ mutation });
+  function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({ mutation,
+      onSuccess: () => {
+        if (stayOnPage) formikHelpers.resetForm()
+        else goToNextStep()
+       },
+    });
     handle(values, formikHelpers);
   }
 
@@ -33,7 +40,7 @@ export default function SignUpChildren({ goToNextStep }) {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer>
+      <OssContainer sx={{ border: 1, borderRadius: 1.5 }}>
         <Typography variant="h5" sx={{ mt: 6, textAlign: "center" }}>
           Children&apos;s details
         </Typography>
@@ -54,7 +61,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(34),
             lastName: Yup.string()
               .label("Last name")
               .required()
@@ -64,7 +71,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(34),
             displayName: Yup.string()
               .label("Display/nick name")
               .required()
@@ -74,7 +81,7 @@ export default function SignUpChildren({ goToNextStep }) {
                 "${label} must contain only letters, hyphens, apostrophes, and spaces"
               )
               .min(2)
-              .max(50),
+              .max(64),
             birthDate: Yup.date()
               .label("Date of birth")
               .required()
@@ -83,6 +90,7 @@ export default function SignUpChildren({ goToNextStep }) {
               .max(dayjs(), `Date of birth must be before ${dayjs().format("MM/DD/YYYY")}`),
             school: Yup.number().label("School").required(),
             classYear: Yup.string().label("Class/year").required(),
+            allergiesMedical: Yup.string().label("Allergies/Medical").max(350),
           })}
         >
           {(formik) => (
@@ -107,11 +115,12 @@ export default function SignUpChildren({ goToNextStep }) {
                   </MenuItem>
                 ))}
               </FormikSelect>
+              <FormikTextField name="allergiesMedical" label="Allergies/Medical" multiline rows={4} fullWidth sx={{ mt: 1.5 }} />
 
               <Button
-                onClick={async () => {
-                  await formik.submitForm();
-                  if (formik.isValid) formik.resetForm();
+                onClick={() => {
+                  setStayOnPage(true);
+                  formik.submitForm();
                 }}
                 variant="outlined"
                 startIcon={<AddCircleOutlineIcon />}
@@ -122,9 +131,9 @@ export default function SignUpChildren({ goToNextStep }) {
                 Add another child
               </Button>
               <Button
-                onClick={async () => {
-                  await formik.submitForm();
-                  if (formik.isValid) goToNextStep();
+                onClick={() => {
+                  setStayOnPage(false);
+                  formik.submitForm();
                 }}
                 variant="contained"
                 color="green"
@@ -137,7 +146,7 @@ export default function SignUpChildren({ goToNextStep }) {
             </Form>
           )}
         </Formik>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }
