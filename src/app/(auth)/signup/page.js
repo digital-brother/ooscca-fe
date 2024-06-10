@@ -10,7 +10,7 @@ import { SIGNUP_CURRENT_STEP_KEY } from "@/app/api.mjs";
 import { AuthTokenContext } from "@/app/layout";
 
 export default function SignUp() {
-  const authToken = useContext(AuthTokenContext);
+  const { authToken } = useContext(AuthTokenContext);
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
 
