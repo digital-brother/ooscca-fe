@@ -7,6 +7,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 
 // const FOOTER_NAV_LINKS = HEADER_NAV_LINKS.filter(link => ["about", "providers", "contact"].includes(link.name))
 
@@ -39,7 +40,7 @@ export default function Footer() {
               <FacebookIcon/>
             </Box>
             <Box sx={{display: "flex", flexDirection: "column", gap: 0.5, mt: 3}}>
-              <Typography variant="body2">Terms & Conditions</Typography>
+              <Link href="/terms" variant="body2" sx={{color: "white", textDecoration: "none"}}>Terms & Conditions</Link>
               <Typography variant="body2">Privacy policy</Typography>
               <Typography variant="body2">Copyright © 2023 OOSCCA</Typography>
             </Box>

@@ -83,7 +83,7 @@ export default function SignUpAccount({ goToNextStep }) {
               name="termsConditionsAccepted"
               label={
                 <Typography variant="body2" color="text.secondary">
-                  By signing up you accept <Link href="#">Terms and Conditions</Link> and{" "}
+                  By signing up you accept <Link href="/terms">Terms and Conditions</Link> and{" "}
                   <Link href="#">Privacy Policy</Link>
                 </Typography>
               }
