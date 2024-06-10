@@ -7,29 +7,12 @@ import {
   FormikErrors,
   createHandleSubmit,
 } from "@/app/activities/[activityId]/edit/components/formikFields";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
-import { Box, Button, Container, IconButton, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { useMutation } from "react-query";
 import { signupAccount, USER_ID_KEY } from "@/app/api.mjs";
-
-export function SignUpContainer({ children, sx }) {
-  const router = useRouter();
-  return (
-    <Box sx={{ border: 1, borderRadius: 1.5, width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, ...sx }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Image src="/logo.png" alt="Logo" width={160} height={36} />
-        <IconButton size="small" onClick={() => router.back()}>
-          <HighlightOffRoundedIcon sx={{ color: "common.black", fontSize: 28 }} />
-        </IconButton>
-      </Box>
-      {children}
-    </Box>
-  );
-}
+import { OssContainer } from "@/components/OosContainer";
 
 export default function SignUpAccount({ goToNextStep }) {
   const mutation = useMutation(signupAccount);
@@ -47,7 +30,7 @@ export default function SignUpAccount({ goToNextStep }) {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer sx={{ textAlign: "center" }}>
+      <OssContainer sx={{ border: 1, borderRadius: 1.5, textAlign: "center" }}>
         <Typography variant="h5" sx={{ mt: 6 }}>
           Sign in or create an account
         </Typography>
@@ -95,7 +78,7 @@ export default function SignUpAccount({ goToNextStep }) {
             <FormikErrors />
           </Form>
         </Formik>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }

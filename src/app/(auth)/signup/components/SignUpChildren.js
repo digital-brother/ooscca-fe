@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import { useMutation, useQuery } from "react-query";
 import * as Yup from "yup";
-import { SignUpContainer } from "./SignUpAccount";
+import { OssContainer } from "@/components/OosContainer";
 import { useState } from "react";
 
 export default function SignUpChildren({ goToNextStep }) {
@@ -40,7 +40,7 @@ export default function SignUpChildren({ goToNextStep }) {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer>
+      <OssContainer sx={{ border: 1, borderRadius: 1.5 }}>
         <Typography variant="h5" sx={{ mt: 6, textAlign: "center" }}>
           Children&apos;s details
         </Typography>
@@ -146,7 +146,7 @@ export default function SignUpChildren({ goToNextStep }) {
             </Form>
           )}
         </Formik>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }

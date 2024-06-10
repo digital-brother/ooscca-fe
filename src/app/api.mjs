@@ -21,6 +21,7 @@ const SIGNUP_CHILDREN_PATH = "/signup-children";
 const RESEND_EMAIL_PATH = "/resend-email";
 const VERIFY_EMAIL_PATH = "/verify-email";
 const LOGOUT_PATH = "/dj-rest-auth/logout";
+const SHARE_CALENDAR_PATH = "/share-calendar";
 
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
@@ -262,4 +263,10 @@ export async function createBill(data) {
 export async function getBill(billId) {
     const response = await client.get(`${BILLS_PATH}/${billId}/`);
     return response.data;
+}
+
+export async function shareCalendar(childId, data) {
+  data.child = childId;
+  const response = await client.post(`${SHARE_CALENDAR_PATH}/`, data);
+  return response.data;
 }
