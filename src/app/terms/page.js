@@ -1,18 +1,18 @@
 "use client";
 
 import React from 'react';
-import { Box, Container, Typography, useTheme } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
-function MainSection({ theme }) {
+function MainSection() {
   return (
     <>
     <Box
       sx={{
-        backgroundColor: theme.palette.grey[200],
+        backgroundColor: "grey.200",
         textAlign: "center",
-        mb: theme.spacing(4),
-        p: theme.spacing(14),
-        borderRadius: theme.shape.borderRadius,
+        mb: 4,
+        p: 14,
+        borderRadius: 4,
       }}
     >
       <Typography variant="h3">Terms and Conditions</Typography>
@@ -157,18 +157,13 @@ function TerminationSection() {
 }
 
 export default function TermsAndConditionsPage() {
-  const theme = useTheme();
-
   return (
     <Container maxWidth="md">
       <Box sx={{
-        backgroundColor: theme.palette.background.paper,
-        fontFamily: theme.typography.fontFamily,
-        p: theme.spacing(4),
-        mt: theme.spacing(5),
-        mb: theme.spacing(5),
+        p: 4,
+        my: 5,
       }}>
-        <MainSection theme={theme} />
+        <MainSection />
         <AcceptanceSection />
         <ServicesSection />
         <PrivacySection />
