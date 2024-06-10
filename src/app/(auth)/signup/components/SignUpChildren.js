@@ -90,6 +90,7 @@ export default function SignUpChildren({ goToNextStep }) {
               .max(dayjs(), `Date of birth must be before ${dayjs().format("MM/DD/YYYY")}`),
             school: Yup.number().label("School").required(),
             classYear: Yup.string().label("Class/year").required(),
+            allergiesMedical: Yup.string().label("Allergies/Medical").max(350),
           })}
         >
           {(formik) => (
@@ -114,6 +115,7 @@ export default function SignUpChildren({ goToNextStep }) {
                   </MenuItem>
                 ))}
               </FormikSelect>
+              <FormikTextField name="allergiesMedical" label="Allergies/Medical" multiline rows={4} fullWidth sx={{ mt: 1.5 }} />
 
               <Button
                 onClick={() => {
