@@ -93,14 +93,6 @@ const CustomTab = styled(Tab)(({ theme }) => ({
                                 </InputAdornment>
                               ),
                             }}
-                            InputLabelProps={{
-                              sx: {
-                                color: "info.light",
-                                '&.Mui-focused': {
-                                  color: "info.light",
-                                },
-                              },
-                            }}
                           />
                           <FormikErrors sx={{ mt: 1.5 }} />
                         </Box>
