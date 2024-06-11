@@ -10,6 +10,7 @@ import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
+import Link from "@/app/(homepage)/components/Link";
 import { useContext } from "react";
 import * as Yup from "yup";
 import { OssContainer } from "@/components/OosContainer";
@@ -53,9 +54,12 @@ export default function Login() {
             <FormikTextField name="email" label="Email Address" fullWidth sx={{ mt: 3 }} />
             <FormikTextField name="password" label="Password" type="password" fullWidth sx={{ mt: 1.5 }} />
             <FormikErrors sx={{ mt: 1.5 }} />
-            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6 }}>
+            <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6, mb: 2 }}>
               Login
             </Button>
+              <Link href="/signup">
+                Create an account
+              </Link>
           </Form>
         </Formik>
       </OssContainer>
