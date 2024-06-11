@@ -31,7 +31,7 @@ export const StyledMuiLink = ({ children, sx, ...props }) => {
 export default function Link({ children, href, sx }) {
   return (
     <NextLink href={href} passHref style={{ textDecoration: "none" }}>
-      <StyledMuiLink>{children}</StyledMuiLink>
+      <StyledMuiLink sx={sx}>{children}</StyledMuiLink>
     </NextLink>
   );
 }

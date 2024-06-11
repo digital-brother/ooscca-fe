@@ -15,6 +15,7 @@ import { useContext } from "react";
 import * as Yup from "yup";
 import { OssContainer } from "@/components/OosContainer";
 import { AuthTokenContext } from "@/app/layout";
+import { fontWeight } from "@mui/system";
 
 export default function Login() {
   const { setAuthToken } = useContext(AuthTokenContext);
@@ -57,7 +58,7 @@ export default function Login() {
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6, mb: 2 }}>
               Login
             </Button>
-              <Link href="/signup">
+              <Link href="/signup" sx={{textDecoration: "none", fontWeight: 600}}>
                 Create an account
               </Link>
           </Form>
