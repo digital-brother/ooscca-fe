@@ -8,7 +8,7 @@ import {
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { SignUpContainer } from "./SignUpAccount";
+import { OssContainer } from "@/components/OosContainer";
 import { useMutation } from "react-query";
 import { signupDetails, USER_ID_KEY } from "@/app/api.mjs";
 
@@ -23,7 +23,7 @@ export default function SignUpDetails({ goToNextStep }) {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer>
+      <OssContainer sx={{ border: 1, borderRadius: 1.5 }}>
         <Typography variant="h5" sx={{ mt: 6, textAlign: "center" }}>
           Welcome to OOSCCA
         </Typography>
@@ -71,7 +71,7 @@ export default function SignUpDetails({ goToNextStep }) {
             <FormikErrors />
           </Form>
         </Formik>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }
