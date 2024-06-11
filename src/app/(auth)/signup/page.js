@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import SignUpAccount from "./components/SignUpAccount";
 import SignUpDetails from "./components/SignUpDetails";
 import SignUpEmailConfirmation from "./components/SignUpEmailConfirmation";
 import SignUpChildren from "./components/SignUpChildren";
-import { AUTH_TOKEN_KEY, SIGNUP_CURRENT_STEP_KEY } from "@/app/api.mjs";
+import { SIGNUP_CURRENT_STEP_KEY } from "@/app/api.mjs";
+import { AuthTokenContext } from "@/app/layout";
 
 export default function SignUp() {
+  const { authToken } = useContext(AuthTokenContext);
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       router.push("/");
     }

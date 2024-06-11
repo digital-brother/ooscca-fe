@@ -11,10 +11,13 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import Link from "@/app/(homepage)/components/Link";
+import { useContext } from "react";
 import * as Yup from "yup";
-import { SignUpContainer } from "../signup/components/SignUpAccount";
+import { OssContainer } from "@/components/OosContainer";
+import { AuthTokenContext } from "@/app/layout";
 
 export default function Login() {
+  const { setAuthToken } = useContext(AuthTokenContext);
   const mutation = useMutation(login);
   const router = useRouter();
 
@@ -23,6 +26,7 @@ export default function Login() {
       mutation,
       onSuccess: ({ key: token }) => {
         localStorage.setItem(AUTH_TOKEN_KEY, token);
+        setAuthToken(token);
         router.push("/booking");
       },
     });
@@ -31,7 +35,7 @@ export default function Login() {
 
   return (
     <Container sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", py: 10 }}>
-      <SignUpContainer sx={{ textAlign: "center" }}>
+      <OssContainer sx={{ textAlign: "center", border: 1, borderRadius: 1.5 }}>
         <Typography variant="h5" sx={{ mt: 6 }}>
           Log in
         </Typography>
@@ -58,7 +62,7 @@ export default function Login() {
               </Link>
           </Form>
         </Formik>
-      </SignUpContainer>
+      </OssContainer>
     </Container>
   );
 }

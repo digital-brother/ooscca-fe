@@ -7,6 +7,10 @@ import Footer from "@/app/Footer";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SnackbarProvider } from "notistack";
 import { Box } from "@mui/material";
+import { createContext, useState, useEffect } from "react";
+import { AUTH_TOKEN_KEY } from "@/app/api.mjs";
+
+export const AuthTokenContext = createContext({});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,18 +22,26 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout({ children }) {
+  const [authToken, setAuthToken] = useState(null);
+
+  useEffect(() => {
+    setAuthToken(localStorage.getItem(AUTH_TOKEN_KEY));
+  }, []);
+
   return (
     <html lang="en">
       <body>
         <ThemeRegistry>
           <QueryClientProvider client={queryClient}>
-            <SnackbarProvider>
+          <AuthTokenContext.Provider value={{ authToken, setAuthToken }}>
+          <SnackbarProvider>
               <Box sx={{ minHeight: "100vh", display: "grid", gridTemplateRows: "auto 1fr auto" }}>
                 <Header />
                 <Box>{children}</Box>
                 <Footer />
               </Box>
             </SnackbarProvider>
+          </AuthTokenContext.Provider>
           </QueryClientProvider>
         </ThemeRegistry>
       </body>
