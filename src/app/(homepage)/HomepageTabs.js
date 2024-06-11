@@ -170,7 +170,7 @@ export default function HomepageTabs() {
   return (
     <Container sx={{ py: { xs: 6, md: 10 } }}>
       <HomepageTabsHeader sx={{ maxWidth: 730, textAlign: "center", mx: "auto" }} />
-      <Tabs sx={{ mt: 5 }} />
+      {/* <Tabs sx={{ mt: 5 }} /> */}
     </Container>
   );
 }
