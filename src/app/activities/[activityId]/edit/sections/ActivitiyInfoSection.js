@@ -57,6 +57,7 @@ import {
 import { SmFlex } from "../components/responsiveFlexes";
 import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
+import { CustomEditor } from "../components/CustomEditor";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -675,36 +676,41 @@ function DescriptionForm() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
+  const editorDescriptionsRef = useRef(null);
+  const editorPreRequisitesRef = useRef(null);
+  const [error, setError] = useState(null);
+
+  function handleSave() {
+    const descriptionContext = editorDescriptionsRef.current.getContent();
+    const preRequisitesContext = editorPreRequisitesRef.current.getContent();
+    mutation.mutate(
+      { description: descriptionContext, preRequisites: preRequisitesContext },
+      {
+        onError: (error) => setError(error?.response?.data?.description || error?.response?.data?.preRequisites || error.message),
+        onSuccess: () => {
+          setError(null);
+        },
+      }
+    );
+  }
 
   return (
-    <Formik
-      initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-      onSubmit={createHandleSubmit({ mutation })}
-      enableReinitialize
-    >
-      <Form>
-        <Stack spacing={3}>
-          <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
-          <FormikTextField
-            name="preRequisites"
-            variant="filled"
-            fullWidth
-            label="Highlight important details here"
-            multiline
-            rows={9}
-            inputProps={{
-              style: {
-                fontWeight: 700,
-              },
-            }}
-          />
-          <Button variant="contained" color="green" size="large" type="submit">
-            Save
-          </Button>
-          <FormikErrors />
-        </Stack>
-      </Form>
-    </Formik>
+      <Box sx={{ width: "100%", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 2}}> 
+        <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Description:</Typography>
+        <CustomEditor
+          initialValue={activity?.description}
+          editorRef={editorDescriptionsRef}
+        />
+        <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Highlight important details here:</Typography>
+        <CustomEditor 
+          initialValue={activity?.preRequisites}
+          editorRef={editorPreRequisitesRef}
+        />
+        <Button variant="contained" color="green" size="large" onClick={handleSave} fullWidth>
+          Save
+        </Button>
+        <Error>{error}</Error>
+    </Box>
   );
 }
 
