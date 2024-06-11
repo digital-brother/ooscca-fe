@@ -15,7 +15,6 @@ import { useContext } from "react";
 import * as Yup from "yup";
 import { OssContainer } from "@/components/OosContainer";
 import { AuthTokenContext } from "@/app/layout";
-import { fontWeight } from "@mui/system";
 
 export default function Login() {
   const { setAuthToken } = useContext(AuthTokenContext);
