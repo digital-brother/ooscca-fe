@@ -75,7 +75,7 @@ export default function SignUpAccount({ goToNextStep }) {
             <Button type="submit" variant="contained" color="grey" fullWidth sx={{ mt: 1, mb: 2 }}>
               Sign up with email
             </Button>
-              <Link href="/login">
+              <Link href="/login" sx={{textDecoration: "none", fontWeight: 600}}>
                 Sign in to account
               </Link>
             <FormikErrors />
