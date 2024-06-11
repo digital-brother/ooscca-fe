@@ -3,9 +3,17 @@
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
 
-function MainSection({ headerName }) {
+
+export function PolicyContainer({ children, headerName, lastUpdated }) {
   return (
-    <>
+    <Container maxWidth="md">
+      <Box
+        sx={{
+          p: 4,
+          mt: 5,
+          mb: 10,
+        }}
+      >
       <Box
         sx={{
           backgroundColor: "grey.200",
@@ -16,13 +24,15 @@ function MainSection({ headerName }) {
         }}
       >
         <Typography variant="h3"> {headerName} </Typography>
-        <Typography variant="body1">Last updated: April 21 2024</Typography>
+        <Typography variant="body1"> {lastUpdated} </Typography>
       </Box>
-    </>
+        {children}
+      </Box>
+    </Container>
   );
 }
 
-function IntroductionSection() {
+export function IntroductionSection() {
   return (
     <>
       <Typography variant="h6">1. INTRODUCTION</Typography>
@@ -57,7 +67,7 @@ function IntroductionSection() {
   );
 }
 
-function AcceptingSection() {
+export function AcceptingSection() {
   return (
     <>
       <Typography variant="h6">2. ACCEPTING THIS AGREEMENT</Typography>
@@ -71,7 +81,7 @@ function AcceptingSection() {
   );
 }
 
-function PrivacySection() {
+export function PrivacySection() {
   return (
     <>
       <Typography variant="h6">3. PRIVACY</Typography>
@@ -83,7 +93,7 @@ function PrivacySection() {
   );
 }
 
-function DescriptionSection() {
+export function DescriptionSection() {
   return (
     <>
       <Typography variant="h6">4. DESCRIPTION OF SERVICES</Typography>
@@ -114,7 +124,7 @@ function DescriptionSection() {
   );
 }
 
-function LimitationSection() {
+export function LimitationSection() {
   return (
     <>
       <Typography variant="h6">5. LIMITATIONS OF THE SERVICES</Typography>
@@ -175,7 +185,7 @@ function LimitationSection() {
   );
 }
 
-function UserResponsibilitiesSection() {
+export function UserResponsibilitiesSection() {
   return (
     <>
       <Typography variant="h6">6. USER RESPONSIBILITIES</Typography>
@@ -223,7 +233,7 @@ function UserResponsibilitiesSection() {
   );
 }
 
-function AccountSection() {
+export function AccountSection() {
   return (
     <>
       <Typography variant="h6">7. YOUR ACCOUNT</Typography>
@@ -272,7 +282,7 @@ function AccountSection() {
   );
 }
 
-function ProviderServicesPaymentSection() {
+export function ProviderServicesPaymentSection() {
   return (
     <>
       <Typography variant="h6">8. PROVIDER SERVICES AND PAYMENT</Typography>
@@ -327,7 +337,7 @@ function ProviderServicesPaymentSection() {
   );
 }
 
-function PlatformSection() {
+export function PlatformSection() {
   return (
     <>
       <Typography variant="h6">9. YOUR USE OF THE OOSCCA PLATFORM</Typography>
@@ -454,7 +464,7 @@ function PlatformSection() {
   );
 }
 
-function AvailabilitySection() {
+export function AvailabilitySection() {
   return (
     <>
       <Typography variant="h6">10. UPDATES TO THE OOSCCA PLATFORM; AVAILABILITY</Typography>
@@ -478,7 +488,7 @@ function AvailabilitySection() {
   );
 }
 
-function LinkingSection() {
+export function LinkingSection() {
   return (
     <>
       <Typography variant="h6">11. LINKING</Typography>
@@ -504,7 +514,7 @@ function LinkingSection() {
   );
 }
 
-function TerminationSection() {
+export function TerminationSection() {
   return (
     <>
       <Typography variant="h6">12. TERMINATION</Typography>
@@ -535,7 +545,7 @@ function TerminationSection() {
   );
 }
 
-function IntellectualPropertyRightsSection() {
+export function IntellectualPropertyRightsSection() {
   return (
     <>
       <Typography variant="h6">13. INTELLECTUAL PROPERTY RIGHTS</Typography>
@@ -569,7 +579,7 @@ function IntellectualPropertyRightsSection() {
   );
 }
 
-function ReleaseOfLiabilitySection() {
+export function ReleaseOfLiabilitySection() {
   return (
     <>
       <Typography variant="h6">14. RELEASE OF LIABILITY FOR USER CONDUCT AND DISPUTES</Typography>
@@ -599,7 +609,7 @@ function ReleaseOfLiabilitySection() {
   );
 }
 
-function DisclaimersSection() {
+export function DisclaimersSection() {
   return (
     <>
       <Typography variant="h6">15. DISCLAIMERS; LIMITATION OF LIABILITY</Typography>
@@ -652,7 +662,7 @@ function DisclaimersSection() {
   );
 }
 
-function GoverningLawSection() {
+export function GoverningLawSection() {
   return (
     <>
       <Typography variant="h6">16. GOVERNING LAW AND JURISDICTION</Typography>
@@ -668,7 +678,7 @@ function GoverningLawSection() {
   );
 }
 
-function GeneralProvisionsSection() {
+export function GeneralProvisionsSection() {
   return (
     <>
       <Typography variant="h6">17. GENERAL PROVISIONS</Typography>
@@ -718,15 +728,7 @@ function GeneralProvisionsSection() {
 
 export default function TermsAndConditionsPage() {
   return (
-    <Container maxWidth="md">
-      <Box
-        sx={{
-          p: 4,
-          mt: 5,
-          mb: 10,
-        }}
-      >
-        <MainSection headerName="PARENTS - TERMS OF USE"/>
+    <PolicyContainer headerName="PARENTS - TERMS OF USE" lastUpdated="Last updated: April 21 2024">
         <IntroductionSection />
         <AcceptingSection />
         <PrivacySection />
@@ -744,7 +746,6 @@ export default function TermsAndConditionsPage() {
         <DisclaimersSection />
         <GoverningLawSection />
         <GeneralProvisionsSection />
-      </Box>
-    </Container>
+    </PolicyContainer>
   );
 }
