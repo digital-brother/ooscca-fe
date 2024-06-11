@@ -53,7 +53,7 @@ export default function Login() {
             <Button type="submit" variant="contained" color="green" fullWidth sx={{ mt: 6, mb: 2 }}>
               Login
             </Button>
-              <Link href="/signup" sx={{ textAlign: 'center'}}>
+              <Link href="/signup">
                 Create an account
               </Link>
           </Form>
