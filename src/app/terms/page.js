@@ -3,7 +3,7 @@
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
 
-function MainSection() {
+function MainSection({ headerName }) {
   return (
     <>
       <Box
@@ -15,7 +15,7 @@ function MainSection() {
           borderRadius: 4,
         }}
       >
-        <Typography variant="h3">Terms and Conditions</Typography>
+        <Typography variant="h3"> {headerName} </Typography>
         <Typography variant="body1">Last updated: April 21 2024</Typography>
       </Box>
     </>
@@ -444,7 +444,7 @@ function PlatformSection() {
         (iv) content that, in the sole judgment of OOSCCA, is objectionable or which restricts or inhibits any other
         person from using the OOSCCA Platform, or which may expose us or our users to any harm or liability of any type.
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" paragraph>
         9.5 You understand, acknowledge, and agree that any violation of the foregoing provisions may in our sole
         discretion and judgment lead us to terminate our business relationship with you and/or may subject you to
         criminal liability and/or liability for damages, costs, expenses, or fees (including attorney&apos;s fees)
@@ -722,10 +722,11 @@ export default function TermsAndConditionsPage() {
       <Box
         sx={{
           p: 4,
-          my: 5,
+          mt: 5,
+          mb: 10,
         }}
       >
-        <MainSection />
+        <MainSection headerName="PARENTS - TERMS OF USE"/>
         <IntroductionSection />
         <AcceptingSection />
         <PrivacySection />
