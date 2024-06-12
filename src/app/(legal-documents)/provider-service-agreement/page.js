@@ -104,7 +104,7 @@ export function DefinitionSection() {
       </Typography>
       <Typography variant="body1" paragraph>
         &quot;OOSCCA DPA&quot; means the data processing addendum which governs the processing activities which relate
-        to this OOSCCA Service Agreement, which can be accessed <Link href="/agreement">here</Link>;
+        to this OOSCCA Service Agreement, which can be accessed <Link href="/provider-service-agreement">here</Link>;
       </Typography>
       <Typography variant="body1" paragraph>
         &quot;OOSCCA Platform&quot; means OOSCCA&apos;s online marketplace which allows care seekers to book,
