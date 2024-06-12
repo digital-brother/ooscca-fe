@@ -19,7 +19,7 @@ import {
   DisclaimersSection,
   GoverningLawSection,
   GeneralProvisionsSection,
-} from "@/app/terms/page";
+} from "@/app/(legal-documents)/parent-terms-of-use/page";
 
 export default function PrivacyPolicyPage() {
   return (
