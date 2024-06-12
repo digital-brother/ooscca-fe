@@ -31,17 +31,17 @@ export function BackgroundSection() {
         to the terms and conditions in this agreement.
       </Typography>
       <Typography variant="body1" paragraph>
-        B. This agreement (<Link href="/terms/provider">OOSCCA T&amp;Cs</Link>, the OOSCCA DPA and any Confirmation
+        B. This agreement (<Link href="/provider-terms-of-use">OOSCCA T&amp;Cs</Link>, the OOSCCA DPA and any Confirmation
         Order Forms) forms an agreement between OOSCCA and the Provider (the &quot;OOSCCA Service Agreement&quot;). This
         OOSCCA Service Agreement will become effective on the Effective Date.
       </Typography>
       <Typography variant="body1" paragraph>
-        C. The OOSCCA T&amp;Cs are available <Link href="/terms/provider">here</Link>. As soon as possible after
+        C. The OOSCCA T&amp;Cs are available <Link href="/provider-terms-of-use">here</Link>. As soon as possible after
         agreeing to this OOSCCA Service Agreement, please ensure that you print a copy of the
-        <Link href="/terms/provider">OOSCCA T&amp;Cs</Link> for your records.
+        <Link href="/provider-terms-of-use">OOSCCA T&amp;Cs</Link> for your records.
       </Typography>
       <Typography variant="body1" paragraph>
-        THIS OOSCCA SERVICE AGREEMENT (INCLUDING THE <Link href="/terms/provider">OOSCCA T&amp;Cs</Link>, THE OOSCCA DPA
+        THIS OOSCCA SERVICE AGREEMENT (INCLUDING THE <Link href="/provider-terms-of-use">OOSCCA T&amp;Cs</Link>, THE OOSCCA DPA
         AND ANY CONFIRMATION ORDER FORMS) CONSTITUTES A LEGAL AND ENFORCEABLE CONTRACT BETWEEN OOSCCA AND THE PROVIDER.
         BY APPLYING TO ENTER INTO THIS OOSCCA SERVICE AGREEMENT, THIS CONSTITUTES AN OFFER BY YOU, OR THE COMPANY OR
         ORGANISATION WHO YOU ARE MAKING THIS OFFER ON BEHALF OF, TO ENTER INTO AN AGREEMENT WITH OOSCCA LIMITED (TRADING
