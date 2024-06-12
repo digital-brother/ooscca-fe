@@ -23,7 +23,7 @@ function SignUpForm() {
       <Box sx={{display: "flex", alignItems: "center", justifyContent: {xs: "center", md: "left"}}}>
         <Checkbox size="small" sx={{ml: -1}}/>
         <Typography variant="body2" color="text.secondary">
-          I accept the <Link href="/parent-terms-of-use">Terms and Conditions</Link> and <Link href="/privacy-policy">Privacy Policy</Link>
+          I accept the <Link href="/parent-terms-of-use">Terms and Conditions</Link> and <Link href="/parent-privacy-policy">Privacy Policy</Link>
         </Typography>
       </Box>
 
