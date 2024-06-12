@@ -67,7 +67,7 @@ export default function SignUpAccount({ goToNextStep }) {
               label={
                 <Typography variant="body2" color="text.secondary">
                   By signing up you accept <Link href="/parent-terms-of-use">Terms and Conditions</Link> and{" "}
-                  <Link href="/privacy-policy">Privacy Policy</Link>
+                  <Link href="/parent-privacy-policy">Privacy Policy</Link>
                 </Typography>
               }
               sx={{ mt: 6 }}
