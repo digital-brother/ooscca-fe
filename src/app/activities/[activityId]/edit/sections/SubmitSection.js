@@ -42,7 +42,7 @@ function FormBlock() {
         <Box sx={{display: "flex", alignItems: "center"}}>
           <Checkbox size="small" sx={{ml: -1}}/>
           <Typography variant="body2" color="text.secondary">
-            I accept the <Link href="#">Terms and Conditions</Link> and <Link href="/privacy">Privacy Policy</Link>
+            I accept the <Link href="/provider-terms-of-use">Terms and Conditions</Link> and <Link href="/provider-terms-of-use">Privacy Policy</Link>
           </Typography>
         </Box>
       </Box>
