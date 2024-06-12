@@ -11,10 +11,12 @@ export function BetweenSection() {
       <Typography variant="body1" paragraph>
         (1) OOSCCA Ltd (referred to hereinafter as &quot;OOSCCA&quot;, &quot;we&quot;, &quot;our&quot;, &quot;us&quot;)
         is private limited company established in England &amp; Wales with a registered office at 259 Sheepcot Lane,
-        Watford, Hertfordshire, WD25 7DJ and registered company number 15566374; and (2) Yourself (if the Provider is an
-        individual) or the company or organisation that you are submitting on behalf of, as described in the information
-        that you have provided during the course of the sign-up and onboarding process (&quot;Provider&quot;), each a
-        &quot;Party&quot; and together the &quot;Parties&quot;.
+        Watford, Hertfordshire, WD25 7DJ and registered company number 15566374; and
+      </Typography>
+      <Typography variant="body1" paragraph>
+        (2) Yourself (if the Provider is an individual) or the company or organisation that you are submitting on behalf
+        of, as described in the information that you have provided during the course of the sign-up and onboarding
+        process (&quot;Provider&quot;), each a &quot;Party&quot; and together the &quot;Parties&quot;.
       </Typography>
     </>
   );
@@ -35,7 +37,7 @@ export function BackgroundSection() {
       </Typography>
       <Typography variant="body1" paragraph>
         C. The OOSCCA T&amp;Cs are available <Link href="/terms/provider">here</Link>. As soon as possible after
-        agreeing to this OOSCCA Service Agreement, please ensure that you print a copy of the{" "}
+        agreeing to this OOSCCA Service Agreement, please ensure that you print a copy of the
         <Link href="/terms/provider">OOSCCA T&amp;Cs</Link> for your records.
       </Typography>
       <Typography variant="body1" paragraph>
@@ -102,7 +104,7 @@ export function DefinitionSection() {
       </Typography>
       <Typography variant="body1" paragraph>
         &quot;OOSCCA DPA&quot; means the data processing addendum which governs the processing activities which relate
-        to this OOSCCA Service Agreement, which can be accessed here [insert link];
+        to this OOSCCA Service Agreement, which can be accessed <Link href="/agreement">here</Link>;
       </Typography>
       <Typography variant="body1" paragraph>
         &quot;OOSCCA Platform&quot; means OOSCCA&apos;s online marketplace which allows care seekers to book,
@@ -171,7 +173,10 @@ export function ProviderObligationSection() {
         to the sign-up and onboarding process;
       </Typography>
       <Typography variant="body1" paragraph>
-        2.2.2 submit and provide any information requested by OOSCCA from time to time (including without limitation
+        2.2.2 complete certain onboarding activities, as notified to the Provider by OOSCCA; and
+      </Typography>
+      <Typography variant="body1" paragraph>
+        2.2.3 submit and provide any information requested by OOSCCA from time to time (including without limitation
         during the sign-up and onboarding process).
       </Typography>
       <Typography variant="body1" paragraph>
