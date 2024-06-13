@@ -3,7 +3,7 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { useMediaQuery } from "@mui/material";
 
-export function CustomEditor({ initialValue, editorRef }) {
+export function WYSIWYGEditor({ initialValue, editorRef }) {
     const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
     return (

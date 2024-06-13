@@ -57,7 +57,7 @@ import {
 import { SmFlex } from "../components/responsiveFlexes";
 import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
-import { CustomEditor } from "../components/CustomEditor";
+import { WYSIWYGEditor } from "../components/WYSIWYGEditor";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -697,12 +697,12 @@ function DescriptionForm() {
   return (
       <Box sx={{ width: "100%", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 2}}> 
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Description:</Typography>
-        <CustomEditor
+        <WYSIWYGEditor
           initialValue={activity?.description}
           editorRef={editorDescriptionsRef}
         />
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Highlight important details here:</Typography>
-        <CustomEditor 
+        <WYSIWYGEditor 
           initialValue={activity?.preRequisites}
           editorRef={editorPreRequisitesRef}
         />

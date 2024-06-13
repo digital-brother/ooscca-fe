@@ -5,7 +5,7 @@ import { Button, Dialog } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import { CustomEditor } from "../components/CustomEditor";
+import { WYSIWYGEditor } from "../components/WYSIWYGEditor";
 import "dayjs/locale/en-gb";
 import { useParams } from "next/navigation";
 import React, { useRef, useState } from "react";
@@ -42,7 +42,7 @@ function TermsAndConditionsModal({ setTermsCoditionsOpen }) {
         Add your Terms & Contitions here
       </Typography>
       <Box sx={{ mt: { xs: 2, md: 5 } }}>
-        <CustomEditor initialValue={provider?.termsAndConditions} editorRef={editorRef} />
+        <WYSIWYGEditor initialValue={provider?.termsAndConditions} editorRef={editorRef} />
       </Box>
       <Error>{error}</Error>
       <SmFlex sx={{ mt: { xs: 2, md: 5 }, rowGap: 1, columnGap: 5, justifyContent: "right", alignItems: "center" }}>
