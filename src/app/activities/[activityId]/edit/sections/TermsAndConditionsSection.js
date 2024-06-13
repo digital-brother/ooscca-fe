@@ -121,7 +121,6 @@ export default function TermsAndConditionsSection(sx) {
       <Dialog
         onClose={() => setTermsCoditionsOpen(false)}
         open={termsCoditionsOpen}
-        PaperProps={{ sx: { maxWidth: "none" } }}
       >
         <TermsAndConditionsModal {...{ setTermsCoditionsOpen }} />
       </Dialog>
@@ -131,10 +130,9 @@ export default function TermsAndConditionsSection(sx) {
 
 export const TermsAndConditionsContainer = styled(Box)(({ theme }) =>
   theme.unstable_sx({
-    minWidth: { xs: 300, md: 500 },
-    minHeight: 150,
+    width: { xs: "100%", sm: "545px"},
+    maxWidth: {sx: "545px"},
     px: { xs: 2.5, md: 7 },
     py: { xs: 3, md: 5 },
-    overflow:"hidden"
   })
 );
