@@ -17,7 +17,7 @@ export default function Homepage() {
       <Demo/>
       <Security/>
       <Benefits/>
-      <HomepageTabs/>
+      {/* <HomepageTabs/> */}
       <SignUp/>
     </>
   )
