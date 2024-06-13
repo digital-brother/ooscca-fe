@@ -677,15 +677,15 @@ function DescriptionForm() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
-  const editorDescriptionsRef = useRef(null);
-  const editorPreRequisitesRef = useRef(null);
+  const descriptionEditorRef = useRef(null);
+  const preRequisitesEditorRef = useRef(null);
   const [errors, setErrors] = useState({ description: null, preRequisites: null, generic: null });
 
   function handleSave() {
-    const descriptionContext = editorDescriptionsRef.current.getContent();
-    const preRequisitesContext = editorPreRequisitesRef.current.getContent();
+    const description = descriptionEditorRef.current.getContent();
+    const preRequisites = preRequisitesEditorRef.current.getContent();
     mutation.mutate(
-      { description: descriptionContext, preRequisites: preRequisitesContext },
+      { description, preRequisites },
       {
         onError: (error) => {
           const { fieldErrors, formErrors, genericError } = getFormAndFieldErrors(error);
@@ -707,13 +707,13 @@ function DescriptionForm() {
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Description:</Typography>
         <WYSIWYGEditor
           initialValue={activity?.description}
-          editorRef={editorDescriptionsRef}
+          editorRef={descriptionEditorRef}
         />
         <Error>{errors.description}</Error>
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Highlight important details here:</Typography>
         <WYSIWYGEditor 
           initialValue={activity?.preRequisites}
-          editorRef={editorPreRequisitesRef}
+          editorRef={preRequisitesEditorRef}
         />
         <Error>{errors.preRequisites}</Error>
         <Button variant="contained" color="green" size="large" onClick={handleSave} fullWidth>
