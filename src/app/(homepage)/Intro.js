@@ -5,28 +5,30 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
+import { useRouter } from "next/navigation";
 
 function IntroText(props) {
+  const router = useRouter()
+
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
       <Typography variant="subheading">
-        OOSCCA /ˈos.ka/ — Out Of School Clubs, Classes & Activities
+        Organise and share with ease
       </Typography>
       <Typography mt={3} variant="h1">
-        All-in-one platform that brings kids’ activity providers and parents
-        under one roof
+        All-in-one platform that makes it super easy to discover, pay and manage activities 
       </Typography>
       <Typography mt={3} variant="h5" color="text.secondary">
-        AOOSCCA makes it super easy to discover, pay and manage activities with
-        multiple providers — because parenting is hard enough.
+        Intuitive. Powerful. Simple — because parenting is stressful enough.
       </Typography>
       <Button
         sx={{ mt: 5, textTransform: "none", fontSize: 24, fontWieght: 700 }}
         variant="contained"
         color="orange"
         size="large"
+        onClick={() => router.push("/booking")}
       >
-        Sign in and start relaxing
+        Stop searching. Start booking.
       </Button>
     </Box>
   );
