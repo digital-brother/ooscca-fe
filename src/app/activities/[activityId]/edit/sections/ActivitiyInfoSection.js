@@ -221,7 +221,6 @@ export function ActivityDetails({ sx, editMode=false }) {
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
         <StyledMuiLink
           onClick={() => {
-            console.log(1);
             setTermsCoditionsOpen(true);
           }}
         >
