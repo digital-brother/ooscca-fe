@@ -231,7 +231,6 @@ export function ActivityDetails({ sx, editMode=false }) {
         <Dialog
           onClose={() => setTermsCoditionsOpen(false)}
           open={termsCoditionsOpen}
-          PaperProps={{ sx: { width: { xs: "100%", sm: "50%" }, overflow: 'auto' } }}
         >
           <TermsAndConditionsView activity={activity} handleClose={() => setTermsCoditionsOpen(false)} />
         </Dialog>
