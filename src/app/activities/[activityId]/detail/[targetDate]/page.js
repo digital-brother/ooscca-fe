@@ -127,17 +127,22 @@ function ActivityDescription() {
   const { data: activity } = useQuery(["activity", activityId, targetDate], () =>
     getActivityForDate(activityId, targetDate)
   );
-  const preRequisitesLines = activity?.preRequisites.split("\n");
 
   return (
     <Box>
       <Typography variant="h5">Description</Typography>
-      {activity?.description || "Add description for parents to read here."}
+      {activity?.description ? (
+        <Box dangerouslySetInnerHTML={{ __html: activity.description }} />
+      ) : (
+        <Typography sx={{ fontWeight: 700 }}>Add description for parents to read here.</Typography>
+      )}
 
       <Typography sx={{ mt: 3, fontWeight: 700 }}>Pre-requisites to join this class:</Typography>
-      {activity?.preRequisites
-        ? preRequisitesLines.map((line, index) => <Typography key={index}>- {line}</Typography>)
-        : "Add short important information for parents to read here."}
+      {activity?.preRequisites ? (
+        <Box dangerouslySetInnerHTML={{ __html: activity.preRequisites }} />
+      ) : (
+        <Typography sx={{ fontWeight: 700 }}>Add short important information for parents to read here.</Typography>
+      )}
     </Box>
   );
 }
