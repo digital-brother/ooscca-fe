@@ -48,6 +48,7 @@ import {
   FormikCheckboxField,
   FormikDecimalField,
   FormikErrors,
+  getFormAndFieldErrors,
   FormikNumberField,
   FormikSelect,
   FormikTextField,
@@ -678,7 +679,7 @@ function DescriptionForm() {
   const mutation = useMutation((data) => patchActivity(activityId, data));
   const editorDescriptionsRef = useRef(null);
   const editorPreRequisitesRef = useRef(null);
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({ description: null, preRequisites: null, generic: null });
 
   function handleSave() {
     const descriptionContext = editorDescriptionsRef.current.getContent();
@@ -686,9 +687,16 @@ function DescriptionForm() {
     mutation.mutate(
       { description: descriptionContext, preRequisites: preRequisitesContext },
       {
-        onError: (error) => setError(error?.response?.data?.description || error?.response?.data?.preRequisites || error.message),
+        onError: (error) => {
+          const { fieldErrors, formErrors, genericError } = getFormAndFieldErrors(error);
+          setErrors({
+            description: fieldErrors?.description || null,
+            preRequisites: fieldErrors?.preRequisites || null,
+            generic: formErrors?.join(", ") || genericError || null,
+          });
+        },
         onSuccess: () => {
-          setError(null);
+          setErrors({ description: null, preRequisites: null, generic: null });
         },
       }
     );
@@ -701,15 +709,17 @@ function DescriptionForm() {
           initialValue={activity?.description}
           editorRef={editorDescriptionsRef}
         />
+        <Error>{errors.description}</Error>
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Highlight important details here:</Typography>
         <WYSIWYGEditor 
           initialValue={activity?.preRequisites}
           editorRef={editorPreRequisitesRef}
         />
+        <Error>{errors.preRequisites}</Error>
         <Button variant="contained" color="green" size="large" onClick={handleSave} fullWidth>
           Save
         </Button>
-        <Error>{error}</Error>
+        <Error>{errors.generic}</Error>
     </Box>
   );
 }
