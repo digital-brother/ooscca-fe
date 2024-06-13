@@ -703,7 +703,7 @@ function DescriptionForm() {
   }
 
   return (
-      <Box sx={{ width: "100%", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 2}}> 
+      <Stack sx={{ width: "100%", justifyContent: "center", alignItems: "center", gap: 2}}> 
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Description:</Typography>
         <WYSIWYGEditor
           initialValue={activity?.description}
@@ -720,7 +720,7 @@ function DescriptionForm() {
           Save
         </Button>
         <Error>{errors.generic}</Error>
-    </Box>
+    </Stack>
   );
 }
 
