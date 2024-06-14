@@ -49,7 +49,7 @@ function IntroImage() {
       width={0}
       height={0}
       sizes="100vw"
-      style={{width: "100%", height: "auto", objectFit: "cover", objectPosition: "left" }}
+      style={{width: "100%", height: "100%", objectFit: "cover", objectPosition: "left" }}
     />
   );
 }
