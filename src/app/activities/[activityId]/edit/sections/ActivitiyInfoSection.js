@@ -48,6 +48,7 @@ import {
   FormikCheckboxField,
   FormikDecimalField,
   FormikErrors,
+  getFormAndFieldErrors,
   FormikNumberField,
   FormikSelect,
   FormikTextField,
@@ -57,6 +58,7 @@ import {
 import { SmFlex } from "../components/responsiveFlexes";
 import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
+import { WYSIWYGEditor } from "../components/WYSIWYGEditor";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -675,36 +677,50 @@ function DescriptionForm() {
   const activityId = useParams().activityId;
   const { data: activity } = useQuery(["activity", activityId], () => getActivity(activityId));
   const mutation = useMutation((data) => patchActivity(activityId, data));
+  const descriptionEditorRef = useRef(null);
+  const preRequisitesEditorRef = useRef(null);
+  const [errors, setErrors] = useState({ description: null, preRequisites: null, generic: null });
+
+  function handleSave() {
+    const description = descriptionEditorRef.current.getContent();
+    const preRequisites = preRequisitesEditorRef.current.getContent();
+    mutation.mutate(
+      { description, preRequisites },
+      {
+        onError: (error) => {
+          const { fieldErrors, formErrors, genericError } = getFormAndFieldErrors(error);
+          setErrors({
+            description: fieldErrors?.description || null,
+            preRequisites: fieldErrors?.preRequisites || null,
+            generic: formErrors?.join(", ") || genericError || null,
+          });
+        },
+        onSuccess: () => {
+          setErrors({ description: null, preRequisites: null, generic: null });
+        },
+      }
+    );
+  }
 
   return (
-    <Formik
-      initialValues={{ description: activity?.description ?? "", preRequisites: activity?.preRequisites ?? "" }}
-      onSubmit={createHandleSubmit({ mutation })}
-      enableReinitialize
-    >
-      <Form>
-        <Stack spacing={3}>
-          <FormikTextField name="description" variant="filled" fullWidth label="Description" multiline rows={10} />
-          <FormikTextField
-            name="preRequisites"
-            variant="filled"
-            fullWidth
-            label="Highlight important details here"
-            multiline
-            rows={9}
-            inputProps={{
-              style: {
-                fontWeight: 700,
-              },
-            }}
-          />
-          <Button variant="contained" color="green" size="large" type="submit">
-            Save
-          </Button>
-          <FormikErrors />
-        </Stack>
-      </Form>
-    </Formik>
+      <Stack sx={{ width: "100%", justifyContent: "center", alignItems: "center", gap: 3}}> 
+        <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Description:</Typography>
+        <WYSIWYGEditor
+          initialValue={activity?.description}
+          editorRef={descriptionEditorRef}
+        />
+        <Error>{errors.description}</Error>
+        <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Highlight important details here:</Typography>
+        <WYSIWYGEditor 
+          initialValue={activity?.preRequisites}
+          editorRef={preRequisitesEditorRef}
+        />
+        <Error>{errors.preRequisites}</Error>
+        <Button variant="contained" color="green" size="large" onClick={handleSave} fullWidth>
+          Save
+        </Button>
+        <Error>{errors.generic}</Error>
+    </Stack>
   );
 }
 
@@ -756,7 +772,7 @@ export const ActivityInfoContainer = styled(Box)(({ theme }) =>
   theme.unstable_sx({
     display: "grid",
     gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
-    gap: 3,
+    gap: 5,
     maxWidth: { xs: 540, lg: "none" },
     mx: "auto",
   })

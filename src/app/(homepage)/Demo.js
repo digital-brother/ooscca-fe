@@ -1,6 +1,7 @@
 import OosStepper from "@/components/OosStepper";
 import { Box, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import NextImage from "next/image";
 
 function DemoHeader({sx}) {
   return (
@@ -24,8 +25,14 @@ export default function Demo() {
   return (
     <Container sx={{ py: { xs: 6, md: 10 } }}>
       <DemoHeader sx={{ mx: "auto" }} />
-      <OosStepper sx={{ mt: 4, maxWidth: 700, mx: "auto" }} steps={steps} />
-      <Box component="img" src="/demo.png" sx={{ mt: { xs: 2, sm: 10 }, width: "100%" }} />
+      <OosStepper sx={{ mt: 4, maxWidth: 700, mx: "auto", mb: { xs: 2, sm: 10 } }} steps={steps} />
+        <NextImage 
+          src="/demo.png"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: '100%', height: 'auto' }}
+        />
     </Container>
   );
 }
