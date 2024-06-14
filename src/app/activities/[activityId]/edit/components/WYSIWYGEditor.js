@@ -18,6 +18,7 @@ export function WYSIWYGEditor({ initialValue, editorRef }) {
             // inline={true}
             init={{
             height: mdUp ? 500 : 350,
+            width: "100%",
             menubar: false,
             statusbar: false,
             plugins: [
