@@ -4,7 +4,7 @@ import { FooterLogo } from "@/app/(homepage)/components/Logo";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { Box, Container, styled } from "@mui/material";
+import { Box, Container, Stack, styled } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
@@ -44,16 +44,15 @@ export default function Footer() {
               mt: 1,
               gap: 5,
             }}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+            <Stack sx={{ gap: 0.5 }}>
               <FooterLink href="/parent-terms-of-use" variant="body2">Parent Terms of Use</FooterLink>
               <FooterLink href="/privacy-policy" variant="body2">Privacy Policy</FooterLink>
               <Typography variant="body2">Data Processing Agreement</Typography>
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+            </Stack>
+            <Stack sx={{ gap: 0.5 }}>
               <FooterLink href="/provider-service-agreement" variant="body2">Provider Processing Agreement</FooterLink>
               <FooterLink href="/b2b-terms" variant="body2">B2B Terms</FooterLink>
-              
-            </Box>
+            </Stack>
             </Box>
           </Grid>
           <Grid item xs={6} sm="auto" sx={{textAlign: "right"}}>
@@ -62,9 +61,9 @@ export default function Footer() {
               <LinkedInIcon/>
               <FacebookIcon/>
             </Box>
-            <Box sx={{display: "flex", flexDirection: "column", gap: 0.5, mt: 3}}>
+            <Stack sx={{ gap: 0.5, mt: 3}}>
               <Typography variant="body2">Copyright © 2023 OOSCCA</Typography>
-            </Box>
+            </Stack>
           </Grid>
         </Grid>
       </Container>
