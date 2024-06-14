@@ -7,9 +7,12 @@ import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { useRouter } from "next/navigation";
 import NextImage from "next/image";
+import { useContext } from "react";
+import { AuthTokenContext } from "@/app/layout";
 
 function IntroText(props) {
   const router = useRouter()
+  const { authToken } = useContext(AuthTokenContext);
 
   return (
     <Box textAlign={{ xs: "center", md: "left" }} {...props}>
@@ -27,7 +30,7 @@ function IntroText(props) {
         variant="contained"
         color="orange"
         size="large"
-        onClick={() => router.push("/booking")}
+        onClick={() => authToken ? router.push("/booking") : router.push("/login")}
       >
         Stop searching. Start booking.
       </Button>
