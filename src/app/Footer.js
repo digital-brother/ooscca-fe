@@ -46,12 +46,13 @@ export default function Footer() {
             }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
               <FooterLink href="/parent-terms-of-use" variant="body2">Parent Terms of Use</FooterLink>
-              <FooterLink href="/parent-privacy-policy" variant="body2">Privacy Policy</FooterLink>
+              <FooterLink href="/privacy-policy" variant="body2">Privacy Policy</FooterLink>
+              <Typography variant="body2">Data Processing Agreement</Typography>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-              <FooterLink href="/provider-terms-of-use" variant="body2">Provider Terms of Use</FooterLink>
-              <FooterLink href="/b2b-terms" variant="body2">B2B Terms</FooterLink>
               <FooterLink href="/provider-service-agreement" variant="body2">Provider Processing Agreement</FooterLink>
+              <FooterLink href="/b2b-terms" variant="body2">B2B Terms</FooterLink>
+              
             </Box>
             </Box>
           </Grid>
