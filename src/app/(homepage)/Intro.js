@@ -6,6 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { useRouter } from "next/navigation";
+import NextImage from "next/image";
 
 function IntroText(props) {
   const router = useRouter()
@@ -40,15 +41,12 @@ function IntroImage() {
   const src = mdUp ? "/intro-desktop.png" : "/intro-mobile.png";
 
   return (
-    <Box
-      component="img"
+    <NextImage
       src={src}
-      sx={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        objectPosition: "left",
-      }}
+      width={0}
+      height={0}
+      sizes="100vw"
+      style={{width: "100%", height: "auto", objectFit: "cover", objectPosition: "left" }}
     />
   );
 }
