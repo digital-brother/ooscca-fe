@@ -703,7 +703,7 @@ function DescriptionForm() {
   }
 
   return (
-      <Stack sx={{ width: "100%", justifyContent: "center", alignItems: "center", gap: 2}}> 
+      <Stack sx={{ width: "100%", justifyContent: "center", alignItems: "center", gap: 3}}> 
         <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>Description:</Typography>
         <WYSIWYGEditor
           initialValue={activity?.description}
@@ -772,7 +772,7 @@ export const ActivityInfoContainer = styled(Box)(({ theme }) =>
   theme.unstable_sx({
     display: "grid",
     gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
-    gap: 3,
+    gap: 5,
     maxWidth: { xs: 540, lg: "none" },
     mx: "auto",
   })
