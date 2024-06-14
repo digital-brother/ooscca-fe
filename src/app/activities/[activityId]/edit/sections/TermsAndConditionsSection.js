@@ -1,7 +1,7 @@
 "use client";
 
 import { getActivity, patchProvider } from "@/app/api.mjs";
-import { Button, Dialog } from "@mui/material";
+import { Button, Container, Dialog } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
@@ -90,7 +90,7 @@ export default function TermsAndConditionsSection(sx) {
   );
 }
 
-export const TermsAndConditionsContainer = styled(Box)(({ theme }) =>
+export const TermsAndConditionsContainer = styled(Container)(({ theme }) =>
   theme.unstable_sx({
     minWidth: { xs: 300, md: 500 },
     minHeight: 150,
