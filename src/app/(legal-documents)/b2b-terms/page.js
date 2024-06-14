@@ -516,7 +516,7 @@ function GeneralSection() {
   );
 }
 
-export default function TermsAndConditionsPage() {
+export default function B2BTermPage() {
   return (
     <PolicyContainer headerName="B2B - TERMS OF USE" lastUpdated="Last updated: April 21 2024">
       <DefinitionSection />

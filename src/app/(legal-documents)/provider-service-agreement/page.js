@@ -601,7 +601,7 @@ export function GeneralSection() {
   );
 }
 
-export default function TermsAndConditionsPage() {
+export default function ProviderServiceAgreementPage() {
   return (
     <PolicyContainer headerName="PROVIDER - SERVICE AGREEMENT" lastUpdated="THIS AGREEMENT is made on Effective Date.">
       <BetweenSection />

@@ -726,7 +726,7 @@ export function GeneralProvisionsSection() {
   );
 }
 
-export default function TermsAndConditionsPage() {
+export default function ParantsTermsOfUsePage() {
   return (
     <PolicyContainer headerName="PARENTS - TERMS OF USE" lastUpdated="Last updated: April 21 2024">
         <IntroductionSection />
