@@ -20,16 +20,16 @@ import { useState } from "react";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
-  const [stayOnPage, setStayOnPage] = useState(false);
+  const [isTheLastChild, setIsTheLastChild] = useState(false);
 
   const userId = localStorage.getItem(USER_ID_KEY);
-  const mutation = useMutation((data) => signupChildren(userId, data));
+  const mutation = useMutation((data) => signupChildren(isTheLastChild, userId, data));
 
   function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({ mutation,
       onSuccess: () => {
-        if (stayOnPage) formikHelpers.resetForm()
-        else goToNextStep()
+        if (isTheLastChild) goToNextStep()
+        else formikHelpers.resetForm()
        },
     });
     handle(values, formikHelpers);
@@ -119,7 +119,7 @@ export default function SignUpChildren({ goToNextStep }) {
 
               <Button
                 onClick={() => {
-                  setStayOnPage(true);
+                  setIsTheLastChild(false);
                   formik.submitForm();
                 }}
                 variant="outlined"
@@ -132,7 +132,7 @@ export default function SignUpChildren({ goToNextStep }) {
               </Button>
               <Button
                 onClick={() => {
-                  setStayOnPage(false);
+                  setIsTheLastChild(true);
                   formik.submitForm();
                 }}
                 variant="contained"
