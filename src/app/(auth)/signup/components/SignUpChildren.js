@@ -49,7 +49,7 @@ export default function SignUpChildren({ goToNextStep }) {
         </Typography>
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Child</Typography>
         <Formik
-          initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
+          initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "", allergiesMedical: "" }}
           onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
