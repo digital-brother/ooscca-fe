@@ -20,15 +20,15 @@ import { useState } from "react";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
-  const [isTheLastChild, setIsTheLastChild] = useState(false);
+  const [isLastChild, setisLastChild] = useState(false);
 
   const userId = localStorage.getItem(USER_ID_KEY);
-  const mutation = useMutation((data) => signupChildren(isTheLastChild, userId, data));
+  const mutation = useMutation((data) => signupChildren(isLastChild, userId, data));
 
   function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({ mutation,
       onSuccess: () => {
-        if (isTheLastChild) goToNextStep()
+        if (isLastChild) goToNextStep()
         else formikHelpers.resetForm()
        },
     });
@@ -119,7 +119,7 @@ export default function SignUpChildren({ goToNextStep }) {
 
               <Button
                 onClick={() => {
-                  setIsTheLastChild(false);
+                  setisLastChild(false);
                   formik.submitForm();
                 }}
                 variant="outlined"
@@ -132,7 +132,7 @@ export default function SignUpChildren({ goToNextStep }) {
               </Button>
               <Button
                 onClick={() => {
-                  setIsTheLastChild(true);
+                  setisLastChild(true);
                   formik.submitForm();
                 }}
                 variant="contained"
