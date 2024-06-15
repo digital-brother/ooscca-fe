@@ -55,7 +55,7 @@ export default function SignUpAccount({ goToNextStep }) {
               .label("Re-enter password")
               .oneOf([Yup.ref("password1")], "Passwords must match")
               .required(),
-            termsConditionsAccepted: Yup.boolean().oneOf([true], "You must accept the Terms and Conditions"),
+            termsConditionsAccepted: Yup.boolean().oneOf([true], "You must accept the Terms of Use"),
           })}
         >
           <Form>
@@ -66,7 +66,7 @@ export default function SignUpAccount({ goToNextStep }) {
               name="termsConditionsAccepted"
               label={
                 <Typography variant="body2" color="text.secondary">
-                  By signing up you accept <Link href="/parent-terms-of-use">Terms and Conditions</Link> and{" "}
+                  By signing up you accept <Link href="/parent-terms-of-use">Terms of Use</Link> and{" "}
                   <Link href="/privacy-policy">Privacy Policy</Link>
                 </Typography>
               }
