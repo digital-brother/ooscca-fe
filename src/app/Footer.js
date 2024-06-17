@@ -17,14 +17,6 @@ const FooterLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const FooterBox = styled(Box)(({ theme }) => ({
-  color: "white",
-  textDecoration: 'none',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-}));
-
 // const FOOTER_NAV_LINKS = HEADER_NAV_LINKS.filter(link => ["about", "providers", "contact"].includes(link.name))
 
 export default function Footer() {
