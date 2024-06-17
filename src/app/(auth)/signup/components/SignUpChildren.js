@@ -20,16 +20,16 @@ import { useState } from "react";
 
 export default function SignUpChildren({ goToNextStep }) {
   const { data: schools } = useQuery("schools", getSchools);
-  const [stayOnPage, setStayOnPage] = useState(false);
+  const [isLastChild, setisLastChild] = useState(false);
 
   const userId = localStorage.getItem(USER_ID_KEY);
-  const mutation = useMutation((data) => signupChildren(userId, data));
+  const mutation = useMutation((data) => signupChildren(isLastChild, userId, data));
 
   function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({ mutation,
       onSuccess: () => {
-        if (stayOnPage) formikHelpers.resetForm()
-        else goToNextStep()
+        if (isLastChild) goToNextStep()
+        else formikHelpers.resetForm()
        },
     });
     handle(values, formikHelpers);
@@ -49,7 +49,7 @@ export default function SignUpChildren({ goToNextStep }) {
         </Typography>
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Child</Typography>
         <Formik
-          initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "" }}
+          initialValues={{ firstName: "", lastName: "", displayName: "", birthDate: null, classYear: "", school: "", allergiesMedical: "" }}
           onSubmit={handleSubmit}
           validationSchema={Yup.object({
             firstName: Yup.string()
@@ -119,7 +119,7 @@ export default function SignUpChildren({ goToNextStep }) {
 
               <Button
                 onClick={() => {
-                  setStayOnPage(true);
+                  setisLastChild(false);
                   formik.submitForm();
                 }}
                 variant="outlined"
@@ -132,7 +132,7 @@ export default function SignUpChildren({ goToNextStep }) {
               </Button>
               <Button
                 onClick={() => {
-                  setStayOnPage(false);
+                  setisLastChild(true);
                   formik.submitForm();
                 }}
                 variant="contained"
