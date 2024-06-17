@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export function OssContainer({ children, sx, handleClick = null }) {
     const router = useRouter();
-    const clickHandler = typeof handleClick === 'function' ? handleClick : () => router.back();
+    const clickHandler = typeof handleClick === 'function' ? handleClick : () => router.push("/");
 
     return (
       <Box sx={{ width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, ...sx }}>
