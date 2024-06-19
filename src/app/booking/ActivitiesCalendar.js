@@ -48,7 +48,7 @@ function PickerDate({ date, setSelectedDate, isSelectedDate }) {
 }
 
 export function getDisplayedWeekModayDate(date) {
-  const dayOfWeek = date.day();
+  const dayOfWeek = date.utc();
 
   let displayedWeekModayDate;
   if (dayOfWeek === 6) {
