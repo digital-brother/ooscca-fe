@@ -2,7 +2,6 @@
 
 import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
@@ -35,6 +34,7 @@ import { SelectedDateContext } from "./page";
 import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import ShareCalendarPopup from './ShareCalendarPopup';
 import MenuChildPopup from "./MenuChildPopup";
+import PreviosWeekButton from "./PreviosWeekButton"
 
 dayjs.extend(weekday);
 
@@ -471,7 +471,6 @@ function BookingsTable() {
 
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
-  const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
     !isLoadingChildren && (
@@ -488,9 +487,7 @@ function BookingsTable() {
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <IconButton onClick={handlePreviosWeek}>
-                      <ArrowBackIosNewIcon />
-                    </IconButton>
+                    <PreviosWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
                     <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
                       Today
                     </Button>
