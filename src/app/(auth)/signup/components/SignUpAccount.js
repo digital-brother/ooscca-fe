@@ -46,10 +46,7 @@ export default function SignUpAccount({ goToNextStep }) {
               .label("Password")
               .min(8, "Password must be at least 8 characters")
               .max(20, "Password must be 20 characters or less")
-              .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-              .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-              .matches(/[0-9]/, "Password must contain at least one number")
-              .matches(/[@$!%*?&]/, "Password must contain at least one special character (@, $, !, %, *, ?, &)")
+              .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])/, "Password must contain at least one number, a lowercase letter, an uppercase letter and a special character (@, $, !, %, *, ?, &)")
               .required(),
             password2: Yup.string()
               .label("Re-enter password")
