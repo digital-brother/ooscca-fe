@@ -4,10 +4,13 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import { Box, IconButton } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { AuthTokenContext } from "@/app/layout";
 
 export function OssContainer({ children, sx, handleClick = null }) {
     const router = useRouter();
-    const clickHandler = typeof handleClick === 'function' ? handleClick : () => router.push("/");
+    const { authToken } = useContext(AuthTokenContext);
+    const clickHandler = typeof handleClick === 'function' ? handleClick : () => authToken ? router.push("/booking") : router.push("/");
 
     return (
       <Box sx={{ width: { xs: "100%", sm: 545 }, maxWidth: 545, p: 4, ...sx }}>
