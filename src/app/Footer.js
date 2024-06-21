@@ -4,6 +4,7 @@ import { FooterLogo } from "@/app/(homepage)/components/Logo";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Box, Container, Stack, styled } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -49,6 +50,13 @@ export default function Footer() {
           </Grid>
           <Grid item xs={6} sm="auto" sx={{textAlign: "right"}}>
             <Box sx={{display: "inline-flex", gap: 3, mt: 1}}>
+            <FooterLink
+                href="https://wa.me/447456523586"
+                aria-label="Chat on WhatsApp"
+                target="_blank"
+                rel="noopener noreferrer">
+                  <WhatsAppIcon/>
+              </FooterLink>
               <InstagramIcon/>
               <LinkedInIcon/>
               <FacebookIcon/>
