@@ -6,15 +6,13 @@ import * as React from "react";
 
 export  function LogoImage() {
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
-  const width = mdUp ? 190 : 117;
-  const height = mdUp ? 43 : 26;
 
   return (
     <NextImage
         src="/logo.png"
         alt="OOSCCA logo"
-        width={width}
-        height={height}
+        width={mdUp ? 190 : 117}
+        height={mdUp ? 43 : 26}
     />
   );
 }
