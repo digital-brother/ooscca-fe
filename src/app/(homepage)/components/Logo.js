@@ -1,11 +1,22 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 
 export function Logo() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push('/');
+  };
+
   return (
     <Box>
-      <Box component="img" sx={{width: {xs: 117, md: 190}, height: 'auto'}} src="/logo.png" alt="OOSCCA logo"/>
+      <Box component="img" onClick={handleClick} src="/logo.png" alt="OOSCCA logo" sx={{
+        cursor: 'pointer',
+        width: {xs: 117, md: 190},
+        height: 'auto'
+      }}/>
       <Typography sx={{
         display: {xs: "none", md: "inherit"},
         fontSize: 9,
