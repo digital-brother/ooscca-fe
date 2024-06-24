@@ -293,12 +293,12 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   );
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
-  const relevantBooking = unpaidBookings?.filter((booking) => {
+  const relevantBookings = unpaidBookings?.filter((booking) => {
     const bookingDateTime = dayjs.utc(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
     return today.isBefore(bookingDateTime);
   })
-  const relevantBookingIds = relevantBooking?.map((booking) => booking.id);
-  const mutation = useMutation(() => createBill({ bookings: relevantBookingIds }), {
+  const relevantBookingsIds = relevantBookings?.map((booking) => booking.id);
+  const mutation = useMutation(() => createBill({ bookings: relevantBookingsIds }), {
     onSuccess: (bill) => {
       if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
       else {
