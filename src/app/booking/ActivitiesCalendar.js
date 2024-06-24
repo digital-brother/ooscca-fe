@@ -311,7 +311,7 @@ export default ActivitiesCalendar;
 export function ActivityClientBadges({ activity }) {
   return (
     <Stack sx={{ gap: 1 }}>
-      {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />}
+      {/* {activity?.goingFast && <Chip label="Going fast" sx={{ bgcolor: "magenta.main", color: "common.white" }} />} */}
       {activity?.spacesLeft <= 5 && (
         <Chip label="3 Spots left" sx={{ bgcolor: "yellow.main", color: "common.black" }} />
       )}
