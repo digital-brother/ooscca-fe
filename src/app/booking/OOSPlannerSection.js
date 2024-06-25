@@ -26,7 +26,7 @@ import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { Suspense, useContext, useState } from "react";
+import { Suspense, useContext, useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
@@ -44,38 +44,51 @@ const BookingBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-function FilledBooking({ booking, weekDates }) {
+function useBookingPolling({ bookingIdInitial, weekDates }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [counter, setCounter] = useState(0);
   const queryClient = useQueryClient();
+
+  const { data: newBookings } = useQuery(
+    ["newBookings", weekDates],
+    () => getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] }), 
+    {
+      enabled: !!counter && counter <= 5,
+      refetchInterval: 2000,
+      onError: (error) => {
+        const errorMsg = getFlatErrors(error).join("; ");
+        enqueueSnackbar(errorMsg, { variant: "error" });
+        setCounter(0);
+      },
+      onSuccess: (data) => {
+        if (data.filter(newBooking => newBooking.id === bookingIdInitial).length === 0) {
+          setCounter(6);
+          enqueueSnackbar("Booking deleted", { variant: "success" });
+          queryClient.invalidateQueries("bookings");
+        } else {
+          setCounter(prevCounter => prevCounter + 1);
+        }
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (counter === 6 && newBookings?.filter(newBooking => newBooking.id === bookingIdInitial).length > 0) {
+      enqueueSnackbar("Failed to update booking within the expected time", { variant: "error" });
+    }
+  }, [counter, newBookings, bookingIdInitial, enqueueSnackbar]);
+
+  return { setCounter }
+}
+
+function FilledBooking({ booking, weekDates }) {
+  const { setCounter: setBookingPolling } = useBookingPolling({bookingIdInitial: booking.id, weekDates});
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
       enqueueSnackbar("Preparing to delete booking", { variant: "success" });
-  
-      const waitForBookingDeletion = new Promise((resolve, reject) => {
-        const intervalId = setInterval(async () => {
-          const newBookingsData = await queryClient.fetchQuery(['bookings'], () => getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] }));
-          
-          if (newBookingsData.filter(newBooking => newBooking.id === booking.id).length === 0) {
-            clearInterval(intervalId);
-            resolve();
-          }
-        }, 1000);
-  
-        setTimeout(() => {
-          clearInterval(intervalId);
-          reject(new Error("Failed to update booking within the expected time"));
-        }, 10000);
-      });
-  
-      waitForBookingDeletion
-        .then(() => {
-          enqueueSnackbar("Booking deleted", { variant: "success" });
-          queryClient.invalidateQueries({ queryKey: ["bookings"] });
-        })
-        .catch((error) => {
-          enqueueSnackbar(error.message, { variant: "error" });
-        });
+      setBookingPolling(1);
     },
     onError: (error) => {
       const errorMessage = getFlatErrors(error).join(". ");
