@@ -1,11 +1,28 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import NextImage from "next/image";
+import { useMediaQuery, Link } from "@mui/material";
 import * as React from "react";
+
+export  function LogoImage() {
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
+  return (
+    <NextImage
+        src="/logo.png"
+        alt="OOSCCA logo"
+        width={mdUp ? 190 : 117}
+        height={mdUp ? 43 : 26}
+    />
+  );
+}
 
 export function Logo() {
   return (
     <Box>
-      <Box component="img" sx={{width: {xs: 117, md: 190}, height: 'auto'}} src="/logo.png" alt="OOSCCA logo"/>
+      <Link href="/">
+        <LogoImage />
+      </Link>
       <Typography sx={{
         display: {xs: "none", md: "inherit"},
         fontSize: 9,
@@ -22,7 +39,7 @@ export function Logo() {
 export function FooterLogo() {
   return (
     <Box>
-      <Box component="img" sx={{width: {xs: 247, sm: 190}, height: 'auto'}} src="/logo.png" alt="OOSCCA logo"/>
+      <LogoImage />
       <Typography sx={{
         // display: {xs: "none", md: "inherit"},
         fontSize: {xs: 13, sm: 9.5},

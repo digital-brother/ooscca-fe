@@ -2,7 +2,6 @@
 
 import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
@@ -35,6 +34,7 @@ import { SelectedDateContext } from "./page";
 import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import ShareCalendarPopup from './ShareCalendarPopup';
 import MenuChildPopup from "./MenuChildPopup";
+import PreviosWeekButton from "./PreviosWeekButton"
 
 dayjs.extend(weekday);
 
@@ -107,7 +107,7 @@ function FilledBooking({ booking }) {
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
         <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
-        <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.activity.price}</Typography>
+        {booking.status !== "paid" && <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.price}</Typography>}
       </Box>
       <Typography>
         {booking.activity.startTime} - {booking.activity.endTime}
@@ -286,14 +286,19 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const today = dayjs.utc()
 
   const { data: bookings } = useQuery(["bookings", weekDates], () =>
     getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
-  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
-  const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
+  const relevantBookings = unpaidBookings?.filter((booking) => {
+    const bookingDateTime = dayjs.utc(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
+    return today.isBefore(bookingDateTime);
+  })
+  const relevantBookingsIds = relevantBookings?.map((booking) => booking.id);
+  const mutation = useMutation(() => createBill({ bookings: relevantBookingsIds }), {
     onSuccess: (bill) => {
       if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
       else {
@@ -471,7 +476,6 @@ function BookingsTable() {
 
   const formatDate = (date) => date.format("ddd D");
   const handleNextWeek = () => setSelectedDate(selectedDate.add(7, "day"));
-  const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
   return (
     !isLoadingChildren && (
@@ -488,9 +492,7 @@ function BookingsTable() {
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <IconButton onClick={handlePreviosWeek}>
-                      <ArrowBackIosNewIcon />
-                    </IconButton>
+                    <PreviosWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
                     <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
                       Today
                     </Button>
