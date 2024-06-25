@@ -310,7 +310,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const today = dayjs.utc()
+  const today = dayjs()
 
   const { data: bookings } = useQuery(["bookings", weekDates], () =>
     getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
@@ -318,7 +318,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const relevantBookings = unpaidBookings?.filter((booking) => {
-    const bookingDateTime = dayjs.utc(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
+    const bookingDateTime = dayjs(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
     return today.isBefore(bookingDateTime);
   })
   const relevantBookingsIds = relevantBookings?.map((booking) => booking.id);
