@@ -17,15 +17,15 @@ import { logout, AUTH_TOKEN_KEY } from "@/app/api.mjs";
 import { AuthTokenContext } from "@/app/layout";
 
 export const HEADER_NAV_LINKS = [
-  {name: "about", text: 'About', path: '/'},
-  {name: "providers", text: 'Providers', path: '#'},
-  {name: "contact", text: 'Contact', path: '#'},
+  {name: "about", text: 'About', path: '#', unclickable: true},
+  {name: "providers", text: 'Providers', path: '#', unclickable: true},
+  {name: "contact", text: 'Contact', path: '/contact', unclickable: false},
 ];
 
 function NavLink({link}) {
   const theme = useTheme()
   const linkElement = (
-    <Link href="#" sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
+    <Link href={link.path } unclickable={link.unclickable} sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
       {link.text}
     </Link>
   )
