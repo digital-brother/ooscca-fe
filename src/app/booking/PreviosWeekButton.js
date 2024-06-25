@@ -6,7 +6,7 @@ import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
 import dayjs from "dayjs";
 
 export default function PreviosWeekButton({ selectedDate, setSelectedDate }) {
-  const currentMonday = getDisplayedWeekModayDate(dayjs.utc())
+  const currentMonday = getDisplayedWeekModayDate(dayjs())
   const previousWeekButtonDisabled = getDisplayedWeekModayDate(selectedDate).isSame(currentMonday)
   const handlePreviosWeek = () => setSelectedDate(selectedDate.subtract(7, "day"));
 
