@@ -44,14 +44,38 @@ const BookingBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-function FilledBooking({ booking }) {
+function FilledBooking({ booking, weekDates }) {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bookings"] });
-      enqueueSnackbar("Booking deleted", { variant: "success" });
+      enqueueSnackbar("Preparing to delete booking", { variant: "success" });
+  
+      const waitForBookingDeletion = new Promise((resolve, reject) => {
+        const intervalId = setInterval(async () => {
+          const newBookingsData = await queryClient.fetchQuery(['bookings'], () => getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] }));
+          
+          if (newBookingsData.filter(newBooking => newBooking.id === booking.id).length === 0) {
+            clearInterval(intervalId);
+            resolve();
+          }
+        }, 1000);
+  
+        setTimeout(() => {
+          clearInterval(intervalId);
+          reject(new Error("Failed to update booking within the expected time"));
+        }, 10000);
+      });
+  
+      waitForBookingDeletion
+        .then(() => {
+          enqueueSnackbar("Booking deleted", { variant: "success" });
+          queryClient.invalidateQueries({ queryKey: ["bookings"] });
+        })
+        .catch((error) => {
+          enqueueSnackbar(error.message, { variant: "error" });
+        });
     },
     onError: (error) => {
       const errorMessage = getFlatErrors(error).join(". ");
@@ -192,7 +216,7 @@ function FriendEmptyBooking() {
   );
 }
 
-function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
+function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable, weekDates }) {
   bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
 
   if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
@@ -212,7 +236,7 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
             <FriendEmptyBooking key={index} />
           )
         ) : booking ? (
-          <FilledBooking key={booking.id} booking={booking} />
+          <FilledBooking key={booking.id} booking={booking} weekDates={weekDates} />
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
         )
@@ -331,7 +355,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
               );
               return (
                 <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }}/>
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} weekDates={weekDates} />
                 </StyledTableCell>
               );
             })}
