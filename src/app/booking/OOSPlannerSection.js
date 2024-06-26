@@ -142,7 +142,7 @@ function FilledBooking({ booking, weekDates }) {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
-        <Typography sx={{ fontWeight: 700 }}>{booking.activity.type?.name}</Typography>
+        <Typography sx={{ fontWeight: 700 }}>{booking.activity.providerName}</Typography>
         {booking.status !== "paid" && <Typography sx={{ right: 12, top: 12, fontWeight: 700 }}>£{booking.price}</Typography>}
       </Box>
       <Typography>
