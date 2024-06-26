@@ -35,6 +35,7 @@ export default function SignUpEmailConfirmation() {
         >
           Resend confirmation email
         </Button>
+        <Typography sx={{ mt: 2, textAlign: "center",  fontWeight: 600, }}>Please check your junk/spam folder if you don&apos;t see the verification email in your inbox</Typography>
         <Error>{mutation.isError && mutation.error.message}</Error>
       </OssContainer>
     </Container>

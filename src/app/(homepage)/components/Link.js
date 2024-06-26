@@ -28,7 +28,10 @@ export const StyledMuiLink = ({ children, sx, ...props }) => {
   );
 };
 
-export default function Link({ children, href, sx }) {
+export default function Link({ children, href, sx, unclickable = false }) {
+  if (unclickable) {
+    return <MuiLink sx={{color: "text.secondary", ...sx}}>{children}</MuiLink>;
+  }
   return (
     <NextLink href={href} passHref style={{ textDecoration: "none" }}>
       <StyledMuiLink sx={sx}>{children}</StyledMuiLink>
