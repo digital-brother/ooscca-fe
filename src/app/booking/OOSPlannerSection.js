@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings, getBookingDetails } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -26,7 +26,7 @@ import weekday from "dayjs/plugin/weekday";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { Suspense, useContext, useState, useEffect } from "react";
+import { Suspense, useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import { getDisplayedWeekModayDate } from "./ActivitiesCalendar";
@@ -44,50 +44,47 @@ const BookingBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-function useBookingPolling({ bookingIdInitial, weekDates }) {
+function useAwaitingBookingDeletion({ bookingIdInitial }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [counter, setCounter] = useState(0);
+  const [iterationIndex, setIterationIndex] = useState(null);
   const queryClient = useQueryClient();
+  const MAX_ITERATION_INDEX = 4;
 
-  const { data: newBookings } = useQuery(
-    ["newBookings", weekDates],
-    () => getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] }), 
+  useQuery("deletedBooking", () => getBookingDetails(bookingIdInitial), 
     {
-      enabled: !!counter && counter <= 5,
+      enabled: iterationIndex !== null && iterationIndex <= MAX_ITERATION_INDEX,
       refetchInterval: 2000,
+      retry: false,
       onError: (error) => {
-        const errorMsg = getFlatErrors(error).join("; ");
-        enqueueSnackbar(errorMsg, { variant: "error" });
-        setCounter(0);
-      },
-      onSuccess: (data) => {
-        if (data.filter(newBooking => newBooking.id === bookingIdInitial).length === 0) {
+        if (error.response?.status === 404) {
           enqueueSnackbar("Booking deleted", { variant: "success" });
           queryClient.invalidateQueries("bookings");
-          setCounter(6);
         }
-        else setCounter(prevCounter => prevCounter + 1);
+        else {
+          const errorMsg = getFlatErrors(error).join("; ");
+          enqueueSnackbar(errorMsg, { variant: "error" });
+        }
+      },
+      onSuccess: () => {
+        if (iterationIndex === MAX_ITERATION_INDEX) {
+          enqueueSnackbar("Failed to delete booking within the expected time", { variant: "error" });
+        }
+        setIterationIndex(prevIterationIndex => prevIterationIndex + 1);
       },
     }
   );
 
-  useEffect(() => {
-    if (counter === 6 && newBookings?.filter(newBooking => newBooking.id === bookingIdInitial).length > 0) {
-      enqueueSnackbar("Failed to delete booking within the expected time", { variant: "error" });
-    }
-  }, [counter, newBookings, bookingIdInitial, enqueueSnackbar]);
-
-  return { setCounter }
+  return { setIterationIndex }
 }
 
-function FilledBooking({ booking, weekDates }) {
-  const { setCounter: setBookingPolling } = useBookingPolling({bookingIdInitial: booking.id, weekDates});
+function FilledBooking({ booking }) {
+  const { setIterationIndex: setAwaitingBookingDeletion } = useAwaitingBookingDeletion({bookingIdInitial: booking.id });
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
-      enqueueSnackbar("Preparing to delete booking", { variant: "success" });
-      setBookingPolling(1);
+      enqueueSnackbar("Deleting a booking", { variant: "success" });
+      setAwaitingBookingDeletion(0);
     },
     onError: (error) => {
       const errorMessage = getFlatErrors(error).join(". ");
@@ -248,7 +245,7 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable, wee
             <FriendEmptyBooking key={index} />
           )
         ) : booking ? (
-          <FilledBooking key={booking.id} booking={booking} weekDates={weekDates} />
+          <FilledBooking key={booking.id} booking={booking} />
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
         )
