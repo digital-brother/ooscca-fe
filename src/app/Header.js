@@ -17,15 +17,15 @@ import { logout, AUTH_TOKEN_KEY } from "@/app/api.mjs";
 import { AuthTokenContext } from "@/app/layout";
 
 export const HEADER_NAV_LINKS = [
-  {name: "about", text: 'About', path: '#', unclickable: true},
-  {name: "providers", text: 'Providers', path: '#', unclickable: true},
+  // {name: "about", text: 'About', path: '#', unclickable: true},
+  // {name: "providers", text: 'Providers', path: '#', unclickable: true},
   {name: "contact", text: 'Contact', path: '/contact', unclickable: false},
 ];
 
 function NavLink({link}) {
   const theme = useTheme()
   const linkElement = (
-    <Link href={link.path } unclickable={link.unclickable} sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
+    <Link href={link.path } sx={{whiteSpace: "nowrap", textDecoration: "none"}}>
       {link.text}
     </Link>
   )
@@ -135,7 +135,7 @@ export default function Header() {
           <Box sx={{
             flexGrow: 1,
             display: {xs: "none", sm: "flex"},
-            justifyContent: "space-between",
+            justifyContent: "space-evenly;",
             alignItems: "center",
             maxWidth: 500,
             mr: 5,
