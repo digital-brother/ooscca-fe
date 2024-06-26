@@ -28,7 +28,7 @@ export default function SignUpDetails({ goToNextStep }) {
           Welcome to OOSCCA
         </Typography>
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
-          All-in-one platform that brings kids’ activity under one roof.
+          An all-in-one platform that brings kids activities under one roof.
         </Typography>
         <Typography sx={{ fontWeight: 700, mt: 6 }}>Your details</Typography>
         <Formik
