@@ -13,7 +13,7 @@ export const BookNowButton = ({ activityId, targetDate, isEarlyDropOffSelected, 
     const { data: children } = useQuery("children", getChildren);
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
-    const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate, earlyDropOff: isEarlyDropOffSelected, latePickUp: isLatePickUpSelected }), 
+    const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate, isEarlyDropOff: isEarlyDropOffSelected, isLatePickUp: isLatePickUpSelected }), 
     {
       onSuccess: () => {
         enqueueSnackbar("Booking created", { variant: "success" });
