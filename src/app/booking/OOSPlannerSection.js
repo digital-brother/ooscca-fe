@@ -225,7 +225,7 @@ function FriendEmptyBooking() {
   );
 }
 
-function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable, weekDates }) {
+function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
   bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
 
   if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
@@ -364,7 +364,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
               );
               return (
                 <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} weekDates={weekDates} />
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
                 </StyledTableCell>
               );
             })}
