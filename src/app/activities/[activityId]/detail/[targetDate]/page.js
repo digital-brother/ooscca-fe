@@ -14,8 +14,8 @@ import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import { useQuery } from "react-query";
-import { BookNowButton } from "@/app/booking/BookNowButton";
 
 export function EmblaContainer({ emblaSx: emblaSxOuter, children }) {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
@@ -149,15 +149,23 @@ function ActivityDescription() {
 
 function ActivityInfo() {
   const { activityId, targetDate } = useParams();
+  const [isEarlyDropOffSelected, setIsEarlyDropOffSelected] = useState(false);
+  const [isLatePickUpSelected, setIsLatePickUpSelected] = useState(false);
+
   return (
     <Container sx={{ my: 10 }}>
       <ActivityInfoContainer>
         <ActivityDescription />
         <Box>
-        <SlideContainer sx={{ minHeight: 0 }}>
-          <ActivityDetails sx={{ flex: 1 }} />
-          <BookNowButton activityId={activityId} targetDate={targetDate}/>
-        </SlideContainer>
+          <SlideContainer sx={{ minHeight: 0 }}>
+            <ActivityDetails
+              sx={{ flex: 1 }}
+              isEarlyDropOffSelected={isEarlyDropOffSelected}
+              isLatePickUpSelected={isLatePickUpSelected}
+              setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
+              setIsLatePickUpSelected={setIsLatePickUpSelected}
+            />
+          </SlideContainer>
         </Box>
       </ActivityInfoContainer>
     </Container>

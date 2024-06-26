@@ -59,6 +59,9 @@ import { SmFlex } from "../components/responsiveFlexes";
 import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
 import { WYSIWYGEditor } from "../components/WYSIWYGEditor";
+import { BookNowButton } from "@/app/booking/BookNowButton";
+import CheckboxDropFields from "@/app/booking/CheckboxDropFields"
+
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -106,7 +109,11 @@ export function ActivityDetails({ sx, editMode=false }) {
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
   const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
+  const [isEarlyDropOffSelected, setIsEarlyDropOffSelected] = useState(false);
+  const [isLatePickUpSelected, setIsLatePickUpSelected] = useState(false);
+
   return (
+    <>
     <Box
       sx={{
         display: "flex",
@@ -160,30 +167,42 @@ export function ActivityDetails({ sx, editMode=false }) {
           {activity?.startTime} - {activity?.endTime}
         </Typography>
       </SmFlex>
-      {activity?.earlyDropOff && (
-        <SmFlex>
-          <b>Early drop off:</b> {activity?.earlyDropOffTime}
-          {parseFloat(activity?.earlyDropOffPrice) ? (
-            <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
-          ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+      {editMode ? (
+        <>
+          {activity?.earlyDropOff && (
+            <SmFlex>
+              <b>Early drop off:</b> {activity?.earlyDropOffTime}
+              {parseFloat(activity?.earlyDropOffPrice) ? (
+                <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
+              ) : (
+                <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+              )}
+            </SmFlex>
           )}
-        </SmFlex>
-      )}
-      {activity?.latePickUp && (
-        <SmFlex>
-          <b>Late pick up:</b> {activity?.latePickUpTime}
-          {parseFloat(activity?.latePickUpPrice) ? (
-            <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
-          ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+          {activity?.latePickUp && (
+            <SmFlex>
+              <b>Late pick up:</b> {activity?.latePickUpTime}
+              {parseFloat(activity?.latePickUpPrice) ? (
+                <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
+              ) : (
+                <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+              )}
+            </SmFlex>
           )}
-        </SmFlex>
-      )}
-      {activity?.level && (
-        <SmFlex>
-          <b>Level:</b> {activity?.level}
-        </SmFlex>
+          {activity?.level && (
+            <SmFlex>
+              <b>Level:</b> {activity?.level}
+            </SmFlex>
+          )}
+        </>
+      ) : (
+        <CheckboxDropFields
+          activity={activity}
+          isEarlyDropOffSelected={isEarlyDropOffSelected}
+          isLatePickUpSelected={isLatePickUpSelected} 
+          setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
+          setIsLatePickUpSelected={setIsLatePickUpSelected}
+        />
       )}
       <SmFlex>
         <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
@@ -240,6 +259,14 @@ export function ActivityDetails({ sx, editMode=false }) {
         </Dialog>
       </Box>
     </Box>
+    {!editMode && (<BookNowButton
+      activityId={activityId}
+      targetDate={targetDate}
+      isEarlyDropOffSelected={isEarlyDropOffSelected}
+      isLatePickUpSelected={isLatePickUpSelected}
+    />
+    )}
+  </>
   );
 }
 

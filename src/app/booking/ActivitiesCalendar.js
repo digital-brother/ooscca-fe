@@ -18,6 +18,7 @@ import { useQuery } from "react-query";
 import { getActivitiesForDate, getChildren } from "../api.mjs";
 import { BookNowButton } from "./BookNowButton";
 import PreviosWeekButton from "./PreviosWeekButton";
+import CheckboxDropFields from "./CheckboxDropFields"
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -100,6 +101,9 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
 }
 
 export function ActivityCard({ activity, targetDate }) {
+  const [isEarlyDropOffSelected, setIsEarlyDropOffSelected] = useState(false);
+  const [isLatePickUpSelected, setIsLatePickUpSelected] = useState(false);
+
   const activityDetailUrl = `/activities/${activity.id}/detail/${targetDate}`;
   return (
     <Stack sx={{ height: "100%", border: "1px solid", borderColor: "grey.500", borderRadius: 2, overflow: "hidden" }}>
@@ -138,34 +142,13 @@ export function ActivityCard({ activity, targetDate }) {
                 {activity?.startTime} - {activity?.endTime}
               </Typography>
             </Box>
-            {activity?.earlyDropOff && (
-              <Typography variant="body2">
-                <b>
-                  {parseFloat(activity?.earlyDropOffPrice) ? (
-                    `£${activity?.earlyDropOffPrice}`
-                  ) : (
-                    <Box component="span" sx={{ color: "green.main" }}>
-                      FREE
-                    </Box>
-                  )}
-                </b>
-                &nbsp; Early drop off {activity?.earlyDropOffTime}
-              </Typography>
-            )}
-            {activity?.latePickUp && (
-              <Typography variant="body2">
-                <b>
-                  {parseFloat(activity?.latePickUpPrice) ? (
-                    `£${activity?.latePickUpPrice}`
-                  ) : (
-                    <Box component="span" sx={{ color: "green.main" }}>
-                      FREE
-                    </Box>
-                  )}
-                </b>
-                &nbsp; Late pick up {activity?.latePickUpTime}
-              </Typography>
-            )}
+            <CheckboxDropFields
+              activity={activity}
+              isEarlyDropOffSelected={isEarlyDropOffSelected}
+              isLatePickUpSelected={isLatePickUpSelected} 
+              setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
+              setIsLatePickUpSelected={setIsLatePickUpSelected}
+            />
           </Stack>
           <ActivityDiscountedPrice activity={activity} />
         </Box>
@@ -175,7 +158,12 @@ export function ActivityCard({ activity, targetDate }) {
               Learn more
             </Button>
           </Link>
-          <BookNowButton activityId={activity.id} targetDate={targetDate} />
+          <BookNowButton
+            activityId={activity.id}
+            targetDate={targetDate}
+            isEarlyDropOffSelected={isEarlyDropOffSelected}
+            isLatePickUpSelected={isLatePickUpSelected}
+          />
         </Box>
       </Stack>
     </Stack>
