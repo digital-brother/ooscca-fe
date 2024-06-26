@@ -149,8 +149,6 @@ function ActivityDescription() {
 
 function ActivityInfo() {
   const { activityId, targetDate } = useParams();
-  const [isEarlyDropOffSelected, setIsEarlyDropOffSelected] = useState(false);
-  const [isLatePickUpSelected, setIsLatePickUpSelected] = useState(false);
 
   return (
     <Container sx={{ my: 10 }}>
@@ -158,13 +156,7 @@ function ActivityInfo() {
         <ActivityDescription />
         <Box>
           <SlideContainer sx={{ minHeight: 0 }}>
-            <ActivityDetails
-              sx={{ flex: 1 }}
-              isEarlyDropOffSelected={isEarlyDropOffSelected}
-              isLatePickUpSelected={isLatePickUpSelected}
-              setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
-              setIsLatePickUpSelected={setIsLatePickUpSelected}
-            />
+            <ActivityDetails sx={{ flex: 1 }} />
           </SlideContainer>
         </Box>
       </ActivityInfoContainer>
