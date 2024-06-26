@@ -62,19 +62,18 @@ function useBookingPolling({ bookingIdInitial, weekDates }) {
       },
       onSuccess: (data) => {
         if (data.filter(newBooking => newBooking.id === bookingIdInitial).length === 0) {
-          setCounter(6);
           enqueueSnackbar("Booking deleted", { variant: "success" });
           queryClient.invalidateQueries("bookings");
-        } else {
-          setCounter(prevCounter => prevCounter + 1);
+          setCounter(6);
         }
+        else setCounter(prevCounter => prevCounter + 1);
       },
     }
   );
 
   useEffect(() => {
     if (counter === 6 && newBookings?.filter(newBooking => newBooking.id === bookingIdInitial).length > 0) {
-      enqueueSnackbar("Failed to update booking within the expected time", { variant: "error" });
+      enqueueSnackbar("Failed to delete booking within the expected time", { variant: "error" });
     }
   }, [counter, newBookings, bookingIdInitial, enqueueSnackbar]);
 
