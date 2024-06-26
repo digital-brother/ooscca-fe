@@ -18,7 +18,7 @@ import { useQuery } from "react-query";
 import { getActivitiesForDate, getChildren } from "../api.mjs";
 import { BookNowButton } from "./BookNowButton";
 import PreviosWeekButton from "./PreviosWeekButton";
-import CheckboxDropFields from "./CheckboxDropFields"
+import DropOffPickUpCheckboxes from "./DropOffPickUpCheckboxes"
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -142,7 +142,7 @@ export function ActivityCard({ activity, targetDate }) {
                 {activity?.startTime} - {activity?.endTime}
               </Typography>
             </Box>
-            <CheckboxDropFields
+            <DropOffPickUpCheckboxes
               activity={activity}
               isEarlyDropOffSelected={isEarlyDropOffSelected}
               isLatePickUpSelected={isLatePickUpSelected} 

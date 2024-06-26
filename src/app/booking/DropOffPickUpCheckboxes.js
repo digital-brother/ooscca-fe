@@ -5,7 +5,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Box, Typography } from "@mui/material";
 
-export default function CheckboxDropFields({
+export default function DropOffPickUpCheckboxes({
   activity,
   isEarlyDropOffSelected,
   setIsEarlyDropOffSelected,

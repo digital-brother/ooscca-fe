@@ -60,7 +60,7 @@ import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
 import { WYSIWYGEditor } from "../components/WYSIWYGEditor";
 import { BookNowButton } from "@/app/booking/BookNowButton";
-import CheckboxDropFields from "@/app/booking/CheckboxDropFields"
+import DropOffPickUpCheckboxes from "@/app/booking/DropOffPickUpCheckboxes"
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -168,7 +168,7 @@ export function ActivityDetails({ sx, showCapacity=false, bookingMode=false }) {
         </Typography>
       </SmFlex>
       {bookingMode ? (
-        <CheckboxDropFields
+        <DropOffPickUpCheckboxes
           activity={activity}
           isEarlyDropOffSelected={isEarlyDropOffSelected}
           isLatePickUpSelected={isLatePickUpSelected} 
