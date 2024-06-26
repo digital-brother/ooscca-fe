@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings, getBookingDetails } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings, getBooking } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -46,13 +46,14 @@ const BookingBox = styled(Box)(({ theme }) => ({
 
 function useAwaitingBookingDeletion({ bookingIdInitial }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [iterationIndex, setIterationIndex] = useState(null);
+  const [requestNum, setRequestNum] = useState(null);
   const queryClient = useQueryClient();
-  const MAX_ITERATION_INDEX = 4;
+  const MAX_REQUEST_NUM = 4;
+  const isEnabled = requestNum !== null && requestNum <= MAX_REQUEST_NUM;
 
-  useQuery("deletedBooking", () => getBookingDetails(bookingIdInitial), 
+  useQuery("deletedBooking", () => getBooking(bookingIdInitial), 
     {
-      enabled: iterationIndex !== null && iterationIndex <= MAX_ITERATION_INDEX,
+      enabled: isEnabled,
       refetchInterval: 2000,
       retry: false,
       onError: (error) => {
@@ -66,19 +67,19 @@ function useAwaitingBookingDeletion({ bookingIdInitial }) {
         }
       },
       onSuccess: () => {
-        if (iterationIndex === MAX_ITERATION_INDEX) {
+        if (requestNum === MAX_REQUEST_NUM) {
           enqueueSnackbar("Failed to delete booking within the expected time", { variant: "error" });
         }
-        setIterationIndex(prevIterationIndex => prevIterationIndex + 1);
+        setRequestNum(prevIterationIndex => prevIterationIndex + 1);
       },
     }
   );
 
-  return { setIterationIndex }
+  return { setRequestNum }
 }
 
 function FilledBooking({ booking }) {
-  const { setIterationIndex: setAwaitingBookingDeletion } = useAwaitingBookingDeletion({bookingIdInitial: booking.id });
+  const { setRequestNum: setAwaitingBookingDeletion } = useAwaitingBookingDeletion({bookingIdInitial: booking.id });
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = useMutation(() => deleteBooking(booking.id), {

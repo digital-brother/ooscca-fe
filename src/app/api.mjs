@@ -182,7 +182,7 @@ export async function getBookings({ dateAfter, dateBefore }) {
   return response.data;
 }
 
-export async function getBookingDetails(bookingId) {
+export async function getBooking(bookingId) {
   const response = await client.get(`${BOOKINGS_PATH}/${bookingId}/`);
   return response.data;
 }
