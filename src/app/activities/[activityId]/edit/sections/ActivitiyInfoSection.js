@@ -96,7 +96,7 @@ function TermsAndConditionsView({ activity, handleClose }) {
   );
 }
 
-export function ActivityDetails({ sx, editMode=false }) {
+export function ActivityDetails({ sx, showCapacity=false, bookingMode=false }) {
   const { activityId, targetDate } = useParams();
   const forDate = Boolean(targetDate);
   const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : () => getActivity(activityId);
@@ -167,7 +167,15 @@ export function ActivityDetails({ sx, editMode=false }) {
           {activity?.startTime} - {activity?.endTime}
         </Typography>
       </SmFlex>
-      {editMode ? (
+      {bookingMode ? (
+        <CheckboxDropFields
+          activity={activity}
+          isEarlyDropOffSelected={isEarlyDropOffSelected}
+          isLatePickUpSelected={isLatePickUpSelected} 
+          setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
+          setIsLatePickUpSelected={setIsLatePickUpSelected}
+        />
+      ) : (
         <>
           {activity?.earlyDropOff && (
             <SmFlex>
@@ -195,19 +203,11 @@ export function ActivityDetails({ sx, editMode=false }) {
             </SmFlex>
           )}
         </>
-      ) : (
-        <CheckboxDropFields
-          activity={activity}
-          isEarlyDropOffSelected={isEarlyDropOffSelected}
-          isLatePickUpSelected={isLatePickUpSelected} 
-          setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
-          setIsLatePickUpSelected={setIsLatePickUpSelected}
-        />
       )}
       <SmFlex>
         <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
       </SmFlex>
-      {editMode && (
+      {showCapacity && (
         <SmFlex>
           <b>Available spaces:</b> {activity?.capacity}
         </SmFlex>
@@ -259,7 +259,7 @@ export function ActivityDetails({ sx, editMode=false }) {
         </Dialog>
       </Box>
     </Box>
-    {!editMode && (<BookNowButton
+    {bookingMode && (<BookNowButton
       activityId={activityId}
       targetDate={targetDate}
       isEarlyDropOffSelected={isEarlyDropOffSelected}
@@ -345,7 +345,7 @@ function SavedSlide({ scrollNext, close }) {
   return (
     <>
       <Typography variant="h6">Saved activity details</Typography>
-      <ActivityDetails sx={{ flex: 1, mt: 3 }} editMode={true} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} showCapacity={true} />
 
       <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
@@ -369,7 +369,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   return (
     <>
       <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails sx={{ flex: 1, mt: 3 }} editMode={true} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} showCapacity={true} />
 
       <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3, rowGap: 1 }}>

@@ -156,7 +156,7 @@ function ActivityInfo() {
         <ActivityDescription />
         <Box>
           <SlideContainer sx={{ minHeight: 0 }}>
-            <ActivityDetails sx={{ flex: 1 }} />
+            <ActivityDetails sx={{ flex: 1 }}  bookingMode={true} />
           </SlideContainer>
         </Box>
       </ActivityInfoContainer>
