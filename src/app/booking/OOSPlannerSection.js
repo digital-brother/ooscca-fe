@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings } from "@/app/api.mjs";
+import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings, getBooking } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -44,14 +44,48 @@ const BookingBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-function FilledBooking({ booking }) {
+function useAwaitingBookingDeletion({ bookingIdInitial }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [requestNum, setRequestNum] = useState(null);
   const queryClient = useQueryClient();
+  const MAX_REQUEST_NUM = 4;
+  const isEnabled = requestNum !== null && requestNum <= MAX_REQUEST_NUM;
+
+  useQuery("deletedBooking", () => getBooking(bookingIdInitial), 
+    {
+      enabled: isEnabled,
+      refetchInterval: 2000,
+      retry: false,
+      onError: (error) => {
+        if (error.response?.status === 404) {
+          enqueueSnackbar("Booking deleted", { variant: "success" });
+          queryClient.invalidateQueries("bookings");
+        }
+        else {
+          const errorMsg = getFlatErrors(error).join("; ");
+          enqueueSnackbar(errorMsg, { variant: "error" });
+        }
+      },
+      onSuccess: () => {
+        if (requestNum === MAX_REQUEST_NUM) {
+          enqueueSnackbar("Failed to delete booking within the expected time", { variant: "error" });
+        }
+        setRequestNum(prevRequestNum => prevRequestNum + 1);
+      },
+    }
+  );
+
+  return { setRequestNum }
+}
+
+function FilledBooking({ booking }) {
+  const { setRequestNum: setAwaitingBookingDeletion } = useAwaitingBookingDeletion({bookingIdInitial: booking.id });
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bookings"] });
-      enqueueSnackbar("Booking deleted", { variant: "success" });
+      enqueueSnackbar("Deleting a booking", { variant: "success" });
+      setAwaitingBookingDeletion(0);
     },
     onError: (error) => {
       const errorMessage = getFlatErrors(error).join(". ");
@@ -331,7 +365,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
               );
               return (
                 <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }}/>
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
                 </StyledTableCell>
               );
             })}
