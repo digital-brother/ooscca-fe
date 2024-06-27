@@ -70,7 +70,7 @@ function useAwaitingBookingDeletion({ bookingIdInitial }) {
         if (requestNum === MAX_REQUEST_NUM) {
           enqueueSnackbar("Failed to delete booking within the expected time", { variant: "error" });
         }
-        setRequestNum(prevIterationIndex => prevIterationIndex + 1);
+        setRequestNum(prevRequestNum => prevRequestNum + 1);
       },
     }
   );
