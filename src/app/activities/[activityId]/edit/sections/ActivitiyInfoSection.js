@@ -59,6 +59,9 @@ import { SmFlex } from "../components/responsiveFlexes";
 import { isTimeStringAfter, isTimeStringBefore, numericSchema, timeschema } from "../utils";
 import { TermsAndConditionsContainer } from "./TermsAndConditionsSection";
 import { WYSIWYGEditor } from "../components/WYSIWYGEditor";
+import { BookNowButton } from "@/app/booking/BookNowButton";
+import DropOffPickUpCheckboxes from "@/app/booking/DropOffPickUpCheckboxes"
+
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
@@ -93,7 +96,7 @@ function TermsAndConditionsView({ activity, handleClose }) {
   );
 }
 
-export function ActivityDetails({ sx, editMode=false }) {
+export function ActivityDetails({ sx, showCapacity=false, bookingMode=false }) {
   const { activityId, targetDate } = useParams();
   const forDate = Boolean(targetDate);
   const activityGetter = forDate ? () => getActivityForDate(activityId, targetDate) : () => getActivity(activityId);
@@ -106,7 +109,11 @@ export function ActivityDetails({ sx, editMode=false }) {
   const formatDateString = (dateString) => dateString && dayjs(dateString).format("DD MMMM");
   const [termsCoditionsOpen, setTermsCoditionsOpen] = React.useState(false);
 
+  const [isEarlyDropOffSelected, setIsEarlyDropOffSelected] = useState(false);
+  const [isLatePickUpSelected, setIsLatePickUpSelected] = useState(false);
+
   return (
+    <>
     <Box
       sx={{
         display: "flex",
@@ -160,35 +167,47 @@ export function ActivityDetails({ sx, editMode=false }) {
           {activity?.startTime} - {activity?.endTime}
         </Typography>
       </SmFlex>
-      {activity?.earlyDropOff && (
-        <SmFlex>
-          <b>Early drop off:</b> {activity?.earlyDropOffTime}
-          {parseFloat(activity?.earlyDropOffPrice) ? (
-            <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
-          ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+      {bookingMode ? (
+        <DropOffPickUpCheckboxes
+          activity={activity}
+          isEarlyDropOffSelected={isEarlyDropOffSelected}
+          isLatePickUpSelected={isLatePickUpSelected} 
+          setIsEarlyDropOffSelected={setIsEarlyDropOffSelected}
+          setIsLatePickUpSelected={setIsLatePickUpSelected}
+        />
+      ) : (
+        <>
+          {activity?.earlyDropOff && (
+            <SmFlex>
+              <b>Early drop off:</b> {activity?.earlyDropOffTime}
+              {parseFloat(activity?.earlyDropOffPrice) ? (
+                <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.earlyDropOffPrice}</Typography>
+              ) : (
+                <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+              )}
+            </SmFlex>
           )}
-        </SmFlex>
-      )}
-      {activity?.latePickUp && (
-        <SmFlex>
-          <b>Late pick up:</b> {activity?.latePickUpTime}
-          {parseFloat(activity?.latePickUpPrice) ? (
-            <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
-          ) : (
-            <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+          {activity?.latePickUp && (
+            <SmFlex>
+              <b>Late pick up:</b> {activity?.latePickUpTime}
+              {parseFloat(activity?.latePickUpPrice) ? (
+                <Typography sx={{ ml: { sm: "auto" } }}>£{activity?.latePickUpPrice}</Typography>
+              ) : (
+                <Typography sx={{ ml: { sm: "auto" }, color: "green.main", fontWeight: 700 }}>FREE</Typography>
+              )}
+            </SmFlex>
           )}
-        </SmFlex>
-      )}
-      {activity?.level && (
-        <SmFlex>
-          <b>Level:</b> {activity?.level}
-        </SmFlex>
+          {activity?.level && (
+            <SmFlex>
+              <b>Level:</b> {activity?.level}
+            </SmFlex>
+          )}
+        </>
       )}
       <SmFlex>
         <b>Age:</b> {activity?.ageFrom} {activity?.ageTo && ` - ${activity?.ageTo}`}
       </SmFlex>
-      {editMode && (
+      {showCapacity && (
         <SmFlex>
           <b>Available spaces:</b> {activity?.capacity}
         </SmFlex>
@@ -240,6 +259,14 @@ export function ActivityDetails({ sx, editMode=false }) {
         </Dialog>
       </Box>
     </Box>
+    {bookingMode && (<BookNowButton
+      activityId={activityId}
+      targetDate={targetDate}
+      isEarlyDropOffSelected={isEarlyDropOffSelected}
+      isLatePickUpSelected={isLatePickUpSelected}
+    />
+    )}
+  </>
   );
 }
 
@@ -318,7 +345,7 @@ function SavedSlide({ scrollNext, close }) {
   return (
     <>
       <Typography variant="h6">Saved activity details</Typography>
-      <ActivityDetails sx={{ flex: 1, mt: 3 }} editMode={true} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} showCapacity={true} />
 
       <Button onClick={scrollNext} variant="contained" fullWidth color="grey" sx={{ mt: 3 }}>
         Edit
@@ -342,7 +369,7 @@ function ReviewSlide({ scrollNext, scrollPrev, close }) {
   return (
     <>
       <SlideHeader label="Review activity details" close={close} />
-      <ActivityDetails sx={{ flex: 1, mt: 3 }} editMode={true} />
+      <ActivityDetails sx={{ flex: 1, mt: 3 }} showCapacity={true} />
 
       <Error>{mutation.isError && mutation.error.message}</Error>
       <SmFlex sx={{ mt: 3, rowGap: 1 }}>
