@@ -586,9 +586,9 @@ export default function OOSPlannerSection() {
     <Box sx={{ bgcolor: "grey.50", py: 10 }}>
       <Container>
         <Box sx={{ textAlign: "center" }}>
-          <Typography variant="overlineBold">Directly from calendar</Typography>
+          <Typography variant="overlineBold">One calendar to rule them all</Typography>
           <Typography variant="h2" sx={{ mt: 2 }}>
-            Enjoy the ease of booking activities without the text and email tennis
+            Share with classmates, friends and neighbours—effortlessly
           </Typography>
         </Box>
         <Wrapper sx={{ mt: 8 }}>

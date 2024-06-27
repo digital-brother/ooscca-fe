@@ -8,9 +8,9 @@ import OosStepper from "@/components/OosStepper";
 export default function Intro() {
   const theme = useTheme();
   const steps = [
-    "Find the activities your child will love",
-    "Add them to child's calendar",
-    "Review and then pay for all in one click",
+    "Select activities below",
+    "Activities are added to your child's calendar underneath",
+    "Pay for all bookings in one go",
   ];
 
   return (
@@ -36,16 +36,18 @@ export default function Intro() {
             Keeping it simple
           </Typography>
           <Typography variant="h3" mt={2}>
-            Enjoy the ease of booking activities without the text and email tennis
+            Book kids activities without the faff
           </Typography>
           <Typography color="grey.500" mt={2}>
-            We know when kids are going to be Out Of School so why not plan by calendar instead of activities. It&apos;s
-            is simpler, easier and more intuitive.
+            Enjoy not planning by calendar instead of activities
+          </Typography>
+          <Typography color="grey.500">
+            It&apos;s is way simpler, easier and more intuitive
           </Typography>
         </Box>
         <Box sx={{ maxWidth: 800, mx: "auto", mt: { xs: 6, md: 10 } }}>
           <Typography variant="subtitle1">
-            The cure to complexity of booking activities in
+            The cure to complexity in
             <span style={{ color: theme.palette.purple.main }}> 3 simple steps</span>
           </Typography>
           <OosStepper steps={steps} sx={{ mt: 3 }} />
