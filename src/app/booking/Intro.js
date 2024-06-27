@@ -39,10 +39,7 @@ export default function Intro() {
             Book kids activities without the faff
           </Typography>
           <Typography color="grey.500" mt={2}>
-            Enjoy not planning by calendar instead of activities
-          </Typography>
-          <Typography color="grey.500">
-            It&apos;s is way simpler, easier and more intuitive
+            Enjoy planning by calendar - It&apos;s is way simpler, easier and more intuitive
           </Typography>
         </Box>
         <Box sx={{ maxWidth: 800, mx: "auto", mt: { xs: 6, md: 10 } }}>
