@@ -9,11 +9,11 @@ import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import { getFlatErrors } from "../activities/[activityId]/edit/components/formikFields";
 import MenuChildPopup from "./MenuChildPopup";
 
-export const BookNowButton = ({ activityId, targetDate }) => {
+export const BookNowButton = ({ activityId, targetDate, isEarlyDropOffSelected, isLatePickUpSelected }) => {
     const { data: children } = useQuery("children", getChildren);
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
-    const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate }), 
+    const mutation = useMutation((childId) => createBooking({ activity: activityId, child: childId, date: targetDate, isEarlyDropOff: isEarlyDropOffSelected, isLatePickUp: isLatePickUpSelected }), 
     {
       onSuccess: () => {
         enqueueSnackbar("Booking created", { variant: "success" });
