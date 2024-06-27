@@ -70,8 +70,8 @@ export default function OosStepper({ sx, steps }) {
         connector={<StepConnector />}
         orientation={smUp ? "horizontal" : "vertical"}
         sx={{
-          minHeight: { xs: 393, sm: 0 },
-          alignItems: "center",
+          minHeight: { xs: 400, sm: 0 },
+          alignItems: smUp ? "flex-start" : "center",
         }}
       >
         {steps.map((label, index) => {
@@ -84,9 +84,8 @@ export default function OosStepper({ sx, steps }) {
                 <Typography
                   sx={{
                     fontFamily: manrope.style.fontFamily,
-                    fontWeight: 700,
                     color: "#495057",
-                    maxWidth: 180,
+                    maxWidth: 250,
                     mx: "auto",
                   }}
                 >
