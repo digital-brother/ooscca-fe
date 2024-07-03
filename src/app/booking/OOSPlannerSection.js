@@ -101,7 +101,7 @@ function FilledBooking({ booking, weekDates }) {
     enqueueSnackbar(errorMessage, { variant: "error" });
   }
 
-  const bookingSetsMutation = useMutation(() =>
+  const bookingSetMutation = useMutation(() =>
       deleteBookingSets({
         startDate: weekDates[0],
         endDate: weekDates[4],
@@ -188,7 +188,7 @@ function FilledBooking({ booking, weekDates }) {
           <WholeWeekBookingsDeleteDialog
             open={deleteDialogOpen}
             onClose={() => setDeleteDialogOpen(false)}
-            onConfirm={bookingSetsMutation.mutate}
+            onConfirm={bookingSetMutation.mutate}
             providerName={booking.activity.providerName}
           />
         </>
