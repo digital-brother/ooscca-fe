@@ -34,7 +34,7 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
     });
 
     const transformDaysToArray = (days) => {
-      return ['M', 'T', 'W', 'Th', 'F'].map(day => days[day]);
+      return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(day => days[day]);
     };
 
     const { data: children } = useQuery("children", getChildren);
