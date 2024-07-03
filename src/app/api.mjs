@@ -213,7 +213,6 @@ export async function createBookingSet(data) {
 
 export async function deleteBookingSets({ startDate, endDate, childId, activityId }) {
   const url = `${BOOKING_SETS_PATH}/`;
-  console.log(childId)
   const response = await client.delete(url, {
     params: {
       start_date: startDate.format("YYYY-MM-DD"),
