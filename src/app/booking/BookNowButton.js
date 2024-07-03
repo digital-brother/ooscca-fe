@@ -41,15 +41,6 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
 
-    const onSuccess = () => {
-      enqueueSnackbar("Booking created", { variant: "success" });
-      queryClient.invalidateQueries("bookings");
-    }
-    const onError = (error) => {
-        const errorMessage = getFlatErrors(error).join(". ");
-        enqueueSnackbar(errorMessage, { variant: "error" });
-    }
-
     const mutation = useMutation(
       (childId) => activity.isWholeWeekOnly
         ? createBookingSet(
@@ -71,12 +62,18 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
             isLatePickUp: isLatePickUpSelected
           }),
       {
-        onSuccess,
-        onError
+        onSuccess: () => {
+          enqueueSnackbar("Booking created", { variant: "success" });
+          queryClient.invalidateQueries("bookings");
+        },
+        onError: (error) => {
+          const errorMessage = getFlatErrors(error).join(". ");
+          enqueueSnackbar(errorMessage, { variant: "error" });
+        }
       }
     );
 
-    const handleBookNowClick = (childId) => {
+    const handleClick = (childId) => {
       if (activity.isWholeWeekOnly) {
         setSelectedChildId(childId);
         setDialogOpen(true);
@@ -105,7 +102,7 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
         {children && children.length === 1 ? (
           <Button
             variant="contained"
-            onClick={() => handleBookNowClick(children[0].id)}
+            onClick={() => handleClick(children[0].id)}
           >
             Book now
           </Button>
@@ -116,7 +113,7 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
                 <Button variant="contained" {...bindTrigger(popupState)} endIcon={<ExpandMoreIcon />}>
                   Book now
                 </Button>
-                <MenuChildPopup childrenData={children} popupState={popupState} handleClick={handleBookNowClick}/>
+                <MenuChildPopup childrenData={children} popupState={popupState} handleClick={handleClick}/>
               </>
             )}
           </PopupState>
