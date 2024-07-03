@@ -12,6 +12,7 @@ import {Logo} from "@/app/(homepage)/components/Logo";
 import { useContext } from "react";
 import { useMutation } from "react-query";
 import { useSnackbar } from 'notistack';
+import { useRouter } from "next/navigation";
 import { getFlatErrors } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { logout, AUTH_TOKEN_KEY } from "@/app/api.mjs";
 import { AuthTokenContext } from "@/app/layout";
@@ -59,17 +60,29 @@ function NavLink({link}) {
 
 function LogOutLink() {
   const theme = useTheme()
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { setAuthToken } = useContext(AuthTokenContext);
+
+  const clearAuthToken = () => {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    setAuthToken(null);
+  };
+
   const mutation = useMutation(logout, {
     onSuccess: () => {
-      localStorage.removeItem(AUTH_TOKEN_KEY);
-      setAuthToken(null)
+      clearAuthToken();
       enqueueSnackbar("Logout successful", { variant: "success" });
     },
     onError: (error) => {
-      const errorMsg = getFlatErrors(error).join("; ");
-      enqueueSnackbar(errorMsg, { variant: "error" });
+      if (error.response?.status === 401) {
+        clearAuthToken();
+        router.push("/login");
+      }
+      else {
+        const errorMsg = getFlatErrors(error).join("; ");
+        enqueueSnackbar(errorMsg, { variant: "error" });
+      }
     }
   });
 
