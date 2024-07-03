@@ -25,7 +25,7 @@ export default function WholeWeekDialog({
   setLatePickupDays,
 }) {
   const totalPrice = activity?.price * 5;
-  const daysOfWeek = ["M", "T", "W", "T", "F"];
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const handleCheckboxChange = (day, type) => (e) => {
     if (type === "early") {
       setEarlyDropOffDays({ ...earlyDropOffDays, [day]: e.target.checked });
@@ -57,7 +57,7 @@ export default function WholeWeekDialog({
                   <FormControlLabel
                     key={day}
                     control={<Checkbox checked={earlyDropOffDays[day]} onChange={handleCheckboxChange(day, "early")} />}
-                    label={`${day}`}
+                    label={`${day[0]}`}
                   />
                 ))}
               </FormGroup>
@@ -78,7 +78,7 @@ export default function WholeWeekDialog({
                   <FormControlLabel
                     key={day}
                     control={<Checkbox checked={latePickupDays[day]} onChange={handleCheckboxChange(day, "late")} />}
-                    label={`${day}`}
+                    label={`${day[0]}`}
                   />
                 ))}
               </FormGroup>

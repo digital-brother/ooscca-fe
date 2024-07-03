@@ -18,19 +18,19 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
     const [selectedChildId, setSelectedChildId] = useState(null);
 
     const [earlyDropOffDays, setEarlyDropOffDays] = useState({
-      M: false,
-      T: false,
-      W: false,
-      Th: false,
-      F: false,
+      Monday: false,
+      Tuesday: false,
+      Wednesday: false,
+      Thursday: false,
+      Friday: false,
     });
   
     const [latePickupDays, setLatePickupDays] = useState({
-      M: false,
-      T: false,
-      W: false,
-      Th: false,
-      F: false,
+      Monday: false,
+      Tuesday: false,
+      Wednesday: false,
+      Thursday: false,
+      Friday: false,
     });
 
     const transformDaysToArray = (days) => {
