@@ -91,11 +91,12 @@ function useAwaitingBookingDeletion({ bookingIdInitial }) {
 function FilledBooking({ booking, weekDates }) {
   const { setRequestNum: setAwaitingBookingDeletion } = useAwaitingBookingDeletion({bookingIdInitial: booking.id });
   const { enqueueSnackbar } = useSnackbar();
-  const onSuccess = () => {
+  
+  const onMutationSuccess = () => {
     enqueueSnackbar("Deleting a booking(s)", { variant: "success" });
     setAwaitingBookingDeletion(0);
   }
-  const onError = (error) => {
+  const onMutationError = (error) => {
     const errorMessage = getFlatErrors(error).join(". ");
     enqueueSnackbar(errorMessage, { variant: "error" });
   }
@@ -108,14 +109,14 @@ function FilledBooking({ booking, weekDates }) {
         activityId: booking.activity.id,
       }),
     {
-      onSuccess,
-      onError,
+      onSuccess: onMutationSuccess,
+      onError: onMutationError
     },
   );
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
-    onSuccess,
-    onError
+    onSuccess: onMutationSuccess,
+    onError: onMutationError
   });
 
   const colorMapping = {
