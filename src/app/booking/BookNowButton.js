@@ -18,23 +18,23 @@ export const BookNowButton = ({ activity, targetDate, isEarlyDropOffSelected, is
     const [selectedChildId, setSelectedChildId] = useState(null);
 
     const [earlyDropOffDays, setEarlyDropOffDays] = useState({
-      Monday: false,
-      Tuesday: false,
-      Wednesday: false,
-      Thursday: false,
-      Friday: false,
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
     });
   
     const [latePickupDays, setLatePickupDays] = useState({
-      Monday: false,
-      Tuesday: false,
-      Wednesday: false,
-      Thursday: false,
-      Friday: false,
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
     });
 
     const transformDaysToArray = (days) => {
-      return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(day => days[day]);
+      return ["monday", "tuesday", "wednesday", "thursday", "friday"].map(day => days[day]);
     };
 
     const { data: children } = useQuery("children", getChildren);
