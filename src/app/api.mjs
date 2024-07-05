@@ -31,12 +31,28 @@ const client = axios.create({
   baseURL: API_HOST,
   timeout: 5000,
 });
+  
+client.interceptors.request.use(
+  (config) => {
+    const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (authToken) config.headers.Authorization = `Token ${authToken}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-client.interceptors.request.use((config) => {
-  const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
-  if (authToken) config.headers.Authorization = `Token ${authToken}`;
-  return config;
-});
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      window.location.href = '/login';
+  }
+    return Promise.reject(error);
+  }
+  );
 
 // TODO: Rationalize mutation and api layer (duplicate function code)
 // IMAGES
