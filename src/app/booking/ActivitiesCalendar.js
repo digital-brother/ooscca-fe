@@ -159,7 +159,7 @@ export function ActivityCard({ activity, targetDate }) {
             </Button>
           </Link>
           <BookNowButton
-            activityId={activity.id}
+            activity={activity}
             targetDate={targetDate}
             isEarlyDropOffSelected={isEarlyDropOffSelected}
             isLatePickUpSelected={isLatePickUpSelected}

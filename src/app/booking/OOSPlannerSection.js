@@ -1,6 +1,15 @@
 "use client";
 
-import { deleteBooking, getBookings, getChildren, createBill, getBill, getFriendsBookings, getBooking } from "@/app/api.mjs";
+import {
+  deleteBooking,
+  getBookings,
+  getChildren,
+  createBill,
+  getBill,
+  getFriendsBookings,
+  getBooking,
+  deleteBookingSets,
+} from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -35,6 +44,7 @@ import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import ShareCalendarPopup from './ShareCalendarPopup';
 import MenuChildPopup from "./MenuChildPopup";
 import PreviosWeekButton from "./PreviosWeekButton"
+import WholeWeekBookingsDeleteDialog from "./WholeWeekBookingsDeleteDialog"
 
 dayjs.extend(weekday);
 
@@ -58,7 +68,7 @@ function useAwaitingBookingDeletion({ bookingIdInitial }) {
       retry: false,
       onError: (error) => {
         if (error.response?.status === 404) {
-          enqueueSnackbar("Booking deleted", { variant: "success" });
+          enqueueSnackbar("Booking deleted", { variant: "success", preventDuplicate: true });
           queryClient.invalidateQueries("bookings");
         }
         else {
@@ -78,19 +88,35 @@ function useAwaitingBookingDeletion({ bookingIdInitial }) {
   return { setRequestNum }
 }
 
-function FilledBooking({ booking }) {
+function FilledBooking({ booking, weekDates }) {
   const { setRequestNum: setAwaitingBookingDeletion } = useAwaitingBookingDeletion({bookingIdInitial: booking.id });
   const { enqueueSnackbar } = useSnackbar();
+  
+  const onMutationSuccess = () => {
+    enqueueSnackbar("Deleting a booking(s)", { variant: "success" });
+    setAwaitingBookingDeletion(0);
+  }
+  const onMutationError = (error) => {
+    const errorMessage = getFlatErrors(error).join(". ");
+    enqueueSnackbar(errorMessage, { variant: "error" });
+  }
+
+  const bookingSetMutation = useMutation(() =>
+      deleteBookingSets({
+        startDate: weekDates[0],
+        endDate: weekDates[4],
+        childId: booking.child,
+        activityId: booking.activity.id,
+      }),
+    {
+      onSuccess: onMutationSuccess,
+      onError: onMutationError
+    },
+  );
 
   const mutation = useMutation(() => deleteBooking(booking.id), {
-    onSuccess: () => {
-      enqueueSnackbar("Deleting a booking", { variant: "success" });
-      setAwaitingBookingDeletion(0);
-    },
-    onError: (error) => {
-      const errorMessage = getFlatErrors(error).join(". ");
-      enqueueSnackbar(errorMessage, { variant: "error" });
-    },
+    onSuccess: onMutationSuccess,
+    onError: onMutationError
   });
 
   const colorMapping = {
@@ -123,6 +149,7 @@ function FilledBooking({ booking }) {
   const border = statusBorderSxMap[booking.status];
   const showDeleteIcon = ['unpaid', 'pending'].includes(booking.status);
   const [shareCalendarPopupOpen, setShareCalendarPopupOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [shareCalendarChildId, setShareCalendarChildId] = useState();
 
   const showSharePopup = (shareCalendarChildId) => {
@@ -152,9 +179,19 @@ function FilledBooking({ booking }) {
           <IosShareIcon onClick={() => showSharePopup(booking.child)} />
         </IconButton>
         {showDeleteIcon && (
-        <IconButton>
-          <DeleteForeverIcon onClick={() => mutation.mutate()} />
-        </IconButton>
+        <>
+          <IconButton>
+            <DeleteForeverIcon onClick={() =>
+              booking.activity.isWholeWeekOnly ? setDeleteDialogOpen(true): mutation.mutate()}
+            />
+          </IconButton>
+          <WholeWeekBookingsDeleteDialog
+            open={deleteDialogOpen}
+            onClose={() => setDeleteDialogOpen(false)}
+            onConfirm={bookingSetMutation.mutate}
+            providerName={booking.activity.providerName}
+          />
+        </>
         )}
       </Box>
       <ShareCalendarPopup open={shareCalendarPopupOpen} onClose={() => setShareCalendarPopupOpen(false)} childId={shareCalendarChildId} />
@@ -226,7 +263,7 @@ function FriendEmptyBooking() {
   );
 }
 
-function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
+function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable, weekDates }) {
   bookings = _.sortBy(bookings, [(booking) => booking.activity.meridiem]);
 
   if (!bookings || _.isEmpty(bookings)) bookings = [null, null];
@@ -246,7 +283,7 @@ function BookingDay({ bookings = [], targetDate, sx, bookingForFriendsTable }) {
             <FriendEmptyBooking key={index} />
           )
         ) : booking ? (
-          <FilledBooking key={booking.id} booking={booking} />
+          <FilledBooking key={booking.id} booking={booking} weekDates={weekDates} />
         ) : (
           <EmptyBooking key={index} targetDate={targetDate} />
         )
@@ -329,8 +366,22 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const relevantBookings = unpaidBookings?.filter((booking) => {
     const bookingDateTime = dayjs(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
-    return today.isBefore(bookingDateTime);
-  })
+
+    if (!booking.activity.isWholeWeekOnly && today.isBefore(bookingDateTime)) {
+      return true;
+    }
+
+    if (booking.activity.isWholeWeekOnly) {
+      const anyBookingAfterToday = unpaidBookings.some((wholeWeekBooking) => {
+        const wholeWeekBookingDateTime = dayjs(`${wholeWeekBooking.date} ${wholeWeekBooking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
+        return wholeWeekBooking.activity.id === booking.activity.id && today.isAfter(wholeWeekBookingDateTime);
+      });
+      return !anyBookingAfterToday;
+    }
+
+    return false;
+  });
+
   const relevantBookingsIds = relevantBookings?.map((booking) => booking.id);
   const mutation = useMutation(() => createBill({ bookings: relevantBookingsIds }), {
     onSuccess: (bill) => {
@@ -365,7 +416,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
               );
               return (
                 <StyledTableCell key={index} align="left" sx={isLastChild && { pb: 0 }}>
-                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} />
+                  <BookingDay bookings={dateBookings} targetDate={targetDate} sx={{ mx: "auto" }} weekDates={weekDates} />
                 </StyledTableCell>
               );
             })}

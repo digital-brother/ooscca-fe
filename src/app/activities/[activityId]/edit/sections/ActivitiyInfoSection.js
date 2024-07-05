@@ -260,7 +260,7 @@ export function ActivityDetails({ sx, showCapacity=false, bookingMode=false }) {
       </Box>
     </Box>
     {bookingMode && (<BookNowButton
-      activityId={activityId}
+      activity={activity}
       targetDate={targetDate}
       isEarlyDropOffSelected={isEarlyDropOffSelected}
       isLatePickUpSelected={isLatePickUpSelected}
