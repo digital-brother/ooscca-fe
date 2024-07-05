@@ -18,10 +18,12 @@ export default function SignUpEmailConfirmation() {
           Please verify your email
         </Typography>
         <Typography sx={{ mt: 1.5, textAlign: "center" }}>
-          For security, we&apos;ve sent you an email to the address you provided. Please click the link in the email to
-          verify, and then log in.
+          For security, we&apos;ve sent an email to the address you provided.
+          Please click the link in the email to verify and start booking.
         </Typography>
-
+        <Typography sx={{ mt: 2, textAlign: "center",  fontWeight: 600, }}>
+          Check your junk or spam folder if you don&apos;t see the email in your inbox.
+        </Typography>
         <Typography sx={{ mt: 16, textAlign: "center" }}>
           If you can&apos;t find it, you can resend the email.
         </Typography>
@@ -35,7 +37,6 @@ export default function SignUpEmailConfirmation() {
         >
           Resend confirmation email
         </Button>
-        <Typography sx={{ mt: 2, textAlign: "center",  fontWeight: 600, }}>Please check your junk/spam folder if you don&apos;t see the verification email in your inbox</Typography>
         <Error>{mutation.isError && mutation.error.message}</Error>
       </OssContainer>
     </Container>
