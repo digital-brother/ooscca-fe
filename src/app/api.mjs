@@ -11,6 +11,7 @@ const IMAGES_SECONDARY_SUBPATH = "secondary-images";
 
 const CHILDREN_PATH = "/children";
 const BOOKINGS_PATH = "/bookings";
+const BOOKING_SETS_PATH = "/booking-sets";
 const FRIENDS_BOOKINGS_PATH = "/friends-bookings";
 const BILLS_PATH = "/bills";
 const SCHOOLS_PATH = "/schools";
@@ -201,6 +202,25 @@ export async function getFriendsBookings({ dateAfter, dateBefore }) {
 export async function createBooking(data) {
   const url = `${BOOKINGS_PATH}/`;
   const response = await client.post(url, data);
+  return response.data;
+}
+
+export async function createBookingSet(data) {
+  const url = `${BOOKING_SETS_PATH}/`;
+  const response = await client.post(url, data);
+  return response.data
+}
+
+export async function deleteBookingSets({ startDate, endDate, childId, activityId }) {
+  const url = `${BOOKING_SETS_PATH}/`;
+  const response = await client.delete(url, {
+    params: {
+      start_date: startDate.format("YYYY-MM-DD"),
+      end_date: endDate.format("YYYY-MM-DD"),
+      child_id: childId,
+      activity_id: activityId
+    }
+  });
   return response.data;
 }
 
