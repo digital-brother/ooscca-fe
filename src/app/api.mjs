@@ -38,9 +38,6 @@ client.interceptors.request.use(
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) config.headers.Authorization = `Token ${authToken}`;
     return config;
-  },
-  (error) => {
-    return Promise.reject(error);
   }
 );
 
