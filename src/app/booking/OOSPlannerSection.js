@@ -439,6 +439,8 @@ function FamilyBookings({ childrenData = [], weekDates }) {
 
 function FriendsBookings({ childrenData = [], weekDates }) {
   const [selectedChild, setSelectedChild] = useState(childrenData[0]);
+  const [shareCalendarPopupOpen, setShareCalendarPopupOpen] = useState(false);
+
   const { data: friendsBookings } = useQuery(["friendsBookings", weekDates], () =>
     getFriendsBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
@@ -470,7 +472,19 @@ function FriendsBookings({ childrenData = [], weekDates }) {
         <TableRow>
           <StyledTableCell></StyledTableCell>
           <StyledTableCell colSpan={6} align="left">
-            <Typography sx={{ fontWeight: 700 }}>{selectedChild.displayName} has no friends yet</Typography>
+            <Button
+              color="grey"
+              variant="text"
+              sx={{
+                textDecoration: 'underline',
+                '&:hover': {
+                  background: 'none',
+                  textDecoration: 'underline',
+                }
+              }}
+              onClick={() => setShareCalendarPopupOpen(true)}>
+                Invite friends here
+            </Button>
           </StyledTableCell>
         </TableRow>
       ) : (
@@ -515,6 +529,7 @@ function FriendsBookings({ childrenData = [], weekDates }) {
           );
         })
       )}
+      <ShareCalendarPopup open={shareCalendarPopupOpen} onClose={() => setShareCalendarPopupOpen(false)} childId={selectedChild.id} />
     </>
   );
 }
