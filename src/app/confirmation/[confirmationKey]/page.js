@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
-import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
-import { Container, CircularProgress } from '@mui/material';
 import { verifyEmail, SIGNUP_CURRENT_STEP_KEY, USER_ID_KEY } from "@/app/api.mjs";
+import CircularProgresContainer from "@/components/CircularProgresContainer"
 
 export default function VerifyEmail({ params }) {
   const router = useRouter();
@@ -29,12 +28,6 @@ export default function VerifyEmail({ params }) {
   }, []);
 
   return (
-    <Container sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 10 }}>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Error>{mutation.isError && mutation.error.message}</Error>
-      )}
-    </Container>
+    <CircularProgresContainer loading={loading} mutation={mutation} />
   );
 };

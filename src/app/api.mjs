@@ -23,6 +23,7 @@ const RESEND_EMAIL_PATH = "/resend-email";
 const VERIFY_EMAIL_PATH = "/verify-email";
 const LOGOUT_PATH = "/dj-rest-auth/logout";
 const SHARE_CALENDAR_PATH = "/share-calendar";
+const SHARE_BACK_CALENDAR_PATH = "/share-back-calendar";
 
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
@@ -306,5 +307,10 @@ export async function getBill(billId) {
 export async function shareCalendar(childId, data) {
   data.child = childId;
   const response = await client.post(`${SHARE_CALENDAR_PATH}/`, data);
+  return response.data;
+}
+
+export async function shareCalendarBack(acceptionInviteId, data) {
+  const response = await client.patch(`${SHARE_BACK_CALENDAR_PATH}/${acceptionInviteId}/`, data);
   return response.data;
 }
