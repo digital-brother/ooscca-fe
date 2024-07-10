@@ -153,7 +153,7 @@ export function ActivityCard({ activity, targetDate }) {
           <ActivityDiscountedPrice activity={activity} />
         </Box>
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", mt: 2, gap: 2 }}>
-          <Link href={activityDetailUrl} passHref>
+          <Link href={activityDetailUrl} target="_blank" passHref>
             <Button variant="outlined" fullWidth sx={{ height: "100%" }}>
               Learn more
             </Button>
