@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "react-query";
-import { Error } from "@/app/activities/[activityId]/edit/components/formikFields";
-import { Container, CircularProgress } from '@mui/material';
 import { shareCalendarBack } from "@/app/api.mjs";
 import { useSnackbar } from 'notistack';
-
+import CircularProgresContainer from "@/components/CircularProgresContainer";
 
 export default function ShareCalendarBack({ params }) {
   const router = useRouter();
@@ -33,12 +31,6 @@ export default function ShareCalendarBack({ params }) {
   }, []);
 
   return (
-    <Container sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', py: 10 }}>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Error>{mutation.isError && mutation.error.message}</Error>
-      )}
-    </Container>
+    <CircularProgresContainer loading={loading} mutation={mutation} />
   );
 };
