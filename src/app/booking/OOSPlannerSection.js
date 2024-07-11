@@ -144,7 +144,7 @@ function FilledBooking({ booking, weekDates }) {
   };
 
   const bgcolorBase = colorMapping[booking.activity.type?.slug] || "grey";
-  const bgcolor = `${bgcolorBase}.100`;
+  const bgcolor = booking.status === "paid" ? `${bgcolorBase}.200` : `${bgcolorBase}.100`;
   const statusBorderSxMap = { unpaid: "2px solid", pending: "1px solid", paid: "none" };
   const border = statusBorderSxMap[booking.status];
   const showDeleteIcon = ['unpaid', 'pending'].includes(booking.status);
