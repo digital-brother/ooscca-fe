@@ -366,8 +366,22 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
   const relevantBookings = unpaidBookings?.filter((booking) => {
     const bookingDateTime = dayjs(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
-    return today.isBefore(bookingDateTime);
-  })
+
+    if (!booking.activity.isWholeWeekOnly && today.isBefore(bookingDateTime)) {
+      return true;
+    }
+
+    if (booking.activity.isWholeWeekOnly) {
+      const anyBookingAfterToday = unpaidBookings.some((wholeWeekBooking) => {
+        const wholeWeekBookingDateTime = dayjs(`${wholeWeekBooking.date} ${wholeWeekBooking.activity.startTime}`, 'YYYY-MM-DD HH:mm');
+        return wholeWeekBooking.activity.id === booking.activity.id && today.isAfter(wholeWeekBookingDateTime);
+      });
+      return !anyBookingAfterToday;
+    }
+
+    return false;
+  });
+
   const relevantBookingsIds = relevantBookings?.map((booking) => booking.id);
   const mutation = useMutation(() => createBill({ bookings: relevantBookingsIds }), {
     onSuccess: (bill) => {
