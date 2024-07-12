@@ -9,6 +9,7 @@ import {
 } from "@/app/activities/[activityId]/edit/components/formikFields";
 import { Button, Container, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
+import { useSearchParams } from "next/navigation";
 import * as Yup from "yup";
 import { useMutation } from "react-query";
 import { signupAccount, USER_ID_KEY } from "@/app/api.mjs";
@@ -17,6 +18,9 @@ import { OssContainer } from "@/components/OosContainer";
 export default function SignUpAccount({ goToNextStep }) {
   const mutation = useMutation(signupAccount);
   const passwordHint = "Password must contain at least one number, a lowercase letter, an uppercase letter and a special character (@, $, !, %, *, ?, &)";
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email') ? decodeURIComponent(searchParams.get('email')) : "";
+  const acceptPolicy = searchParams.get('acceptPolicy') === 'true';
 
   async function handleSubmit(values, formikHelpers) {
     const handle = createHandleSubmit({
@@ -40,7 +44,7 @@ export default function SignUpAccount({ goToNextStep }) {
         </Typography>
         <Formik
           onSubmit={handleSubmit}
-          initialValues={{ email: "", password1: "", password2: "", termsConditionsAccepted: false }}
+          initialValues={{ email, password1: "", password2: "", termsConditionsAccepted: acceptPolicy }}
           validationSchema={Yup.object({
             email: Yup.string().email("Invalid email address").required("Required"),
             password1: Yup.string()
