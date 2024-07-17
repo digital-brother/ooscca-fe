@@ -286,14 +286,17 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const today = dayjs.utc()
 
   const { data: bookings } = useQuery(["bookings", weekDates], () =>
     getBookings({ dateAfter: weekDates[0], dateBefore: weekDates[4] })
   );
 
   const unpaidBookings = bookings?.filter((booking) => ["unpaid", "pending"].includes(booking.status));
-  const unpaidBookingsIds = unpaidBookings?.map((booking) => booking.id);
-  const mutation = useMutation(() => createBill({ bookings: unpaidBookingsIds }), {
+  const relevantBooking = unpaidBookings?.filter((booking) => 
+    today.isBefore(dayjs.utc(`${booking.date} ${booking.activity.startTime}`, 'YYYY-MM-DD HH:mm')))
+  const relevantBookingIds = relevantBooking?.map((booking) => booking.id);
+  const mutation = useMutation(() => createBill({ bookings: relevantBookingIds }), {
     onSuccess: (bill) => {
       if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
       else {
