@@ -1,15 +1,17 @@
 'use client'
 
-import {Box, Container} from "@mui/material";
+import {Box, Stack, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 const SCHOOLS = [
   {src: "/milbourne-lodge.svg", label: "Milbourne Lodge "},
-  {src: "/shrewsbury-house-pre-preparatory.svg", label: "Shrewsbury House Pre-Preparatory"},
+  {src: "/claygate-primary.svg", label: "Claygate Primary"},
+  {src: "/shrewsbury-house-pre-preparatory.svg", label: "Shrewsbury House"},
   {src: "/rowan-preparatory.svg", label: "Rowan Preparatory"},
-  {src: "/claremont-fan-court.svg", label: "Claremont Fan Court "},
-  {src: "/parkside.svg", label: "Parkside "},
-  {src: "/danes-hill.svg", label: "Danes Hill "},
+  {src: "/claremont-fan-court.svg", label: "Claremont Fan Court"},
+  {src: "/esher-church.svg", label: "Esher Church"},
+  {src: "/parkside.svg", label: "Parkside"},
+  {src: "/danes-hill.svg", label: "Danes Hill"},
 ]
 
 export default function ClientSchools() {
@@ -24,9 +26,9 @@ export default function ClientSchools() {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "repeat(2, 150px)",
-              sm: "repeat(3, 150px)",
-              lg: "repeat(6, 160px)"
+              xs: "repeat(2, 160px)",
+              lg: "repeat(4, 160px)",
+              xl: "repeat(8, 160px)"
             },
             gap: 2,
             justifyContent: "center",
@@ -43,9 +45,13 @@ export default function ClientSchools() {
 
 function School({src, label}) {
   return (
-    <Box sx={{textAlign: "center"}}>
+    <Stack sx={{
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+    }}>
       <img src={src}/>
       <Typography color="text.secondary">{label}</Typography>
-    </Box>
+    </Stack>
   )
 }
