@@ -30,7 +30,6 @@ const TickerTape = () => {
       backgroundColor: "magenta.500",
       color: 'white',
       whiteSpace: 'nowrap',
-      fontSize: '1.5rem',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
