@@ -14,7 +14,7 @@ import { keyframes } from '@emotion/react';
 
 const ticker = keyframes`
   0% {
-    transform: translateX(50%);
+    transform: translateX(100%);
   }
   100% {
     transform: translateX(-100%);
@@ -33,16 +33,15 @@ const TickerTape = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      py: 1
+      py: 1,
     }}
   >
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
-        animation: `${ticker} 15s linear infinite`,
-        gap: 15,
+        animation: `${ticker} 32s linear infinite`,
+        gap: 30,
       }}
     >
       <Typography sx={{ fontWeight: 600 }}>
