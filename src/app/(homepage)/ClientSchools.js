@@ -2,6 +2,7 @@
 
 import {Box, Stack, Container} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Image from "next/image";
 
 const SCHOOLS = [
   {src: "/milbourne-lodge.svg", label: "Milbourne Lodge "},
@@ -50,7 +51,7 @@ function School({src, label}) {
       justifyContent: "center",
       textAlign: "center",
     }}>
-      <img src={src}/>
+      <Image src={src} alt={label} width={60} height={60}/>
       <Typography color="text.secondary">{label}</Typography>
     </Stack>
   )
