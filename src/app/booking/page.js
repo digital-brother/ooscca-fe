@@ -10,13 +10,13 @@ import dayjs from "dayjs";
 export const SelectedDateContext = createContext({});
 
 function getSelectedDayDefault() {
-  let today = dayjs.utc();
+  let selectedDayDefault = dayjs.utc();
   const fixedDate = dayjs.utc('2024-07-15');
-  if (today.isBefore(fixedDate)) today = dayjs.utc('2024-07-15');
+  if (selectedDayDefault.isBefore(fixedDate)) selectedDayDefault = dayjs.utc('2024-07-15');
 
-  if (today.day() === 6) return today.add(2, "day");
-  else if (today.day() === 0) return today.add(1, "day");
-  else return today;
+  if (selectedDayDefault.day() === 6) return selectedDayDefault.add(2, "day");
+  else if (selectedDayDefault.day() === 0) return selectedDayDefault.add(1, "day");
+  else return selectedDayDefault;
 }
 
 export default function BookingPage() {
