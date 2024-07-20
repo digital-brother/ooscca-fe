@@ -488,7 +488,7 @@ function BookingsTable() {
                   <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <MoveNextWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
-                    <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs.utc())}>
+                    <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
                       Today
                     </Button>
                     <IconButton onClick={handleNextWeek}>
