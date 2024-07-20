@@ -34,7 +34,7 @@ import { SelectedDateContext } from "./page";
 import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import ShareCalendarPopup from './ShareCalendarPopup';
 import MenuChildPopup from "./MenuChildPopup";
-import MoveNextWeekButton from "./MoveNextWeekButton"
+import PreviosWeekButton from "./PreviosWeekButton"
 
 dayjs.extend(weekday);
 
@@ -487,7 +487,7 @@ function BookingsTable() {
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <Typography variant="h6">{selectedDate.format("MMMM YYYY")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <MoveNextWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+                    <PreviosWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
                     <Button color="grey" sx={{ py: 0.2 }} onClick={() => setSelectedDate(dayjs())}>
                       Today
                     </Button>

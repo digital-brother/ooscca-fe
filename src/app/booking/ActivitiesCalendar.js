@@ -17,7 +17,7 @@ import { forwardRef, useCallback, useState } from "react";
 import { useQuery } from "react-query";
 import { getActivitiesForDate, getChildren } from "../api.mjs";
 import { BookNowButton } from "./BookNowButton";
-import MoveNextWeekButton from "./MoveNextWeekButton";
+import PreviosWeekButton from "./PreviosWeekButton";
 dayjs.extend(utc);
 
 function PickerDate({ date, setSelectedDate, isSelectedDate }) {
@@ -84,7 +84,7 @@ function DateSwitcher({ selectedDate, setSelectedDate }) {
           mt: 1,
         }}
       >
-        <MoveNextWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+        <PreviosWeekButton selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         {weekDates.map((date, index) => {
           const isSelectedDate = date.isSame(selectedDate, "day");
           return (
