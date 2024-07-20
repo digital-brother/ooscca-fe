@@ -10,7 +10,10 @@ import dayjs from "dayjs";
 export const SelectedDateContext = createContext({});
 
 function getSelectedDayDefault() {
-  const today = dayjs.utc('2024-07-15');
+  let today = dayjs.utc();
+  const fixedDate = dayjs.utc('2024-07-15')
+  if (today.isBefore(fixedDate)) today = dayjs.utc('2024-07-15')
+
   if (today.day() === 6) return today.add(2, "day");
   else if (today.day() === 0) return today.add(1, "day");
   else return today;
