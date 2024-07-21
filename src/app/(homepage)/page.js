@@ -13,11 +13,11 @@ import { AuthTokenContext } from "@/app/layout";
 
 export default function Homepage() {
   const router = useRouter();
-  const { setAuthToken } = useContext(AuthTokenContext);
+  const { authToken } = useContext(AuthTokenContext);
 
   useEffect(() => {
-    if (setAuthToken) router.push("/booking") 
-  }, [router, setAuthToken]);
+    if (authToken) router.push("/booking") 
+  }, [router, authToken]);
 
   return (
     <>
