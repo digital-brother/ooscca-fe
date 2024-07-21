@@ -6,13 +6,9 @@ import * as React from "react";
 export function Logo() {
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push('/');
-  };
-
   return (
     <Box>
-      <Box component="img" onClick={handleClick} src="/logo.png" alt="OOSCCA logo" sx={{
+      <Box component="img" onClick={() => router.push('/')} src="/logo.png" alt="OOSCCA logo" sx={{
         cursor: 'pointer',
         width: {xs: 117, md: 190},
         height: 'auto'
