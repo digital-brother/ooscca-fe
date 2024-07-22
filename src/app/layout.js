@@ -7,6 +7,8 @@ import Footer from "@/app/Footer";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SnackbarProvider } from "notistack";
 import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { createContext, useState, useEffect } from "react";
 import { AUTH_TOKEN_KEY } from "@/app/api.mjs";
 import { keyframes } from '@emotion/react';
@@ -22,6 +24,9 @@ const ticker = keyframes`
 `;
 
 const TickerTape = () => {
+  const theme = useTheme()
+  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const animationDuration  = mdUp ? "28s" : "16s";
   return (
     <Box
     sx={{
@@ -38,10 +43,12 @@ const TickerTape = () => {
   >
     <Box
       sx={{
+        minWidth: { md: 'auto', lg: '100%'},
         display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        animation: `${ticker} 32s linear infinite`,
-        gap: 30,
+        animation: `${ticker} ${animationDuration} linear infinite`,
+        gap: {xs: 5, md: 30}
       }}
     >
       <Typography sx={{ fontWeight: 600 }}>
