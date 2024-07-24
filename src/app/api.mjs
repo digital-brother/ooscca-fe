@@ -24,6 +24,8 @@ const VERIFY_EMAIL_PATH = "/verify-email";
 const LOGOUT_PATH = "/dj-rest-auth/logout";
 const SHARE_CALENDAR_PATH = "/share-calendar";
 const SHARE_BACK_CALENDAR_PATH = "/share-back-calendar";
+const CREATE_DISCOUNT_CODE ="/discount-code";
+const APPLY_DISCOUNT_CODE = "/apply-discount-code";
 
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
@@ -312,5 +314,15 @@ export async function shareCalendar(childId, data) {
 
 export async function shareCalendarBack(acceptionInviteId, data) {
   const response = await client.patch(`${SHARE_BACK_CALENDAR_PATH}/${acceptionInviteId}/`, data);
+  return response.data;
+}
+
+export async function createDiscountCode(data) {
+  const response = await client.post(`${CREATE_DISCOUNT_CODE}/`, data);
+  return response.data;
+}
+
+export async function applyDiscountCode(data) {
+  const response = await client.post(`${APPLY_DISCOUNT_CODE}/`, data);
   return response.data;
 }
