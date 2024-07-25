@@ -365,6 +365,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
   const today = dayjs()
 
   const { data: bookings } = useQuery(["bookings", weekDates], () =>
@@ -410,7 +411,8 @@ function FamilyBookings({ childrenData = [], weekDates }) {
     const handle = createHandleSubmit({
       mutation: mutationApplyDiscount,
       onSuccess: () => {
-        enqueueSnackbar("Discount code applied successfully to all unpaid bookings", { variant: "success"});
+        enqueueSnackbar("Discount code applied successfully to unpaid bookings", { variant: "success"});
+        queryClient.invalidateQueries("bookings");
       },
     });
     handle(values, formikHelpers);
