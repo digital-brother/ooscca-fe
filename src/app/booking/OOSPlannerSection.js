@@ -9,6 +9,7 @@ import {
   getFriendsBookings,
   getBooking,
   deleteBookingSets,
+  applyDiscountCode,
 } from "@/app/api.mjs";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -43,8 +44,15 @@ import { SelectedDateContext } from "./page";
 import PopupState, { bindTrigger } from 'material-ui-popup-state';
 import ShareCalendarPopup from './ShareCalendarPopup';
 import MenuChildPopup from "./MenuChildPopup";
-import PreviosWeekButton from "./PreviosWeekButton"
-import WholeWeekBookingsDeleteDialog from "./WholeWeekBookingsDeleteDialog"
+import PreviosWeekButton from "./PreviosWeekButton";
+import WholeWeekBookingsDeleteDialog from "./WholeWeekBookingsDeleteDialog";
+import {
+  FormikErrors,
+  FormikTextField,
+  createHandleSubmit,
+} from "@/app/activities/[activityId]/edit/components/formikFields";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
 
 dayjs.extend(weekday);
 
@@ -357,6 +365,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
   const today = dayjs()
 
   const { data: bookings } = useQuery(["bookings", weekDates], () =>
@@ -383,7 +392,7 @@ function FamilyBookings({ childrenData = [], weekDates }) {
   });
 
   const relevantBookingsIds = relevantBookings?.map((booking) => booking.id);
-  const mutation = useMutation(() => createBill({ bookings: relevantBookingsIds }), {
+  const mutationCreateBill = useMutation(() => createBill({ bookings: relevantBookingsIds }), {
     onSuccess: (bill) => {
       if (bill?.stripeCheckoutSessionUrl) router.push(bill.stripeCheckoutSessionUrl);
       else {
@@ -396,6 +405,18 @@ function FamilyBookings({ childrenData = [], weekDates }) {
       enqueueSnackbar(errorMsg, { variant: "error" });
     },
   });
+
+  const mutationApplyDiscount = useMutation(applyDiscountCode);
+  async function handleSubmit(values, formikHelpers) {
+    const handle = createHandleSubmit({
+      mutation: mutationApplyDiscount,
+      onSuccess: () => {
+        enqueueSnackbar("Discount code applied successfully to unpaid bookings", { variant: "success"});
+        queryClient.invalidateQueries("bookings");
+      },
+    });
+    handle(values, formikHelpers);
+  }
 
   const { setBillId: setAwaitingStripeRedirectBill } = useAwaitingStripeRedirectBill();
   const awaitingPaidStatusBill = searchParams.get("awaitingPaidStatusBill");
@@ -424,12 +445,32 @@ function FamilyBookings({ childrenData = [], weekDates }) {
         );
       })}
       {childrenData && childrenData.length !== 0 && (
-        <TableRow>
-          <StyledTableCell></StyledTableCell>
-          <StyledTableCell colSpan={5} sx={{ textAlign: "right" }}>
-            <Button variant="contained" color="yellow" onClick={mutation.mutate}>
-              Pay now
-            </Button>
+        <TableRow rowSpan={2}>
+          <StyledTableCell>
+          </StyledTableCell>
+          <StyledTableCell colSpan={5}>
+            <Box sx={{ display: "flex", alignItems: "center",  justifyContent: "space-between", mt: 2}}>
+                <Formik
+                  onSubmit={handleSubmit}
+                  initialValues={{ code: "" }}
+                  validationSchema={Yup.object({
+                    code: Yup.string().label("Discount code").required().min(2).max(50),
+                  })}
+                >
+                  <Form style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <FormikTextField name="code" label="Enter discount code" type="Code" />
+                      <Button type="submit" variant="contained" color="grey">
+                        Apply
+                      </Button>
+                    </Box>
+                    <FormikErrors/>
+                  </Form>
+              </Formik>
+              <Button variant="contained" color="yellow" onClick={mutationCreateBill.mutate}>
+                Pay now
+              </Button>
+            </Box>
           </StyledTableCell>
         </TableRow>
       )}
