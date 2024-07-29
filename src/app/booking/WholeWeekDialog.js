@@ -25,7 +25,7 @@ export default function WholeWeekDialog({
   setLatePickupDays,
 }) {
   const totalPrice = activity?.price * 5;
-  const daysOfWeek = ["M", "T", "W", "Th", "F"];
+  const daysOfWeek = ["M", "T", "W", "T", "F"];
   const handleCheckboxChange = (day, type) => (e) => {
     if (type === "early") {
       setEarlyDropOffDays({ ...earlyDropOffDays, [day]: e.target.checked });
@@ -38,7 +38,7 @@ export default function WholeWeekDialog({
     <Dialog open={open} onClose={onClose}>
       <OssContainer sx={{ pb: 6, border: "none" }} handleClick={onClose}>
         <DialogContent sx={{ pt: 6 }}>
-          <DialogContentText sx={{ mb: 2 }}>
+          <DialogContentText sx={{ mb: 2, fontWeight: 600 }}>
             This activity is only available for the whole week. The total price is ${totalPrice}. Would you like to
             proceed?
           </DialogContentText>
