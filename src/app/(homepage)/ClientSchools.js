@@ -28,7 +28,7 @@ export default function ClientSchools() {
             gridTemplateColumns: {
               xs: "repeat(2, 160px)",
               lg: "repeat(4, 160px)",
-              xl: "repeat(7, 160px)"
+              xl: `repeat(${SCHOOLS.length}, 160px)`
             },
             gap: 2,
             justifyContent: "center",
