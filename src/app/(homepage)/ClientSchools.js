@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 
 const SCHOOLS = [
-  {src: "/milbourne-lodge.svg", label: "Milbourne Lodge "},
   {src: "/claygate-primary.svg", label: "Claygate Primary"},
   {src: "/shrewsbury-house-pre-preparatory.svg", label: "Shrewsbury House"},
   {src: "/rowan-preparatory.svg", label: "Rowan Preparatory"},
